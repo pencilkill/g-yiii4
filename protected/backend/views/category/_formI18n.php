@@ -1,0 +1,23 @@
+<div class="form">
+
+
+<?php $form = $this->beginWidget('GxActiveForm', array(
+	'id' => 'category-form',
+	'enableAjaxValidation' => true,
+));
+?>
+<?php
+$this->widget('zii.widgets.jui.CJuiTabs', array(
+	'tabs'=>array(
+		Yii::t('app', 'Tabs Basic') => $this->renderPartial('_form', array('form' => $form, 'model' => $model, 'categories'=>$categories), true),
+		'繁體中文' => $this->renderPartial('//categoryI18n/_i18n', array('form' => $form, 'model' => $i18ns[1], 'language_id' => 1), true),
+		'English' => $this->renderPartial('//categoryI18n/_i18n', array('form' => $form, 'model' => $i18ns[2], 'language_id' => 2), true),
+		'简体中文' => $this->renderPartial('//categoryI18n/_i18n', array('form' => $form, 'model' => $i18ns[3], 'language_id' => 3), true),
+	),
+));
+?>
+<?php
+echo GxHtml::submitButton(Yii::t('app', 'Save'));
+$this->endWidget();
+?>
+</div><!-- form -->

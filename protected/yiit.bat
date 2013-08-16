@@ -1,0 +1,1 @@
+yiic message "./messages/config.php"
