@@ -1,3 +1,8 @@
-assets/
-protected/runtime/
-themes/classic/views/
+/assets/*
+**/runtime/*
+/upload/*
+.buildpath
+.project
+.settings/
+
+!index.html
