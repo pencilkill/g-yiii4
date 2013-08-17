@@ -85,7 +85,8 @@ class AjaxImageUploadWidget extends CInputWidget
 		$settings = array_merge_recursive($settings, $this->settings);
 		$settings = CJavaScript::encode($settings);
 
-		Yii::app()->getClientScript()->registerScript(__CLASS__, "jQuery('#{$prefix}').ajaxUploadHandler($settings);");
+		// register id append $prefix to make sure unique
+		Yii::app()->getClientScript()->registerScript(__CLASS__.$prefix, "jQuery('#{$prefix}').ajaxUploadHandler($settings);");
 
 		$this->render('image', array(
 			'model' => $this->model,

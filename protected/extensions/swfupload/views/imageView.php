@@ -1,4 +1,4 @@
-<li style="display: inline-block;">
+<li style="display: inline-block;"">
 	<div style="background:url(<?php echo $src?>) center no-repeat; width: 125px; height: 125px; margin: 5px; border:1px solid gray;">
 	</div>
     <div style="text-align:center;">

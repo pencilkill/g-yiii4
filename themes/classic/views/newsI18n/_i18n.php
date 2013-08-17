@@ -7,7 +7,7 @@
 
 		<div class="row">
 		<?php echo $form->labelEx($model,'pic'); ?>
-		<?php echo CSite::ajaxImageUpload(array('model'=>$model, 'attribute' => "[$language_id]pic"))?>
+		<?php echo CSite::ajaxFileUpload(array($model, "[$language_id]pic"))?>
 		<?php echo $form->error($model, "[$language_id]pic"); ?>
 		</div><!-- row -->
 

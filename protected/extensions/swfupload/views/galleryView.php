@@ -18,6 +18,7 @@
 			),
 			'htmlOptions' => array(
 				'id' => 'thumbnails',
+				'style' => 'margin: 0px; padding: 0px;',
 			),
 		));
 	?>
