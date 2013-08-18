@@ -36,6 +36,7 @@ class Controller extends RController
 
 	public function init() {
 		parent::init();
+		// set language
 		$this->languages();
 	}
 

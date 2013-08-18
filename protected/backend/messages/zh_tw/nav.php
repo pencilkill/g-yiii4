@@ -19,6 +19,7 @@
 return array (
   'Admin' => '管理員',
   'Category' => '目錄',
+  'Dashboard' => '管理首頁',
   'Home' => '首頁',
   'Information' => '單頁',
   'News' => '新聞',
