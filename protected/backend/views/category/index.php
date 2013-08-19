@@ -5,49 +5,46 @@ $this->breadcrumbs = array(
 	Yii::t('app', 'List'),
 );
 
-$this->menu = array(
-		array('label'=>Yii::t('app', 'List') . ' ' . $model->label(2), 'url'=>array('index')),
-		array('label'=>Yii::t('app', 'Create') . ' ' . $model->label(), 'url'=>array('create')),
-	);
-
-Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
-});
-$('.search-form form').submit(function(){
-	$.fn.yiiGridView.update('category-grid', {
-		data: $(this).serialize()
-	});
-	return false;
-});
-");
 ?>
-
-<?php echo GxHtml::link(Yii::t('app', 'Advanced Search'), '#', array('class' => 'search-button')); ?>
-<div class="search-form" style="display:none;">
-<?php $this->renderPartial('_search', array(
-	'model' => $model,
-)); ?>
-</div><!-- search-form -->
-
+<div id="content">
+	<div class="breadcrumb">
+	<?php if(isset($this->breadcrumbs)):?>
+		<?php $this->widget('zii.widgets.CBreadcrumbs', array(
+			'links'=>$this->breadcrumbs,
+		)); ?><!-- breadcrumbs -->
+	<?php endif?>
+	</div>
+	<div class="box">
+		<div class="heading">
+			<div class="buttons">
+				<a onclick="location='<?php echo $this->createUrl('create')?>';" class="button"><?php echo Yii::t('app', 'Create')?></a>
+				<a onclick="GridViewDelete();" class="button"><?php echo Yii::t('app', 'Delete')?></a>
+			</div>
+		</div>
+		<div class="content">
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id' => 'category-grid',
+	'template' => "{items}\n<div class=\"pagination\">{summary}{pager}</div>",
+	'itemsCssClass' => 'list',
+	'filterCssClass' => 'filter',
+	'summaryCssClass' => 'results',
+	'pagerCssClass' => 'links',
+	'htmlOptions' => array(
+		'class' => ''
+	),
+	'cssFile' => false,
 	'dataProvider' => $model->search(),
 	'filter' => $model,
 	'columns' => array(
 		array(
 			'selectableRows' => 2,
-			'footer' => CHtml::button(Yii::t('app', 'Grid View Delete'), array(
-				'onclick' => 'GridViewDelete();',
-			)),
 			'class' => 'CCheckBoxColumn',
 			'checkBoxHtmlOptions' => array(
 				// The value is autofill
 				'name' => 'GridViewSelect[]',
 			),
 			'htmlOptions' => array(
-				'style' => 'text-align:center;',
+				'width' => 1,
 			),
 		),
 		array(
@@ -57,7 +54,7 @@ $('.search-form form').submit(function(){
 		),
 		array(
 			'name' => 'top',
-			'value' => '($data->top === 0) ? Yii::t(\'app\', \'No\') : Yii::t(\'app\', \'Yes\')',
+			'value' => '($data->top == 0) ? Yii::t(\'app\', \'No\') : Yii::t(\'app\', \'Yes\')',
 			'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
 		),
 		'sort_id',
@@ -68,11 +65,18 @@ $('.search-form form').submit(function(){
 	        'urlExpression'=>'"backend.php?r=category/index&parent_id=".$data->category_id',
 		),
 		array(
+			'header' => Yii::t('app', 'Grid Actions'),
 			'class' => 'CButtonColumn',
-			'template' => '{update}{delete}',
+			'template' => '{update}&nbsp;{delete}',
 		),
 	),
 )); ?>
+
+
+		</div>
+	</div>
+</div>
+
 
 <script type="text/javascript">
 /*

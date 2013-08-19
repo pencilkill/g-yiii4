@@ -297,13 +297,35 @@ a.button, .list a.button {
 	border-left: 1px solid #DDDDDD;
 	margin-bottom: 20px;
 }
+.list th {
+	border-right: 1px solid #DDDDDD;
+	border-bottom: 1px solid #DDDDDD;
+	text-align: left;
+	padding: 7px;
+}
+.list thead th {
+	background-color: #EFEFEF;
+}
+.list thead th a, .list thead th {
+	text-decoration: none;
+	color: #222222;
+	font-weight: bold;
+}
+.list tbody th a {
+	text-decoration: underline;
+}
+.list tbody th {
+	vertical-align: middle;
+	background: #FFFFFF;
+}
 .list td {
 	border-right: 1px solid #DDDDDD;
 	border-bottom: 1px solid #DDDDDD;
+	text-align: left;
+	padding: 7px;
 }
 .list thead td {
 	background-color: #EFEFEF;
-	padding: 0px 5px;
 }
 .list thead td a, .list thead td {
 	text-decoration: none;
@@ -315,7 +337,6 @@ a.button, .list a.button {
 }
 .list tbody td {
 	vertical-align: middle;
-	padding: 0px 5px;
 	background: #FFFFFF;
 }
 .list .left {

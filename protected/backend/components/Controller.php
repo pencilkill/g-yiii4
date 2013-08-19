@@ -38,6 +38,8 @@ class Controller extends RController
 		parent::init();
 		// set language
 		$this->languages();
+		// pageTitle
+		$this->pageTitle = Yii::app()->name;
 	}
 
 	public function filters() {

@@ -2,9 +2,6 @@
 /* @var $this SiteController */
 /* @var $model LoginForm */
 /* @var $form CActiveForm  */
-
-$this->pageTitle=Yii::app()->name;
-
 ?>
 
 <div id="content">
@@ -13,11 +10,11 @@ $this->pageTitle=Yii::app()->name;
       <h1><img src="_ozman/image/lockscreen.png" alt="" /><?php echo Yii::t('app', 'Login'); ?></h1>
     </div>
     <div class="content" style="min-height: 150px; overflow: hidden;">
-    
+
     <?php if(Yii::app()->user->hasFlash('warning')): ?>
     <div class="warning"><?php echo Yii::app()->user->getFlash('warning'); ?></div>
     <?php endif;?>
-	
+
 		<?php $form=$this->beginWidget('CActiveForm', array(
 			'id'=>'login-form',
 			'enableClientValidation'=>false,

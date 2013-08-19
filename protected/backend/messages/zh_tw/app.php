@@ -23,7 +23,7 @@ return array (
   'Confirm Grid View Delete?' => '確定要刪除選中項目嗎？',
   'Confirm Gallery Image Delete?' => '確定要刪除選中图片嗎？',
   'Create' => '新增',
-  'Delete' => '新增',
+  'Delete' => '刪除',
   'Grid Actions' => '操作',
   'Grid View Delete' => '刪除',
   'Gallery Image Delete' => '刪除',
@@ -42,6 +42,7 @@ return array (
   'Tabs Basic' => '基本設置',
   'Update' => '編輯',
   'View' => '查看',
+  'Welcome to administration panel:' => '您已登錄為：',
   'Yes' => '是',
   'Your request is invalid.' => '您的請求無效。',
 );

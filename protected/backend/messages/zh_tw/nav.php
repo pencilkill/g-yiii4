@@ -18,12 +18,16 @@
  */
 return array (
   'Admin' => '管理員',
+  'Catalog' => '商品管理',
   'Category' => '目錄',
   'Dashboard' => '管理首頁',
-  'Home' => '首頁',
-  'Information' => '單頁',
-  'News' => '新聞',
-  'Pic' => '圖片',
+  'Design Team' => '元伸網頁設計',
+  'Exit System' => '退出系統',
+  'Information' => '單一頁面',
+  'News' => '最新消息',
+  'Pic' => '圖片管理',
   'Product' => '商品',
-  'Setting' => '设置',
+  'Setting' => '網站設定',
+  'Site Frontend' => '網站首頁',
+  'System' => '系統設定',
 );

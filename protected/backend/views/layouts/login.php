@@ -4,6 +4,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="language" content="en" />
+<meta name="keywords" content="<?php echo $this->pageTitle; ?>" />
+<meta name="description" content="<?php echo $this->pageTitle; ?>" />
 <!-- core jquery -->
 <?php Yii::app()->clientScript->registerCoreScript('jquery');?>
 <title><?php echo $this->pageTitle; ?></title>
