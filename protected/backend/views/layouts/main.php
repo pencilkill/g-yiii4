@@ -1,4 +1,4 @@
-<?php /* @var $this Controller */ ?>
+<?php /* @var Yii::app() Controller */ ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
@@ -11,9 +11,7 @@
 <title><?php echo $this->pageTitle; ?></title>
 
 <link rel="stylesheet" type="text/css" href="_ozman/stylesheet/stylesheet.css" />
-<link type="text/css" href="_ozman/javascript/jquery/ui/themes/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
 
-<script type="text/javascript" src="_ozman/javascript/jquery/ui/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="_ozman/javascript/jquery/php.js"></script>
 <script type="text/javascript" src="_ozman/javascript/jquery/tabs.js"></script>
 <script type="text/javascript" src="_ozman/javascript/jquery/superfish/js/superfish.js"></script>
@@ -57,23 +55,24 @@
       <li id="dashboard"><a href="<?php echo Yii::app()->homeUrl; ?>" class="top"><?php echo Yii::t('nav', 'Dashboard'); ?></a></li>
       <li id="catalog"><a class="top"><?php echo Yii::t('nav', 'Catalog'); ?></a>
         <ul>
-          <li><a href="<?php echo $this->createUrl('category/index', array()); ?>"><?php echo Yii::t('nav', 'Category'); ?></a></li>
-          <li><a href="<?php echo $this->createUrl('product/index', array()); ?>"><?php echo Yii::t('nav', 'Product'); ?></a></li>
+          <li><a href="<?php echo Yii::app()->createUrl('category/index', array()); ?>"><?php echo Yii::t('nav', 'Category'); ?></a></li>
+          <li><a href="<?php echo Yii::app()->createUrl('product/index', array()); ?>"><?php echo Yii::t('nav', 'Product'); ?></a></li>
         </ul>
       </li>
-	  <li id="news"><a href="<?php echo $this->createUrl('news/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'News'); ?></a></li>
-      <li id="information"><a href="<?php echo $this->createUrl('information/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Information'); ?></a></li>
-      <li id="pic"><a href="<?php echo $this->createUrl('pic/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Pic'); ?></a></li>
+	  <li id="news"><a href="<?php echo Yii::app()->createUrl('news/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'News'); ?></a></li>
+      <li id="information"><a href="<?php echo Yii::app()->createUrl('information/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Information'); ?></a></li>
+      <li id="pic"><a href="<?php echo Yii::app()->createUrl('pic/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Pic'); ?></a></li>
+      <li id="admin"><a href="<?php echo Yii::app()->createUrl('admin/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Admin'); ?></a></li>
       <li id="system"><a class="top"><?php echo Yii::t('nav', 'System'); ?></a>
         <ul>
-          <li><a href="<?php echo $this->createUrl('admin/index', array('tpid' => '0')); ?>"><?php echo Yii::t('nav', 'Admin'); ?></a></li>
-          <li><a href="<?php echo $this->createUrl('setting/index', array('tpid' => '0')); ?>"><?php echo Yii::t('nav', 'Setting'); ?></a></li>
+          <li><a href="<?php echo Yii::app()->createUrl('admin/account', array()); ?>"><?php echo Yii::t('nav', 'Account'); ?></a></li>
+          <li><a href="<?php echo Yii::app()->createUrl('setting/index', array()); ?>"><?php echo Yii::t('nav', 'Setting'); ?></a></li>
         </ul>
       </li>
     </ul>
     <ul class="right">
       <li id="store"><a onclick="window.open('<?php echo Yii::app()->baseUrl; ?>');" class="top"><?php echo Yii::t('nav', 'Site Frontend'); ?></a></li>
-      <li id="exit"><a class="top" href="<?php echo $this->createUrl('site/logout', array()); ?>"><?php echo Yii::t('nav', 'Exit System'); ?></a></li>
+      <li id="exit"><a class="top" href="<?php echo Yii::app()->createUrl('site/logout', array()); ?>"><?php echo Yii::t('nav', 'Exit System'); ?></a></li>
     </ul>
     <script type="text/javascript">
     jQuery(function($) {
@@ -129,7 +128,7 @@ jQuery(function($) {
 		if (part[1]) {
 			url += '/' + part[1];
 		}
-
+		console.log('a[href*=\'' + url + '\']');
 		$('a[href*=\'' + url + '\']').parents('li[id]').addClass('selected');
 	}
 });

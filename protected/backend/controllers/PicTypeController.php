@@ -1,5 +1,6 @@
 <?php
 
+
 class PicTypeController extends GxController {
 
 
@@ -41,12 +42,13 @@ class PicTypeController extends GxController {
 		}
 
 		$this->render('create', array(
-			'model' => $model
+			'model' => $model,
 		));
 	}
 
 	public function actionUpdate($id) {
 		$model = $this->loadModel($id, 'PicType');
+
 		$this->performAjaxValidationEx(array(
 				array(
 					'model' => $model,

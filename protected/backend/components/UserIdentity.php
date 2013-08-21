@@ -23,6 +23,9 @@ class UserIdentity extends CUserIdentity
 
 		if($user===null){
 			$this->errorCode=self::ERROR_USERNAME_INVALID;
+		}else if(!($user->super || $user->status)){
+			// 不是超級管理員，且帳號被停用
+			$this->errorCode=self::ERROR_UNKNOWN_IDENTITY;
 		}else if(!$user->validatePassword($this->password)){
 			$this->errorCode=self::ERROR_PASSWORD_INVALID;
 		}else{

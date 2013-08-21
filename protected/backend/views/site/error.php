@@ -1,15 +1,40 @@
 <?php
-/* @var $this SiteController */
-/* @var $error array */
 
-$this->pageTitle=Yii::app()->name . ' - Error';
-$this->breadcrumbs=array(
-	'Error',
+$this->breadcrumbs = array(
+	Yii::t('error', 'Error Page'),
 );
+
 ?>
+<div id="content">
+	<div class="breadcrumb">
+	<?php if(isset($this->breadcrumbs)):?>
+		<?php $this->widget('zii.widgets.CBreadcrumbs', array(
+			'links'=>$this->breadcrumbs,
+		)); ?><!-- breadcrumbs -->
+	<?php endif?>
+	</div>
 
-<h2>Error <?php echo $code; ?></h2>
+	<?php foreach(Yii::app()->user->getFlashes() as $key => $message) :?>
+	<div class="<?php echo $key?>"><?php echo $message?></div>
+	<?php endforeach;?>
 
-<div class="error">
-<?php echo CHtml::encode($message); ?>
+	<div class="box">
+		<div class="content">
+			<h2><?php echo Yii::t('error', "Error{$code}")?></h2>
+
+			<div class="error">
+				<?php echo $message ? CHtml::encode($message) : Yii::t('error', "Error{$code} Message"); ?>
+			</div>
+
+		</div>
+	</div>
 </div>
+<style type="text/css">
+.box {
+	border: 1px solid #ccc;
+}
+.content {
+	margin: 20px;
+	border: 1px solid #ccc;
+}
+</style>

@@ -55,7 +55,7 @@ class Controller extends RController
 			'where' => array(
 				'status = 1',
 			),
-			'order' => "field(code, '".Yii::app()->language."') desc, sort desc",
+			'order' => "field(code, '".Yii::app()->language."') desc, sort_id desc",
 		);
 
 		$languages = Yii::app()->db->createCommand($qa)->queryAll();

@@ -25,4 +25,5 @@ return array (
   'Status' => '啟用',
   'Top' => '置頂',
   'Update Time' => '更新時間',
+  'Parent_id should be at least one which has no sub categories' => '商品分類至少一個，且對應分類下不能有子分類'
 );

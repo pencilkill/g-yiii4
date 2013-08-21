@@ -15,11 +15,13 @@
  * @property string $email
  * @property string $password
  * @property integer $status
+ * @property integer $super
  * @property string $create_time
  * @property string $update_time
  *
  */
 abstract class BaseAdmin extends GxActiveRecord {
+
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
@@ -40,11 +42,11 @@ abstract class BaseAdmin extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('name, username, email', 'required'),
-			array('status', 'numerical', 'integerOnly'=>true),
+			array('status, super', 'numerical', 'integerOnly'=>true),
 			array('name, username, email, password', 'length', 'max'=>32),
 			array('create_time, update_time', 'safe'),
-			array('password, status, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('admin_id, name, username, email, password, status, create_time, update_time', 'safe', 'on'=>'search'),
+			array('status, super, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('admin_id, name, username, email, password, status, super, create_time, update_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -66,6 +68,7 @@ abstract class BaseAdmin extends GxActiveRecord {
 			'email' => Yii::t('M/admin', 'Email'),
 			'password' => Yii::t('M/admin', 'Password'),
 			'status' => Yii::t('M/admin', 'Status'),
+			'super' => Yii::t('M/admin', 'Super'),
 			'create_time' => Yii::t('M/admin', 'Create Time'),
 			'update_time' => Yii::t('M/admin', 'Update Time'),
 		);
@@ -80,11 +83,18 @@ abstract class BaseAdmin extends GxActiveRecord {
 		$criteria->compare('email', $this->email, true);
 		$criteria->compare('password', $this->password, true);
 		$criteria->compare('status', $this->status);
+		$criteria->compare('super', $this->super);
 		$criteria->compare('create_time', $this->create_time, true);
 		$criteria->compare('update_time', $this->update_time, true);
 
+
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
+			'sort'=>array(
+				'attributes'=>array(
+					'*',
+				),
+			),
 		));
 	}
 

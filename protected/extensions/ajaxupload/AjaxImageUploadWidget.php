@@ -95,6 +95,7 @@ class AjaxImageUploadWidget extends CInputWidget
 			'prefix' => $prefix,
 			'preview' => $preview,
 			'previewX' => $previewX,
+			'resize' => $imageCache['resize'],
 		));
     }
 

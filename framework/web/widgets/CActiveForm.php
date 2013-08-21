@@ -161,7 +161,7 @@ class CActiveForm extends CWidget
 	 */
 	public $stateful=false;
 	/**
-	 * @var string the CSS class name for error messages. 
+	 * @var string the CSS class name for error messages.
 	 * Since 1.1.14 this defaults to 'errorMessage' defined in {@link CHtml::$errorMessageCss}.
 	 * Individual {@link error} call may override this value by specifying the 'class' HTML option.
 	 */
@@ -331,7 +331,7 @@ class CActiveForm extends CWidget
 			echo CHtml::statefulForm($this->action, $this->method, $this->htmlOptions);
 		else
 			echo CHtml::beginForm($this->action, $this->method, $this->htmlOptions);
-			
+
 		if($this->errorMessageCssClass===null)
 			$this->errorMessageCssClass=CHtml::$errorMessageCss;
 	}
@@ -410,9 +410,9 @@ class CActiveForm extends CWidget
 	 * <ul>
 	 * <li>inputID</li>
 	 * </ul>
-	 * When an CActiveForm input field uses a custom ID, for ajax/client validation to work properly 
+	 * When an CActiveForm input field uses a custom ID, for ajax/client validation to work properly
 	 * inputID should be set to the same ID
-	 * 
+	 *
 	 * Example:
 	 * <pre>
 	 * <div class="form-element">
@@ -421,7 +421,7 @@ class CActiveForm extends CWidget
 	 *    <?php echo $form->error($model,'attribute',array('inputID'=>'custom-id')); ?>
 	 * </div>
 	 * </pre>
-	 * 
+	 *
 	 * When client-side validation is enabled, an option named "clientValidation" is also recognized.
 	 * This option should take a piece of JavaScript code to perform client-side validation. In the code,
 	 * the variables are predefined:

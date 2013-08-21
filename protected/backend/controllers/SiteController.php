@@ -3,27 +3,28 @@
 class SiteController extends Controller
 {
 
-	public function allowedActions()
-	{
+	/**
+	 * Cause the RBAC module rights can not get actions returned from controller->actions() well
+	 * Allowedactions() authorize for guest role here and
+	 * RBAC rights will authorize nothing for guest role
+	 */
+	public function allowedActions(){
 		return 'error, login, logout, captcha';
 	}
-
 	/**
 	 * Declares class-based actions.
 	 */
 	public function actions()
 	{
 		return array(
-		// captcha action renders the CAPTCHA image displayed on the contact page
-			'captcha'=>array(
+			// captcha action renders the CAPTCHA image displayed on the contact page
+			'captcha' => array(
 				'class'=>'CCaptchaAction',
 				'backColor'=>0xFFFFFF,
-		),
-		// page action renders "static" pages stored under 'protected/views/site/pages'
-		// They can be accessed via: index.php?r=site/page&view=FileName
-			'page'=>array(
-				'class'=>'CViewAction',
-		),
+				'minLength'=>6,
+				'maxLength'=>6,
+				'testLimit'=>1,
+			),
 		);
 	}
 
@@ -52,31 +53,6 @@ class SiteController extends Controller
 		}
 	}
 
-	/**
-	 * Displays the contact page
-	 */
-	public function actionContact()
-	{
-		$model=new ContactForm;
-		if(isset($_POST['ContactForm']))
-		{
-			$model->attributes=$_POST['ContactForm'];
-			if($model->validate())
-			{
-				$name='=?UTF-8?B?'.base64_encode($model->name).'?=';
-				$subject='=?UTF-8?B?'.base64_encode($model->subject).'?=';
-				$headers="From: $name <{$model->email}>\r\n".
-					"Reply-To: {$model->email}\r\n".
-					"MIME-Version: 1.0\r\n".
-					"Content-type: text/plain; charset=UTF-8";
-
-				mail(Yii::app()->params['adminEmail'],$subject,$model->body,$headers);
-				Yii::app()->user->setFlash('contact','Thank you for contacting us. We will respond to you as soon as possible.');
-				$this->refresh();
-			}
-		}
-		$this->render('contact',array('model'=>$model));
-	}
 
 	/**
 	 * Displays the login page
@@ -88,11 +64,13 @@ class SiteController extends Controller
 		$model=new LoginForm;
 
 		// if it is ajax validation request
+		/*
 		if(isset($_POST['ajax']) && $_POST['ajax']==='login-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
+		*/
 
 		// collect user input data
 		if(isset($_POST['LoginForm']))
@@ -117,7 +95,7 @@ class SiteController extends Controller
 		Yii::app()->user->logout();
 		$this->redirect(Yii::app()->homeUrl);
 	}
-	
+
 	/**
 	 * swfuplod
 	 * @author sam@ozchamp.net
@@ -165,23 +143,23 @@ class SiteController extends Controller
 			$thumbSrc = Yii::app()->image->load($fullPath.$rename)
 					->resize($resize['width'], $resize['height'], $resize['master'])
 					->cache();
-			
+
 			$serverData['attributes']['name'] = $file->name;
 			$serverData['attributes']['type'] = $file->type;
 			$serverData['attributes']['pic'] = $path.'/'.$rename;
-		
+
 			$serverData['thumbSrc'] = $thumbSrc;
-			
+
 			$image = new $modelClass;
 			$image->setAttributes($serverData['attributes']);
-			
+
 			$imageView = Yii::app()->getRequest()->getParam('imageView');
 			$imageViewFile=$this->getViewFile($imageView);
 			if(empty($imageViewFile)){
 				$viewFile = Yii::getPathOfAlias('frontend.extensions.swfupload.views').'/imageView.php';
 			}
-			$serverData['imageView'] = $this->renderFile($viewFile, array('image'=>$image, 'src'=>$thumbSrc, 'index'=>uniqid()), true);
-			
+			$serverData['imageView'] = $this->renderFile($viewFile, array('image'=>$image, 'src'=>$thumbSrc, 'index'=>uniqid(), 'resize' => $resize), true);
+
 //			$serverData['modelClass'] = $modelClass;
 //			$serverData['attributes'] = $gallery->getAttributes();
 //			$serverData['languages'] = Yii::app()->getRequest()->getParam('languages') ? $this->languages : null;
@@ -195,7 +173,7 @@ class SiteController extends Controller
 		}
 		Yii::app()->end();
 	}
-	
+
 	/**
 	 * ajaxupload
 	 * @author sam@ozchamp.net
@@ -223,7 +201,7 @@ class SiteController extends Controller
 
 			// Here should be checked if necessary
 			$file->saveAs($fullPath.$rename);
-			
+
 			$src = '';
 
 			if(strtolower(strchr($file->type, '/', true))=='image'){
@@ -238,11 +216,11 @@ class SiteController extends Controller
 						->resize($resize['width'], $resize['height'], $resize['master'])
 						->cache();
 			}
-			
+
 			$severData['file'] = $path.'/'.$rename;
 			$severData['src'] = $src;
 			$severData['success'] = Yii::t('app', 'Upload Successfully');
-			
+
 			echo json_encode($severData);
 		}catch(Exception $e){
 			$severData['error'] = $e->getMessage();

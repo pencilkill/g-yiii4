@@ -1,25 +1,18 @@
-<div class="form">
 
-<?php
-	$juiTabs = array();
-	
-	foreach ($this->languages as $language) {
-		$juiTabs[$language['title']] = $this->renderPartial('//setting/_i18n/meta', array('language_id' => $language['language_id']), true);
-	}
-?>
+<div id="tab-<?php echo $group?>">
 
-<?php $form = $this->beginWidget('GxActiveForm', array(
-	'id' => 'product-form',
-	'enableAjaxValidation' => true,
-));
-?>
-<?php
-$this->widget('zii.widgets.jui.CJuiTabs', array(
-	'tabs'=>$juiTabs,
-));
-?>
-<?php
-echo GxHtml::submitButton(Yii::t('app', 'Save'));
-$this->endWidget();
-?>
-</div><!-- form -->
+  <div id="<?php echo $group?>-languages" class="htabs">
+    <?php foreach ($this->languages as $language) : ?>
+    <a href="#<?php echo $group?>-languages-<?php echo $language['language_id']?>"><?php echo $language['title']; ?></a>
+    <?php endforeach; ?>
+  </div>
+
+  <?php foreach ($this->languages as $language) : ?>
+  <div id="<?php echo $group?>-languages-<?php echo $language['language_id']?>">
+
+		<?php $this->renderPartial("//setting/{$group}/_i18n", array('language_id' => $language['language_id']))?>
+
+  </div>
+  <?php endforeach; ?>
+
+</div>

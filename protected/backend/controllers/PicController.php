@@ -1,5 +1,6 @@
 <?php
 
+
 class PicController extends GxController {
 
 
@@ -8,20 +9,40 @@ class PicController extends GxController {
 		$model = new Pic('search');
 		$model->unsetAttributes();
 
+		$i18n = new PicI18n('search');
+		$i18n->unsetAttributes();
+
+		$model->searchI18n = $i18n;
+
 		if (isset($_GET['Pic']))
 			$model->setAttributes($_GET['Pic']);
 
+		if (isset($_GET['PicI18n']))
+			$i18n->setAttributes($_GET['PicI18n']);
+
 		$this->render('index', array(
 			'model' => $model,
+			'i18n' => $i18n,
 		));
 	}
 
 	public function actionCreate() {
 		$model = new Pic;
 
+		$i18ns = array();
+
+		foreach($this->languages as $val){
+			$i18n = new PicI18n;
+			$i18ns[$val['language_id']] = $i18n;
+		}
+
 		$this->performAjaxValidationEx(array(
 				array(
 					'model' => $model,
+				),
+				array(
+					'model' => $i18ns,
+					'many' => true,
 				),
 			),
 			'pic-form'
@@ -30,26 +51,49 @@ class PicController extends GxController {
 		if (isset($_POST['Pic'])) {
 			$model->setAttributes($_POST['Pic']);
 
-			if ($model->validate()) {
+			$valid = true;
+
+			foreach($this->languages as $val){
+				$i18ns[$val['language_id']]->setAttributes($_POST['PicI18n'][$val['language_id']]);
+				$i18ns[$val['language_id']]->language_id = $val['language_id'];
+				$i18ns[$val['language_id']]->pic_id = 0;
+
+				$valid = $i18ns[$val['language_id']]->validate() && $valid;
+			}
+
+
+			if ($valid && $model->validate()) {
 				$model->save(false);
+
+				foreach($this->languages as $val){
+					$i18ns[$val['language_id']]->pic_id = $model->pic_id;
+					$i18ns[$val['language_id']]->save();
+				}
 				if (Yii::app()->getRequest()->getIsAjaxRequest())
 					Yii::app()->end();
 				else
 					$this->redirect(array('index'));
-
 			}
 		}
 
 		$this->render('create', array(
-			'model' => $model
+			'model' => $model,
+			'i18ns' => $i18ns,
 		));
 	}
 
 	public function actionUpdate($id) {
 		$model = $this->loadModel($id, 'Pic');
+
+		$i18ns = $model->picI18ns;
+
 		$this->performAjaxValidationEx(array(
 				array(
 					'model' => $model,
+				),
+				array(
+					'model' => $i18ns,
+					'many' => true,
 				),
 			),
 			'pic-form'
@@ -57,9 +101,22 @@ class PicController extends GxController {
 
 		if (isset($_POST['Pic'])) {
 			$model->setAttributes($_POST['Pic']);
+			$valid = true;
 
-			if ($model->validate()) {
+			foreach($this->languages as $val){
+				$i18ns[$val['language_id']]->setAttributes($_POST['PicI18n'][$val['language_id']]);
+				$i18ns[$val['language_id']]->language_id = $val['language_id'];
+				$i18ns[$val['language_id']]->pic_id = $model->pic_id;
+
+				$valid = $i18ns[$val['language_id']]->validate() && $valid;
+			}
+
+			if ($valid && $model->validate()) {
 				$model->save(false);
+
+				foreach($this->languages as $val){
+					$i18ns[$val['language_id']]->save();
+				}
 				if (Yii::app()->getRequest()->getIsAjaxRequest())
 					Yii::app()->end();
 				else
@@ -69,6 +126,7 @@ class PicController extends GxController {
 
 		$this->render('update', array(
 			'model' => $model,
+			'i18ns' => $i18ns,
 		));
 	}
 

@@ -20,5 +20,6 @@ return array (
   'Incorrect username or password.' => '帳號或密碼不正確',
   'Password' => '密碼',
   'Remember me next time' => '記住密碼',
+  'Verify Code' => '驗證碼',
   'Username' => '帳號',
 );

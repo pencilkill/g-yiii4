@@ -13,12 +13,14 @@
  * @property integer $information_id
  * @property integer $language_id
  * @property string $title
+ * @property string $keywords
  * @property string $description
  *
  * @property Information $information
  * @property Language $language
  */
 abstract class BaseInformationI18n extends GxActiveRecord {
+
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
@@ -38,10 +40,10 @@ abstract class BaseInformationI18n extends GxActiveRecord {
 
 	public function rules() {
 		return array(
-			array('information_id, language_id, title, description', 'required'),
+			array('information_id, language_id, title, keywords, description', 'required'),
 			array('information_id, language_id', 'numerical', 'integerOnly'=>true),
 			array('title', 'length', 'max'=>256),
-			array('information_i18n_id, information_id, language_id, title, description', 'safe', 'on'=>'search'),
+			array('information_i18n_id, information_id, language_id, title, keywords, description', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -63,6 +65,7 @@ abstract class BaseInformationI18n extends GxActiveRecord {
 			'information_id' => null,
 			'language_id' => null,
 			'title' => Yii::t('M/informationi18n', 'Title'),
+			'keywords' => Yii::t('M/informationi18n', 'Keywords'),
 			'description' => Yii::t('M/informationi18n', 'Description'),
 			'information' => null,
 			'language' => null,
@@ -76,10 +79,17 @@ abstract class BaseInformationI18n extends GxActiveRecord {
 		$criteria->compare('information_id', $this->information_id);
 		$criteria->compare('language_id', $this->language_id);
 		$criteria->compare('title', $this->title, true);
+		$criteria->compare('keywords', $this->keywords, true);
 		$criteria->compare('description', $this->description, true);
+
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
+			'sort'=>array(
+				'attributes'=>array(
+					'*',
+				),
+			),
 		));
 	}
 

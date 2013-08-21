@@ -18,10 +18,10 @@
  */
 return array (
   'Admin' => '管理員',
+  'Account' => '帳號設定',
   'Catalog' => '商品管理',
   'Category' => '目錄',
   'Dashboard' => '管理首頁',
-  'Design Team' => '元伸網頁設計',
   'Exit System' => '退出系統',
   'Information' => '單一頁面',
   'News' => '最新消息',

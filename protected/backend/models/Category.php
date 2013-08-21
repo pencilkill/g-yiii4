@@ -4,20 +4,20 @@ Yii::import('backend.models._base.BaseCategory');
 
 class Category extends BaseCategory
 {
-	
+
 	public function rules() {
-		return array_merge(
+		return CMap::mergeArray(
 			parent::rules(),
 			array(
 				array('parent_id', 'validParentId'),
 			)
 		);
 	}
-	
+
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
-	
+
 	/**
 	 *  Get all child node base on $parent
 	 *  category level will be added on for each node
@@ -30,17 +30,17 @@ class Category extends BaseCategory
 		$storage = array();
 		$language_id = Yii::app()->getController()->language_id;
 		$callback = null;
-		
+
 		$callback = function($parent, $level, $language_id) use ($storage, &$callback){
 	        $criteria = new CDbCriteria;
 	        $criteria->addCondition(array("parent_id='{$parent}'"));
-	        
+
 	        $criteria->with = array('categoryI18ns'=>array('condition'=>"language_id='{$language_id}'"));
 			$criteria->group = 't.category_id';
 			$criteria->together = true;
-			
+
 	        $model = Category::model()->findAll($criteria);
-	        
+
 	        foreach ($model as $key) {
 	        	$subCategories = call_user_func($callback, $key->category_id, $level+1, $language_id);
 	        	$storage[] = array(
@@ -55,10 +55,10 @@ class Category extends BaseCategory
 
 	        return $storage;
 		};
-		
+
 		return $callback($parent, $level, $language_id);
     }
-    
+
 	/**
 	 *  Get all child node id base on $parent
 	 * @return array
@@ -67,13 +67,13 @@ class Category extends BaseCategory
 	public static function getCategoryIds($parent=0, $self=false) {
 		$storage = array();
 		$callback = null;
-		
+
 		$callback = function($parent, $self) use ($storage, &$callback){
 	        $criteria = new CDbCriteria;
 	        $criteria->addCondition(array("parent_id='{$parent}'"));
-	        
+
 	        $model = Category::model()->findAll($criteria);
-	        
+
 	        foreach ($model as $key) {
 	        	$storage[] = $key->category_id;
 	        	$storage = array_merge($storage, call_user_func($callback, $key->category_id, $self));
@@ -81,14 +81,14 @@ class Category extends BaseCategory
 
 	        return $storage;
 		};
-		
+
 		$categoryIds = $callback($parent, $self);
 
 		$self && array_unshift($categoryIds, $parent);
-		
+
 		return $categoryIds;
     }
-    
+
     public function validParentId(){
     	$categoryIds = Category::getCategoryIds($this->category_id, true);
 

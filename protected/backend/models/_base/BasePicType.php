@@ -38,7 +38,7 @@ abstract class BasePicType extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('pic_type', 'required'),
-			array('pic_type', 'length', 'max'=>32),
+			array('pic_type', 'length', 'max'=>256),
 			array('create_time, update_time', 'safe'),
 			array('create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
 			array('pic_type_id, pic_type, create_time, update_time', 'safe', 'on'=>'search'),

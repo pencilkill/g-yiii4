@@ -26,12 +26,14 @@ return array (
 	'Meta Description' => '網站描述',
 // mail
 	'Mail' => '郵件主機',
-	'Mail Smtp Host' => '主機',
+	'Mail Email' => '郵箱',
+	'Mail Smtp' => '主機',
+	'Mail Smtp Host' => '服務器',
 	'Mail Smtp User' => '帳號',
 	'Mail Smtp Password' => '密碼',
 	'Mail Smtp Port' => '端口',
-	'Mail Contact Email' => '聯絡郵箱',
+	'Mail Email Contact' => '聯絡郵箱',
 // analysis
 	'Analysis' => '流量分析',
-	'Analysis Google' => 'Google分析',
+	'Analysis Google' => 'Google',
 );

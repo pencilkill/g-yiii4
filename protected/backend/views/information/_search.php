@@ -10,8 +10,8 @@
 
 
 	<div class="row">
-		<?php echo $form->label($model, 'sort'); ?>
-		<?php echo $form->textField($model, 'sort'); ?>
+		<?php echo $form->label($model, 'sort_id'); ?>
+		<?php echo $form->textField($model, 'sort_id'); ?>
 	</div>
 
 

@@ -5,9 +5,6 @@ $this->breadcrumbs = array(
 	Yii::t('app', 'Create'),
 );
 
-$this->menu = array(
-	array('label'=>Yii::t('app', 'List') . ' ' . $model->label(2), 'url' => array('index')),
-);
 ?>
 
 <?php
@@ -15,5 +12,7 @@ $this->renderPartial('_formI18n', array(
 		'model' => $model,
 		'i18ns' => $i18ns,
 		'categories' => $categories,
-		'buttons' => 'create'));
+		'buttons' => 'create'
+	)
+);
 ?>

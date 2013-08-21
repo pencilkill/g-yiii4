@@ -35,4 +35,44 @@ class GxActiveForm extends CActiveForm {
 		return GxHtml::activeCheckBoxList($model, $attribute, $data, $htmlOptions);
 	}
 
+	/**
+	 * conbine validate(), validateTabular()
+	 * @author sam@ozchamp.net
+	 * @see validate()
+	 * @see validateTabular()
+	 * @return string the JSON representation of the validation error messages.
+	 */
+	public static function validateEx($models, $loadInput=true)
+	{
+		$result=array();
+
+		if(!is_array($models))
+			$models=array($models);
+
+		foreach($models as $model){
+			if(! isset($model['model'])) continue;
+			$mods = $model['model'];
+			$attributes = isset($model['attributes']) ? $model['attributes'] : null;
+			$many = isset($model['many']) ? $model['many'] : false;
+
+			if($many){
+				foreach($mods as $i=>$mod)
+				{
+					if($loadInput && isset($_POST[get_class($mod)][$i]))
+						$mod->attributes=$_POST[get_class($mod)][$i];
+					$mod->validate($attributes);
+					foreach($mod->getErrors() as $attribute=>$errors)
+						$result[CHtml::activeId($mod,'['.$i.']'.$attribute)]=$errors;
+				}
+			}else{
+				if($loadInput && isset($_POST[get_class($mods)]))
+				$mods->attributes=$_POST[get_class($mods)];
+				$mods->validate($attributes);
+				foreach($mods->getErrors() as $attribute=>$errors)
+					$result[CHtml::activeId($mods,$attribute)]=$errors;
+			}
+		}
+
+		return function_exists('json_encode') ? json_encode($result) : CJSON::encode($result);
+	}
 }

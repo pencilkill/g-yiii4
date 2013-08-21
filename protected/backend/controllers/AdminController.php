@@ -1,12 +1,13 @@
 <?php
 
+
 class AdminController extends GxController {
-
-
 
 	public function actionIndex() {
 		$model = new Admin('search');
 		$model->unsetAttributes();
+		// except super ar
+		$model->super = 0;
 
 		if (isset($_GET['Admin']))
 			$model->setAttributes($_GET['Admin']);
@@ -17,14 +18,34 @@ class AdminController extends GxController {
 	}
 
 	public function actionCreate() {
-		$model = new Admin('create');
+		$model = new Admin;
 
-		$this->performAjaxValidation($model, 'admin-form');
+		// RBAC
+		$authorizer = Yii::app()->getModule("rights")->getAuthorizer();
+		$roles = $authorizer->getRoles(false);
+
+		$this->performAjaxValidationEx(array(
+				array(
+					'model' => $model,
+				),
+			),
+			'admin-form'
+		);
 
 		if (isset($_POST['Admin'])) {
 			$model->setAttributes($_POST['Admin']);
+			// 超級管理員只可手動設定
+			$model->super = 0;
 
-			if ($model->save(true)) {
+
+			if ($model->validate()) {
+				$model->save(false);
+
+				// RBAC
+				if(array_key_exists($model->defaultRole, $roles)){
+					$authorizer->authManager->assign($model->defaultRole, $model->admin_id);
+				}
+
 				if (Yii::app()->getRequest()->getIsAjaxRequest())
 					Yii::app()->end();
 				else
@@ -33,24 +54,84 @@ class AdminController extends GxController {
 		}
 
 		$this->render('create', array(
-			'model' => $model
+			'model' => $model,
+			//'roles' => $roles,
 		));
 	}
 
 	public function actionUpdate($id) {
 		$model = $this->loadModel($id, 'Admin');
 
-		$this->performAjaxValidation($model, 'admin-form');
+		// RBAC
+		//$authorizer = Yii::app()->getModule("rights")->getAuthorizer();
+		//$roles = $authorizer->getRoles();
+
+		$this->performAjaxValidationEx(array(
+				array(
+					'model' => $model,
+				),
+			),
+			'admin-form'
+		);
 
 		if (isset($_POST['Admin'])) {
+			// 超級管理員只可手動設定
+			if(isset($_POST['Admin']['super'])) unset($_POST['Admin']['super']);
+
 			$model->setAttributes($_POST['Admin']);
 
-			if ($model->save(true)) {
-				$this->redirect(array('index'));
+			if ($model->validate()) {
+				$model->save(false);
+
+				// RBAC
+				/*
+				if(array_key_exists($model->defaultRole, $roles)){
+					$authorizer->authManager->assign($model->defaultRole, $model->admin_id);
+				}
+				*/
+
+				if (Yii::app()->getRequest()->getIsAjaxRequest())
+					Yii::app()->end();
+				else
+					$this->redirect(array('index'));
 			}
 		}
 
 		$this->render('update', array(
+			'model' => $model,
+			//'roles' => $roles,
+		));
+	}
+
+	public function actionAccount() {
+		$id = Yii::app()->user->getId();
+
+		$model = $this->loadModel($id, 'Admin');
+
+		$this->performAjaxValidationEx(array(
+				array(
+					'model' => $model,
+				),
+			),
+			'admin-form'
+		);
+
+		if (isset($_POST['Admin'])) {
+			$model->setAttributes($_POST['Admin']);
+
+			if ($model->validate()) {
+				$model->save(false);
+				if (Yii::app()->getRequest()->getIsAjaxRequest())
+					Yii::app()->end();
+				else{
+					Yii::app()->user->setFlash('success', Yii::t('app', 'Operation Success'));
+					$this->refresh();
+					$this->redirect(array('account', array('id' => $id)));
+				}
+			}
+		}
+
+		$this->render('account', array(
 			'model' => $model,
 		));
 	}
@@ -71,9 +152,9 @@ class AdminController extends GxController {
 			$model = new Admin;
 
 			$criteria= new CDbCriteria;
-			$criteria->addInCondition('admin_id', Yii::app()->getRequest()->getPost('selected'));
-			// except super ar
-			$criteria->addCondition('super = 0');
+			$criteria->compare('admin_id', Yii::app()->getRequest()->getPost('selected'));
+			// except super ar, event beforeDelete() has no effect on model()->deleteAll()
+			$criteria->compare('super', 0);
 
 			Admin::model()->deleteAll($criteria);
 

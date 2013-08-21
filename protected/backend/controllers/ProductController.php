@@ -31,9 +31,9 @@ class ProductController extends GxController {
 
 		$gallery = new Product2image;
 		$galleries = $model->product2images;
-		
+
 		$categoryIds = CHtml::listData($model->product2categories, 'category_id', 'product_id');
-		
+
 		$categories = Category::getCategories(0);
 
 		$i18ns = array();
@@ -71,15 +71,15 @@ class ProductController extends GxController {
 
 			if ($valid && $model->validate()) {
 				$model->save(false);
-				
+
 				// i18n
 				foreach($this->languages as $val){
 					$i18ns[$val['language_id']]->product_id = $model->product_id;
 					$i18ns[$val['language_id']]->save();
 				}
-				
+
 				// images
-				if(isset($_POST['Product2categories']) && is_array($_POST['Product2image'])){
+				if(isset($_POST['Product2image']) && is_array($_POST['Product2image'])){
 					foreach ($_POST['Product2image'] as $val) {
 						$image = new Product2image;
 						$image->setAttributes($val);
@@ -87,17 +87,17 @@ class ProductController extends GxController {
 						$image->save();
 					}
 				}
-				
+
 				// product2categories
-				if(isset($_POST['Product2categories']) && is_array($_POST['product2categories'])){
-					foreach ($_POST['product2categories'] as $val) {
+				if(isset($_POST['Product']['product2categories']) && is_array($_POST['Product']['product2categories'])){
+					foreach ($_POST['Product']['product2categories'] as $val) {
 						$product2category = new Product2category;
 						$product2category->setAttributes($val);
 						$product2category->product_id = $model->product_id;
 						$product2category->save();
 					}
 				}
-				
+
 				if (Yii::app()->getRequest()->getIsAjaxRequest())
 					Yii::app()->end();
 				else
@@ -122,11 +122,11 @@ class ProductController extends GxController {
 		$galleries = $model->product2images;
 
 		$i18ns = $model->productI18ns;
-		
+
 		$categoryIds = CHtml::listData($model->product2categories, 'category_id', 'product_id');
-		
+
 		$categories = Category::getCategories(0);
-		
+
 		$this->performAjaxValidationEx(array(
 				array(
 					'model' => $model,
@@ -153,12 +153,12 @@ class ProductController extends GxController {
 
 			if ($valid && $model->validate()) {
 				$model->save(false);
-				
+
 				// I18n
 				foreach($this->languages as $val){
 					$i18ns[$val['language_id']]->save();
 				}
-				
+
 				// images
 				Product2image::model()->deleteAllByAttributes(array('product_id'=>$model->product_id));
 				if(isset($_POST['Product2image']) && is_array($_POST['Product2image'])){
@@ -169,18 +169,18 @@ class ProductController extends GxController {
 						$image->save();
 					}
 				}
-				
+
 				// product2categories
 				Product2category::model()->deleteAllByAttributes(array('product_id'=>$model->product_id));
-				if(isset($_POST['Product2categories']) && is_array($_POST['Product2categories'])){
-					foreach ($_POST['Product2categories'] as $val) {
+				if(isset($_POST['Product']['product2categories']) && is_array($_POST['Product']['product2categories'])){
+					foreach ($_POST['Product']['product2categories'] as $val) {
 						$product2category = new Product2category;
 						$product2category->setAttributes($val);
 						$product2category->product_id = $model->product_id;
 						$product2category->save();
 					}
 				}
-				
+
 				if (Yii::app()->getRequest()->getIsAjaxRequest())
 					Yii::app()->end();
 				else

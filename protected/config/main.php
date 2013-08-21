@@ -76,9 +76,10 @@ return array(
 
 		// uncomment the following to use a MySQL database
 		'db'=>require_once(dirname(__FILE__).'/db.php'),
-		
+
 		'config' => array(
          	'class' => 'ext.EConfig',
+			'strictMode' => false,
 		),
 
 		'image'=>array(
@@ -92,12 +93,16 @@ return array(
 		 'assetManager' => array(
 		 	'forceCopy' => (boolean)YII_DEBUG,
 		 ),
-
+		 // mail
+		 'mail'=>array(
+            'class'=>'application.extensions.mail.mail',
+        ),
+        // error
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
 			'errorAction'=>'site/error',
 		),
-
+		// log
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(

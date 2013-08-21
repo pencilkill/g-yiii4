@@ -54,7 +54,7 @@ class GiixCrudCode extends CrudCode {
 			'where' => array(
 				'status = 1',
 			),
-			'order' => "field(code, '".Yii::app()->language."') desc, sort desc",
+			'order' => "field(code, '".Yii::app()->language."') desc, sort_id desc",
 		);
 
 		$languages = Yii::app()->db->createCommand($qa)->queryAll();
@@ -204,7 +204,7 @@ class GiixCrudCode extends CrudCode {
 			),
 			));\n";
 		} else if (stripos($column->dbType, 'text') !== false) { // Start of CrudCode::generateActiveField code.
-			return "echo \$form->textArea(\$model, \"[{\${$languageColumn}}]{$column->name}\")";
+			return "echo \$form->textArea(\$model, \"[{\${$languageColumn}}]{$column->name}\", array('cols' => 50, 'rows' => 5, 'class' => ''))";
 		} else {
 			$passwordI18n = Yii::t('app', 'password');
 			$passwordI18n = (isset($passwordI18n) && $passwordI18n !== '') ? '|' . $passwordI18n : '';
@@ -303,10 +303,10 @@ class GiixCrudCode extends CrudCode {
 					|| strtoupper($column->dbType) == 'BOOL'
 					|| strtoupper($column->dbType) == 'BOOLEAN') {
 				return "array(
-					'name' => '{$column->name}',
-					'value' => '(\$data->{$column->name} === 0) ? Yii::t(\\'app\\', \\'No\\') : Yii::t(\\'app\\', \\'Yes\\')',
-					'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
-					)";
+			'name' => '{$column->name}',
+			'value' => '(\$data->{$column->name} == 0) ? Yii::t(\\'app\\', \\'No\\') : Yii::t(\\'app\\', \\'Yes\\')',
+			'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
+		)";
 			} else // Common column.
 				return "'{$column->name}'";
 		} else { // FK.
@@ -315,10 +315,10 @@ class GiixCrudCode extends CrudCode {
 			$relationName = $relation[0];
 			$relatedModelClass = $relation[3];
 			return "array(
-				'name'=>'{$column->name}',
-				'value'=>'GxHtml::valueEx(\$data->{$relationName})',
-				'filter'=>GxHtml::listDataEx({$relatedModelClass}::model()->findAllAttributes(null, true)),
-				)";
+		'name'=>'{$column->name}',
+		'value'=>'GxHtml::valueEx(\$data->{$relationName})',
+		'filter'=>GxHtml::listDataEx({$relatedModelClass}::model()->findAllAttributes(null, true)),
+	)";
 		}
 	}
 

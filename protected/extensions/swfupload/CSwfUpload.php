@@ -10,8 +10,14 @@ class CSwfUpload extends CWidget
 	public $postParams=array();
 	public $customSettings=array();
 	public $config=array();
-	
+
 	public $galleries;
+
+	public static function actions(){
+		return array(
+			'upload' => 'upload',
+		);
+	}
 
     public function run()
     {
@@ -28,7 +34,7 @@ class CSwfUpload extends CWidget
 		}
 
 		$config = array(
-            'upload_url'=>CHtml::normalizeUrl(Yii::app()->createUrl('site/swfUpload')),
+            'upload_url' => CHtml::normalizeUrl(Yii::app()->createUrl('site/swfUpload')),
             'post_params' => array(),
             'file_size_limit' => '2 MB',
 			'use_query_string'=>false,
@@ -59,9 +65,11 @@ class CSwfUpload extends CWidget
 		);
 		if(isset($this->postParams))
 		{
-			$postParams = array_merge_recursive(
-				isset($config['post_params']) ? $config['post_params'] : array(),
-				$postParams,
+			$postParams = CMap::mergeArray(
+				CMap::mergeArray(
+					isset($config['post_params']) ? $config['post_params'] : array(),
+					$postParams
+				),
 				$this->postParams
 			);
 		}
@@ -71,9 +79,11 @@ class CSwfUpload extends CWidget
 		);
 		if(isset($this->customSettings))
 		{
-			$customSettings = array_merge_recursive(
-				isset($config['custom_settings']) ? $config['custom_settings'] : array(),
-				$customSettings,
+			$customSettings = CMap::mergeArray(
+				CMap::mergeArray(
+					isset($config['custom_settings']) ? $config['custom_settings'] : array(),
+					$customSettings
+				),
 				$this->customSettings
 			);
 		}
@@ -82,14 +92,14 @@ class CSwfUpload extends CWidget
 		$config['flash_url'] = $baseUrl. '/swfupload.swf';
 		$config['custom_settings'] = $customSettings;
 
-		$config = array_merge_recursive($config, $this->config);
+		$config = CMap::mergeArray($config, $this->config);
 		$config = CJavaScript::encode($config);
 
 		Yii::app()->getClientScript()->registerScript(__CLASS__, "var swfu;swfu = new SWFUpload($config);");
-		
+
 		$galleryView = isset($postParams['galleryView']) ? $postParams['galleryView'] : 'galleryView';
 		$imageView = isset($postParams['imageView']) ? $postParams['imageView'] : 'imageView';
-		
+
 		$galleries = $items= array();
 		if($this->galleries){
 			$galleries = is_array($this->galleries) ? $this->galleries : array($this->galleries);
@@ -102,14 +112,13 @@ class CSwfUpload extends CWidget
 						->resize($resize['width'], $resize['height'], $resize['master'])
 						->cache();
 				$index = uniqid();
-				$items["gallery_item_{$index}"] = $this->render($imageView, array('src'=>$src, 'image'=>$image, 'index'=>$index), true);
+				$items["gallery_item_{$index}"] = $this->render($imageView, array('src'=>$src, 'image'=>$image, 'index'=>$index, 'resize' => $resize), true);
 			}
 		}
-		
+
 		$this->render($galleryView,array(
 			'items' => $items,
 		));
 
     }
-
 }

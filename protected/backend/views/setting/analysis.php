@@ -1,22 +1,14 @@
-<div class="form">
 
+<table class="form">
 
-<?php $form = $this->beginWidget('GxActiveForm', array(
-	'id' => 'setting-form',
-	'enableAjaxValidation' => false,
-));
-?>
-
-		<div class="row">
-		<label>
-		<?php echo Yii::t('setting', 'Analysis Google'); ?>
-		</label>
-		<?php $key = 'analysis_google'; ?>
+<?php $key = 'analysis_google'; ?>
+<tr>
+	<td>
+		<label><?php echo Yii::t('setting', ucwords(strtr($key, array('_' => ' ')))); ?></label>
+	</td>
+	<td>
 		<?php echo CHtml::textArea("Setting[{$key}]", Yii::app()->config->get($key), array('rows'=>5, 'cols'=>50)); ?>
-		</div><!-- row -->
+	</td>
+</tr><!-- row -->
 
-<?php
-echo GxHtml::submitButton(Yii::t('app', 'Save'));
-$this->endWidget();
-?>
-</div><!-- form -->
+</table>

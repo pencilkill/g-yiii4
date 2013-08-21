@@ -23,5 +23,4 @@ return array (
   'Sort' => '排序',
   'Status' => '啟用',
   'Update Time' => '更新時間',
-  'Url' => '連结',
 );

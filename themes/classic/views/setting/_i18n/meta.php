@@ -1,4 +1,3 @@
-
 		<div class="row">
 		<label>
 		<?php echo Yii::t('setting', 'Meta Title'); ?>
@@ -24,4 +23,3 @@
 		<?php $key = "meta_description_{$language_id}"; ?>
 		<?php echo CHtml::textArea("Setting[{$key}]", Yii::app()->config->get($key), array('rows'=>10, 'cols'=>50)); ?>
 		</div><!-- row -->
-

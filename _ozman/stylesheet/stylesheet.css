@@ -169,7 +169,7 @@ body > #container {
 	color: #666;
 	margin-bottom: 15px;
 }
-.success {
+div.success {
 	padding: 10px 10px 10px 33px;
 	margin-bottom: 15px;
 	background: #EAF7D9 url('../image/success.png') 10px center no-repeat;
@@ -180,7 +180,7 @@ body > #container {
 	-khtml-border-radius: 5px 5px 5px 5px;
 	border-radius: 5px 5px 5px 5px;
 }
-.warning {
+div.warning {
 	padding: 10px 10px 10px 33px;
 	margin-bottom: 15px;
 	background: #FFD1D1 url('../image/warning.png') 10px center no-repeat;
@@ -191,7 +191,7 @@ body > #container {
 	-khtml-border-radius: 5px 5px 5px 5px;
 	border-radius: 5px 5px 5px 5px;
 }
-.attention {
+div.attention {
 	padding: 10px 10px 10px 33px;
 	margin-bottom: 15px;
 	background: #FFF5CC url('../image/attention.png') 10px center no-repeat;
@@ -289,6 +289,10 @@ a.button, .list a.button {
 	-moz-border-radius: 10px 10px 10px 10px;
 	-khtml-border-radius: 10px 10px 10px 10px;
 	border-radius: 10px 10px 10px 10px;
+}
+.search-form .row {
+	display: inline-block;
+	margin-left: 10px;
 }
 .list {
 	border-collapse: collapse;
@@ -410,7 +414,7 @@ table.form > tbody > tr > td {
 .scrollbox {
 	border: 1px solid #CCCCCC;
 	width: 350px;
-	height: 100px;
+	height: 150px;
 	background: #FFFFFF;
 	overflow-y: scroll;
 }
@@ -572,7 +576,29 @@ table.form > tbody > tr > td {
 	position: relative;
 	top: 3px;
 }
+/* yii */
 .errorMessage {
 	color: red;
 	font-size: 0.9em
+}
+table.form tr.error input,
+table.form tr.error textarea,
+table.form tr.error select,
+table.form input.error,
+table.form textarea.error,
+table.form select.error
+{
+	background: #FEE;
+	border-color: #C00;
+}
+
+table.form tr.success input,
+table.form tr.success textarea,
+table.form tr.success select,
+table.form input.success,
+table.form textarea.success,
+table.form select.success
+{
+	background: #E6EFC2;
+	border-color: #C6D880;
 }

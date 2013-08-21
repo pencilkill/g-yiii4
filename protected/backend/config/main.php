@@ -7,6 +7,9 @@ $backend=dirname(dirname(__FILE__));
 $frontend=dirname($backend);
 Yii::setPathOfAlias('backend', $backend);
 
+// RBAC rights
+Yii::setPathOfAlias('rights', Yii::getPathOfAlias('frontend.modules.rights'));
+
 // This is the backend main Web application configuration.
 $frontCfg = require_once($frontend.'/config/main.php');
 
@@ -79,7 +82,7 @@ $backCfg = array(
 		   'baseUrl'=>'/rights',
 		   'layout'=>'rights.views.layouts.main',
 		   'appLayout'=>'backend.views.layouts.main',
-		   'cssFile'=>'rights.css',
+		   'cssFile'=>'/_ozman/stylesheet/rights.css',
 		   'debug'=>false,
 		),
 
@@ -92,9 +95,9 @@ $backCfg = array(
 	// application components
 	'components'=>array(
 		'user'=>array(
+			'class'=>'RWebUser',
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
-			'class'=>'RWebUser',
 			'stateKeyPrefix'=>'back',
 			'loginUrl'=>array('site/login'),
 			'returnUrl'=>array('site/index'),

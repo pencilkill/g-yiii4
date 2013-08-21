@@ -5,12 +5,12 @@
 * @author Christoffer Niska <cniska@live.com>
 * @copyright Copyright &copy; 2010 Christoffer Niska
 * @version 1.3.0
-* 
+*
 * DO NOT CHANGE THE DEFAULT CONFIGURATION VALUES!
-* 
-* You may overload the module configuration values in your rights-module 
+*
+* You may overload the module configuration values in your rights-module
 * configuration like so:
-* 
+*
 * 'modules'=>array(
 *     'rights'=>array(
 *         'userNameColumn'=>'name',
@@ -50,7 +50,7 @@ class RightsModule extends CWebModule
 	*/
 	public $enableBizRuleData = false;
 	/**
-	* @property boolean whether to display authorization items description 
+	* @property boolean whether to display authorization items description
 	* instead of name it is set.
 	*/
 	public $displayDescription = true;

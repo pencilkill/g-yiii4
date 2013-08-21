@@ -1,9 +1,16 @@
-<li style="display: inline-block;"">
-	<div style="background:url(<?php echo $src?>) center no-repeat; width: 125px; height: 125px; margin: 5px; border:1px solid gray;">
-	</div>
-    <div style="text-align:center;">
-    <a href="#" onclick="confirm('<?php echo Yii::t('app', 'Confirm Gallery Image Delete?')?>') && jQuery(this).closest('li').remove(); return false;"><?php echo Yii::t('app', 'Gallery Image Delete')?></a>
-    </div>
+<li>
+	<table style="border:1px solid gray;">
+		<tr>
+			<td style="width:<?php echo $resize['width']?>px; height: <?php echo $resize['height']?>px;" align="center">
+				<img src="<?php echo $src?>"/>
+			</td>
+		</tr>
+		<tr>
+			<td align="center">
+				<a href="#" onclick="confirm('<?php echo Yii::t('app', 'Confirm Gallery Image Delete?')?>') && jQuery(this).closest('li').remove(); return false;"><?php echo Yii::t('app', 'Gallery Image Delete')?></a>
+			</td>
+		</tr>
+	</table>
 <?php
 	if($image->hasAttribute('pic')) echo CHtml::activeHiddenField($image,"[{$index}]pic");
 	if($image->hasAttribute('name')) echo CHtml::activeHiddenField($image,"[{$index}]name");

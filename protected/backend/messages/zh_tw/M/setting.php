@@ -17,10 +17,7 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Setting' => '設置',
-  'Setting Key' => '鍵',
-  'Setting Type' => '組',
-  'Setting Value' => '值',
+  'Key' => '',
+  'Value' => '',
   'Setting|Settings' => '設置',
-  'Status' => '啟用',
 );

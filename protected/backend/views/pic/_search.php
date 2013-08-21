@@ -11,7 +11,7 @@
 
 	<div class="row">
 		<?php echo $form->label($model, 'sort_id'); ?>
-		<?php echo $form->textField($model, 'sort_id', array('maxlength' => 11)); ?>
+		<?php echo $form->textField($model, 'sort_id'); ?>
 	</div>
 
 
@@ -19,13 +19,6 @@
 	<div class="row">
 		<?php echo $form->label($model, 'pic'); ?>
 		<?php echo $form->textField($model, 'pic', array('maxlength' => 256)); ?>
-	</div>
-
-
-
-	<div class="row">
-		<?php echo $form->label($model, 'url'); ?>
-		<?php echo $form->textField($model, 'url', array('maxlength' => 256)); ?>
 	</div>
 
 

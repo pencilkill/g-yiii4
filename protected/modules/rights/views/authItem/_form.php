@@ -5,7 +5,7 @@
 	<h3><?php echo Rights::getAuthItemTypeName($model->type); ?></h3>
 
 <?php endif; ?>
-	
+
 <?php $form=$this->beginWidget('CActiveForm'); ?>
 
 	<div class="row">
@@ -17,7 +17,7 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model, 'description'); ?>
-		<?php echo $form->textField($model, 'description', array('maxlength'=>255, 'class'=>'text-field')); ?>
+		<?php echo $form->textArea($model, 'description', array('maxlength'=>255, 'class'=>'text-field', 'rows' => 5)); ?>
 		<?php echo $form->error($model, 'description'); ?>
 		<p class="hint"><?php echo Rights::t('core', 'A descriptive name for this item.'); ?></p>
 	</div>

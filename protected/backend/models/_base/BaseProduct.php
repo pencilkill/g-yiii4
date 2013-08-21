@@ -103,6 +103,10 @@ abstract class BaseProduct extends GxActiveRecord {
 			'criteria' => $criteria,
 			'sort'=>array(
 				'attributes'=>array(
+					'sort_id'=>array(
+						'desc'=>'sort_id DESC',
+						'asc'=>'sort_id',
+					),
 					'*',
 				),
 			),

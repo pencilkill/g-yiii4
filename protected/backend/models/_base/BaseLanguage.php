@@ -13,12 +13,13 @@
  * @property string $code
  * @property string $title
  * @property string $image
- * @property integer $sort
+ * @property integer $sort_id
  * @property integer $status
  *
  * @property CategoryI18n[] $categoryI18ns
  * @property InformationI18n[] $informationI18ns
  * @property NewsI18n[] $newsI18ns
+ * @property PicI18n[] $picI18ns
  * @property ProductI18n[] $productI18ns
  */
 abstract class BaseLanguage extends GxActiveRecord {
@@ -43,12 +44,12 @@ abstract class BaseLanguage extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('code, title', 'required'),
-			array('sort, status', 'numerical', 'integerOnly'=>true),
+			array('sort_id, status', 'numerical', 'integerOnly'=>true),
 			array('code', 'length', 'max'=>8),
 			array('title', 'length', 'max'=>64),
 			array('image', 'length', 'max'=>255),
-			array('image, sort, status', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('language_id, code, title, image, sort, status', 'safe', 'on'=>'search'),
+			array('image, sort_id, status', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('language_id, code, title, image, sort_id, status', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,6 +58,7 @@ abstract class BaseLanguage extends GxActiveRecord {
 			'categoryI18ns' => array(self::HAS_MANY, 'CategoryI18n', 'language_id'),
 			'informationI18ns' => array(self::HAS_MANY, 'InformationI18n', 'language_id'),
 			'newsI18ns' => array(self::HAS_MANY, 'NewsI18n', 'language_id'),
+			'picI18ns' => array(self::HAS_MANY, 'PicI18n', 'language_id'),
 			'productI18ns' => array(self::HAS_MANY, 'ProductI18n', 'language_id'),
 		);
 	}
@@ -72,11 +74,12 @@ abstract class BaseLanguage extends GxActiveRecord {
 			'code' => Yii::t('M/language', 'Code'),
 			'title' => Yii::t('M/language', 'Title'),
 			'image' => Yii::t('M/language', 'Image'),
-			'sort' => Yii::t('M/language', 'Sort'),
+			'sort_id' => Yii::t('M/language', 'Sort'),
 			'status' => Yii::t('M/language', 'Status'),
 			'categoryI18ns' => null,
 			'informationI18ns' => null,
 			'newsI18ns' => null,
+			'picI18ns' => null,
 			'productI18ns' => null,
 		);
 	}
@@ -88,7 +91,7 @@ abstract class BaseLanguage extends GxActiveRecord {
 		$criteria->compare('code', $this->code, true);
 		$criteria->compare('title', $this->title, true);
 		$criteria->compare('image', $this->image, true);
-		$criteria->compare('sort', $this->sort);
+		$criteria->compare('sort_id', $this->sort_id);
 		$criteria->compare('status', $this->status);
 
 
@@ -96,9 +99,9 @@ abstract class BaseLanguage extends GxActiveRecord {
 			'criteria' => $criteria,
 			'sort'=>array(
 				'attributes'=>array(
-					'sort'=>array(
-						'desc'=>'sort DESC',
-						'asc'=>'sort',
+					'sort_id'=>array(
+						'desc'=>'sort_id DESC',
+						'asc'=>'sort_id',
 					),
 					'*',
 				),

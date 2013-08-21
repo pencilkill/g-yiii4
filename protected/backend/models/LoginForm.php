@@ -10,7 +10,9 @@ class LoginForm extends CFormModel
 	public $username;
 	public $password;
 	public $rememberMe;
-	
+
+	public $verifyCode;
+
 	private $_identity;
 
 	/**
@@ -22,12 +24,21 @@ class LoginForm extends CFormModel
 	{
 		return array(
 			// username and password are required
-			array('username, password', 'required'),
-			// rememberMe needs to be a boolean
-			array('rememberMe', 'boolean'),
+			array('username, password, verifyCode', 'required'),
+			// captcha
+			array('verifyCode', 'captcha'),
 			// password needs to be authenticated
 			array('password', 'authenticate'),
+			// rememberMe needs to be a boolean
+			array('rememberMe', 'boolean'),
 		);
+	}
+
+	public function safeAttributes() {
+	    return array(
+	        'verifyCode',
+	    	'rememberMe',
+	    );
 	}
 
 	/**
@@ -39,6 +50,7 @@ class LoginForm extends CFormModel
 			'username' => Yii::t('M/login', 'Username'),
 			'password' => Yii::t('M/login', 'Password'),
 			'rememberMe' => Yii::t('M/login', 'Remember me next time'),
+			'verifyCode' => Yii::t('M/login', 'Verify Code'),
 		);
 	}
 
@@ -48,11 +60,17 @@ class LoginForm extends CFormModel
 	 */
 	public function authenticate($attribute,$params)
 	{
-		if(!$this->hasErrors())
+		if($this->hasErrors())
 		{
+			Yii::app()->user->setFlash('warning', array_shift($this->getErrors('verifyCode')));
+			return false;
+		}else{
 			$this->_identity=new UserIdentity($this->username,$this->password);
-			if(!$this->_identity->authenticate())
+			if(!$this->_identity->authenticate()){
 				Yii::app()->user->setFlash('warning', Yii::t('M/login', 'Incorrect username or password.'));
+				return true;
+			}
+			return false;
 		}
 	}
 
@@ -69,7 +87,7 @@ class LoginForm extends CFormModel
 		}
 		if($this->_identity->errorCode===UserIdentity::ERROR_NONE)
 		{
-			$duration=$this->rememberMe ? 3600*24*30 : 0; // 30 days
+			$duration=$this->rememberMe ? 3600 * 24 * 30 : 0; // 30 days
 			Yii::app()->user->login($this->_identity,$duration);
 			return true;
 		}

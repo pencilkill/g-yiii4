@@ -12,9 +12,6 @@ echo "<?php\n
 );\n";
 ?>
 
-$this->menu = array(
-	array('label'=>Yii::t('app', 'List') . ' ' . $model->label(2), 'url' => array('index')),
-);
 ?>
 
 <?php echo "<?php\n"; ?>
@@ -27,5 +24,6 @@ $this->renderPartial('_form', array(
 <?php if($this->i18nRelation):?>
 		'i18ns' => $i18ns,
 <?php endif;?>
-		'buttons' => 'create'));
+	)
+);
 <?php echo '?>'; ?>

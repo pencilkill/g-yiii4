@@ -18,9 +18,6 @@
 		<?php $form=$this->beginWidget('CActiveForm', array(
 			'id'=>'login-form',
 			'enableClientValidation'=>false,
-			'clientOptions'=>array(
-				'validateOnSubmit'=>true,
-			),
 		)); ?>
         <table style="width: 100%;">
           <tr>
@@ -34,6 +31,14 @@
               <?php echo $form->labelEx($model,'password', array('style' => 'font-weight: bold; font-size: 0.9em;')); ?><br />
               <?php echo $form->passwordField($model,'password', array('style' => 'margin-top: 4px;')); ?><br />
               <?php echo $form->error($model,'password'); ?>
+              <br />
+              <?php echo $form->labelEx($model, 'verifyCode', array('style' => 'font-weight: bold; font-size: 0.9em;')) ?>
+              <br />
+              <?php echo $form->textField($model,'verifyCode'); ?>
+              <?php echo $form->error($model,'verifyCode'); ?>
+              <br />
+              <?php $this->widget('CCaptcha'); ?>
+              <br />
               <br />
               <?php echo $form->checkBox($model,'rememberMe'); ?>
               <?php echo $form->label($model,'rememberMe'); ?>

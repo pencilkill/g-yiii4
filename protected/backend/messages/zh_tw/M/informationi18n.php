@@ -20,5 +20,6 @@ return array (
   'Description' => '內容',
   'Information I18n' => '多語言',
   'InformationI18n|InformationI18ns' => '多語言',
+  'Keywords' => '關鍵詞',
   'Title' => '標題',
 );

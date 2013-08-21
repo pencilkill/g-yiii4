@@ -10,18 +10,19 @@
  * followed by relations of table "pic" available as properties of the model.
  *
  * @property integer $pic_id
- * @property string $sort_id
+ * @property integer $sort_id
  * @property string $pic
- * @property string $url
  * @property integer $pic_type_id
  * @property integer $status
  * @property string $create_time
  * @property string $update_time
  *
  * @property PicType $picType
+ * @property PicI18n[] $picI18ns
  */
 abstract class BasePic extends GxActiveRecord {
 
+	public $searchI18n;
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
@@ -42,18 +43,18 @@ abstract class BasePic extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('pic, pic_type_id', 'required'),
-			array('pic_type_id, status', 'numerical', 'integerOnly'=>true),
-			array('sort_id', 'length', 'max'=>11),
-			array('pic, url', 'length', 'max'=>256),
+			array('sort_id, pic_type_id, status', 'numerical', 'integerOnly'=>true),
+			array('pic', 'length', 'max'=>256),
 			array('create_time, update_time', 'safe'),
 			array('sort_id, status, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('pic_id, sort_id, pic, url, pic_type_id, status, create_time, update_time', 'safe', 'on'=>'search'),
+			array('pic_id, sort_id, pic, pic_type_id, status, create_time, update_time', 'safe', 'on'=>'search'),
 		);
 	}
 
 	public function relations() {
 		return array(
 			'picType' => array(self::BELONGS_TO, 'PicType', 'pic_type_id'),
+			'picI18ns' => array(self::HAS_MANY, 'PicI18n', 'pic_id', 'index' => 'language_id'),
 		);
 	}
 
@@ -67,12 +68,12 @@ abstract class BasePic extends GxActiveRecord {
 			'pic_id' => Yii::t('M/pic', 'Pic'),
 			'sort_id' => Yii::t('M/pic', 'Sort'),
 			'pic' => Yii::t('M/pic', 'Pic'),
-			'url' => Yii::t('M/pic', 'Url'),
 			'pic_type_id' => null,
 			'status' => Yii::t('M/pic', 'Status'),
 			'create_time' => Yii::t('M/pic', 'Create Time'),
 			'update_time' => Yii::t('M/pic', 'Update Time'),
 			'picType' => null,
+			'picI18ns' => null,
 		);
 	}
 
@@ -80,19 +81,30 @@ abstract class BasePic extends GxActiveRecord {
 		$criteria = new CDbCriteria;
 
 		$criteria->compare('pic_id', $this->pic_id);
-		$criteria->compare('sort_id', $this->sort_id, true);
+		$criteria->compare('sort_id', $this->sort_id);
 		$criteria->compare('pic', $this->pic, true);
-		$criteria->compare('url', $this->url, true);
 		$criteria->compare('pic_type_id', $this->pic_type_id);
 		$criteria->compare('status', $this->status);
 		$criteria->compare('create_time', $this->create_time, true);
 		$criteria->compare('update_time', $this->update_time, true);
 
+		$criteria->with = array('picI18ns');
+		$criteria->group = 't.pic_id';
+		$criteria->together = true;
+
+		$criteria->compare('picI18ns.url', $this->searchI18n->url, true);
+		$criteria->compare('picI18ns.title', $this->searchI18n->title, true);
+		$criteria->compare('picI18ns.keywords', $this->searchI18n->keywords, true);
+		$criteria->compare('picI18ns.description', $this->searchI18n->description, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
 				'attributes'=>array(
+					'sort_id'=>array(
+						'desc'=>'sort_id DESC',
+						'asc'=>'sort_id',
+					),
 					'*',
 				),
 			),

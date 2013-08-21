@@ -10,7 +10,7 @@
  * followed by relations of table "information" available as properties of the model.
  *
  * @property integer $information_id
- * @property integer $sort
+ * @property integer $sort_id
  * @property integer $status
  * @property string $create_time
  * @property string $update_time
@@ -39,10 +39,10 @@ abstract class BaseInformation extends GxActiveRecord {
 
 	public function rules() {
 		return array(
-			array('sort, status', 'numerical', 'integerOnly'=>true),
+			array('sort_id, status', 'numerical', 'integerOnly'=>true),
 			array('create_time, update_time', 'safe'),
-			array('sort, status, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('information_id, sort, status, create_time, update_time', 'safe', 'on'=>'search'),
+			array('sort_id, status, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('information_id, sort_id, status, create_time, update_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,7 +60,7 @@ abstract class BaseInformation extends GxActiveRecord {
 	public function attributeLabels() {
 		return array(
 			'information_id' => Yii::t('M/information', 'Information'),
-			'sort' => Yii::t('M/information', 'Sort'),
+			'sort_id' => Yii::t('M/information', 'Sort'),
 			'status' => Yii::t('M/information', 'Status'),
 			'create_time' => Yii::t('M/information', 'Create Time'),
 			'update_time' => Yii::t('M/information', 'Update Time'),
@@ -72,7 +72,7 @@ abstract class BaseInformation extends GxActiveRecord {
 		$criteria = new CDbCriteria;
 
 		$criteria->compare('information_id', $this->information_id);
-		$criteria->compare('sort', $this->sort);
+		$criteria->compare('sort_id', $this->sort_id);
 		$criteria->compare('status', $this->status);
 		$criteria->compare('create_time', $this->create_time, true);
 		$criteria->compare('update_time', $this->update_time, true);
@@ -82,15 +82,16 @@ abstract class BaseInformation extends GxActiveRecord {
 		$criteria->together = true;
 
 		$criteria->compare('informationI18ns.title', $this->searchI18n->title, true);
+		$criteria->compare('informationI18ns.keywords', $this->searchI18n->keywords, true);
 		$criteria->compare('informationI18ns.description', $this->searchI18n->description, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
 				'attributes'=>array(
-					'sort'=>array(
-						'desc'=>'sort DESC',
-						'asc'=>'sort',
+					'sort_id'=>array(
+						'desc'=>'sort_id DESC',
+						'asc'=>'sort_id',
 					),
 					'*',
 				),

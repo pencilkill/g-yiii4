@@ -4,14 +4,18 @@ Yii::import('backend.models._base.BaseAdmin');
 
 class Admin extends BaseAdmin
 {
+	public $defaultRole = 'Authenticated';
+
 	public $confirm_password = '';
+
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
 
+
 	public function rules(){
-		$appendRules = array(
+		$rules = array(
 			array('email', 'email'),
 			array('confirm_password, password', 'required', 'on' => 'create'),
 			array('confirm_password, password', 'length', 'min' => 6),
@@ -19,7 +23,7 @@ class Admin extends BaseAdmin
 			array('username', 'unique', 'className' => 'Admin', 'attributeName' => 'username'),
 		);
 
-		return array_merge(parent::rules(), $appendRules);
+		return CMap::mergeArray(parent::rules(), $rules);
 	}
 
 
@@ -29,7 +33,7 @@ class Admin extends BaseAdmin
 			'confirm_password' => Yii::t('M/admin', 'Confirm Password'),
 		);
 
-		return array_merge(parent::attributeLabels(), $appendAttributeLabels);
+		return CMap::mergeArray(parent::attributeLabels(), $appendAttributeLabels);
 	}
 
 	/**
