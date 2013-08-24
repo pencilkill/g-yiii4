@@ -14,11 +14,13 @@ class NewsController extends GxController {
 
 		$model->searchI18n = $i18n;
 
-		if (isset($_GET['News']))
+		if (isset($_GET['News'])){
 			$model->setAttributes($_GET['News']);
+		}
 
-		if (isset($_GET['NewsI18n']))
+		if (isset($_GET['NewsI18n'])){
 			$i18n->setAttributes($_GET['NewsI18n']);
+		}
 
 		$this->render('index', array(
 			'model' => $model,
@@ -69,10 +71,11 @@ class NewsController extends GxController {
 					$i18ns[$val['language_id']]->news_id = $model->news_id;
 					$i18ns[$val['language_id']]->save();
 				}
-				if (Yii::app()->getRequest()->getIsAjaxRequest())
+				if (Yii::app()->getRequest()->getIsAjaxRequest()){
 					Yii::app()->end();
-				else
+				}else{
 					$this->redirect(array('index'));
+				}
 			}
 		}
 
@@ -86,6 +89,7 @@ class NewsController extends GxController {
 		$model = $this->loadModel($id, 'News');
 
 		$i18ns = $model->newsI18ns;
+
 		$this->performAjaxValidationEx(array(
 				array(
 					'model' => $model,
@@ -116,10 +120,11 @@ class NewsController extends GxController {
 				foreach($this->languages as $val){
 					$i18ns[$val['language_id']]->save();
 				}
-				if (Yii::app()->getRequest()->getIsAjaxRequest())
+				if (Yii::app()->getRequest()->getIsAjaxRequest()){
 					Yii::app()->end();
-				else
+				}else{
 					$this->redirect(array('index'));
+				}
 			}
 		}
 
@@ -133,10 +138,12 @@ class NewsController extends GxController {
 		if (Yii::app()->getRequest()->getIsPostRequest()) {
 			$this->loadModel($id, 'News')->delete();
 
-			if (!Yii::app()->getRequest()->getIsAjaxRequest())
+			if (! Yii::app()->getRequest()->getIsAjaxRequest()){
 				$this->redirect(array('index'));
-		} else
+			}
+		} else {
 			throw new CHttpException(400, Yii::t('app', 'Your request is invalid.'));
+		}
 	}
 
 
@@ -154,6 +161,49 @@ class NewsController extends GxController {
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
+			}
+		}else{
+			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+		}
+	}
+
+
+	public function actionGridviewupdate() {
+		if (Yii::app()->getRequest()->getIsPostRequest()){
+
+			$editPosts = Yii::app()->getRequest()->getPost('edit');
+			$editIds = array_keys($editPosts);
+
+			$errorModel = null;
+
+			$model = new News;
+
+			$criteria= new CDbCriteria;
+			$criteria->compare('news_id', $editIds);
+
+			$models = News::model()->findAll($criteria);
+
+			foreach ($models as $model){
+				$model->setAttributes($editPosts[$model->news_id]);
+				if(! $model->validate()) {
+					$errorModel = $model;
+					break;
+				}
+			}
+
+			if(! $errorModel){
+				foreach ($models as $model){
+					$model->save(false);
+				}
+			}
+
+			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
+				echo CJSON::encode(array('success' => true));
+				Yii::app()->end();
+			} else{
+				$errorModel && Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
+
+				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));
 			}
 		}else{
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');

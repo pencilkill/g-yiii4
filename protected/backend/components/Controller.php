@@ -49,16 +49,11 @@ class Controller extends RController
 	}
 
 	public function languages() {
-		$qa = array(
-			'select' => '*',
-			'from' => 'language',
-			'where' => array(
-				'status = 1',
-			),
-			'order' => "field(code, '".Yii::app()->language."') desc, sort_id desc",
-		);
+		$criteria = new CDbCriteria;
+		$criteria->compare('status', '1');
+		$criteria->order = "field(code, '".Yii::app()->language."') desc, sort_id desc";
 
-		$languages = Yii::app()->db->createCommand($qa)->queryAll();
+		$languages = Language::model()->findAll($criteria);
 
 		$this->languages = $languages;
 
@@ -77,6 +72,12 @@ class Controller extends RController
 	 * return mixed
 	 */
 	public function columnValue($data, $row, $column){
+		$r = explode('.', $column->name);
+		$i = $data->$r[0];
+		return (sizeOf($r)===1) ? $i : $i[key($i)][$r[1]];
+	}
+
+	public function columnEdit($data, $row, $column){
 		$r = explode('.', $column->name);
 		$i = $data->$r[0];
 		return (sizeOf($r)===1) ? $i : $i[key($i)][$r[1]];

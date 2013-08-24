@@ -14,11 +14,13 @@ class ProductController extends GxController {
 
 		$model->searchI18n = $i18n;
 
-		if (isset($_GET['Product']))
+		if (isset($_GET['Product'])){
 			$model->setAttributes($_GET['Product']);
+		}
 
-		if (isset($_GET['ProductI18n']))
+		if (isset($_GET['ProductI18n'])){
 			$i18n->setAttributes($_GET['ProductI18n']);
+		}
 
 		$this->render('index', array(
 			'model' => $model,
@@ -98,10 +100,11 @@ class ProductController extends GxController {
 					}
 				}
 
-				if (Yii::app()->getRequest()->getIsAjaxRequest())
+				if (Yii::app()->getRequest()->getIsAjaxRequest()){
 					Yii::app()->end();
-				else
+				}else{
 					$this->redirect(array('index'));
+				}
 			}
 		}
 
@@ -181,10 +184,11 @@ class ProductController extends GxController {
 					}
 				}
 
-				if (Yii::app()->getRequest()->getIsAjaxRequest())
+				if (Yii::app()->getRequest()->getIsAjaxRequest()){
 					Yii::app()->end();
-				else
+				}else{
 					$this->redirect(array('index'));
+				}
 			}
 		}
 
@@ -202,10 +206,12 @@ class ProductController extends GxController {
 		if (Yii::app()->getRequest()->getIsPostRequest()) {
 			$this->loadModel($id, 'Product')->delete();
 
-			if (!Yii::app()->getRequest()->getIsAjaxRequest())
+			if (!Yii::app()->getRequest()->getIsAjaxRequest()){
 				$this->redirect(array('index'));
-		} else
+			}
+		} else{
 			throw new CHttpException(400, Yii::t('app', 'Your request is invalid.'));
+		}
 	}
 
 
@@ -228,5 +234,47 @@ class ProductController extends GxController {
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
 		}
 	}
+
+	public function actionGridviewupdate() {
+        if (Yii::app()->getRequest()->getIsPostRequest()){
+
+            $editPosts = Yii::app()->getRequest()->getPost('edit');
+            $editIds = array_keys($editPosts);
+
+            $errorModel = null;
+
+            $model = new Product;
+
+            $criteria= new CDbCriteria;
+            $criteria->compare('product_id', $editIds);
+
+            $models = Product::model()->findAll($criteria);
+
+            foreach ($models as $model){
+                $model->setAttributes($editPosts[$model->product_id]);
+                if(! $model->validate()) {
+                    $errorModel = $model;
+                    break;
+                }
+            }
+
+            if(! $errorModel){
+                foreach ($models as $model){
+                    $model->save(false);
+                }
+            }
+
+            if(Yii::app()->getRequest()->getIsAjaxRequest()) {
+                echo CJSON::encode(array('success' => true));
+                Yii::app()->end();
+            } else{
+                $errorModel && Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
+
+                $this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));
+            }
+        }else{
+            throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+        }
+    }
 
 }

@@ -1,5 +1,7 @@
 <?php
-class mail extends PHPMailer{
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'class.phpmailer.php';
+
+class Mail extends PHPMailer{
 	public function init(){
 		parent::init();
 

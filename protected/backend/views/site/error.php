@@ -20,10 +20,10 @@ $this->breadcrumbs = array(
 
 	<div class="box">
 		<div class="content">
-			<h2><?php echo Yii::t('error', "Error{$code}")?></h2>
+			<h2><?php echo $code?></h2>
 
 			<div class="error">
-				<?php echo $message ? CHtml::encode($message) : Yii::t('error', "Error{$code} Message"); ?>
+				<?php echo CHtml::encode($message); ?>
 			</div>
 
 		</div>

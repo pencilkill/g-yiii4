@@ -35,6 +35,7 @@ $backCfg = array(
 	'controllerPath' => $backend.'/controllers',
     'viewPath' => $backend.'/views',
     'runtimePath' => $backend.'/runtime',
+	'defaultController'=>'site',
 
 	// preloading 'log' component
 	//'preload'=>array('log'),
@@ -119,16 +120,16 @@ $backCfg = array(
 		),
 
 		// uncomment the following to enable URLs in path-format
-        /*
+
 		'urlManager'=>array(
 			'urlFormat'=>'path',
 			'rules'=>array(
-				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
-				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
-				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+				//'<controller:\w+>/<id:\d+>'=>'<controller>/view',
+				//'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
+				'<language:\w+>/<controller:\w+>/<action:\w+>'=>'<language>/<controller>/<action>',
 			),
 		),
-		*/
+
 		/*
 		'db'=>array(
 			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
@@ -137,6 +138,15 @@ $backCfg = array(
 		// uncomment the following to use a MySQL database
 
 		//'db'=>require_once(dirname(__FILE__).'/cfg.db.php'),
+
+		// example to config widget
+		'widgetFactory' => array(
+			'widgets' => array(
+				'CGridView' => array(
+					//'ajaxUpdate' => false,
+				),
+			),
+		),
 
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors

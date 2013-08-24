@@ -47,6 +47,28 @@ class GiixCrudCode extends CrudCode {
 
 	public $languages;
 
+
+	/**
+	 * @var string
+	 * editable name
+	 */
+
+	public $gridViewDeleteAction = 'Gridviewdelete';
+
+	/**
+	 * @var string
+	 * editable name
+	 */
+
+	public $gridViewEditName = 'edit';
+
+	/**
+	 * @var string
+	 * editable name
+	 */
+
+	public $gridViewEditAction = 'Gridviewupdate';
+
 	public function languages() {
 		$qa = array(
 			'select' => '*',
@@ -127,7 +149,7 @@ class GiixCrudCode extends CrudCode {
 				|| strtoupper($column->dbType) == 'BOOL'
 				|| strtoupper($column->dbType) == 'BOOLEAN') {
 			return "echo \$form->checkBox(\$model, '{$column->name}')";
-		} else if (strtoupper($column->dbType) == 'DATE') {
+		} else if (strtoupper($column->dbType) == 'DATE' || strtoupper($column->dbType) == 'DATETIME') {
 			return "\$form->widget('zii.widgets.jui.CJuiDatePicker', array(
 			'model' => \$model,
 			'attribute' => '{$column->name}',
@@ -187,7 +209,7 @@ class GiixCrudCode extends CrudCode {
 				|| strtoupper($column->dbType) == 'BOOL'
 				|| strtoupper($column->dbType) == 'BOOLEAN') {
 			return "echo \$form->checkBox(\$model, \"[{\${$languageColumn}}]{$column->name}\")";
-		} else if (strtoupper($column->dbType) == 'DATE') {
+		} else if (strtoupper($column->dbType) == 'DATE' || strtoupper($column->dbType) == 'DATETIME') {
 			return "\$form->widget('zii.widgets.jui.CJuiDatePicker', array(
 			'name' => \"{$modelClass}[{\${$languageColumn}}][{$column->name}]\",
 			'attribute' => '[{\${$languageColumn}}]{$column->name}',
@@ -295,20 +317,35 @@ class GiixCrudCode extends CrudCode {
 	 * @param CDbColumnSchema $column The column.
 	 * @return string The source code line for the column definition.
 	 */
-	public function generateGridViewColumn($modelClass, $column) {
+	public function generateGridViewColumn($modelClass, $column, $editable=false) {
 		if (!$column->isForeignKey) {
 			// Boolean or bit.
 			if (strtoupper($column->dbType) == 'TINYINT(1)'
 					|| strtoupper($column->dbType) == 'BIT'
 					|| strtoupper($column->dbType) == 'BOOL'
 					|| strtoupper($column->dbType) == 'BOOLEAN') {
-				return "array(
+				return $editable ? "array(
+			'type' => 'raw',
 			'name' => '{$column->name}',
-			'value' => '(\$data->{$column->name} == 0) ? Yii::t(\\'app\\', \\'No\\') : Yii::t(\\'app\\', \\'Yes\\')',
+			'value' => 'CHtml::dropDownList(\"{$this->gridViewEditName}[\$data->{$this->tableSchema->primaryKey}][{$column->name}]\", \$data->{$column->name}, array(\"0\"=>Yii::t(\"app\", \"No\"), \"1\"=>Yii::t(\"app\", \"Yes\")), array(\"class\"=>\"editable\"))',
+			'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
+		)" : "array(
+			'name' => '{$column->name}',
+			'value' => '(\$data->{$column->name} == 0) ? Yii::t(\"app\", \"No\") : Yii::t(\"app\", \"Yes\")',
 			'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
 		)";
-			} else // Common column.
-				return "'{$column->name}'";
+			} else {
+				// Common column.
+				if($editable){
+					return "array(
+			'type' => 'raw',
+			'name' => '{$column->name}',
+			'value' => 'CHtml::textField(\"{$this->gridViewEditName}[\$data->{$this->tableSchema->primaryKey}][{$column->name}]\", \$data->{$column->name}, array(\"class\"=>\"editable\"))',
+		)";
+				}else{
+					return "'{$column->name}'";
+				}
+			}
 		} else { // FK.
 			// Find the related model for this column.
 			$relation = $this->findRelation($modelClass, $column);

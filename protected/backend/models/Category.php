@@ -9,13 +9,23 @@ class Category extends BaseCategory
 		return CMap::mergeArray(
 			parent::rules(),
 			array(
-				array('parent_id', 'validParentId'),
+				array('parent_id', 'validParentId', 'on' => 'update'),
 			)
 		);
 	}
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
+	}
+
+	public function relations() {
+		return CMap::mergeArray(
+			parent::relations(),
+			array(
+				'children' => array(self::HAS_MANY, 'Category', 'parent_id'),
+				'parent' => array(self::BELONGS_TO, 'Category', 'parent_id'),
+			)
+		);
 	}
 
 	/**
@@ -94,6 +104,18 @@ class Category extends BaseCategory
 
     	if(in_array($this->parent_id, $categoryIds)){
     		$this->addError('parent_id', Yii::t('M/category', 'Parent_id can not be self or children'));
+    	}
+    }
+
+    public function beforeDelete(){
+    	if(! parent::beforeDelete()) return false;
+
+    	if((sizeOf($this->children) || sizeOf($this->product2categories))){
+    		Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure').Yii::t('app', 'Including Items'));
+
+    		return false;
+    	}else{
+	    	return true;
     	}
     }
 

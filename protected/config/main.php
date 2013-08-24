@@ -13,15 +13,16 @@ Yii::setPathOfAlias('frontend', $frontend);
 return array(
 	'basePath'=>$frontend,
 
-	'language'=>'tw',
+	'language'=>'zh_tw',
 
 	'name'=>'元伸科技',
 
 	// preloading 'log' component
+	/*
 	'preload'=>array(
 		'log',
-		//'bootstrap',
 	),
+	*/
 
 	// autoloading model and component classes
 	'import'=>array(
@@ -48,6 +49,10 @@ return array(
 		),
 
 
+	),
+
+	'behaviors' => array(
+    	'app' => 'frontend.behaviors.BeforeRequestBehavior',
 	),
 
 	// application components
@@ -95,8 +100,12 @@ return array(
 		 ),
 		 // mail
 		 'mail'=>array(
-            'class'=>'application.extensions.mail.mail',
+            'class'=>'application.extensions.mail.Mail',
         ),
+        // EShoppingCart
+        'shoppingCart' => array(
+		        'class' => 'ext.eshoppingcart.EShoppingCart',
+		),
         // error
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors

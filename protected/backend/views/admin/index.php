@@ -103,6 +103,7 @@ $this->breadcrumbs = array(
 function GridViewDelete(params){
 	var params = jQuery.extend({},{
 		url : '<?php echo $this->createUrl('gridviewdelete'); ?>'
+		, postData : {returnUrl : <?php echo '<?php'?> echo Yii::app()->getRequest()->url?>}
 		, message : '<?php echo Yii::t('app', 'No results found.');?>'
 	}, params);
 	var models = new Array();
@@ -110,8 +111,8 @@ function GridViewDelete(params){
 		models.push(jQuery(this).val());
 	});
 	if(models.length > 0){
-		confirm('<?php echo Yii::t('app', 'Confirm Grid View Delete?')?>') && jQuery.post(params.url, {'selected[]' : models}, function(data){
-			var ret = $.parseJSON(data);
+		confirm('<?php echo Yii::t('app', 'Confirm Grid View Delete?')?>') && jQuery.post(params.url, jQuery.extend(params.postData || {}, {'selected[]' : models}), function(data){
+			var ret = jQuery.parseJSON(data);
             if (ret != null && ret.success != null && ret.success) {
             	jQuery.fn.yiiGridView.update('admin-grid');
             }

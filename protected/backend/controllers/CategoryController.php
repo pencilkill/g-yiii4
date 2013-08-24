@@ -15,11 +15,13 @@ class CategoryController extends GxController {
 
 		$model->searchI18n = $i18n;
 
-		if (isset($_GET['Category']))
+		if (isset($_GET['Category'])){
 			$model->setAttributes($_GET['Category']);
+		}
 
-		if (isset($_GET['CategoryI18n']))
+		if (isset($_GET['CategoryI18n'])){
 			$i18n->setAttributes($_GET['CategoryI18n']);
+		}
 
 		$this->render('index', array(
 			'model' => $model,
@@ -48,9 +50,9 @@ class CategoryController extends GxController {
 			),
 			'category-form'
 		);
-		
+
 		$categories = Category::getCategories();
-		
+
 		if (isset($_POST['Category'])) {
 			$model->setAttributes($_POST['Category']);
 
@@ -72,10 +74,11 @@ class CategoryController extends GxController {
 					$i18ns[$val['language_id']]->category_id = $model->category_id;
 					$i18ns[$val['language_id']]->save();
 				}
-				if (Yii::app()->getRequest()->getIsAjaxRequest())
+				if (Yii::app()->getRequest()->getIsAjaxRequest()){
 					Yii::app()->end();
-				else
+				}else{
 					$this->redirect(array('index'));
+				}
 			}
 		}
 
@@ -103,7 +106,7 @@ class CategoryController extends GxController {
 		);
 
 		$categories = Category::getCategories();
-		
+
 		if (isset($_POST['Category'])) {
 			$model->setAttributes($_POST['Category']);
 			$valid = true;
@@ -122,10 +125,11 @@ class CategoryController extends GxController {
 				foreach($this->languages as $val){
 					$i18ns[$val['language_id']]->save();
 				}
-				if (Yii::app()->getRequest()->getIsAjaxRequest())
+				if (Yii::app()->getRequest()->getIsAjaxRequest()){
 					Yii::app()->end();
-				else
+				}else{
 					$this->redirect(array('index'));
+				}
 			}
 		}
 
@@ -140,27 +144,89 @@ class CategoryController extends GxController {
 		if (Yii::app()->getRequest()->getIsPostRequest()) {
 			$this->loadModel($id, 'Category')->delete();
 
-			if (!Yii::app()->getRequest()->getIsAjaxRequest())
-				$this->redirect(array('index'));
-		} else
+			if (Yii::app()->getRequest()->getIsAjaxRequest()){
+				echo CJSON::encode(array('success' => true));
+				Yii::app()->end();
+			}else{
+				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->createUrl('index'));
+			}
+		} else {
 			throw new CHttpException(400, Yii::t('app', 'Your request is invalid.'));
+		}
 	}
 
 
 	public function actionGridviewdelete() {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
+			$selected = Yii::app()->getRequest()->getPost('selected');
+			$valid = true;
+
 			$model = new Category;
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('category_id', Yii::app()->getRequest()->getPost('selected'));
+			$criteria->compare('category_id', $selected);
 
-			Category::model()->deleteAll($criteria);
+			$models = Category::model()->findAll($criteria);
+
+			foreach ($models as $model){
+				$valid = $valid && $model->beforeDelete();
+				if(! $valid){
+					break;
+				}
+			}
+
+			if($valid) {
+				Category::model()->deleteAll($criteria);
+			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
 				echo CJSON::encode(array('success' => true));
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
+			}
+		}else{
+			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+		}
+	}
+
+
+	public function actionGridviewupdate() {
+		if (Yii::app()->getRequest()->getIsPostRequest()){
+
+			$editPosts = Yii::app()->getRequest()->getPost('edit');
+			$editIds = array_keys($editPosts);
+
+			$errorModel = null;
+
+			$model = new Category;
+
+			$criteria= new CDbCriteria;
+			$criteria->compare('category_id', $editIds);
+
+			$models = Category::model()->findAll($criteria);
+
+			foreach ($models as $model){
+				$model->setAttributes($editPosts[$model->category_id]);
+				if(! $model->validate()) {
+					$errorModel = $model;
+					break;
+				}
+			}
+
+			if(! $errorModel){
+				foreach ($models as $model){
+					$model->save(false);
+				}
+			}
+
+			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
+				echo CJSON::encode(array('success' => true));
+				Yii::app()->end();
+			} else{
+				$errorModel && Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
+
+				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));
 			}
 		}else{
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');

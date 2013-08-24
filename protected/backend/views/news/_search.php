@@ -32,7 +32,23 @@
 
 	<div class="row">
 		<?php echo $form->label($model, 'date_added'); ?>
-		<?php echo $form->textField($model, 'date_added'); ?>
+		<?php $form->widget('zii.widgets.jui.CJuiDatePicker', array(
+			'model' => $model,
+			'attribute' => 'date_added',
+			'language' => Yii::app()->language,
+			'options' => array(
+				'showButtonPanel' => false,
+				'changeYear' => true,
+				'changeMonth' => true,
+				'dateFormat' => 'yy-mm-dd',
+				'yearRange' => '-5:+5',
+			),
+			'htmlOptions' => array(
+				'readonly' => 'readonly',
+				'value' => $model->date_added ? date('Y-m-d', strtotime($model->date_added)) : date('Y-m-d'),
+			),
+			));
+; ?>
 	</div>
 
 

@@ -9,8 +9,9 @@ class PicTypeController extends GxController {
 		$model = new PicType('search');
 		$model->unsetAttributes();
 
-		if (isset($_GET['PicType']))
+		if (isset($_GET['PicType'])){
 			$model->setAttributes($_GET['PicType']);
+		}
 
 		$this->render('index', array(
 			'model' => $model,
@@ -34,10 +35,11 @@ class PicTypeController extends GxController {
 
 			if ($model->validate()) {
 				$model->save(false);
-				if (Yii::app()->getRequest()->getIsAjaxRequest())
+				if (Yii::app()->getRequest()->getIsAjaxRequest()){
 					Yii::app()->end();
-				else
+				}else{
 					$this->redirect(array('index'));
+				}
 			}
 		}
 
@@ -62,10 +64,11 @@ class PicTypeController extends GxController {
 
 			if ($model->validate()) {
 				$model->save(false);
-				if (Yii::app()->getRequest()->getIsAjaxRequest())
+				if (Yii::app()->getRequest()->getIsAjaxRequest()){
 					Yii::app()->end();
-				else
+				}else{
 					$this->redirect(array('index'));
+				}
 			}
 		}
 
@@ -78,10 +81,12 @@ class PicTypeController extends GxController {
 		if (Yii::app()->getRequest()->getIsPostRequest()) {
 			$this->loadModel($id, 'PicType')->delete();
 
-			if (!Yii::app()->getRequest()->getIsAjaxRequest())
+			if (! Yii::app()->getRequest()->getIsAjaxRequest()){
 				$this->redirect(array('index'));
-		} else
+			}
+		} else {
 			throw new CHttpException(400, Yii::t('app', 'Your request is invalid.'));
+		}
 	}
 
 
@@ -99,6 +104,49 @@ class PicTypeController extends GxController {
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
+			}
+		}else{
+			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+		}
+	}
+
+
+	public function actionGridviewupdate() {
+		if (Yii::app()->getRequest()->getIsPostRequest()){
+
+			$editPosts = Yii::app()->getRequest()->getPost('edit');
+			$editIds = array_keys($editPosts);
+
+			$errorModel = null;
+
+			$model = new PicType;
+
+			$criteria= new CDbCriteria;
+			$criteria->compare('pic_type_id', $editIds);
+
+			$models = PicType::model()->findAll($criteria);
+
+			foreach ($models as $model){
+				$model->setAttributes($editPosts[$model->pic_type_id]);
+				if(! $model->validate()) {
+					$errorModel = $model;
+					break;
+				}
+			}
+
+			if(! $errorModel){
+				foreach ($models as $model){
+					$model->save(false);
+				}
+			}
+
+			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
+				echo CJSON::encode(array('success' => true));
+				Yii::app()->end();
+			} else{
+				$errorModel && Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
+
+				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));
 			}
 		}else{
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');

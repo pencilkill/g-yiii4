@@ -62,6 +62,7 @@
 	  <li id="news"><a href="<?php echo Yii::app()->createUrl('news/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'News'); ?></a></li>
       <li id="information"><a href="<?php echo Yii::app()->createUrl('information/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Information'); ?></a></li>
       <li id="pic"><a href="<?php echo Yii::app()->createUrl('pic/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Pic'); ?></a></li>
+      <li id="contact"><a href="<?php echo Yii::app()->createUrl('contact/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Contact'); ?></a></li>
       <li id="admin"><a href="<?php echo Yii::app()->createUrl('admin/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Admin'); ?></a></li>
       <li id="system"><a class="top"><?php echo Yii::t('nav', 'System'); ?></a>
         <ul>
@@ -128,7 +129,7 @@ jQuery(function($) {
 		if (part[1]) {
 			url += '/' + part[1];
 		}
-		console.log('a[href*=\'' + url + '\']');
+
 		$('a[href*=\'' + url + '\']').parents('li[id]').addClass('selected');
 	}
 });

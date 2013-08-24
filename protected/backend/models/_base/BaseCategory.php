@@ -11,13 +11,14 @@
  *
  * @property integer $category_id
  * @property integer $parent_id
- * @property integer $top
  * @property integer $sort_id
  * @property string $create_time
  * @property string $update_time
  *
  * @property CategoryI18n[] $categoryI18ns
  * @property Product2category[] $product2categories
+ * @property Children[] $children
+ * @property Parent $parent
  */
 abstract class BaseCategory extends GxActiveRecord {
 
@@ -42,10 +43,10 @@ abstract class BaseCategory extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('parent_id', 'required'),
-			array('parent_id, top, sort_id', 'numerical', 'integerOnly'=>true),
+			array('parent_id, sort_id', 'numerical', 'integerOnly'=>true),
 			array('create_time, update_time', 'safe'),
-			array('top, sort_id, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('category_id, parent_id, top, sort_id, create_time, update_time', 'safe', 'on'=>'search'),
+			array('sort_id, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('category_id, parent_id, sort_id, create_time, update_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -65,7 +66,6 @@ abstract class BaseCategory extends GxActiveRecord {
 		return array(
 			'category_id' => Yii::t('M/category', 'Category'),
 			'parent_id' => Yii::t('M/category', 'Parent'),
-			'top' => Yii::t('M/category', 'Top'),
 			'sort_id' => Yii::t('M/category', 'Sort'),
 			'create_time' => Yii::t('M/category', 'Create Time'),
 			'update_time' => Yii::t('M/category', 'Update Time'),
@@ -79,7 +79,6 @@ abstract class BaseCategory extends GxActiveRecord {
 
 		$criteria->compare('category_id', $this->category_id);
 		$criteria->compare('parent_id', $this->parent_id);
-		$criteria->compare('top', $this->top);
 		$criteria->compare('sort_id', $this->sort_id);
 		$criteria->compare('create_time', $this->create_time, true);
 		$criteria->compare('update_time', $this->update_time, true);

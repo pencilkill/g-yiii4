@@ -33,12 +33,14 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 		$model->searchI18n = $i18n;
 <?php endif;?>
 
-		if (isset($_GET['<?php echo $this->modelClass; ?>']))
+		if (isset($_GET['<?php echo $this->modelClass; ?>'])){
 			$model->setAttributes($_GET['<?php echo $this->modelClass; ?>']);
+		}
 <?php if($this->i18nRelation):?>
 
-		if (isset($_GET['<?php echo $this->i18nRelation[3]?>']))
+		if (isset($_GET['<?php echo $this->i18nRelation[3]?>'])){
 			$i18n->setAttributes($_GET['<?php echo $this->i18nRelation[3]?>']);
+		}
 <?php endif;?>
 
 		$this->render('index', array(
@@ -106,10 +108,11 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 					$i18ns[$val['language_id']]->save();
 				}
 <?php endif; ?>
-				if (Yii::app()->getRequest()->getIsAjaxRequest())
+				if (Yii::app()->getRequest()->getIsAjaxRequest()){
 					Yii::app()->end();
-				else
+				}else{
 					$this->redirect(array('index'));
+				}
 			}
 		}
 
@@ -170,10 +173,11 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 					$i18ns[$val['language_id']]->save();
 				}
 <?php endif; ?>
-				if (Yii::app()->getRequest()->getIsAjaxRequest())
+				if (Yii::app()->getRequest()->getIsAjaxRequest()){
 					Yii::app()->end();
-				else
+				}else{
 					$this->redirect(array('index'));
+				}
 			}
 		}
 
@@ -189,14 +193,16 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 		if (Yii::app()->getRequest()->getIsPostRequest()) {
 			$this->loadModel($id, '<?php echo $this->modelClass; ?>')->delete();
 
-			if (!Yii::app()->getRequest()->getIsAjaxRequest())
+			if (! Yii::app()->getRequest()->getIsAjaxRequest()){
 				$this->redirect(array('index'));
-		} else
+			}
+		} else {
 			throw new CHttpException(400, Yii::t('app', 'Your request is invalid.'));
+		}
 	}
 
 
-	public function actionGridviewdelete() {
+	public function action<?php echo ucfirst(strtolower($this->gridViewDeleteAction))?>() {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
 			$model = new <?php echo $this->modelClass; ?>;
 
@@ -210,6 +216,49 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
+			}
+		}else{
+			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+		}
+	}
+
+
+	public function action<?php echo ucfirst(strtolower($this->gridViewEditAction))?>() {
+		if (Yii::app()->getRequest()->getIsPostRequest()){
+
+			$<?php echo $this->gridViewEditName?>Posts = Yii::app()->getRequest()->getPost('<?php echo $this->gridViewEditName?>');
+			$<?php echo $this->gridViewEditName?>Ids = array_keys($<?php echo $this->gridViewEditName?>Posts);
+
+			$errorModel = null;
+
+			$model = new <?php echo $this->modelClass; ?>;
+
+			$criteria= new CDbCriteria;
+			$criteria->compare('<?php echo $this->tableSchema->primaryKey; ?>', $<?php echo $this->gridViewEditName?>Ids);
+
+			$models = <?php echo $this->modelClass; ?>::model()->findAll($criteria);
+
+			foreach ($models as $model){
+				$model->setAttributes($<?php echo $this->gridViewEditName?>Posts[$model-><?php echo $this->tableSchema->primaryKey; ?>]);
+				if(! $model->validate()) {
+					$errorModel = $model;
+					break;
+				}
+			}
+
+			if(! $errorModel){
+				foreach ($models as $model){
+					$model->save(false);
+				}
+			}
+
+			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
+				echo CJSON::encode(array('success' => true));
+				Yii::app()->end();
+			} else{
+				$errorModel && Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
+
+				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));
 			}
 		}else{
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');

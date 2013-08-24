@@ -2,6 +2,7 @@
 /**
  *
  * @author Sam@ozchamp.net
+ * use owner instead of Yii::app() to make behavior reusable for other modules
  *
  */
 class BeforeRequestBehavior extends CBehavior
@@ -25,35 +26,21 @@ class BeforeRequestBehavior extends CBehavior
      * @see beginRequest()
      */
     public function beginRequest($event) {
-    	//$this->setAccessCheck();
-
     	/**
     	 * The turns for setMultiLanguage() and setTranslation() should be important
     	 */
-        //$this->setMultiLanguage();
-
+        $this->setMultiLanguage();
+        // forece translation
         $this->setTranslation(true);
+        // theme base on language
+        $this->setTheme($this->owner->language);
     }
-	/**
-	 * accessrules for all request
-	 * @param object $action
-	 */
-	public function setAccessCheck() {
-		$route=Yii::app()->getUrlManager()->parseUrl(Yii::app()->getRequest());
-
-        if(array_search($route, array('site/login','site/error','site/logout','site/captcha','gii/index'))===false)
-        {
-            if(Yii::app()->getUser()->isGuest){
-                Yii::app()->getUser()->loginRequired();
-            }
-        }
-	}
 	/**
 	 * language forceTranslation if using Yii::t()
 	 * @param boolean $isForce
 	 */
 	public function setTranslation($isForce=true) {
-		Yii::app()->getMessages()->forceTranslation = $isForce;
+		$this->owner->getMessages()->forceTranslation = $isForce;
 	}
 	/**
 	 * set multilanguage using get method
@@ -63,38 +50,45 @@ class BeforeRequestBehavior extends CBehavior
 		 * set $langCookieName as custom brower cookie name which store current language
 		 * default name is "language"
 		 */
-		$languageCookieName = (isset(Yii::app()->params['langCookieName']))?Yii::app()->params['langCookieName']:'__lang';
+		$languageCookieName = (isset($this->owner->params['langCookieName']))?$this->owner->params['langCookieName']:'__language';
 		/**
 		 * usging param "language" of "get" method to set current language
 		 */
-		$language = Yii::app()->getRequest()->getParam('lang');
+		$language = $this->owner->getRequest()->getParam('language');
 
 		if ($language){
-            Yii::app()->setLanguage($language);
+            $this->owner->setLanguage($language);
 
-            Yii::app()->getUser()->setState($languageCookieName, $language);
+            $this->owner->getUser()->setState($languageCookieName, $language);
 
             $cookie = new CHttpCookie($languageCookieName, $language);
 
-            $cookie->expire = time() + (60*60*24*365); // (1 year)
+            $cookie->expire = time() + (60 * 60 * 24 * 365); // (1 year)
 
-            Yii::app()->getRequest()->cookies[$languageCookieName] = $cookie;
-        }
-        else if (Yii::app()->getUser()->hasState($languageCookieName)){
-            $language = Yii::app()->getUser()->getState($languageCookieName);
-        }
-        else if(isset(Yii::app()->getRequest()->cookies[$languageCookieName])){
-            $language = Yii::app()->getRequest()->cookies[$languageCookieName]->value;
+            $this->owner->getRequest()->cookies[$languageCookieName] = $cookie;
+        } else if ($this->owner->getUser()->hasState($languageCookieName)){
+            $language = $this->owner->getUser()->getState($languageCookieName);
+        } else if(isset($this->owner->getRequest()->cookies[$languageCookieName])){
+            $language = $this->owner->getRequest()->cookies[$languageCookieName]->value;
         }
 
         /**
-         * recheck
+         * @rechecking
          */
+        $criteria = new CDbCriteria;
+		$criteria->index = 'code';
+		$criteria->compare('status', '1');
+		$criteria->order = "field(code, '".$this->owner->language."') desc, sort_id desc";
 
-        $language = array_key_exists($language, Yii::app()->params('languages')) ? $language : key(Yii::app()->params('languages'));
+		$languages = Language::model()->findAll($criteria);
 
-        Yii::app()->setLanguage($language);
+		if($languages && key($languages)){
+			$this->owner->setLanguage(key($languages));
+		}
+	}
 
+	public function setTheme($theme){
+		$this->owner->theme = $theme;
 	}
 }
 ?>

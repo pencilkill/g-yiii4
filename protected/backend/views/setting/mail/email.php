@@ -4,7 +4,7 @@
 <?php $key = 'mail_email_contact'; ?>
 <tr>
 	<td>
-		<label><?php echo Yii::t('setting', ucwords(strtr($key, array('_' => ' ')))); ?></label>
+		<label><?php echo Yii::t('setting', 'Mail Email Contact'); ?></label>
 	</td>
 	<td>
 		<?php echo CHtml::textArea("Setting[{$key}]", Yii::app()->config->get($key), array('rows'=>5, 'cols'=>50)); ?>

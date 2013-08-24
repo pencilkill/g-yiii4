@@ -10,6 +10,13 @@
 
 
 	<div class="row">
+		<?php echo $form->label($model, 'status'); ?>
+		<?php echo $form->dropDownList($model, 'status', array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')), array('prompt' => Yii::t('app', 'All'))); ?>
+	</div>
+
+
+
+	<div class="row">
 		<?php echo $form->label($model, 'name'); ?>
 		<?php echo $form->textField($model, 'name', array('maxlength' => 32)); ?>
 	</div>
@@ -18,7 +25,7 @@
 
 	<div class="row">
 		<?php echo $form->label($model, 'gender'); ?>
-		<?php echo $form->textField($model, 'gender', array('maxlength' => 16)); ?>
+		<?php echo $form->dropDownList($model, 'gender', array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')), array('prompt' => Yii::t('app', 'All'))); ?>
 	</div>
 
 

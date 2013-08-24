@@ -43,8 +43,9 @@
 			</td>
 		</tr><!-- row -->
 
-		</table>
 
+
+		</table>
 	<?php
 		$this->endWidget();
 	?>

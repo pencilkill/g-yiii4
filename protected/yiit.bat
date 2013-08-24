@@ -1,1 +1,1 @@
-yiic message "./messages/config.php"
+yiic message "./messages/config.php" > ./yiit.log

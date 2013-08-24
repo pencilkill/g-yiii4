@@ -9,8 +9,9 @@ class AdminController extends GxController {
 		// except super ar
 		$model->super = 0;
 
-		if (isset($_GET['Admin']))
+		if (isset($_GET['Admin'])){
 			$model->setAttributes($_GET['Admin']);
+		}
 
 		$this->render('index', array(
 			'model' => $model,
@@ -46,10 +47,11 @@ class AdminController extends GxController {
 					$authorizer->authManager->assign($model->defaultRole, $model->admin_id);
 				}
 
-				if (Yii::app()->getRequest()->getIsAjaxRequest())
+				if (Yii::app()->getRequest()->getIsAjaxRequest()){
 					Yii::app()->end();
-				else
+				}else{
 					$this->redirect(array('index'));
+				}
 			}
 		}
 
@@ -90,10 +92,11 @@ class AdminController extends GxController {
 				}
 				*/
 
-				if (Yii::app()->getRequest()->getIsAjaxRequest())
+				if (Yii::app()->getRequest()->getIsAjaxRequest()){
 					Yii::app()->end();
-				else
+				}else{
 					$this->redirect(array('index'));
+				}
 			}
 		}
 
@@ -140,10 +143,12 @@ class AdminController extends GxController {
 		if (Yii::app()->getRequest()->getIsPostRequest()) {
 			$this->loadModel($id, 'Admin')->delete();
 
-			if (!Yii::app()->getRequest()->getIsAjaxRequest())
+			if (!Yii::app()->getRequest()->getIsAjaxRequest()){
 				$this->redirect(array('index'));
-		} else
+			}
+		} else {
 			throw new CHttpException(400, Yii::t('app', 'Your request is invalid.'));
+		}
 	}
 
 

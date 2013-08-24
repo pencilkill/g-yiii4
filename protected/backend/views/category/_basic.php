@@ -27,18 +27,6 @@
 			</td>
 		</tr><!-- row -->
 
-
-		<tr>
-			<td>
-				<?php echo $form->labelEx($model,'top'); ?>
-			</td>
-			<td>
-				<?php echo $form->checkBox($model, 'top'); ?>
-				<?php echo $form->error($model,'top'); ?>
-			</td>
-		</tr><!-- row -->
-
-
 		<tr>
 			<td>
 				<?php echo $form->labelEx($model,'sort_id'); ?>

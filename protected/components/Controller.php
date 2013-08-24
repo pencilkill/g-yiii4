@@ -20,4 +20,24 @@ class Controller extends CController
 	 * for more details on how to specify this property.
 	 */
 	public $breadcrumbs=array();
+
+
+	/**
+	 * @var ar
+	 * default language code is Yii::app()->language code which using to get language_id if the request does not set a language id
+	 */
+	public $language_id;
+
+	public function init() {
+		parent::init();
+		/**
+		 *  see behavior to get more about init()
+		 */
+		// set language_id
+		$this->setLanuageId(Yii::app()->language);
+	}
+
+	public function setLanuageId($languageCode){
+		$this->language_id = Language::model()->findByAttributes(array('code'=>$languageCode))->language_id;
+	}
 }

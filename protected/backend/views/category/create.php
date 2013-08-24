@@ -12,7 +12,6 @@ $this->renderPartial('_formI18n', array(
 		'model' => $model,
 		'i18ns' => $i18ns,
 		'categories' => $categories,
-		'buttons' => 'create'
 	)
 );
 ?>

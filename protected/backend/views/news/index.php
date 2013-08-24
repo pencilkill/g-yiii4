@@ -44,10 +44,14 @@ $this->breadcrumbs = array(
 			<div class="buttons">
 				<?php echo GxHtml::link(Yii::t('app', 'Advanced Search'), '#', array('class' => 'search-button button', 'style' => 'display: none;')); ?>
 				<a onclick="location='<?php echo $this->createUrl('create')?>';" class="button"><?php echo Yii::t('app', 'Create')?></a>
+				<a onclick="GridViewUpdate();" class="button"><?php echo Yii::t('app', 'Save')?></a>
 				<a onclick="GridViewDelete();" class="button"><?php echo Yii::t('app', 'Delete')?></a>
 			</div>
 		</div>
 		<div class="content">
+
+		<form id="news-grid-form" action="<?php echo $this->createUrl('gridviewupdate')?>" method="post">
+		<?php echo CHtml::hiddenField('returnUrl', Yii::app()->getRequest()->url)?>
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id' => 'news-grid',
 	'template' => "{items}\n<div class=\"pagination\">{summary}{pager}</div>",
@@ -73,24 +77,30 @@ $this->breadcrumbs = array(
 				'name' => 'GridViewSelect[]',
 			),
 		),
+
 		array(
-			'name' => 'newsI18ns.title',
+        	'name' => 'newsI18ns.title',
 			'value' => array($this, 'columnValue'),
 			'filter' => CHtml::activeTextField($model->searchI18n, 'title'),
 		),
-		'sort_id',
 		array(
+			'type' => 'raw',
+			'name' => 'sort_id',
+			'value' => 'CHtml::textField("edit[$data->news_id][sort_id]", $data->sort_id, array("class"=>"editable"))',
+		),
+		array(
+			'type' => 'raw',
 			'name' => 'top',
-			'value' => '($data->top == 0) ? Yii::t(\'app\', \'No\') : Yii::t(\'app\', \'Yes\')',
+			'value' => 'CHtml::dropDownList("edit[$data->news_id][top]", $data->top, array("0"=>Yii::t("app", "No"), "1"=>Yii::t("app", "Yes")), array("class"=>"editable"))',
 			'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
 		),
-		'sort_id',
 		array(
+			'type' => 'raw',
 			'name' => 'status',
-			'value' => '($data->status == 0) ? Yii::t(\'app\', \'No\') : Yii::t(\'app\', \'Yes\')',
+			'value' => 'CHtml::dropDownList("edit[$data->news_id][status]", $data->status, array("0"=>Yii::t("app", "No"), "1"=>Yii::t("app", "Yes")), array("class"=>"editable"))',
 			'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
 		),
-		'date_added',
+
 		array(
 			'header' => Yii::t('app', 'Grid Actions'),
 			'class' => 'CButtonColumn',
@@ -99,6 +109,7 @@ $this->breadcrumbs = array(
 	),
 )); ?>
 
+		</form>
 
 		</div>
 	</div>
@@ -112,19 +123,30 @@ $this->breadcrumbs = array(
 function GridViewDelete(params){
 	var params = jQuery.extend({},{
 		url : '<?php echo $this->createUrl('gridviewdelete'); ?>'
+		, postData : {returnUrl : <?php echo '<?php'?> echo Yii::app()->getRequest()->url?>}
 		, message : '<?php echo Yii::t('app', 'No results found.');?>'
-	}, params);
+	}, params || {});
 	var models = new Array();
 	jQuery.each(jQuery(':checkbox:not(:disabled)[name^="GridViewSelect"]:checked'), function(){
 		models.push(jQuery(this).val());
 	});
 	if(models.length > 0){
-		confirm('<?php echo Yii::t('app', 'Confirm Grid View Delete?')?>') && jQuery.post(params.url, {'selected[]' : models}, function(data){
-			var ret = $.parseJSON(data);
+		confirm('<?php echo Yii::t('app', 'Confirm Grid View Delete?')?>') && jQuery.post(params.url, jQuery.extend(params.postData || {}, {'selected[]' : models}), function(data){
+			var ret = jQuery.parseJSON(data);
             if (ret != null && ret.success != null && ret.success) {
             	jQuery.fn.yiiGridView.update('news-grid');
             }
 		});
 	}
+}
+/*
+ * Grid View Update
+ */
+function GridViewUpdate(params){
+	var params = jQuery.extend({},{
+		id : 'news-grid-form'
+	}, params || {});
+	confirm('<?php echo Yii::t('app', 'Confirm Grid View Update?')?>') && jQuery('#' + params.id).submit();
+	return false;
 }
 </script>
