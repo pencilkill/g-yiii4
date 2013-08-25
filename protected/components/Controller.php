@@ -21,23 +21,39 @@ class Controller extends CController
 	 */
 	public $breadcrumbs=array();
 
-
 	/**
-	 * @var ar
-	 * default language code is Yii::app()->language code which using to get language_id if the request does not set a language id
+	 * see app behavior to get more about init()
 	 */
-	public $language_id;
-
 	public function init() {
 		parent::init();
-		/**
-		 *  see behavior to get more about init()
-		 */
-		// set language_id
-		$this->setLanuageId(Yii::app()->language);
 	}
 
-	public function setLanuageId($languageCode){
-		$this->language_id = Language::model()->findByAttributes(array('code'=>$languageCode))->language_id;
-	}
+	public function createUrl($route,$params=array(),$ampersand='&')
+    {
+    	/**
+		 * default name is "language"
+		 */
+		$languageVar = (isset(Yii::app()->params->languageVar))? Yii::app()->params->languageVar : false;
+    	// append language param
+        if ($languageVar !== false && (! isset($params[$languageVar])))
+        {
+            $params[$languageVar] = Yii::app()->language;
+        }
+        // to make a no language parameter url sometimes
+        if($languageVar === false || (isset($params[$languageVar]) && $params[$languageVar] === false)){
+        	unset($params[$languageVar]);
+        }
+        // create
+        if($route===''){
+            $route=$this->getId().'/'.$this->getAction()->getId();
+        }
+        else if(strpos($route,'/')===false){
+            $route=$this->getId().'/'.$route;
+        }
+        if($route[0]!=='/' && ($module=$this->getModule())!==null){
+            $route=$module->getId().'/'.$route;
+        }
+        return Yii::app()->createUrl(trim($route,'/'),$params,$ampersand);
+    }
+
 }
