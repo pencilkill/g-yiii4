@@ -1,6 +1,6 @@
 <?php
 
-Yii::import('backend.models._base.BaseInformation') ;
+Yii::import('backend.models._base.BaseInformation');
 
 class Information extends BaseInformation
 {

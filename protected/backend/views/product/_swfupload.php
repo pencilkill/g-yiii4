@@ -1,5 +1,5 @@
 <?php
-$modelClass = get_class($gallery) ;
+$modelClass = get_class($gallery);
 $languages = 0;
 
 $this->widget('frontend.extensions.swfupload.CSwfUpload', array(
