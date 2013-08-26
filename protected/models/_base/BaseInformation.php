@@ -48,7 +48,7 @@ abstract class BaseInformation extends GxActiveRecord {
 
 	public function relations() {
 		return array(
-			'informationI18ns' => array(self::HAS_MANY, 'InformationI18n', 'information_id', 'index' => 'language_id'),
+			'informationI18ns' => array(self::HAS_ONE, 'InformationI18n', 'information_id'),
 		);
 	}
 
@@ -81,6 +81,7 @@ abstract class BaseInformation extends GxActiveRecord {
 		$criteria->group = 't.information_id';
 		$criteria->together = true;
 
+		$criteria->compare('informationI18ns.language_id', Yii::app()->params->languageId);
 		$criteria->compare('informationI18ns.title', $this->searchI18n->title, true);
 		$criteria->compare('informationI18ns.keywords', $this->searchI18n->keywords, true);
 		$criteria->compare('informationI18ns.description', $this->searchI18n->description, true);

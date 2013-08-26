@@ -9,8 +9,6 @@ class SettingController extends GxController {
 			foreach ($_POST['Setting'] as $key=>$val) {
 				Yii::app()->config->set($key, $val);
 			}
-
-			$this->redirect(array('index', 'group'=>$group));
 		}
 
 		$this->render('index', array(

@@ -50,7 +50,7 @@ abstract class BaseNews extends GxActiveRecord {
 
 	public function relations() {
 		return array(
-			'newsI18ns' => array(self::HAS_MANY, 'NewsI18n', 'news_id', 'index' => 'language_id'),
+			'newsI18ns' => array(self::HAS_ONE, 'NewsI18n', 'news_id'),
 		);
 	}
 
@@ -87,6 +87,7 @@ abstract class BaseNews extends GxActiveRecord {
 		$criteria->group = 't.news_id';
 		$criteria->together = true;
 
+		$criteria->compare('newsI18ns.language_id', Yii::app()->params->languageId);
 		$criteria->compare('newsI18ns.pic', $this->searchI18n->pic, true);
 		$criteria->compare('newsI18ns.title', $this->searchI18n->title, true);
 		$criteria->compare('newsI18ns.keywords', $this->searchI18n->keywords, true);

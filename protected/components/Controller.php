@@ -22,10 +22,19 @@ class Controller extends CController
 	public $breadcrumbs=array();
 
 	/**
+	 * @var assetsUrl
+	 */
+	public $assetsUrl = '';
+
+	/**
 	 * see app behavior to get more about init()
 	 */
 	public function init() {
 		parent::init();
+		// default head
+		$this->setDefaultHead();
+		// assetsUrl
+		$this->assetsUrl = $this->assetsUrl(Yii::app()->theme->basePath . DIRECTORY_SEPARATOR . 'assets');
 	}
 
 	public function createUrl($route,$params=array(),$ampersand='&')
@@ -33,14 +42,17 @@ class Controller extends CController
     	/**
 		 * default name is "language"
 		 */
-		$languageVar = (isset(Yii::app()->params->languageVar))? Yii::app()->params->languageVar : false;
-    	// append language param
-        if ($languageVar !== false && (! isset($params[$languageVar])))
-        {
-            $params[$languageVar] = Yii::app()->language;
-        }
-        // to make a no language parameter url sometimes
-        if($languageVar === false || (isset($params[$languageVar]) && $params[$languageVar] === false)){
+		$languageVar = isset(Yii::app()->params->languageVar)? Yii::app()->params->languageVar : null;
+    	/**
+		 * whether to show language query string
+		 */
+		$showLanguageVar = (isset(Yii::app()->params->showLanguageVar))? Yii::app()->params->showLanguageVar : false;
+
+        if ($showLanguageVar){
+	    	// append language param
+         	$params[$languageVar] = Yii::app()->language;
+        }else{
+	        // to make a no language parameter url sometimes
         	unset($params[$languageVar]);
         }
         // create
@@ -56,4 +68,20 @@ class Controller extends CController
         return Yii::app()->createUrl(trim($route,'/'),$params,$ampersand);
     }
 
+    public function setDefaultHead(){
+    	$l = Yii::app()->params->languageId;
+    	$t = 'meta_title_'.$l;
+    	$k = 'meta_keywords_'.$l;
+    	$d = 'meta_description_'.$l;
+
+    	// title
+    	$this->pageTitle = Yii::app()->config->get($t);
+    	// metaTags
+    	Yii::app()->clientScript->registerMetaTag(Yii::app()->config->get($k), 'keywords', null, null, 'keywords');
+    	Yii::app()->clientScript->registerMetaTag(Yii::app()->config->get($d), 'description', null, null, 'description');
+    }
+
+    public function assetsUrl($themePath){
+    	return Yii::app()->assetManager->publish($themePath);
+    }
 }

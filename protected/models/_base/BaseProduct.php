@@ -54,7 +54,7 @@ abstract class BaseProduct extends GxActiveRecord {
 		return array(
 			'product2categories' => array(self::HAS_MANY, 'Product2category', 'product_id'),
 			'product2images' => array(self::HAS_MANY, 'Product2image', 'product_id'),
-			'productI18ns' => array(self::HAS_MANY, 'ProductI18n', 'product_id', 'index' => 'language_id'),
+			'productI18ns' => array(self::HAS_ONE, 'ProductI18n', 'product_id'),
 		);
 	}
 
@@ -93,6 +93,7 @@ abstract class BaseProduct extends GxActiveRecord {
 		$criteria->group = 't.product_id';
 		$criteria->together = true;
 
+		$criteria->compare('productI18ns.language_id', Yii::app()->params->languageId);
 		$criteria->compare('productI18ns.pic', $this->searchI18n->pic, true);
 		$criteria->compare('productI18ns.title', $this->searchI18n->title, true);
 		$criteria->compare('productI18ns.keywords', $this->searchI18n->keywords, true);

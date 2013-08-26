@@ -1,4 +1,20 @@
 <?php
+/**
+ * ***********************************************************************
+ * ***********************************************************************
+ * ** About This Config **
+ * ** The backend configuration will override this configuration using CMap::mergeArray()
+ * ** That is mean, there is something we should not be setting in this config like CLinkPager
+ * ** unless someone can override all of this config using backend config to make a real backend config
+ * ** but we don't need to override in that case, why not just make two config that are separate from each other?
+ *
+ * ** so parts of config are dynamic setted
+ * ** see compenents/controller and its behavior to get more about those dynamic settings please
+ * **
+ * ***********************************************************************
+ * ***********************************************************************
+ */
+
 
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
@@ -26,12 +42,10 @@ return array(
 
 	// autoloading model and component classes
 	'import'=>array(
-		'application.models.*',
-		'application.components.*',
 		//required for module giix
 		'ext.giix-components.*',
 		//helpers
-		'application.helpers.*',
+		'frontend.helpers.*',
 	),
 
 	'modules'=>array(
@@ -80,7 +94,7 @@ return array(
 		*/
 
 		// uncomment the following to use a MySQL database
-		'db'=>require_once(dirname(__FILE__).'/db.php'),
+		'db'=>require_once(dirname(__FILE__).'/DB.php'),
 
 		'config' => array(
          	'class' => 'ext.EConfig',
@@ -100,11 +114,20 @@ return array(
 		 ),
 		 // mail
 		 'mail'=>array(
-            'class'=>'application.extensions.mail.Mail',
+            'class'=>'frontend.extensions.mail.Mail',
         ),
         // EShoppingCart
         'shoppingCart' => array(
 		        'class' => 'ext.eshoppingcart.EShoppingCart',
+		),
+		// example to config widget
+		'widgetFactory' => array(
+			'widgets' => array(
+				'CLinkPager' => array(
+					// Don't place you configuration for CLinkPager at here
+					// CLinkPager configuration is dynamic, see app behavior
+				),
+			),
 		),
         // error
 		'errorHandler'=>array(

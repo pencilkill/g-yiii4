@@ -54,7 +54,7 @@ abstract class BasePic extends GxActiveRecord {
 	public function relations() {
 		return array(
 			'picType' => array(self::BELONGS_TO, 'PicType', 'pic_type_id'),
-			'picI18ns' => array(self::HAS_MANY, 'PicI18n', 'pic_id', 'index' => 'language_id'),
+			'picI18ns' => array(self::HAS_ONE, 'PicI18n', 'pic_id'),
 		);
 	}
 
@@ -92,6 +92,7 @@ abstract class BasePic extends GxActiveRecord {
 		$criteria->group = 't.pic_id';
 		$criteria->together = true;
 
+		$criteria->compare('picI18ns.language_id', Yii::app()->params->languageId);
 		$criteria->compare('picI18ns.url', $this->searchI18n->url, true);
 		$criteria->compare('picI18ns.title', $this->searchI18n->title, true);
 		$criteria->compare('picI18ns.keywords', $this->searchI18n->keywords, true);

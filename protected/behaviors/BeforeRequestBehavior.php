@@ -7,18 +7,6 @@
  */
 class BeforeRequestBehavior extends CBehavior
 {
-	private $_languageCookieVar = '__language';
-
-	public function init(){
-		parent::init();
-
-		/**
-		 * set $_langCookieVar as custom brower cookie name which store current language
-		 * default name is "__language"
-		 */
-		$this->_languageCookieVar = (isset(Yii::app()->params->languageCookieVar))? Yii::app()->params->languageCookieVar :'__language';
-
-	}
 	/**
 	 * The attachEventHandler() mathod attaches an event handler to an event.
 	 * So: onBeginRequest, the backBeginRequest() method will be called.
@@ -57,7 +45,30 @@ class BeforeRequestBehavior extends CBehavior
 	 * set multilanguage using get method
 	 */
 	public function setMultiLanguage() {
-		$lanuageVar = isset(Yii::app()->params->languageVar) ? Yii::app()->params->languageVar : '' ;
+		// default languageId
+		if(! isset($this->owner->params->languageId)){
+			$this->owner->params = CMap::mergeArray($this->owner->params, array('languageId' => null));
+		}
+		// default lanuageVar
+		if(! isset($this->owner->params->languages)){
+			$this->owner->params = CMap::mergeArray($this->owner->params, array('languages' => array()));
+		}
+		// default showLanuageVar
+		if(! isset($this->owner->params->showLanguageVar)){
+			$this->owner->params = CMap::mergeArray($this->owner->params, array('showLanguageVar' => false));
+		}
+		// default lanuageVar
+		if(! isset($this->owner->params->languageVar)){
+			$this->owner->params = CMap::mergeArray($this->owner->params, array('languageVar' => 'language'));
+		}
+		// default languageCookieVar
+		if(! isset($this->owner->params->languageCookieVar)){
+			$this->owner->params = CMap::mergeArray($this->owner->params, array('languageCookieVar' => '__language'));
+		}
+
+
+		$lanuageVar = $this->owner->params->languageVar;
+		$languageCookieVar = $this->owner->params->languageCookieVar;
 		/**
 		 * usging param "language" of "get" method to set current language
 		 */
@@ -66,16 +77,16 @@ class BeforeRequestBehavior extends CBehavior
 		// set language state
 		if ($languageCode){
 			// user state
-            $this->owner->getUser()->setState($this->_languageCookieVar, $languageCode);
+            $this->owner->getUser()->setState($languageCookieVar, $languageCode);
 
             // cookie
-            $cookie = new CHttpCookie($this->_languageCookieVar, $languageCode);
+            $cookie = new CHttpCookie($languageCookieVar, $languageCode);
             $cookie->expire = time() + (60 * 60 * 24 * 365); // (1 year)
-            $this->owner->getRequest()->cookies[$this->_languageCookieVar] = $cookie;
-        } else if ($this->owner->getUser()->hasState($this->_languageCookieVar)){
-            $languageCode = $this->owner->getUser()->getState($this->_languageCookieVar);
-        } else if(isset($this->owner->getRequest()->cookies[$this->_languageCookieVar])){
-            $languageCode = $this->owner->getRequest()->cookies[$this->_languageCookieVar]->value;
+            $this->owner->getRequest()->cookies[$languageCookieVar] = $cookie;
+        } else if ($this->owner->getUser()->hasState($languageCookieVar)){
+            $languageCode = $this->owner->getUser()->getState($languageCookieVar);
+        } else if(isset($this->owner->getRequest()->cookies[$languageCookieVar])){
+            $languageCode = $this->owner->getRequest()->cookies[$languageCookieVar]->value;
         }
 
         /**
@@ -89,11 +100,7 @@ class BeforeRequestBehavior extends CBehavior
 		$languages = Language::model()->findAll($criteria);
 
 		// set languages
-		if(isset(Yii::app()->params->languages)){
-			Yii::app()->params->languages = $languages;
-		}else{
-			CMap::mergeArray(Yii::app()->params, array('languages' => $languages));
-		}
+		$this->owner->params->languages = $languages;
 
 		// finially language
 		if($languages && key($languages)){
@@ -105,11 +112,7 @@ class BeforeRequestBehavior extends CBehavior
 		$this->owner->setLanguage($languageCode);
 
 		// languageId
-		if(isset(Yii::app()->params->languageId)){
-			Yii::app()->params->languageId = $language->language_id;
-		}else{
-			CMap::mergeArray(Yii::app()->params, array('languageId' => $language->language_id));
-		}
+		$this->owner->params->languageId = $language->language_id;
 
 		return true;
 	}
@@ -118,6 +121,5 @@ class BeforeRequestBehavior extends CBehavior
 	public function setTheme($theme){
 		$this->owner->theme = $theme;
 	}
-
 }
 ?>

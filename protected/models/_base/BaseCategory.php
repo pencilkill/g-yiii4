@@ -50,7 +50,7 @@ abstract class BaseCategory extends GxActiveRecord {
 
 	public function relations() {
 		return array(
-			'categoryI18ns' => array(self::HAS_MANY, 'CategoryI18n', 'category_id', 'index' => 'language_id'),
+			'categoryI18ns' => array(self::HAS_ONE, 'CategoryI18n', 'category_id'),
 			'product2categories' => array(self::HAS_MANY, 'Product2category', 'category_id'),
 		);
 	}
@@ -85,6 +85,7 @@ abstract class BaseCategory extends GxActiveRecord {
 		$criteria->group = 't.category_id';
 		$criteria->together = true;
 
+		$criteria->compare('categoryI18ns.language_id', Yii::app()->params->languageId);
 		$criteria->compare('categoryI18ns.title', $this->searchI18n->title, true);
 		$criteria->compare('categoryI18ns.keywords', $this->searchI18n->keywords, true);
 		$criteria->compare('categoryI18ns.description', $this->searchI18n->description, true);

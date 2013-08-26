@@ -397,7 +397,7 @@ class Image {
 			chmod($new_image, 0644);
 		}
 
-		return strtr($new_image, array(Yii::getPathOfAlias('webroot').'/'=>''));
+		return strtr($new_image, array(Yii::getPathOfAlias('webroot').'/' => ''));
 	}
 
 	/**

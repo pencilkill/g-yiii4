@@ -1,5 +1,4 @@
 <?php
-
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
 
@@ -69,7 +68,7 @@ $backCfg = array(
 
 
 		'rights'=>array(
-		   'superuserName'=>'admin',
+		   'superuserName'=>'Admin',
 		   'authenticatedName'=>'Authenticated',
 		   'userClass'=>'Admin',
 		   'userIdColumn'=>'admin_id',
@@ -120,16 +119,16 @@ $backCfg = array(
 		),
 
 		// uncomment the following to enable URLs in path-format
-
+		/*
 		'urlManager'=>array(
 			'urlFormat'=>'path',
 			'rules'=>array(
 				//'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				//'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
-				'<language:\w+>/<controller:\w+>/<action:\w+>'=>'<language>/<controller>/<action>',
+				//'<language:\w+>/<controller:\w+>/<action:\w+>'=>'<language>/<controller>/<action>',
 			),
 		),
-
+		*/
 		/*
 		'db'=>array(
 			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
