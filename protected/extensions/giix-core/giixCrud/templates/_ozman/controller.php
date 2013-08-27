@@ -193,8 +193,11 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 		if (Yii::app()->getRequest()->getIsPostRequest()) {
 			$this->loadModel($id, '<?php echo $this->modelClass; ?>')->delete();
 
-			if (! Yii::app()->getRequest()->getIsAjaxRequest()){
-				$this->redirect(array('index'));
+			if (Yii::app()->getRequest()->getIsAjaxRequest()){
+				echo CJSON::encode(($flashes=Yii::app()->user->getFlashes()) ? $flashes : array('success' => true));
+				Yii::app()->end();
+			}else{
+				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->createUrl('index'));
 			}
 		} else {
 			throw new CHttpException(400, Yii::t('app', 'Your request is invalid.'));

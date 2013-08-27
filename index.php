@@ -7,8 +7,12 @@ defined('YII_DEBUG') or define('YII_DEBUG', (strpos($_SERVER['HTTP_HOST'], 'loca
 // specify how many levels of call stack should be shown in each log message
 defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
 
-require_once($yii);	// Yii accessable now
+require_once($yii);
 
-$config=CMap::mergeArray(require(dirname(__FILE__).'/protected/config/main.php'), require(dirname(__FILE__).'/protected/config/front.php'));
+// Yii accessable now
+// YiiBase method accessable now
+// classes defined by framework/YiiBase::$_coreClasses accessable now
+
+$config=CMap::mergeArray(require_once(dirname(__FILE__).'/protected/config/main.php'), require_once(dirname(__FILE__).'/protected/config/front.php'));
 
 Yii::createWebApplication($config)->run();

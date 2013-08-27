@@ -116,10 +116,6 @@ return array(
 		 'mail'=>array(
             'class'=>'frontend.extensions.mail.Mail',
         ),
-        // EShoppingCart
-        'shoppingCart' => array(
-		        'class' => 'ext.eshoppingcart.EShoppingCart',
-		),
 		// example to config widget
 		'widgetFactory' => array(
 			'widgets' => array(

@@ -15,9 +15,11 @@ $this->breadcrumbs = array(
 	<?php endif?>
 	</div>
 
+	<div id="messageBox">
 	<?php foreach(Yii::app()->user->getFlashes() as $key => $message) :?>
-	<div class="<?php echo $key?>"><?php echo $message?></div>
+		<div class="<?php echo $key?>"><?php echo $message?></div>
 	<?php endforeach;?>
+	</div>
 
 	<?php
 		Yii::app()->clientScript->registerScript('search', "
@@ -91,7 +93,8 @@ $this->breadcrumbs = array(
 		array(
 			'header' => Yii::t('app', 'Grid Actions'),
 			'class' => 'CButtonColumn',
-			'template' => '{up}&nbsp;{down}&nbsp;{update}&nbsp;{delete}',
+			'afterDelete' => 'function(link,success,data){var r=jQuery.parseJSON(data); if(!r || !r.success){jQuery.each(r, function(t, m){GridViewFlash(t, m); return false;});}}',
+			'template' => '{up}&emsp;{down}&emsp;&emsp;{update}&nbsp;{delete}',
 			'buttons' => array(
 				'up' => array(
 					'label'=>Yii::t('app', 'Level Up'),
@@ -102,8 +105,8 @@ $this->breadcrumbs = array(
 				'down' => array(
 					'label'=>Yii::t('app', 'Level Down'),
 					'imageUrl'=>'_ozman/image/down.gif',
-					'visible'=>'sizeOf($data->children)',
-            		'url'=>'sizeOf($data->children) ? Yii::app()->createUrl("category/index", array("parent_id"=>$data->category_id)) : ""',
+					'visible'=>'sizeOf($data->children) || sizeOf($data->product2categories)',
+            		'url'=>'sizeOf($data->children) ? Yii::app()->createUrl("category/index", array("parent_id"=>$data->category_id)) : (sizeOf($data->product2categories) ? Yii::app()->createUrl("product/index", array("category_id"=>$data->category_id)) : "")',
 				),
 			),
 		),
@@ -149,5 +152,18 @@ function GridViewUpdate(params){
 	}, params || {});
 	confirm('<?php echo Yii::t('app', 'Confirm Grid View Update?')?>') && jQuery('#' + params.id).submit();
 	return false;
+}
+/**
+ * Grid View Flash
+ */
+function GridViewFlash(type, message){
+	if(!(type || message)) return false;
+
+	var box = jQuery('#messageBox');
+	var em = box.find('.' + type);
+	var html = '<div class="' + type + '">' + message + '</div>';
+	(em.length == 0 ? box.append(html) : box.children('.' + type).replaceWith(html));
+	box.on('click', '.' + type, function(){jQuery(this).remove()});
+	return true;
 }
 </script>

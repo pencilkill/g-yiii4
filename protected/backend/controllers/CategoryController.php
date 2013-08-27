@@ -145,7 +145,7 @@ class CategoryController extends GxController {
 			$this->loadModel($id, 'Category')->delete();
 
 			if (Yii::app()->getRequest()->getIsAjaxRequest()){
-				echo CJSON::encode(array('success' => true));
+				echo CJSON::encode(($flashes=Yii::app()->user->getFlashes()) ? $flashes : array('success' => true));
 				Yii::app()->end();
 			}else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->createUrl('index'));

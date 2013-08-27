@@ -25,9 +25,11 @@ echo "<?php\n
 	<?php echo '<?php'?> endif?>
 	</div>
 
+	<div id="messageBox">
 	<?php echo '<?php'?> foreach(Yii::app()->user->getFlashes() as $key => $message) :?>
-	<div class="<?php echo '<?php'?> echo $key?>"><?php echo '<?php'?> echo $message?></div>
+		<div class="<?php echo '<?php'?> echo $key?>"><?php echo '<?php'?> echo $message?></div>
 	<?php echo '<?php'?> endforeach;?>
+	</div>
 
 	<?php echo "<?php\n"?>
 		Yii::app()->clientScript->registerScript('search', "
@@ -114,6 +116,7 @@ if ($count >= 7){
 		array(
 			'header' => Yii::t('app', 'Grid Actions'),
 			'class' => 'CButtonColumn',
+			'afterDelete' => 'function(link,success,data){var r=jQuery.parseJSON(data); if(!r || !r.success){jQuery.each(r, function(t, m){GridViewFlash(t, m); return false;});}}',
 			'template' => '{update}&nbsp;{delete}',
 		),
 	),
@@ -158,5 +161,16 @@ function GridViewUpdate(params){
 	}, params || {});
 	confirm('<?php echo "<?php" ?> echo Yii::t('app', 'Confirm Grid View Update?')?>') && jQuery('#' + params.id).submit();
 	return false;
+}
+/**
+ * Grid View Flash
+ */
+function GridViewFlash(type, message){
+	if(!(type || message)) return false;
+
+	var box = jQuery('#messageBox');
+	var html = '<div class="' + type + '">' + message + '</div>';
+	box.children('.' + type).length == 0 ? box.append(html) : box.children('.' + type).replaceWith(html);
+	return true;
 }
 </script>

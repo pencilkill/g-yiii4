@@ -56,6 +56,23 @@ class CSite {
 	}
 
 	/**
+	 * image resize, cache is force to be enabled
+	 * @param $imageFile
+	 * @param $width
+	 * @param $height
+	 * @param $master
+	 */
+	public static function resize($imageFile, $width, $height, $master=2)
+	{
+		$src = strtr($imageFile, array(Yii::getPathOfAlias('webroot')=>''));
+		if($width && $height){
+			$src = Yii::app()->image->load($imageFile)->resize($width, $height, $master)->cache(false);
+		}
+
+		return $src;
+	}
+
+	/**
 	 * @param String $directory
 	 */
 	public static function createUploadDirectory($directory=null, $full=false){

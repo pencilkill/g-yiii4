@@ -1,16 +1,21 @@
 <?php
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
+// This is the backend main Web application configuration.
+
 
 $backend=dirname(dirname(__FILE__));
 $frontend=dirname($backend);
+
+// This step should be done firstly
+// cause require one file will run the script which may be define some variable besides configuration
+$frontCfg = require_once($frontend.'/config/main.php');
+// override safety now
+
 Yii::setPathOfAlias('backend', $backend);
 
 // RBAC rights
 Yii::setPathOfAlias('rights', Yii::getPathOfAlias('frontend.modules.rights'));
-
-// This is the backend main Web application configuration.
-$frontCfg = require_once($frontend.'/config/main.php');
 
 // This is the backend main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
@@ -43,7 +48,6 @@ $backCfg = array(
 	'import'=>array(
 		'backend.models.*',
 		'backend.components.*',
-		'backend.behaviors.*',
 		'frontend.modules.rights.*',
 		'frontend.modules.rights.components.*',
 	),

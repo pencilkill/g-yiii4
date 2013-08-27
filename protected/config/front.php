@@ -10,6 +10,10 @@ return array(
 	),
 	// application components
 	'components'=>array(
+        // EShoppingCart
+        'shoppingCart' => array(
+		        'class' => 'ext.eshoppingcart.EShoppingCart',
+		),
 		// example to config widget
 		'widgetFactory' => array(
 			'widgets' => array(
@@ -31,6 +35,19 @@ return array(
 					  'cssFile' => NULL,
 					  'htmlOptions' => array (
 					  ),
+				),
+				'CBreadcrumbs' => array (
+					  'tagName' => 'div',
+					  'htmlOptions' => array (
+					    'class' => 'breadcrumbs',
+					  ),
+					  'encodeLabel' => true,
+					  'homeLink' => NULL,
+					  'links' => array (
+					  ),
+					  'activeLinkTemplate' => '<a href="{url}">{label}</a>',
+					  'inactiveLinkTemplate' => '<span>{label}</span>',
+					  'separator' => ' &raquo; ',
 				),
 			),
 		),
