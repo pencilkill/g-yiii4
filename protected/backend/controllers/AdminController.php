@@ -21,9 +21,17 @@ class AdminController extends GxController {
 	public function actionCreate() {
 		$model = new Admin;
 
-		// RBAC
+		// RBAC, see modules rights components/rights to get more
 		$authorizer = Yii::app()->getModule("rights")->getAuthorizer();
 		$roles = $authorizer->getRoles(false);
+
+		$rolesList = array();
+		foreach ($roles as $name => $role){
+			$rolesList[$name] = $name;
+		}
+
+		// leave it to be as default roles
+		//$model->roles = array_keys(Rights::getAssignedRoles($model->admin_id, true));
 
 		$this->performAjaxValidationEx(array(
 				array(
@@ -35,6 +43,11 @@ class AdminController extends GxController {
 
 		if (isset($_POST['Admin'])) {
 			$model->setAttributes($_POST['Admin']);
+
+			if(isset($_POST['Admin']['roles'])){
+				//$model->roles = $_POST['Admin']['roles'];
+			}
+
 			// 超級管理員只可手動設定
 			$model->super = 0;
 
@@ -42,9 +55,16 @@ class AdminController extends GxController {
 			if ($model->validate()) {
 				$model->save(false);
 
-				// RBAC
-				if(array_key_exists($model->defaultRole, $roles)){
-					$authorizer->authManager->assign($model->defaultRole, $model->admin_id);
+				// RBAC revoke roles
+				$assignedRoles = Rights::getAssignedRoles($model->admin_id, false); // sort false
+				foreach ($assignedRoles as $roleName => $roleItem){
+					Rights::revoke($roleName, $model->admin_id);
+				}
+
+				// RBAC assign roles, acctual rights recursive setting is already finished
+				// here is just for compatibility
+				foreach($model->roles as $role){
+					Rights::assign($role, $model->admin_id);
 				}
 
 				if (Yii::app()->getRequest()->getIsAjaxRequest()){
@@ -57,7 +77,8 @@ class AdminController extends GxController {
 
 		$this->render('create', array(
 			'model' => $model,
-			//'roles' => $roles,
+			'roles' => $roles,
+			'rolesList' => $rolesList,
 		));
 	}
 
@@ -65,8 +86,15 @@ class AdminController extends GxController {
 		$model = $this->loadModel($id, 'Admin');
 
 		// RBAC
-		//$authorizer = Yii::app()->getModule("rights")->getAuthorizer();
-		//$roles = $authorizer->getRoles();
+		$authorizer = Yii::app()->getModule("rights")->getAuthorizer();
+		$roles = $authorizer->getRoles(false);
+
+		$rolesList = array();
+		foreach ($roles as $name => $role){
+			$rolesList[$name] = $name;
+		}
+
+		$model->roles = array_keys(Rights::getAssignedRoles($model->admin_id, true));
 
 		$this->performAjaxValidationEx(array(
 				array(
@@ -85,12 +113,17 @@ class AdminController extends GxController {
 			if ($model->validate()) {
 				$model->save(false);
 
-				// RBAC
-				/*
-				if(array_key_exists($model->defaultRole, $roles)){
-					$authorizer->authManager->assign($model->defaultRole, $model->admin_id);
+				// RBAC revoke roles
+				$assignedRoles = Rights::getAssignedRoles($model->admin_id, false); // sort false
+				foreach ($assignedRoles as $roleName => $roleItem){
+					Rights::revoke($roleName, $model->admin_id);
 				}
-				*/
+
+				// RBAC assign roles, acctual rights recursive setting is already finished
+				// here is just for compatibility
+				foreach($model->roles as $role){
+					Rights::assign($role, $model->admin_id);
+				}
 
 				if (Yii::app()->getRequest()->getIsAjaxRequest()){
 					Yii::app()->end();
@@ -102,7 +135,8 @@ class AdminController extends GxController {
 
 		$this->render('update', array(
 			'model' => $model,
-			//'roles' => $roles,
+			'roles' => $roles,
+			'rolesList' => $rolesList,
 		));
 	}
 

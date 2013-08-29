@@ -125,7 +125,9 @@ class RightsModule extends CWebModule
 					'class'=>'RInstaller',
 					'superuserName'=>$this->superuserName,
 					'authenticatedName'=>$this->authenticatedName,
+					// notice that guestName get from app 	// sam@ozchamp.net
 					'guestName'=>Yii::app()->user->guestName,
+					// notice that guestName get from app
 					'defaultRoles'=>Yii::app()->authManager->defaultRoles,
 				),
 			));

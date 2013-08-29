@@ -110,6 +110,7 @@ $backCfg = array(
 		'authManager'=>array(
 			'class'=>'RDbAuthManager',
 			'connectionID'=>'db',
+			// this is the deault role which user use to login, should be the lowest for backend
 			'defaultRoles'=>array('Guest'),
 			//DB table, maybe auth will be added frontend sometime
 			'assignmentTable' => 'authassignment',

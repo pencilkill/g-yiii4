@@ -25,6 +25,7 @@ return array (
   'Email' => '郵箱',
   'Name' => '姓名',
   'Password' => '密碼',
+  'Roles' => '管理組',
   'Status' => '啟用',
   'Update Time' => '更新時間',
   'Username' => '用戶名',
