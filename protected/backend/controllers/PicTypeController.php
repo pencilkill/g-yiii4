@@ -92,12 +92,27 @@ class PicTypeController extends GxController {
 
 	public function actionGridviewdelete() {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
-			$model = new PicType;
+			$selected = Yii::app()->getRequest()->getPost('selected');
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('pic_type_id', Yii::app()->getRequest()->getPost('selected'));
+			$criteria->compare('pic_type_id', $selected);
 
-			PicType::model()->deleteAll($criteria);
+			$models = PicType::model()->findAll($criteria);
+
+			$valid = true;
+
+			foreach ($models as $model){
+				$valid = $valid && $model->beforeDelete();
+				if(! $valid){
+					break;
+				}
+			}
+
+			if($valid) {
+				foreach ($models as $model){
+					$model->delete();
+				}
+			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
 				echo CJSON::encode(array('success' => true));

@@ -21,6 +21,7 @@ class AdminController extends GxController {
 	public function actionCreate() {
 		$model = new Admin;
 
+
 		// RBAC, see modules rights components/rights to get more
 		$authorizer = Yii::app()->getModule("rights")->getAuthorizer();
 		$roles = $authorizer->getRoles(false);
@@ -29,9 +30,6 @@ class AdminController extends GxController {
 		foreach ($roles as $name => $role){
 			$rolesList[$name] = $name;
 		}
-
-		// leave it to be as default roles
-		//$model->roles = array_keys(Rights::getAssignedRoles($model->admin_id, true));
 
 		$this->performAjaxValidationEx(array(
 				array(
@@ -43,10 +41,6 @@ class AdminController extends GxController {
 
 		if (isset($_POST['Admin'])) {
 			$model->setAttributes($_POST['Admin']);
-
-			if(isset($_POST['Admin']['roles'])){
-				//$model->roles = $_POST['Admin']['roles'];
-			}
 
 			// 超級管理員只可手動設定
 			$model->super = 0;
@@ -77,13 +71,13 @@ class AdminController extends GxController {
 
 		$this->render('create', array(
 			'model' => $model,
-			'roles' => $roles,
 			'rolesList' => $rolesList,
 		));
 	}
 
 	public function actionUpdate($id) {
 		$model = $this->loadModel($id, 'Admin');
+
 
 		// RBAC
 		$authorizer = Yii::app()->getModule("rights")->getAuthorizer();
@@ -94,7 +88,7 @@ class AdminController extends GxController {
 			$rolesList[$name] = $name;
 		}
 
-		$model->roles = array_keys(Rights::getAssignedRoles($model->admin_id, true));
+		$model->roles = array_keys(Rights::getAssignedRoles($model->admin_id, false));
 
 		$this->performAjaxValidationEx(array(
 				array(
@@ -135,7 +129,6 @@ class AdminController extends GxController {
 
 		$this->render('update', array(
 			'model' => $model,
-			'roles' => $roles,
 			'rolesList' => $rolesList,
 		));
 	}
@@ -158,6 +151,7 @@ class AdminController extends GxController {
 
 			if ($model->validate()) {
 				$model->save(false);
+
 				if (Yii::app()->getRequest()->getIsAjaxRequest())
 					Yii::app()->end();
 				else{
@@ -188,14 +182,29 @@ class AdminController extends GxController {
 
 	public function actionGridviewdelete() {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
-			$model = new Admin;
+			$selected = Yii::app()->getRequest()->getPost('selected');
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('admin_id', Yii::app()->getRequest()->getPost('selected'));
+			$criteria->compare('admin_id', $selected);
 			// except super ar, event beforeDelete() has no effect on model()->deleteAll()
 			$criteria->compare('super', 0);
 
-			Admin::model()->deleteAll($criteria);
+			$models = Admin::model()->findAll($criteria);
+
+			$valid = true;
+
+			foreach ($models as $model){
+				$valid = $valid && $model->beforeDelete();
+				if(! $valid){
+					break;
+				}
+			}
+
+			if($valid) {
+				foreach ($models as $model){
+					$model->delete();
+				}
+			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
 				echo CJSON::encode(array('success' => true));

@@ -116,12 +116,28 @@ class LanguageController extends GxController {
 
 	public function actionGridviewdelete() {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
-			$model = new Language;
+			$selected = Yii::app()->getRequest()->getPost('selected');
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('language_id', Yii::app()->getRequest()->getPost('selected'));
+			$criteria->compare('language_id', $selected);
 
-			Language::model()->deleteAll($criteria);
+			$models = Language::model()->findAll($criteria);
+
+			$valid = true;
+
+			foreach ($models as $model){
+				$valid = $valid && $model->beforeDelete();
+				if(! $valid){
+					break;
+				}
+			}
+
+			if($valid) {
+				foreach ($models as $model){
+					$model->delete();
+				}
+			}
+
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
 				echo CJSON::encode(array('success' => true));

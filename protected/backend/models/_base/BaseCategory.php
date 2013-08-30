@@ -102,6 +102,10 @@ abstract class BaseCategory extends GxActiveRecord {
 					'*',
 				),
 			),
+			'pagination'=>array(
+				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
+				'pageVar' => 'page',
+			),
 		));
 	}
 

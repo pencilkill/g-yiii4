@@ -12,9 +12,9 @@
 
 <link rel="stylesheet" type="text/css" href="_ozman/stylesheet/stylesheet.css" />
 
-<script type="text/javascript" src="_ozman/javascript/jquery/php.js"></script>
 <script type="text/javascript" src="_ozman/javascript/jquery/tabs.js"></script>
 <script type="text/javascript" src="_ozman/javascript/jquery/superfish/js/superfish.js"></script>
+<script type="text/javascript" src="_ozman/javascript/jquery/main.js"></script>
 
 </head>
 

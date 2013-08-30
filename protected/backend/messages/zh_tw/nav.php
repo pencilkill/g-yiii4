@@ -24,7 +24,7 @@ return array (
   'Contact' => '聯絡我們',
   'Dashboard' => '管理首頁',
   'Exit System' => '退出系統',
-  'Information' => '單一頁面',
+  'Information' => '單頁訊息',
   'News' => '最新消息',
   'Pic' => '圖片管理',
   'Product' => '商品',

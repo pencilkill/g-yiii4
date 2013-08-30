@@ -56,8 +56,8 @@ echo "<?php\n
 			<div class="buttons">
 				<?php echo '<?php'?> echo GxHtml::link(Yii::t('app', 'Advanced Search'), '#', array('class' => 'search-button button', 'style' => 'display: none;')); ?>
 				<a onclick="location='<?php echo '<?php'?> echo $this->createUrl('create')?>';" class="button"><?php echo '<?php'?> echo Yii::t('app', 'Create')?></a>
-				<a onclick="GridViewUpdate();" class="button" <?php if(array_intersect($updateColumns, array_keys($this->tableSchema->columns))):?>style="display:none;"<?php endif;?>><?php echo '<?php'?> echo Yii::t('app', 'Save')?></a>
-				<a onclick="GridViewDelete();" class="button"><?php echo '<?php'?> echo Yii::t('app', 'Delete')?></a>
+				<a onclick="GVUpdate();" class="button" <?php if(array_intersect($updateColumns, array_keys($this->tableSchema->columns))):?>style="display:none;"<?php endif;?>><?php echo '<?php'?> echo Yii::t('app', 'Save')?></a>
+				<a onclick="GVDelete();" class="button"><?php echo '<?php'?> echo Yii::t('app', 'Delete')?></a>
 			</div>
 		</div>
 		<div class="content">
@@ -66,6 +66,7 @@ echo "<?php\n
 		<?php echo '<?php' ?> echo CHtml::hiddenField('returnUrl', Yii::app()->getRequest()->url)?>
 <?php echo '<?php'; ?> $this->widget('zii.widgets.grid.CGridView', array(
 	'id' => '<?php echo $this->class2id($this->modelClass)?>-grid',
+	'ajaxUpdate' => false,
 	'template' => "{items}\n<div class=\"pagination\">{summary}{pager}</div>",
 	'itemsCssClass' => 'list',
 	'filterCssClass' => 'filter',
@@ -133,44 +134,25 @@ if ($count >= 7){
 /*
  * Grid View Delete
  */
-function GridViewDelete(params){
-	var params = jQuery.extend({},{
-		url : '<?php echo "<?php" ?> echo $this->createUrl('gridviewdelete'); ?>'
-		, postData : {returnUrl : '<?php echo '<?php'?> echo Yii::app()->getRequest()->url?>'}
-		, message : '<?php echo "<?php" ?> echo Yii::t('app', 'No results found.');?>'
-	}, params || {});
-	var models = new Array();
-	jQuery.each(jQuery(':checkbox:not(:disabled)[name^="GridViewSelect"]:checked'), function(){
-		models.push(jQuery(this).val());
-	});
-	if(models.length > 0){
-		confirm('<?php echo "<?php" ?> echo Yii::t('app', 'Confirm Grid View Delete?')?>') && jQuery.post(params.url, jQuery.extend(params.postData || {}, {'selected[]' : models}), function(data){
-			var ret = jQuery.parseJSON(data);
-            if (ret != null && ret.success != null && ret.success) {
-            	jQuery.fn.yiiGridView.update('<?php echo $this->class2id($this->modelClass); ?>-grid');
-            }
-		});
-	}
-}
+ function GVDelete(){
+	 var params = {
+			id : '<?php echo $this->class2id($this->modelClass)?>-grid'
+			, url : '<?php echo '<?php'; ?> echo $this->createUrl('gridviewdelete'); ?>'
+			, checkBoxColumn : ':checkbox:not(:disabled)[name^="GridViewSelect"]:checked'
+			, postData : {returnUrl : '<?php echo '<?php'; ?> echo Yii::app()->getRequest()->url?>'}
+			, deleteConfirmation : '<?php echo '<?php'; ?> echo Yii::t('app', 'Confirm Grid View Delete?')?>'
+			, selectNoneMessage : '<?php echo '<?php'; ?> echo Yii::t('app', 'No results found.');?>'
+		};
+	 GridViewDelete(params);
+ }
 /*
  * Grid View Update
  */
-function GridViewUpdate(params){
-	var params = jQuery.extend({},{
+ function GVUpdate(){
+	var params = {
 		id : '<?php echo $this->class2id($this->modelClass)?>-grid-form'
-	}, params || {});
-	confirm('<?php echo "<?php" ?> echo Yii::t('app', 'Confirm Grid View Update?')?>') && jQuery('#' + params.id).submit();
-	return false;
-}
-/**
- * Grid View Flash
- */
-function GridViewFlash(type, message){
-	if(!(type || message)) return false;
-
-	var box = jQuery('#messageBox');
-	var html = '<div class="' + type + '">' + message + '</div>';
-	box.children('.' + type).length == 0 ? box.append(html) : box.children('.' + type).replaceWith(html);
-	return true;
-}
+		, submitConfirmation : '<?php echo '<?php'; ?> echo Yii::t('app', 'Confirm Grid View Update?')?>'
+	};
+	GridViewUpdate(params);
+ }
 </script>

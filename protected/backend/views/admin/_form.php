@@ -24,7 +24,7 @@
 		$form = $this->beginWidget('GxActiveForm', array(
 			'id' => 'admin-form',
 			'enableAjaxValidation' => true,
-			'htmlOptions' => array('enctype' => 'multipart/form-data'),
+			'htmlOptions' => array('enctype' => 'multipart/form-data', 'autocomplete'=>'off'),
 		));
 	?>
 
@@ -98,12 +98,12 @@
 		</tr><!-- row -->
 
 
-		<tr>
+		<tr style="display:none;">
 			<td>
 				<?php echo $form->labelEx($model,'roles'); ?>
 			</td>
 			<td>
-				<?php echo CHtml::radioButtonList(CHtml::activeName($model, 'roles[]'), array_shift($model->roles), $rolesList, array()); ?>
+				<?php echo CHtml::dropDownList(CHtml::activeName($model, 'roles[]'), $model->roles, $rolesList, array())?>
 				<?php //echo CHtml::checkBoxList(CHtml::activeName($model, 'roles'), $model->roles, $rolesList, array()); ?>
 				<?php echo $form->error($model,'roles'); ?>
 			</td>

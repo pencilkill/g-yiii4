@@ -123,6 +123,33 @@ $backCfg = array(
 			'basePath'=>$backend.'/messages',
 		),
 
+		'widgetFactory' => array(
+			'widgets' => array(
+				'CLinkPager' => array (
+					  'firstPageCssClass' => 'first',
+					  'lastPageCssClass' => 'last',
+					  'previousPageCssClass' => 'previous',
+					  'nextPageCssClass' => 'next',
+					  'internalPageCssClass' => 'page',
+					  'hiddenPageCssClass' => 'hidden',
+					  'selectedPageCssClass' => 'selected',
+					  'maxButtonCount' => 10,
+					  'nextPageLabel' => '>',
+					  'prevPageLabel' => '<',
+					  'firstPageLabel' => '<<',
+					  'lastPageLabel' => '>>',
+					  'header' => '',
+					  'footer' => '',
+					  'cssFile' => NULL,
+					  'htmlOptions' => array (
+					  ),
+				),
+				'CGridView' => array(
+					'ajaxUpdate' => false,
+				),
+			),
+		),
+
 		// uncomment the following to enable URLs in path-format
 		/*
 		'urlManager'=>array(
@@ -142,15 +169,6 @@ $backCfg = array(
 		// uncomment the following to use a MySQL database
 
 		//'db'=>require_once(dirname(__FILE__).'/cfg.db.php'),
-
-		// example to config widget
-		'widgetFactory' => array(
-			'widgets' => array(
-				'CGridView' => array(
-					//'ajaxUpdate' => false,
-				),
-			),
-		),
 
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors

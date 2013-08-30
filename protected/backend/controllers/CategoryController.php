@@ -159,14 +159,13 @@ class CategoryController extends GxController {
 	public function actionGridviewdelete() {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
 			$selected = Yii::app()->getRequest()->getPost('selected');
-			$valid = true;
-
-			$model = new Category;
 
 			$criteria= new CDbCriteria;
 			$criteria->compare('category_id', $selected);
 
 			$models = Category::model()->findAll($criteria);
+
+			$valid = true;
 
 			foreach ($models as $model){
 				$valid = $valid && $model->beforeDelete();
@@ -176,7 +175,9 @@ class CategoryController extends GxController {
 			}
 
 			if($valid) {
-				Category::model()->deleteAll($criteria);
+				foreach ($models as $model){
+					$model->delete();
+				}
 			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {

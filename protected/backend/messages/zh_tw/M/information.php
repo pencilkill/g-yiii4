@@ -18,8 +18,8 @@
  */
 return array (
   'Create Time' => '創建時間',
-  'Information' => '单页',
-  'Information|Informations' => '單頁',
+  'Information' => '單頁訊息',
+  'Information|Informations' => '單頁訊息',
   'Sort' => '排序',
   'Status' => '啟用',
   'Update Time' => '更新時間',

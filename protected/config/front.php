@@ -7,6 +7,7 @@ return array(
 	'import'=>array(
 		'frontend.models.*',
 		'frontend.components.*',
+		'ext.OzLinkPager'
 	),
 	// application components
 	'components'=>array(
@@ -17,25 +18,6 @@ return array(
 		// example to config widget
 		'widgetFactory' => array(
 			'widgets' => array(
-				'CLinkPager' => array (
-					  'firstPageCssClass' => 'first',
-					  'lastPageCssClass' => 'last',
-					  'previousPageCssClass' => 'previous',
-					  'nextPageCssClass' => 'next',
-					  'internalPageCssClass' => 'page',
-					  'hiddenPageCssClass' => 'hidden',
-					  'selectedPageCssClass' => 'selected',
-					  'maxButtonCount' => 10,
-					  'nextPageLabel' => NULL,
-					  'prevPageLabel' => NULL,
-					  'firstPageLabel' => NULL,
-					  'lastPageLabel' => NULL,
-					  'header' => NULL,
-					  'footer' => '',
-					  'cssFile' => NULL,
-					  'htmlOptions' => array (
-					  ),
-				),
 				'CBreadcrumbs' => array (
 					  'tagName' => 'div',
 					  'htmlOptions' => array (

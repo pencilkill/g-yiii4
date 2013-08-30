@@ -20,9 +20,11 @@ $groups = array(
 	<?php endif?>
   </div>
 
+  <div id="messageBox">
   <?php foreach(Yii::app()->user->getFlashes() as $key => $message) :?>
 	<div class="<?php echo $key?>"><?php echo $message?></div>
   <?php endforeach;?>
+  </div>
 
   <div class="box">
     <div class="heading">

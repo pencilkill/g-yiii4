@@ -10,7 +10,6 @@ $this->breadcrumbs = array(
 <?php
 $this->renderPartial('_form', array(
 		'model' => $model,
-		'roles' => $roles,
 		'rolesList' => $rolesList,
 	)
 );

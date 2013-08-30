@@ -96,6 +96,7 @@ abstract class BaseInformation extends GxActiveRecord {
 					'*',
 				),
 			),
+			'pagination' => false,
 		));
 	}
 

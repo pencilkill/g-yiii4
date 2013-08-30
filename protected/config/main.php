@@ -121,7 +121,8 @@ return array(
 			'widgets' => array(
 				'CLinkPager' => array(
 					// Don't place you configuration for CLinkPager at here
-					// CLinkPager configuration is dynamic, see app behavior
+					// CLinkPager configuration is defined in front config
+					// We have created extension OzLinkPage actually, see ext/OzLinkPager
 				),
 			),
 		),

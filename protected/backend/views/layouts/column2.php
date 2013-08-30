@@ -5,19 +5,17 @@
 
 <script type="text/javascript">
 /**
- * setting $.fn.yiiactiveform
- */
-jQuery(function($){
-	if($.fn.yiiactiveform){
-		$.fn.yiiactiveform.defaults = $.extend($.fn.yiiactiveform.defaults, {
-			inputContainer:'tr'
-			//,successCssClass:'success'
-		}||{});
-	}
-});
-/**
  * tabs
  */
 jQuery('#tabs a').tabs();
+/**
+ * setting $.fn.yiiactiveform
+ */
+if ($.fn.yiiactiveform) {
+	$.fn.yiiactiveform.defaults = $.extend($.fn.yiiactiveform.defaults, {
+		inputContainer : 'tr'
+	// ,successCssClass:'success'
+	} || {});
+}
 </script>
 <?php $this->endContent(); ?>

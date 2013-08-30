@@ -18,7 +18,7 @@ class ContactController extends GxController {
 		));
 	}
 
-	
+
 
 	public function actionUpdate($id) {
 		$model = $this->loadModel($id, 'Contact');
@@ -64,12 +64,29 @@ class ContactController extends GxController {
 
 	public function actionGridviewdelete() {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
-			$model = new Contact;
+			$selected = Yii::app()->getRequest()->getPost('selected');
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('contact_id', Yii::app()->getRequest()->getPost('selected'));
+			$criteria->compare('contact_id', $selected);
 
-			Contact::model()->deleteAll($criteria);
+
+			Contact::model()->findAll($criteria);
+
+			$valid = true;
+
+			foreach ($models as $model){
+				$valid = $valid && $model->beforeDelete();
+				if(! $valid){
+					break;
+				}
+			}
+
+			if($valid) {
+				foreach ($models as $model){
+					$model->delete();
+				}
+			}
+
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
 				echo CJSON::encode(array('success' => true));

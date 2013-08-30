@@ -22,11 +22,11 @@ class Admin extends BaseAdmin
 	public function rules(){
 		$rules = array(
 			array('email', 'email'),
-			array('confirm_password, password, roles', 'required', 'on' => 'create'),
+			array('confirm_password, password', 'required', 'on' => 'insert'),
 			array('confirm_password, password', 'length', 'min' => 6),
 			array('confirm_password', 'compare', 'compareAttribute' => 'password'),
 			array('username', 'unique', 'className' => 'Admin', 'attributeName' => 'username'),
-			array('roles', 'validRoles', 'on' => 'create, update'),
+			array('roles', 'validRoles', 'on' => 'insert, update'),
 			array('roles', 'safe', 'on'=>'search'),
 		);
 
@@ -68,7 +68,7 @@ class Admin extends BaseAdmin
         $authorizer = Yii::app()->getModule("rights")->getAuthorizer();
 		$roles = $authorizer->getRoles(false);
 
-		$valid = true;
+		$valid = (bool)sizeOf($this->roles);
 		foreach($this->roles as $role){
 			$valid = array_key_exists($role, $roles) && $valid;
 			if(! $valid){
@@ -93,5 +93,12 @@ class Admin extends BaseAdmin
 
 	public function beforeDelete() {
 		return $this->super ? false : true;
+	}
+
+	public function afterDelete(){
+		$assignedRoles = Rights::getAssignedRoles($this->admin_id, false); // sort false
+		foreach ($assignedRoles as $roleName => $roleItem){
+			Rights::revoke($roleName, $this->admin_id);
+		}
 	}
 }

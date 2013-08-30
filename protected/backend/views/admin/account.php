@@ -31,7 +31,7 @@ $this->breadcrumbs = array(
 		$form = $this->beginWidget('GxActiveForm', array(
 			'id' => 'admin-form',
 			'enableAjaxValidation' => true,
-			'htmlOptions' => array('enctype' => 'multipart/form-data'),
+			'htmlOptions' => array('enctype' => 'multipart/form-data', 'autocomplete'=>'off'),
 		));
 	?>
 

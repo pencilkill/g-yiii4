@@ -28,6 +28,7 @@ class SiteController extends Controller
 	public function actionIndex()
 	{
 
+
 		$this->render('//site/index');
 	}
 
@@ -48,7 +49,7 @@ class SiteController extends Controller
 	/**
 	 * Displays the contact page
 	 */
-	
+
 
 	/**
 	 * Displays the login page
