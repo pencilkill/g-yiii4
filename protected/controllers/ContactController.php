@@ -6,16 +6,31 @@ class ContactController extends GxController {
 	public function actions()
 	{
 		return array(
-			// captcha action renders the CAPTCHA image displayed on the contact page
+		// captcha action renders the CAPTCHA image displayed on the contact page
 
 			'captcha'=>array(
 				'class'=>'CCaptchaAction',
 				'backColor'=>0xFFFFFF,
 				'testLimit'=>1,
-			),
+		),
 
 		);
 	}
+
+	public function filters()
+	{
+		return array(
+            'accessControl',
+		);
+	}
+
+	public function accessRules()
+    {
+        return array(
+            array('deny',
+            ),
+        );
+    }
 
 	public function actionIndex() {
 		$model=new ContactForm;
