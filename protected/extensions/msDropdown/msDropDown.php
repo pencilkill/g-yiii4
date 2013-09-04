@@ -1,18 +1,9 @@
 <?php
 /**
- * CDropDownMenu class file.
- *
- * @author Herbert Maschke <thyseus@gmail.com>
- * @link http://www.yiiframework.com/
- */
-
-/**
- * CDropDownMenu is an extension to CMenu that supports Drop-Down Menus using the
- * superfish jquery-plugin.
- *
- * Please be sure to also read the CMenu API Documentation to understand how this
- * menu works.
- *
+ * msDropDown class file.
+ * Simply register script and css file
+ * Nothing further about jQuery object Bind, you can finished those in anywhere if necessary.
+ * @author Sam <sam@ozchamp.com>
  */
 
 class msDropDown extends CInputWidget

@@ -37,6 +37,14 @@ class Controller extends CController
 		$this->assetsUrl = $this->assetsUrl(Yii::app()->theme->basePath . DIRECTORY_SEPARATOR . 'assets');
 	}
 
+	/**
+	 * This function override to handler url with language
+	 * it depends on the app params configured in config/params.php whether to show language var automatic
+	 * @see config/params.php
+	 * @param $route
+	 * @param $params
+	 * @param $ampersand
+	 */
 	public function createUrl($route,$params=array(),$ampersand='&')
     {
     	/**
@@ -68,6 +76,11 @@ class Controller extends CController
         return Yii::app()->createUrl(trim($route,'/'),$params,$ampersand);
     }
 
+    /**
+     * Set default page title, keywords, description
+     * The core jquery script is not included, it will be registered in main layout if necessary
+     * We can change title and meta dynamically using the meta unique id which is the fifth parameter for app registerMetaTag()
+     */
     public function setDefaultHead(){
     	$l = Yii::app()->params->languageId;
     	$t = 'meta_title_'.$l;
@@ -81,6 +94,11 @@ class Controller extends CController
     	Yii::app()->clientScript->registerMetaTag(Yii::app()->config->get($d), 'description', null, null, 'description');
     }
 
+    /**
+     * Using to get assetsUrl dynamically
+     * @see this->init()
+     * @param $themePath
+     */
     public function assetsUrl($themePath){
     	return Yii::app()->assetManager->publish($themePath);
     }
