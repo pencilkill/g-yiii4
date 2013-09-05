@@ -104,4 +104,124 @@ class CSite {
 	public static function ajaxFileUpload($params = array()){
 		return Yii::app()->getController()->widget('frontend.extensions.ajaxupload.AjaxFileUploadWidget', $params, true);
 	}
+
+
+	/**
+	 * mixed url, may be using for download url
+	 * @param $array
+	 * @return String
+	 */
+    public static function encodeUrl($array)
+    {
+        $arr = array(
+            '=' => '_',
+            '+' => '.'
+        );
+        return strtr(base64_encode(serialize($array)),$arr);
+    }
+    /**
+	 * mixed url, may be using for download url
+	 * @param $array
+	 * @return Array
+	 */
+    public static function decodeUrl($array)
+    {
+        $arr = array(
+            '_' => '=',
+            '.' => '+'
+        );
+        return unserialize(base64_decode(strtr($array,$arr)));
+    }
+    /**
+     * rand making pwd string
+     * @param $length
+     * @return String
+     */
+    public static function randPwd($length)
+    {
+        $password = '';
+
+        // remove o,0,1,l
+        $word = 'abcdefghijkmnpqrstuvwxyz-ABCDEFGHIJKLMNPQRSTUVWXYZ_23456789';
+        $len = strlen($word);
+
+        for ($i = 0; $i < $length; $i++) {
+            $password .= $word[rand() % $len];
+        }
+
+        return $password;
+    }
+    /**
+     * utf8 strrev, compatiable chinese
+     * @param $str
+     * @return String
+     */
+    public static function utf8Strrev($str)
+    {
+        preg_match_all('/./us', $str, $ar);
+        return implode('', array_reverse($ar[0]));
+    }
+
+    /**
+     *
+     * @param $file
+     * @param $uploadfile
+     * @param $serialize
+     * @return String
+     */
+    public static function uploadFile($file, $uploadDir=null, $serialize = false)
+	{
+        if (is_object($file) && get_class($file) == 'CUploadedFile')
+        {
+        	if(empty($uploadDir)){
+        		$uploadDir = CSite::createUploadDirectory(null, true);
+        	}
+            $fileName = $file->getName();
+            $fileSize = $file->getSize();
+            $fileType = $file->getType();
+            $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+            $newFileName = uniqid().'.'.$ext;
+
+            $uploadFullFile = $uploadDir .'/'. $newFileName;
+            $file->saveAs($uploadFullFile,true);// upload
+
+            $uploadFile = strtr($uploadFullFile, array(Yii::getPathOfAlias('webroot').'/' => ''));
+            if($serialize){
+            	$return = new stdClass;
+            	$return->name = $fileName;
+            	$return->size = $fileSize;
+            	$return->type = $fileType;
+            	$return->file = $uploadFile;
+            }
+            return $serialize ? serialize($return) : $uploadfile;
+        }
+        return '';
+	}
+
+	/**
+	 * download
+	 * @param $url
+	 * @param $name
+	 */
+	public static function download($url, $name=null){
+		$url = CSite::decodeUrl($url);
+       	$name = $name ? CSite::decodeUrl($name) : CSite::randPwd(10);
+        $ext = strtolower(strrchr($name,'.'))==strtolower(strrchr($url,'.')) ? '' : strtolower(strrchr($url,'.'));
+        $name = $name.$ext;
+
+
+       	$ua = $_SERVER['HTTP_USER_AGENT'];
+       	$filename = strtr(urlencode($name), array('+'=>'%20'));
+
+    	header('Content-type:application');
+    	if (preg_match('/MSIE/', $ua)) {
+    		header('Content-Disposition: attachment; filename="' . $filename . '"');
+		} else if (preg_match("/Firefox/", $ua)) {
+			header('Content-Disposition: attachment; filename*="utf8\'\'' . $name . '"');
+		} else {
+			header('Content-Disposition: attachment; filename="' . $name . '"');
+		}
+    	readfile($url);
+    	exit;
+	}
 }//End of CSite

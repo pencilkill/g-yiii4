@@ -228,4 +228,13 @@ class SiteController extends Controller
 		}
 		Yii::app()->end();
 	}
+
+	/**
+	 * Notice: the parameters url and name should be type of CSite::encodeUrl separator from each other
+	 * @param $url, fileurl
+	 * @param $name, download name
+	 */
+	public function actionDownload($url, $name){
+		return CSite::download($url, $name);
+	}
 }
