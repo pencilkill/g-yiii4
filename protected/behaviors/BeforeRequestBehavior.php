@@ -93,9 +93,10 @@ class BeforeRequestBehavior extends CBehavior
          * @rechecking
          */
         $criteria = new CDbCriteria;
+        $criteria->alias = 't';
 		$criteria->index = 'code';
-		$criteria->compare('status', '1');
-		$criteria->order = "FIELD(code, '". $languageCode ."') DESC, sort_id DESC";
+		$criteria->compare('t.status', '1');
+		$criteria->order = "FIELD(t.code, '". $languageCode ."') DESC, t.sort_id DESC";
 
 		$languages = Language::model()->findAll($criteria);
 
