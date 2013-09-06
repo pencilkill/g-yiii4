@@ -83,14 +83,4 @@ abstract class BaseProduct2category extends GxActiveRecord {
 		));
 	}
 
-	public function behaviors() {
-		return array(
-			'CTimestampBehavior'=>array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-				'updateAttribute' => null,
-                'createAttribute' => null,
-				'setUpdateOnCreate' => true,
-			),
-        );
-	}
 }

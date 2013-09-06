@@ -48,7 +48,7 @@ abstract class BaseInformation extends GxActiveRecord {
 
 	public function relations() {
 		return array(
-			'informationI18ns' => array(self::HAS_ONE, 'InformationI18n', 'information_id'),
+			'informationI18ns' => array(self::HAS_ONE, 'InformationI18n', 'information_id', 'scopes' => array('t' => array(Yii::app()->params->languageId))),
 		);
 	}
 
@@ -77,11 +77,16 @@ abstract class BaseInformation extends GxActiveRecord {
 		$criteria->compare('create_time', $this->create_time, true);
 		$criteria->compare('update_time', $this->update_time, true);
 
-		$criteria->with = array('informationI18ns');
+		$criteria->with = array(
+			'informationI18ns' => array(
+				'scopes' => array(
+					't' => array(Yii::app()->params->languageId),
+				),
+			),
+		);
 		$criteria->group = 't.information_id';
 		$criteria->together = true;
 
-		$criteria->compare('informationI18ns.language_id', Yii::app()->params->languageId);
 		$criteria->compare('informationI18ns.title', $this->searchI18n->title, true);
 		$criteria->compare('informationI18ns.keywords', $this->searchI18n->keywords, true);
 		$criteria->compare('informationI18ns.description', $this->searchI18n->description, true);
@@ -100,14 +105,4 @@ abstract class BaseInformation extends GxActiveRecord {
 		));
 	}
 
-	public function behaviors() {
-		return array(
-			'CTimestampBehavior'=>array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-				'updateAttribute' => 'update_time',
-				'createAttribute' => 'create_time',
-				'setUpdateOnCreate' => true,
-			),
-        );
-	}
 }

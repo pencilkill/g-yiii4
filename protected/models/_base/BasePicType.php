@@ -85,14 +85,4 @@ abstract class BasePicType extends GxActiveRecord {
 		));
 	}
 
-	public function behaviors() {
-		return array(
-			'CTimestampBehavior'=>array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-				'updateAttribute' => 'update_time',
-				'createAttribute' => 'create_time',
-				'setUpdateOnCreate' => true,
-			),
-        );
-	}
 }

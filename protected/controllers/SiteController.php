@@ -1,6 +1,31 @@
 <?php
+/**
+ * @author Sam@ozchamp.net
+ * @example
+ * for multiple language model
+ *
+	1. AR read like this :
 
-class SiteController extends Controller
+ 	$model = $this->loadModel(1, 'Category');
+	// Getting language i18n like this
+	var_dump($model->categoryI18ns->title);
+	// Getting language i18n specified like this
+	var_dump($model->categoryI18ns(array('scopes' => array('t' => array(Yii::app()->params->languages['en_us']->language_id))))->title);
+
+	2. ARS read like this :
+	$model = new Category('search');
+	$i18n = new CategoryI18n('search');
+	$model->searchI18n = $i18n;
+	$data = $model->search()->getData();
+	$pages = $model->search()->getPagination();
+	...
+	// Getting language i18n like this
+	var_dump($data[0]->categoryI18ns->title);
+	// Getting language i18n specified like this
+	var_dump($data[0]->categoryI18ns(array('scopes' => array('t' => array(Yii::app()->params->languages['en_us']->language_id))))->title);
+ *
+ */
+class SiteController extends GxController
 {
 	/**
 	 * Declares class-based actions.
@@ -27,7 +52,6 @@ class SiteController extends Controller
 	 */
 	public function actionIndex()
 	{
-
 		$this->render('//site/index');
 	}
 
@@ -39,20 +63,12 @@ class SiteController extends Controller
 		if($error=Yii::app()->errorHandler->error)
 		{
 			if(Yii::app()->request->isAjaxRequest)
-				echo $error['message'];
+			echo $error['message'];
 			else
-				$this->render('error', $error);
+			$this->render('error', $error);
 		}
 	}
 
-	/**
-	 * Displays the contact page
-	 */
-
-
-	/**
-	 * Displays the login page
-	 */
 	public function actionLogin()
 	{
 		$model=new LoginForm;
@@ -76,9 +92,7 @@ class SiteController extends Controller
 		$this->render('login',array('model'=>$model));
 	}
 
-	/**
-	 * Logs out the current user and redirect to homepage.
-	 */
+
 	public function actionLogout()
 	{
 		Yii::app()->user->logout();

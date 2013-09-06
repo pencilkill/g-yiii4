@@ -100,6 +100,7 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 	if(preg_match($pattern, $relation)) {
 		$i18nRelationName = $name;
 		$relation = preg_replace('/(^\s*)array\(\s*self::HAS_MANY\s*/', '\\1array(self::HAS_ONE', $relation);
+		$relation = preg_replace('/^([^\)]*?)(\)\s*)/', '\\1, \'scopes\' => array(\'t\' => array(Yii::app()->params->languageId)))', $relation);
 	}?>
 			<?php echo "'{$name}' => {$relation},\n"; ?>
 <?php endforeach; ?>
@@ -136,18 +137,21 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 <?php endforeach; ?>
 
 <?php if($i18n):?>
-		$criteria->with = array('<?php echo $i18nRelationName?>');
+		$criteria->with = array(
+			'<?php echo $i18nRelationName?>' => array(
+				'scopes' => array(
+					't' => array(Yii::app()->params->languageId),
+				),
+			),
+		);
 		$criteria->group = 't.<?php echo $compareGroupId?>';
 		$criteria->together = true;
 
 <?php foreach($i18n->columns as $name=>$column):?>
 <?php if($column->autoIncrement) continue;?>
 <?php if($column->isForeignKey && isset($columns[$name]) && $columns[$name]->isPrimaryKey) continue;?>
+<?php if(strcasecmp($name, 'language_id')===0 && $column->isForeignKey) continue; ?>
 <?php $partial = ($column->type==='string' and !$column->isForeignKey); ?>
-<?php if(strcasecmp($name, 'language_id')===0 && $column->isForeignKey):?>
-		$criteria->compare('<?php echo $i18nRelationName.'.'.$name; ?>', Yii::app()->params->languageId);
-<?php continue; ?>
-<?php endif;?>
 		$criteria->compare('<?php echo $i18nRelationName.'.'.$name; ?>', $this->searchI18n-><?php echo $name; ?><?php echo $partial ? ', true' : ''; ?>);
 <?php endforeach;?>
 <?php endif;?>
@@ -156,7 +160,7 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 			'criteria' => $criteria,
 			'sort'=>array(
 				'attributes'=>array(
-<?php if(in_array('sort_id', array_keys($columns))):?>
+<?php if(array_key_exists('sort_id', $columns)):?>
 					'sort_id'=>array(
 						'desc'=>'sort_id DESC',
 						'asc'=>'sort_id',
@@ -168,22 +172,4 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 		));
 	}
 
-	public function behaviors() {
-		return array(
-			'CTimestampBehavior'=>array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-<?php if(array_key_exists('create_time', $columns)){?>
-				'updateAttribute' => 'update_time',
-<?php }else{?>
-				'updateAttribute' => null,
-<?php }?>
-<?php if(array_key_exists('create_time', $columns)){?>
-				'createAttribute' => 'create_time',
-<?php }else{?>
-                'createAttribute' => null,
-<?php }?>
-				'setUpdateOnCreate' => true,
-			),
-        );
-	}
 }

@@ -54,7 +54,7 @@ abstract class BasePic extends GxActiveRecord {
 	public function relations() {
 		return array(
 			'picType' => array(self::BELONGS_TO, 'PicType', 'pic_type_id'),
-			'picI18ns' => array(self::HAS_ONE, 'PicI18n', 'pic_id'),
+			'picI18ns' => array(self::HAS_ONE, 'PicI18n', 'pic_id', 'scopes' => array('t' => array(Yii::app()->params->languageId))),
 		);
 	}
 
@@ -88,11 +88,16 @@ abstract class BasePic extends GxActiveRecord {
 		$criteria->compare('create_time', $this->create_time, true);
 		$criteria->compare('update_time', $this->update_time, true);
 
-		$criteria->with = array('picI18ns');
+		$criteria->with = array(
+			'picI18ns' => array(
+				'scopes' => array(
+					't' => array(Yii::app()->params->languageId),
+				),
+			),
+		);
 		$criteria->group = 't.pic_id';
 		$criteria->together = true;
 
-		$criteria->compare('picI18ns.language_id', Yii::app()->params->languageId);
 		$criteria->compare('picI18ns.url', $this->searchI18n->url, true);
 		$criteria->compare('picI18ns.title', $this->searchI18n->title, true);
 		$criteria->compare('picI18ns.keywords', $this->searchI18n->keywords, true);
@@ -112,14 +117,4 @@ abstract class BasePic extends GxActiveRecord {
 		));
 	}
 
-	public function behaviors() {
-		return array(
-			'CTimestampBehavior'=>array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-				'updateAttribute' => 'update_time',
-				'createAttribute' => 'create_time',
-				'setUpdateOnCreate' => true,
-			),
-        );
-	}
 }
