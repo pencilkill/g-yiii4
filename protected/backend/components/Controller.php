@@ -51,14 +51,14 @@ class Controller extends RController
 	public function languages() {
 		$criteria = new CDbCriteria;
 		$criteria->compare('status', '1');
-		$criteria->order = "field(code, '".Yii::app()->language."') desc, sort_id desc";
+		$criteria->order = "FIELD(code, '".Yii::app()->language."') DESC, sort_id DESC";
 
 		$languages = Language::model()->findAll($criteria);
 
 		$this->languages = $languages;
 
-		if(isset($languages[0]['language_id'])){
-			$this->language_id = $languages[0]['language_id'];
+		if($languages && ($key = key($languages))){
+			$this->language_id = $languages[$key]['language_id'];
 		}
 	}
 

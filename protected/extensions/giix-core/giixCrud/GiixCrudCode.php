@@ -70,21 +70,16 @@ class GiixCrudCode extends CrudCode {
 	public $gridViewEditAction = 'Gridviewupdate';
 
 	public function languages() {
-		$qa = array(
-			'select' => '*',
-			'from' => 'language',
-			'where' => array(
-				'status = 1',
-			),
-			'order' => "field(code, '".Yii::app()->language."') desc, sort_id desc",
-		);
+		$criteria = new CDbCriteria;
+		$criteria->compare('status', '1');
+		$criteria->order = "FIELD(code, '".Yii::app()->language."') DESC, sort_id DESC";
 
-		$languages = Yii::app()->db->createCommand($qa)->queryAll();
+		$languages = Language::model()->findAll($criteria);
 
 		$this->languages = $languages;
 
-		if(isset($languages[0]['language_id'])){
-			$this->language_id = $languages[0]['language_id'];
+		if($languages && ($key = key($languages))){
+			$this->language_id = $languages[$key]['language_id'];
 		}
 	}
 
