@@ -135,21 +135,29 @@ return array(
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
+
 				array(
 					'class'=>'CFileLogRoute',
 					'levels'=>'error',
 				),
+
 				// uncomment the following to show log messages on web pages
 				/*
 				array(
 					'class'=>'CWebLogRoute',
 				),
 				*/
+
+				array(
+					'class'=>'ext.toolbar.YiiDebugToolbarRoute',
+	                'ipFilters'=>array('127.0.0.1'),
+				),
+
 			),
 		),
 	),
 
 	// application-level parameters that can be accessed
 	// using Yii::app()->params['paramName']
-	'params'=>require(dirname(__FILE__).'/params.php'),
+	'params'=>require(__DIR__.'/params.php'),
 );

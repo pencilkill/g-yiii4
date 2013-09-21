@@ -7,7 +7,7 @@ return array(
 	'import'=>array(
 		'frontend.models.*',
 		'frontend.components.*',
-		'ext.OzLinkPager'
+		'ext.OzLinkPager',
 	),
 	// application components
 	'components'=>array(

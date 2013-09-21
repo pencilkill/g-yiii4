@@ -17,7 +17,7 @@
 	$i18n = new CategoryI18n('search');
 	$model->searchI18n = $i18n;
 	$data = $model->search()->getData();
-	$pages = $model->search()->getPagination();
+	$pages = $this->widget('OzLinkPager',array('pages' => $model->search()->getPagination()));
 	...
 	// Getting language i18n like this
 	var_dump($data[0]->categoryI18ns->title);

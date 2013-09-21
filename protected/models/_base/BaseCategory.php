@@ -99,7 +99,7 @@ abstract class BaseCategory extends GxActiveRecord {
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
-			'sort'=>array(
+			'sort' => array(
 				'attributes'=>array(
 					'sort_id'=>array(
 						'desc'=>'sort_id DESC',
@@ -107,6 +107,9 @@ abstract class BaseCategory extends GxActiveRecord {
 					),
 					'*',
 				),
+			),
+			'pagination' => array(
+				'pageSize'=>10,
 			),
 		));
 	}

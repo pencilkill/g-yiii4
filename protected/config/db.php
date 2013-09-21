@@ -7,6 +7,9 @@ if(strpos(strtolower($_SERVER['HTTP_HOST']),'local')!==false){
 		'connectionString' => 'mysql:host=localhost;dbname=yii_yiii4',
 		'username' => 'root',
 		'password' => '123456',
+		// enable for toolbar
+		'enableProfiling' => true,
+     	'enableParamLogging' => true,
 	);
 }elseif(strpos(strtolower($_SERVER['HTTP_HOST']),'works.tw')!==false){
 	return array(
@@ -16,6 +19,9 @@ if(strpos(strtolower($_SERVER['HTTP_HOST']),'local')!==false){
 		'connectionString' => 'mysql:host=localhost;dbname=yii_yiii',
 		'username' => '',
 		'password' => '',
+		// enable for toolbar
+		'enableProfiling' => true,
+     	'enableParamLogging' => true,
 	);
 }else{
 	return array(
@@ -25,5 +31,8 @@ if(strpos(strtolower($_SERVER['HTTP_HOST']),'local')!==false){
 		'connectionString' => 'mysql:host=localhost;dbname=yii_yiii',
 		'username' => '',
 		'password' => '',
+		// enable for toolbar
+		'enableProfiling' => true,
+     	'enableParamLogging' => true,
 	);
 }

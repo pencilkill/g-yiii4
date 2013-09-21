@@ -115,6 +115,9 @@ abstract class BaseProduct extends GxActiveRecord {
 					'*',
 				),
 			),
+			'pagination' => array(
+				'pageSize'=>10,
+			),
 		));
 	}
 

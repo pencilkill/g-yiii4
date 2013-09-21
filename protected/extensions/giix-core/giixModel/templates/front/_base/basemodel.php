@@ -158,7 +158,7 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
-			'sort'=>array(
+			'sort' => array(
 				'attributes'=>array(
 <?php if(array_key_exists('sort_id', $columns)):?>
 					'sort_id'=>array(
@@ -168,6 +168,9 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 <?php endif;?>
 					'*',
 				),
+			),
+			'pagination' => array(
+				'pageSize'=>10,
 			),
 		));
 	}

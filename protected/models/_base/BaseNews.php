@@ -109,6 +109,9 @@ abstract class BaseNews extends GxActiveRecord {
 					'*',
 				),
 			),
+			'pagination' => array(
+				'pageSize'=>10,
+			),
 		));
 	}
 }
