@@ -180,7 +180,7 @@ $backCfg = array(
 			'routes'=>array(
 				array(
 					'class'=>'CFileLogRoute',
-					'levels'=>'error',
+					'levels'=>'error,warning,profile,info,trace',
 				),
 				// uncomment the following to show log messages on web pages
 				/*
