@@ -145,7 +145,7 @@ jQuery(function($) {
 </div>
 
 <div id="footer">
-	Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.ozchamp.com/" rel="external"><?php echo Yii::t('app', 'Design Team')?></a>. All Rights Reserved.
+	Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.ozchamp.com/" rel="external" target="_blank"><?php echo Yii::t('app', 'Design Team')?></a>. All Rights Reserved.
 </div><!-- footer -->
 
 <?php $this->widget('ext.ckeditor.CKEditorWidget',array('htmlOptions'=>array('class'=>'fck'))); ?>
