@@ -46,7 +46,7 @@ $this->breadcrumbs = array(
 			<div class="buttons">
 				<?php echo GxHtml::link(Yii::t('app', 'Advanced Search'), '#', array('class' => 'search-button button', 'style' => 'display: none;')); ?>
 				<a onclick="location='<?php echo $this->createUrl('create')?>';" class="button"><?php echo Yii::t('app', 'Create')?></a>
-				<a onclick="GVUpdate();" class="button" style="display:none;"><?php echo Yii::t('app', 'Save')?></a>
+				<a onclick="GVUpdate();" class="button"><?php echo Yii::t('app', 'Save')?></a>
 				<a onclick="GVDelete();" class="button"><?php echo Yii::t('app', 'Delete')?></a>
 			</div>
 		</div>
