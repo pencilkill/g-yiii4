@@ -1,6 +1,7 @@
 <?php
 
-Yii::import('ext.image.Image_Driver');
+Yii::import('frontend.extensions.image.Image_Driver');
+
 
 /**
  * Manipulate images using standard methods such as resize, crop, rotate, etc.
