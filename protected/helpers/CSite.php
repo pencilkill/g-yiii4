@@ -106,7 +106,6 @@ class CSite {
 		return Yii::app()->getController()->widget('frontend.extensions.ajaxupload.AjaxFileUploadWidget', $params, true);
 	}
 
-
 	/**
 	 * mixed url, may be using for download url
 	 * @param $array
@@ -121,6 +120,7 @@ class CSite {
 
         return strtr(base64_encode(serialize($array)),$arr);
     }
+
     /**
 	 * mixed url, may be using for download url
 	 * @param $array
@@ -135,6 +135,7 @@ class CSite {
 
         return unserialize(base64_decode(strtr($array,$arr)));
     }
+
     /**
      * Rand making string from specified characters
      * @param $length
@@ -171,7 +172,7 @@ class CSite {
      *
      * @param $file, Object . The upload file object.
      * @param $uploadDir, String, default null. The directory to upload file,  if set to null CSite::createUploadDirectory will be called to make a new directory.
-     * @param $serialize, Bool, default false. whether to serialize the return value. if set false an relative path of upload file, otherwise an serialize object string
+     * @param $serialize, Bool, default false. whether to serialize the return value. if set false, function returns an relative path of upload file, otherwise a serialized object string
      * @return String
      */
     public static function uploadFile($file, $uploadDir=null, $serialize = false)
