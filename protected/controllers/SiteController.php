@@ -66,23 +66,6 @@ class SiteController extends GxController
 	 */
 	public function actionIndex()
 	{
-		$model = new Information('search');
-
-		$i18n = new InformationI18n('search');
-
-		$model->searchI18n = $i18n;
-
-		$provider = $model->search();
-
-		$provider->pagination->pageSize = 3;
-
-		$data = $provider->getData();
-
-		$pagination = $provider->getPagination();
-		//var_dump($data);
-
-		$this->widget('OzLinkPager',array('pages' => $pagination));
-
 		$this->render('//site/index');
 	}
 
