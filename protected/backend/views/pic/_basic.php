@@ -8,7 +8,7 @@
 				<?php echo $form->labelEx($model,'pic'); ?>
 			</td>
 			<td>
-				<?php echo CSite::ajaxImageUpload(array('model' => $model,'attribute' => 'pic'))?>
+				<?php echo HCSite::ajaxImageUpload(array('model' => $model,'attribute' => 'pic'))?>
 				<?php echo $form->error($model,'pic'); ?>
 			</td>
 		</tr><!-- row -->

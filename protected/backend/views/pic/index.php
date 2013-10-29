@@ -83,7 +83,7 @@ $this->breadcrumbs = array(
 		array(
 			'name'=>'pic',
 			'type'=>'html',
-			'value'=>'CHtml::image(CSite::cache($data->pic, array("resize"=>array("width"=>80, "height"=>80))))',
+			'value'=>'CHtml::image(HCSite::cache($data->pic, array("resize"=>array("width"=>80, "height"=>80))))',
 			'filter'=>false,
 			'htmlOptions' => array(
 				'height' => '100',

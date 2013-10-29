@@ -5,7 +5,7 @@
  * @author     Sam@ozchamp.net
  * @copyright  www.ozchamp.net
  */
-class CSite {
+class HCSite {
 	/**
 	 * Image cache
 	 * If imageFile is not a real file on server, default image named "no_image.jpg" which located under ext.image will be show,
@@ -171,7 +171,7 @@ class CSite {
     /**
      *
      * @param $file, Object . The upload file object.
-     * @param $uploadDir, String, default null. The directory to upload file,  if set to null CSite::createUploadDirectory will be called to make a new directory.
+     * @param $uploadDir, String, default null. The directory to upload file,  if set to null HCSite::createUploadDirectory will be called to make a new directory.
      * @param $serialize, Bool, default false. whether to serialize the return value. if set false, function returns an relative path of upload file, otherwise a serialized object string
      * @return String
      */
@@ -180,7 +180,7 @@ class CSite {
         if (is_object($file) && get_class($file) == 'CUploadedFile')
         {
         	if(empty($uploadDir)){
-        		$uploadDir = CSite::createUploadDirectory(null, true);
+        		$uploadDir = HCSite::createUploadDirectory(null, true);
         	}
             $fileName = $file->getName();
             $fileSize = $file->getSize();
@@ -210,8 +210,8 @@ class CSite {
 	 * @param $name
 	 */
 	public static function download($url, $name=null){
-		$url = CSite::decodeUrl($url);
-       	$name = $name ? CSite::decodeUrl($name) : CSite::charsGenerator(10);
+		$url = HCSite::decodeUrl($url);
+       	$name = $name ? HCSite::decodeUrl($name) : HCSite::charsGenerator(10);
         $ext = strtolower(strrchr($name,'.'))==strtolower(strrchr($url,'.')) ? '' : strtolower(strrchr($url,'.'));
         $name = $name.$ext;
 

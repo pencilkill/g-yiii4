@@ -61,9 +61,9 @@ class AjaxImageUploadWidget extends CInputWidget
 		}
 
 		// thumb
-		$preview = CSite::cache($preview, $imageCache);
+		$preview = HCSite::cache($preview, $imageCache);
 		// thumb no image
-		$previewX = CSite::cache(null, $imageCache);
+		$previewX = HCSite::cache(null, $imageCache);
 
 		$prefix = $this->htmlOptions['id'];
 

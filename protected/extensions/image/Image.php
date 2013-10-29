@@ -423,7 +423,7 @@ class Image
 		if(empty($new_image)){
 			$actions = $this->actions;
 
-			CArray::sortNestedArray($actions, 'ksort');
+			HCArray::sortNestedArray($actions, 'ksort');
 
 			$new_image = $cachedir . strtr(urldecode(http_build_query($actions)), array('['=>'_', '&'=>'', ']'=>'', '='=>'', '\\' => '', '/' => '')) . '__' . pathinfo($this->image['file'], PATHINFO_BASENAME);
 		}else{

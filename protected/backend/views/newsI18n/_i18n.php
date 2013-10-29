@@ -4,7 +4,7 @@
 				<?php echo $form->labelEx($model,'pic'); ?>
 			</td>
 			<td>
-				<?php echo CSite::ajaxImageUpload(array('model' => $model, 'attribute' => "[{$language_id}]pic")); ?>
+				<?php echo HCSite::ajaxImageUpload(array('model' => $model, 'attribute' => "[{$language_id}]pic")); ?>
 				<?php echo $form->error($model, "[$language_id]pic"); ?>
 			</td>
 		</tr><!-- row -->
