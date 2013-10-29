@@ -58,8 +58,8 @@ class Controller extends RController
 
 		$this->languages = $languages;
 
-		if($languages && ($key = key($languages))){
-			$this->language_id = $languages[$key]['language_id'];
+		if($languages){
+			$this->language_id = $languages[key($languages)]['language_id'];
 		}
 	}
 
