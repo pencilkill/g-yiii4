@@ -94,7 +94,7 @@ class OzLinkPager extends CBasePager
 	 * If false, no CSS file will be used. Otherwise, the specified CSS file
 	 * will be included when using this widget.
 	 */
-	public $cssFile;
+	public $cssFile = false;
 	/**
 	 * @var array HTML attributes for the pager container tag.
 	 */
@@ -133,7 +133,7 @@ class OzLinkPager extends CBasePager
 		if(empty($buttons))
 			return;
 		echo $this->header;
-		echo CHtml::tag('ul',$this->htmlOptions,implode("\n",$buttons));
+		echo CHtml::tag('ul',$this->htmlOptions, implode("\n",$buttons));
 		echo $this->footer;
 	}
 
@@ -220,7 +220,7 @@ class OzLinkPager extends CBasePager
 	 * Registers the needed CSS file.
 	 * @param string $url the CSS URL. If null, a default CSS URL will be used.
 	 */
-	public static function registerCssFile($url=null)
+	public static function registerCssFile($url=false)
 	{
 		if($url===null)
 			$url=CHtml::asset(Yii::getPathOfAlias('system.web.widgets.pagers.pager').'.css');

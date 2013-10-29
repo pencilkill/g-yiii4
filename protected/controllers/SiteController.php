@@ -17,12 +17,26 @@
 	$i18n = new CategoryI18n('search');
 	$model->searchI18n = $i18n;
 	$data = $model->search()->getData();
-	$pages = $this->widget('OzLinkPager',array('pages' => $model->search()->getPagination()));
+	$pagination = $model->search()->getPagination();
+	// Widget actually output in view
+	$this->widget('OzLinkPager',array('pages' => $pagination));
 	...
 	// Getting language i18n like this
 	var_dump($data[0]->categoryI18ns->title);
 	// Getting language i18n specified like this
 	var_dump($data[0]->categoryI18ns(array('scopes' => array('t' => array(Yii::app()->params->languages['en_us']->language_id))))->title);
+
+	3. ARS specified pagesize read like this :
+	$model = new Information('search');
+	$i18n = new InformationI18n('search');
+	$model->searchI18n = $i18n;
+	$provider = $model->search();
+	$provider->pagination->pageSize = 3;
+	$data = $provider->getData();
+	var_dump($data);
+	$pagination = $provider->getPagination();
+	// Widget actually output in view
+	$this->widget('OzLinkPager',array('pages' => $pagination));
  *
  */
 class SiteController extends GxController
@@ -52,6 +66,23 @@ class SiteController extends GxController
 	 */
 	public function actionIndex()
 	{
+		$model = new Information('search');
+
+		$i18n = new InformationI18n('search');
+
+		$model->searchI18n = $i18n;
+
+		$provider = $model->search();
+
+		$provider->pagination->pageSize = 3;
+
+		$data = $provider->getData();
+
+		$pagination = $provider->getPagination();
+		//var_dump($data);
+
+		$this->widget('OzLinkPager',array('pages' => $pagination));
+
 		$this->render('//site/index');
 	}
 
