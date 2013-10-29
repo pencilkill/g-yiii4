@@ -1,3 +1,18 @@
+This is a modified version of the Image Yii extension.
+
+There's 3 new functions :
+ - grayscale
+ - emboss
+ - negate
+
+The ImageMagick Driver is optimized greatly by appending arguments for convert instead
+of reading / saving file for each function. The temp image copy in this driver is now useless
+and was removed too.
+
+Author : Parcouss
+
+First release (this is the following) :
+
 说明：
 移植自Kohana的Image类库
 

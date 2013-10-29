@@ -64,7 +64,8 @@ class CSite {
 	 */
 	public static function resize($imageFile, $width, $height, $master=2)
 	{
-		$src = strtr($imageFile, array(Yii::getPathOfAlias('webroot')=>''));
+		$src = strtr(strtr($imageFile, array('\\' => '/')), array(Yii::getPathOfAlias('webroot') . '/' => ''));
+
 		if($width && $height){
 			$src = Yii::app()->image->load($imageFile)->resize($width, $height, $master)->cache(false);
 		}
@@ -117,6 +118,7 @@ class CSite {
             '=' => '_',
             '+' => '.'
         );
+
         return strtr(base64_encode(serialize($array)),$arr);
     }
     /**
@@ -130,43 +132,46 @@ class CSite {
             '_' => '=',
             '.' => '+'
         );
+
         return unserialize(base64_decode(strtr($array,$arr)));
     }
     /**
-     * rand making pwd string
+     * Rand making string from specified characters
      * @param $length
      * @return String
      */
-    public static function randPwd($length)
+    public static function charsGenerator($length)
     {
-        $password = '';
+        $chars = '';
 
         // remove o,0,1,l
         $word = 'abcdefghijkmnpqrstuvwxyz-ABCDEFGHIJKLMNPQRSTUVWXYZ_23456789';
+
         $len = strlen($word);
 
         for ($i = 0; $i < $length; $i++) {
-            $password .= $word[rand() % $len];
+            $chars .= $word[rand() % $len];
         }
 
-        return $password;
+        return $chars;
     }
     /**
-     * utf8 strrev, compatiable chinese
+     * utf8 strrev, compatiable Chinese
      * @param $str
      * @return String
      */
     public static function utf8Strrev($str)
     {
         preg_match_all('/./us', $str, $ar);
+
         return implode('', array_reverse($ar[0]));
     }
 
     /**
      *
-     * @param $file
-     * @param $uploadfile
-     * @param $serialize
+     * @param $file, Object . The upload file object.
+     * @param $uploadDir, String, default null. The directory to upload file,  if set to null CSite::createUploadDirectory will be called to make a new directory.
+     * @param $serialize, Bool, default false. whether to serialize the return value. if set false an relative path of upload file, otherwise an serialize object string
      * @return String
      */
     public static function uploadFile($file, $uploadDir=null, $serialize = false)
@@ -205,7 +210,7 @@ class CSite {
 	 */
 	public static function download($url, $name=null){
 		$url = CSite::decodeUrl($url);
-       	$name = $name ? CSite::decodeUrl($name) : CSite::randPwd(10);
+       	$name = $name ? CSite::decodeUrl($name) : CSite::charsGenerator(10);
         $ext = strtolower(strrchr($name,'.'))==strtolower(strrchr($url,'.')) ? '' : strtolower(strrchr($url,'.'));
         $name = $name.$ext;
 
@@ -221,7 +226,9 @@ class CSite {
 		} else {
 			header('Content-Disposition: attachment; filename="' . $name . '"');
 		}
+
     	readfile($url);
-    	exit;
+
+    	exit();
 	}
 }//End of CSite

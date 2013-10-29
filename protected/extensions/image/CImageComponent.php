@@ -1,6 +1,6 @@
 <?php
 
-Yii::import('application.extensions.image.Image');
+Yii::import('frontend.extensions.image.Image');
 
 /**
  * Description of CImageComponent
@@ -26,7 +26,8 @@ class CImageComponent extends CApplicationComponent
     public function init()
     {
         parent::init();
-        if($this->driver != 'GD' && $this->driver != 'ImageMagick'){
+
+        if ($this->driver != 'GD' && $this->driver != 'ImageMagick') {
             throw new CException('driver must be GD or ImageMagick');
         }
     }
@@ -34,11 +35,12 @@ class CImageComponent extends CApplicationComponent
     public function load($image)
     {
         $config = array(
-            'driver'=>$this->driver,
-            'params'=>$this->params,
+            'driver' => $this->driver,
+            'params' => $this->params,
         );
 
         return new Image($image, $config);
     }
 }
+
 ?>
