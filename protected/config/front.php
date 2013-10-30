@@ -11,10 +11,6 @@ return array(
 	),
 	// application components
 	'components'=>array(
-        // EShoppingCart
-        'shoppingCart' => array(
-		        'class' => 'ext.eshoppingcart.EShoppingCart',
-		),
 		// example to config widget
 		'widgetFactory' => array(
 			'widgets' => array(
