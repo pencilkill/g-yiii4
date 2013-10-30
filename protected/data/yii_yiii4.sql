@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2013 年 08 月 25 日 06:31
+-- 生成日期: 2013 年 10 月 30 日 02:14
 -- 服务器版本: 5.5.24-log
 -- PHP 版本: 5.3.0
 
@@ -45,8 +45,8 @@ CREATE TABLE IF NOT EXISTS `admin` (
 
 INSERT INTO `admin` (`admin_id`, `name`, `username`, `email`, `password`, `status`, `super`, `create_time`, `update_time`) VALUES
 (1, 'admin', 'admin', 'sam@ozchamp.net', '544a5c496570c9fc4ab46ed2ea7df075', 1, 1, '2013-06-01 00:00:00', '2013-08-22 03:51:54'),
-(2, 'administor', 'administor', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 1, '2013-06-01 12:03:02', '2013-08-22 03:47:36'),
-(5, 'ozchamp', 'ozchamp', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 0, '2013-08-22 03:27:11', '2013-08-22 03:34:45');
+(2, 'administrator', 'administrator', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 1, '2013-06-01 12:03:02', '2013-08-22 03:47:36'),
+(5, 'ozchamp', 'ozchamp', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 0, '2013-08-22 03:27:11', '2013-08-30 02:24:10');
 
 -- --------------------------------------------------------
 
@@ -59,7 +59,8 @@ CREATE TABLE IF NOT EXISTS `authassignment` (
   `userid` varchar(64) NOT NULL,
   `bizrule` text,
   `data` text,
-  PRIMARY KEY (`itemname`,`userid`)
+  PRIMARY KEY (`itemname`,`userid`),
+  KEY `userid` (`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -67,8 +68,8 @@ CREATE TABLE IF NOT EXISTS `authassignment` (
 --
 
 INSERT INTO `authassignment` (`itemname`, `userid`, `bizrule`, `data`) VALUES
-('admin', '1', NULL, 'N;'),
-('administor', '2', NULL, 'N;'),
+('Admin', '1', NULL, 'N;'),
+('Administrator', '2', NULL, 'N;'),
 ('Authenticated', '5', NULL, 'N;');
 
 -- --------------------------------------------------------
@@ -91,14 +92,14 @@ CREATE TABLE IF NOT EXISTS `authitem` (
 --
 
 INSERT INTO `authitem` (`name`, `type`, `description`, `bizrule`, `data`) VALUES
-('admin', 2, 'role which can access all', NULL, 'N;'),
+('Admin', 2, 'role which can access all', NULL, 'N;'),
 ('Admin.Account', 0, NULL, NULL, 'N;'),
 ('Admin.Create', 0, NULL, NULL, 'N;'),
 ('Admin.Delete', 0, NULL, NULL, 'N;'),
 ('Admin.Gridviewdelete', 0, NULL, NULL, 'N;'),
 ('Admin.Index', 0, NULL, NULL, 'N;'),
 ('Admin.Update', 0, NULL, NULL, 'N;'),
-('administor', 2, 'role which can access all but not the super admin ,that is mean the super property of admin model belong to items of this role is equal to false', NULL, 'N;'),
+('Administrator', 2, 'role which can access all but not the super admin ,that is mean the super property of admin model belong to items of this role is equal to false', NULL, 'N;'),
 ('Authenticated', 2, 'role which can not access admin controller except account action to update himself informations', NULL, 'N;'),
 ('Category.*', 1, 'Category.*', NULL, 'N;'),
 ('Contact.*', 1, 'Contact.*', NULL, 'N;'),
@@ -130,12 +131,12 @@ CREATE TABLE IF NOT EXISTS `authitemchild` (
 
 INSERT INTO `authitemchild` (`parent`, `child`) VALUES
 ('Authenticated', 'Admin.Account'),
-('administor', 'Admin.Create'),
-('administor', 'Admin.Delete'),
-('administor', 'Admin.Gridviewdelete'),
-('administor', 'Admin.Index'),
-('administor', 'Admin.Update'),
-('administor', 'Authenticated'),
+('Administrator', 'Admin.Create'),
+('Administrator', 'Admin.Delete'),
+('Administrator', 'Admin.Gridviewdelete'),
+('Administrator', 'Admin.Index'),
+('Administrator', 'Admin.Update'),
+('Administrator', 'Authenticated'),
 ('Authenticated', 'Category.*'),
 ('Authenticated', 'Contact.*'),
 ('Authenticated', 'Guest'),
@@ -167,8 +168,8 @@ CREATE TABLE IF NOT EXISTS `category` (
 --
 
 INSERT INTO `category` (`category_id`, `parent_id`, `sort_id`, `create_time`, `update_time`) VALUES
-(4, 0, 0, '2013-08-24 04:13:48', '2013-08-24 06:18:54'),
-(7, 4, 1, '2013-08-24 05:23:17', '2013-08-24 06:19:15');
+(4, 0, 0, '2013-08-24 04:13:48', '2013-08-30 10:09:16'),
+(7, 0, 1, '2013-08-24 05:23:17', '2013-10-28 19:34:21');
 
 -- --------------------------------------------------------
 
@@ -236,14 +237,25 @@ CREATE TABLE IF NOT EXISTS `information` (
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`information_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 
 --
 -- 转存表中的数据 `information`
 --
 
 INSERT INTO `information` (`information_id`, `sort_id`, `status`, `create_time`, `update_time`) VALUES
-(1, 0, 1, '2013-06-30 03:22:08', '2013-08-23 22:57:29');
+(1, 0, 1, '2013-06-30 03:22:08', '2013-10-29 11:24:38'),
+(2, 0, 0, '2013-08-30 03:32:29', '2013-10-29 11:24:38'),
+(3, 0, 1, '2013-08-30 03:35:07', '2013-10-29 11:24:38'),
+(4, 0, 1, '2013-08-30 03:50:44', '2013-10-29 11:24:38'),
+(5, 0, 1, '2013-08-30 03:50:53', '2013-10-29 11:24:38'),
+(6, 0, 1, '2013-08-30 03:51:01', '2013-10-29 11:24:38'),
+(7, 0, 1, '2013-08-30 03:51:09', '2013-10-29 11:24:38'),
+(8, 0, 1, '2013-08-30 03:51:17', '2013-10-29 11:24:38'),
+(9, 0, 1, '2013-08-30 03:51:25', '2013-10-29 11:24:38'),
+(10, 0, 1, '2013-08-30 03:51:33', '2013-10-29 11:24:38'),
+(11, 0, 1, '2013-08-30 03:51:41', '2013-10-29 11:24:38'),
+(12, 0, 1, '2013-08-30 03:51:55', '2013-10-29 11:24:39');
 
 -- --------------------------------------------------------
 
@@ -262,15 +274,37 @@ CREATE TABLE IF NOT EXISTS `information_i18n` (
   KEY `faq_id` (`information_id`),
   KEY `lang` (`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
 
 --
 -- 转存表中的数据 `information_i18n`
 --
 
 INSERT INTO `information_i18n` (`information_i18n_id`, `information_id`, `language_id`, `title`, `keywords`, `description`) VALUES
-(1, 1, 1, 't', '', '<p>\r\n	tttty</p>\r\n'),
-(2, 1, 2, 'ens', '', '<p>\r\n	eeees</p>\r\n');
+(1, 1, 1, 't', NULL, '<p>\r\n	tttty</p>\r\n'),
+(2, 1, 2, 'ens', NULL, '<p>\r\n	eeees</p>\r\n'),
+(3, 2, 1, 'a', NULL, NULL),
+(4, 2, 2, 'b', NULL, NULL),
+(5, 3, 1, 'a', NULL, NULL),
+(6, 3, 2, 'b', NULL, NULL),
+(7, 4, 1, 'a', NULL, NULL),
+(8, 4, 2, 'b', NULL, NULL),
+(9, 5, 1, 'a', NULL, NULL),
+(10, 5, 2, 'b', NULL, NULL),
+(11, 6, 1, 'a', NULL, NULL),
+(12, 6, 2, 'b', NULL, NULL),
+(13, 7, 1, 'a', NULL, NULL),
+(14, 7, 2, 'b', NULL, NULL),
+(15, 8, 1, 'a', NULL, NULL),
+(16, 8, 2, 'b', NULL, NULL),
+(17, 9, 1, 'a', NULL, NULL),
+(18, 9, 2, 'b', NULL, NULL),
+(19, 10, 1, 'a', NULL, NULL),
+(20, 10, 2, 'b', NULL, NULL),
+(21, 11, 1, 'a', NULL, NULL),
+(22, 11, 2, 'b', NULL, NULL),
+(23, 12, 1, 'a', NULL, NULL),
+(24, 12, 2, 'b', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -319,7 +353,7 @@ CREATE TABLE IF NOT EXISTS `news` (
 --
 
 INSERT INTO `news` (`news_id`, `top`, `sort_id`, `status`, `date_added`, `create_time`, `update_time`) VALUES
-(1, 1, 1, 0, '2013-07-23 00:00:00', '2013-07-24 00:32:49', '2013-08-24 07:07:05');
+(1, 1, 0, 0, '2013-07-23 00:00:00', '2013-07-24 00:32:49', '2013-10-25 09:38:29');
 
 -- --------------------------------------------------------
 
@@ -438,14 +472,15 @@ CREATE TABLE IF NOT EXISTS `product` (
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`product_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
 -- 转存表中的数据 `product`
 --
 
 INSERT INTO `product` (`product_id`, `top`, `sort_id`, `status`, `date_added`, `create_time`, `update_time`) VALUES
-(4, 0, 0, 1, '2013-07-29', '2013-07-29 23:21:01', '2013-08-20 22:26:06');
+(4, 1, 0, 1, '2013-07-29', '2013-07-29 23:21:01', '2013-10-28 19:47:05'),
+(5, 0, 0, 1, '2013-10-29', '2013-10-29 11:30:17', '2013-10-29 11:30:17');
 
 -- --------------------------------------------------------
 
@@ -460,7 +495,15 @@ CREATE TABLE IF NOT EXISTS `product2category` (
   PRIMARY KEY (`product2category_id`),
   KEY `product_id` (`product_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+
+--
+-- 转存表中的数据 `product2category`
+--
+
+INSERT INTO `product2category` (`product2category_id`, `product_id`, `category_id`) VALUES
+(4, 4, 4),
+(5, 5, 7);
 
 -- --------------------------------------------------------
 
@@ -474,18 +517,18 @@ CREATE TABLE IF NOT EXISTS `product2image` (
   `pic` varchar(256) NOT NULL,
   PRIMARY KEY (`product2image_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=128 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=153 ;
 
 --
 -- 转存表中的数据 `product2image`
 --
 
 INSERT INTO `product2image` (`product2image_id`, `product_id`, `pic`) VALUES
-(123, 4, 'upload/2013/07/29/51f6b4009933c.jpg'),
-(124, 4, 'upload/2013/07/29/51f6b4014a31d.jpg'),
-(125, 4, 'upload/2013/07/29/51f6abb0d6e59.jpg'),
-(126, 4, 'upload/2013/07/29/51f6ab5237318.jpg'),
-(127, 4, 'upload/2013/07/29/51f6abb18308f.jpg');
+(148, 4, 'upload/2013/07/29/51f6b4009933c.jpg'),
+(149, 4, 'upload/2013/07/29/51f6b4014a31d.jpg'),
+(150, 4, 'upload/2013/07/29/51f6abb0d6e59.jpg'),
+(151, 4, 'upload/2013/07/29/51f6ab5237318.jpg'),
+(152, 4, 'upload/2013/07/29/51f6abb18308f.jpg');
 
 -- --------------------------------------------------------
 
@@ -504,15 +547,17 @@ CREATE TABLE IF NOT EXISTS `product_i18n` (
   PRIMARY KEY (`product_i18n_id`),
   KEY `product_id` (`product_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
 
 --
 -- 转存表中的数据 `product_i18n`
 --
 
 INSERT INTO `product_i18n` (`product_i18n_id`, `product_id`, `language_id`, `pic`, `title`, `keywords`, `description`) VALUES
-(10, 4, 1, 'upload/2013/08/20/52136768c64dc.jpg', 'tw', 'ktw', '<p>\r\n	dtw</p>\r\n'),
-(11, 4, 2, 'upload/2013/07/29/51f68844c85bf.jpg', 'en', 'ken', '<p>\r\n	den</p>\r\n');
+(10, 4, 1, 'upload/2013/10/28/526dd05dbb6ea.jpg', 'tw', 'ktw', '<p>\r\n	dtw</p>\r\n'),
+(11, 4, 2, 'upload/2013/07/29/51f68844c85bf.jpg', 'en', 'ken', '<p>\r\n	den</p>\r\n'),
+(12, 5, 1, 'upload/2013/10/29/526f2bb450dd5.jpg', 'tw1', NULL, NULL),
+(13, 5, 2, 'upload/2013/10/29/526f2bc317c47.jpg', 'en1', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -564,15 +609,15 @@ INSERT INTO `setting` (`key`, `value`) VALUES
 ('mail_smtp_host', 's:12:"smtp.163.com";'),
 ('mail_smtp_password', 's:9:"oz3661000";'),
 ('mail_smtp_port', 's:2:"25";'),
-('mail_smtp_user', 's:9:"oz3661000";'),
-('meta_description_1', 's:0:"";'),
-('meta_description_2', 's:0:"";'),
+('mail_smtp_user', 's:14:"oz_sam@163.com";'),
+('meta_description_1', 's:48:"元伸，元伸科技，元伸科技網頁製作";'),
+('meta_description_2', 's:47:"Ozchamp, Ozchamp technology, Ozchamp web design";'),
 ('meta_description_3', 's:0:"";'),
-('meta_keywords_1', 's:0:"";'),
-('meta_keywords_2', 's:0:"";'),
+('meta_keywords_1', 's:21:"元伸，元伸科技";'),
+('meta_keywords_2', 's:27:"Ozchamp, Ozchamp technology";'),
 ('meta_keywords_3', 's:0:"";'),
-('meta_title_1', 's:0:"";'),
-('meta_title_2', 's:0:"";'),
+('meta_title_1', 's:12:"元伸科技";'),
+('meta_title_2', 's:7:"Ozchamp";'),
 ('meta_title_3', 's:0:"";');
 
 --
