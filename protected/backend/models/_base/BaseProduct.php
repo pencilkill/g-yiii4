@@ -24,6 +24,8 @@
 abstract class BaseProduct extends GxActiveRecord {
 
 	public $searchI18n;
+	// Category filter
+	public $category_id;
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
@@ -89,9 +91,11 @@ abstract class BaseProduct extends GxActiveRecord {
 		$criteria->compare('create_time', $this->create_time, true);
 		$criteria->compare('update_time', $this->update_time, true);
 
-		$criteria->with = array('productI18ns');
+		$criteria->with = array('productI18ns', 'product2categories');
 		$criteria->group = 't.product_id';
 		$criteria->together = true;
+		// Category filter
+		$criteria->compare('product2categories.category_id', $this->category_id, false);
 
 		$criteria->compare('productI18ns.pic', $this->searchI18n->pic, true);
 		$criteria->compare('productI18ns.title', $this->searchI18n->title, true);

@@ -5,9 +5,11 @@ class ProductController extends GxController {
 
 
 
-	public function actionIndex() {
+	public function actionIndex($category_id = 0) {
 		$model = new Product('search');
 		$model->unsetAttributes();
+
+		$model->category_id = (int)$category_id;
 
 		$i18n = new ProductI18n('search');
 		$i18n->unsetAttributes();
