@@ -33,6 +33,8 @@ abstract class BaseSetting extends GxActiveRecord {
 	}
 
 	public function rules() {
+		/*
+		 * Just leave it alone with db checking
 		return array(
 			array('key', 'required'),
 			array('key', 'compare', 'compareAttribute'=>'key'),
@@ -40,6 +42,10 @@ abstract class BaseSetting extends GxActiveRecord {
 			array('value', 'safe'),
 			array('value', 'default', 'setOnEmpty' => true, 'value' => null),
 			array('key, value', 'safe', 'on'=>'search'),
+		);
+		*/
+		return array(
+
 		);
 	}
 
@@ -55,8 +61,9 @@ abstract class BaseSetting extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'key' => Yii::t('M/setting', 'Key'),
+			//'key' => Yii::t('M/setting', 'Key'),
 			'value' => Yii::t('M/setting', 'Value'),
+			'analysis_google' => Yii::t('setting', 'Analysis Google'),
 		);
 	}
 
