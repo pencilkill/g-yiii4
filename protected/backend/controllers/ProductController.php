@@ -9,7 +9,9 @@ class ProductController extends GxController {
 		$model = new Product('search');
 		$model->unsetAttributes();
 
-		$model->category_id = (int)$category_id;
+		if($category_id){
+			$model->category_id = (int)$category_id;
+		}
 
 		$i18n = new ProductI18n('search');
 		$i18n->unsetAttributes();
