@@ -19,11 +19,6 @@ $this->breadcrumbs = array(
   <?php foreach(Yii::app()->user->getFlashes() as $key => $message) :?>
 	<div class="<?php echo $key?>"><?php echo $message?></div>
   <?php endforeach;?>
-  <?php if($model->getErrors()):?>
-  	<div class="warning"><?php echo Yii::t('app', 'Operation Failure')?></div>
-  <?php ;else:?>
-  	<div class="success"><?php echo Yii::t('app', 'Operation Success')?></div>
-  <?php endif;?>
   </div>
 
   <div class="box">
@@ -116,7 +111,7 @@ $this->breadcrumbs = array(
 			<?php $key = 'mail_email_contact'; ?>
 			<tr>
 				<td>
-					<label><?php echo Yii::t('setting', 'Mail Email Contact'); ?></label>
+					<?php echo $form->labelEx($model, $key); ?>
 				</td>
 				<td>
 					<?php echo $form->textArea($model, $key, array('rows'=>5, 'cols'=>50)); ?>
@@ -135,7 +130,7 @@ $this->breadcrumbs = array(
 			<?php $key = 'mail_smtp_host'; ?>
 			<tr>
 				<td>
-					<label><?php echo Yii::t('setting', 'Mail Smtp Host'); ?></label>
+					<?php echo $form->labelEx($model, $key); ?>
 				</td>
 				<td>
 					<?php echo $form->textField($model, $key); ?>
@@ -146,7 +141,7 @@ $this->breadcrumbs = array(
 			<?php $key = 'mail_smtp_user'; ?>
 			<tr>
 				<td>
-					<label><?php echo Yii::t('setting', 'Mail Smtp User'); ?></label>
+					<?php echo $form->labelEx($model, $key); ?>
 				</td>
 				<td>
 					<?php echo $form->textField($model, $key); ?>
@@ -157,7 +152,7 @@ $this->breadcrumbs = array(
 			<?php $key = 'mail_smtp_password'; ?>
 			<tr>
 				<td>
-					<label><?php echo Yii::t('setting', 'Mail Smtp Password'); ?></label>
+					<?php echo $form->labelEx($model, $key); ?>
 				</td>
 				<td>
 					<?php echo $form->textField($model, $key); ?>
@@ -168,7 +163,7 @@ $this->breadcrumbs = array(
 			<?php $key = 'mail_smtp_port'; ?>
 			<tr>
 				<td>
-					<label><?php echo Yii::t('setting', 'Mail Smtp Port'); ?></label>
+					<?php echo $form->labelEx($model, $key); ?>
 				</td>
 				<td>
 					<?php echo $form->textField($model, $key); ?>

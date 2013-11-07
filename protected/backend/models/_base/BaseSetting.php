@@ -45,7 +45,7 @@ abstract class BaseSetting extends GxActiveRecord {
 		);
 		*/
 		return array(
-
+			array('analysis_google', 'required'),
 		);
 	}
 
@@ -62,7 +62,13 @@ abstract class BaseSetting extends GxActiveRecord {
 	public function attributeLabels() {
 		return array(
 			//'key' => Yii::t('M/setting', 'Key'),
-			'value' => Yii::t('M/setting', 'Value'),
+			//'value' => Yii::t('M/setting', 'Value'),
+
+			'mail_email_contact' => Yii::t('setting', 'Mail Email Contact'),
+			'mail_smtp_host' => Yii::t('setting', 'Mail Smtp Host'),
+			'mail_smtp_user' => Yii::t('setting', 'Mail Smtp User'),
+			'mail_smtp_password' => Yii::t('setting', 'Mail Smtp Password'),
+			'mail_smtp_port' => Yii::t('setting', 'Mail Smtp Port'),
 			'analysis_google' => Yii::t('setting', 'Analysis Google'),
 		);
 	}
