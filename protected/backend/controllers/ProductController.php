@@ -130,6 +130,13 @@ class ProductController extends GxController {
 
 		$i18ns = $model->productI18ns;
 
+		foreach($this->languages as $val){
+			if(!isset($i18ns[$val['language_id']])){
+				$i18n = new ProductI18n;
+				$i18ns[$val['language_id']] = $i18n;
+			}
+		}
+
 		$categoryIds = CHtml::listData($model->product2categories, 'category_id', 'product_id');
 
 		$categories = Category::getCategories(0);

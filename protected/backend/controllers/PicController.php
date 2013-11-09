@@ -90,6 +90,13 @@ class PicController extends GxController {
 
 		$i18ns = $model->picI18ns;
 
+		foreach($this->languages as $val){
+			if(!isset($i18ns[$val['language_id']])){
+				$i18n = new PicI18n;
+				$i18ns[$val['language_id']] = $i18n;
+			}
+		}
+
 		$this->performAjaxValidationEx(array(
 				array(
 					'model' => $model,

@@ -90,6 +90,13 @@ class NewsController extends GxController {
 
 		$i18ns = $model->newsI18ns;
 
+		foreach($this->languages as $val){
+			if(!isset($i18ns[$val['language_id']])){
+				$i18n = new NewsI18n;
+				$i18ns[$val['language_id']] = $i18n;
+			}
+		}
+
 		$this->performAjaxValidationEx(array(
 				array(
 					'model' => $model,

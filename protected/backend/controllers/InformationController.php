@@ -90,6 +90,13 @@ class InformationController extends GxController {
 
 		$i18ns = $model->informationI18ns;
 
+		foreach($this->languages as $val){
+			if(!isset($i18ns[$val['language_id']])){
+				$i18n = new InformationI18n;
+				$i18ns[$val['language_id']] = $i18n;
+			}
+		}
+
 		$this->performAjaxValidationEx(array(
 				array(
 					'model' => $model,

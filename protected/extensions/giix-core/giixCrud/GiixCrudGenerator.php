@@ -26,7 +26,8 @@ class GiixCrudGenerator extends CCodeGenerator {
 	 */
 	protected function getModels() {
 		$models = array();
-		$files = scandir(Yii::getPathOfAlias('application.models'));
+		$modelPath = Yii::getPathOfAlias('backend') ? Yii::getPathOfAlias('backend.models') : Yii::getPathOfAlias('frontend.models');
+		$files = scandir($modelPath);
 		foreach ($files as $file) {
 			if ($file[0] !== '.' && CFileHelper::getExtension($file) === 'php') {
 				$fileClassName = substr($file, 0, strpos($file, '.'));

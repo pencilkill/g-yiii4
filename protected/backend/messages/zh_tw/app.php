@@ -21,7 +21,7 @@ return array (
   'Advanced Search' => '高級搜索',
   'All' => '全部',
   'Cancel' => '取消',
-  'Confirm Delete Language?' => '警告：\\n\\n您正在嘗試刪除語言。\\n\\n這個操作將刪除關聯語言的所有資料。\\n\\n確定要刪除語言項目嗎？',
+  'Confirm Delete Language?' => "警告：\n\n您正在嘗試刪除語言。\n\n這個操作將刪除關聯語言的所有資料。\n\n確定要刪除語言項目嗎？",
   'Confirm Gallery Image Delete?' => '確認刪除項目？',
   'Confirm Grid View Delete?' => '確定要刪除選中項目嗎？',
   'Confirm Grid View Update?' => '確定要送出編輯項目嗎？',
