@@ -95,7 +95,7 @@ echo "<?php\n
 		array(
         	'name' => '<?php echo $this->i18nRelation[0]?>.title',
 			'value' => array($this, 'columnValue'),
-			'filter' => CHtml::activeTextField($model->searchI18n, 'title'),
+			'filter' => CHtml::activeTextField($model->filterI18n, 'title'),
 		),
 <?php }?>
 <?php

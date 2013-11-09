@@ -12,7 +12,7 @@ class ProductController extends GxController {
 		$i18n = new ProductI18n('search');
 		$i18n->unsetAttributes();
 
-		$model->searchI18n = $i18n;
+		$model->filterI18n = $i18n;
 
 		if (isset($_GET['Product'])){
 			$model->setAttributes($_GET['Product']);

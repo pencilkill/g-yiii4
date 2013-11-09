@@ -22,7 +22,7 @@
  */
 abstract class BaseCategory extends GxActiveRecord {
 
-	public $searchI18n;
+	public $filterI18n;
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
@@ -87,9 +87,9 @@ abstract class BaseCategory extends GxActiveRecord {
 		$criteria->group = 't.category_id';
 		$criteria->together = true;
 
-		$criteria->compare('categoryI18ns.title', $this->searchI18n->title, true);
-		$criteria->compare('categoryI18ns.keywords', $this->searchI18n->keywords, true);
-		$criteria->compare('categoryI18ns.description', $this->searchI18n->description, true);
+		$criteria->compare('categoryI18ns.title', $this->filterI18n->title, true);
+		$criteria->compare('categoryI18ns.keywords', $this->filterI18n->keywords, true);
+		$criteria->compare('categoryI18ns.description', $this->filterI18n->description, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

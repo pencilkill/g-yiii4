@@ -12,7 +12,7 @@ class InformationController extends GxController {
 		$i18n = new InformationI18n('search');
 		$i18n->unsetAttributes();
 
-		$model->searchI18n = $i18n;
+		$model->filterI18n = $i18n;
 
 		if (isset($_GET['Information'])){
 			$model->setAttributes($_GET['Information']);

@@ -21,7 +21,7 @@
  */
 abstract class BaseNews extends GxActiveRecord {
 
-	public $searchI18n;
+	public $filterI18n;
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
@@ -87,10 +87,10 @@ abstract class BaseNews extends GxActiveRecord {
 		$criteria->group = 't.news_id';
 		$criteria->together = true;
 
-		$criteria->compare('newsI18ns.pic', $this->searchI18n->pic, true);
-		$criteria->compare('newsI18ns.title', $this->searchI18n->title, true);
-		$criteria->compare('newsI18ns.keywords', $this->searchI18n->keywords, true);
-		$criteria->compare('newsI18ns.description', $this->searchI18n->description, true);
+		$criteria->compare('newsI18ns.pic', $this->filterI18n->pic, true);
+		$criteria->compare('newsI18ns.title', $this->filterI18n->title, true);
+		$criteria->compare('newsI18ns.keywords', $this->filterI18n->keywords, true);
+		$criteria->compare('newsI18ns.description', $this->filterI18n->description, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

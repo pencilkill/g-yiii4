@@ -82,7 +82,7 @@ $this->breadcrumbs = array(
 		array(
         	'name' => 'categoryI18ns.title',
 			'value' => array($this, 'columnValue'),
-			'filter' => CHtml::activeTextField($model->searchI18n, 'title'),
+			'filter' => CHtml::activeTextField($model->filterI18n, 'title'),
 		),
 		array(
 			'type' => 'raw',

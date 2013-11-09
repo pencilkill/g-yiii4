@@ -25,7 +25,7 @@ class CategoryController extends GxController {
 		$i18n = new CategoryI18n('search');
 		$i18n->unsetAttributes();
 
-		$model->searchI18n = $i18n;
+		$model->filterI18n = $i18n;
 
 		if (isset($_GET['Category'])){
 			$model->setAttributes($_GET['Category']);

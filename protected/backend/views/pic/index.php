@@ -93,7 +93,7 @@ $this->breadcrumbs = array(
 		array(
         	'name' => 'picI18ns.url',
 			'value' => array($this, 'columnValue'),
-			'filter' => CHtml::activeTextField($model->searchI18n, 'url'),
+			'filter' => CHtml::activeTextField($model->filterI18n, 'url'),
 		),
 		array(
 			'type' => 'raw',

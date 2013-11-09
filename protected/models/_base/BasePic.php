@@ -22,7 +22,7 @@
  */
 abstract class BasePic extends GxActiveRecord {
 
-	public $searchI18n;
+	public $filterI18n;
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
@@ -98,10 +98,10 @@ abstract class BasePic extends GxActiveRecord {
 		$criteria->group = 't.pic_id';
 		$criteria->together = true;
 
-		$criteria->compare('picI18ns.url', $this->searchI18n->url, true);
-		$criteria->compare('picI18ns.title', $this->searchI18n->title, true);
-		$criteria->compare('picI18ns.keywords', $this->searchI18n->keywords, true);
-		$criteria->compare('picI18ns.description', $this->searchI18n->description, true);
+		$criteria->compare('picI18ns.url', $this->filterI18n->url, true);
+		$criteria->compare('picI18ns.title', $this->filterI18n->title, true);
+		$criteria->compare('picI18ns.keywords', $this->filterI18n->keywords, true);
+		$criteria->compare('picI18ns.description', $this->filterI18n->description, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

@@ -15,7 +15,7 @@
 	2. ARS read like this :
 	$model = new Category('search');
 	$i18n = new CategoryI18n('search');
-	$model->searchI18n = $i18n;
+	$model->filterI18n = $i18n;
 	$data = $model->search()->getData();
 	$pagination = $model->search()->getPagination();
 	// Widget actually output in view
@@ -29,7 +29,7 @@
 	3. ARS specified pagesize read like this :
 	$model = new Information('search');
 	$i18n = new InformationI18n('search');
-	$model->searchI18n = $i18n;
+	$model->filterI18n = $i18n;
 	$provider = $model->search();
 	$provider->pagination->pageSize = 3;
 	$data = $provider->getData();

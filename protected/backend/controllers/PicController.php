@@ -12,7 +12,7 @@ class PicController extends GxController {
 		$i18n = new PicI18n('search');
 		$i18n->unsetAttributes();
 
-		$model->searchI18n = $i18n;
+		$model->filterI18n = $i18n;
 
 		if (isset($_GET['Pic'])){
 			$model->setAttributes($_GET['Pic']);

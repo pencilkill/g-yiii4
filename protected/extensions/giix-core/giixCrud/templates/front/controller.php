@@ -43,7 +43,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 		$i18n = new <?php echo $this->i18nRelation[3]?>('search');
 		$i18n->unsetAttributes();
 
-		$model->searchI18n = $i18n;
+		$model->filterI18n = $i18n;
 <?php endif;?>
 
 		if (isset($_GET['<?php echo $this->modelClass; ?>'])){

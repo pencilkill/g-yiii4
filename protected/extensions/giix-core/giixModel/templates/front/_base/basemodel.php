@@ -56,7 +56,7 @@
 abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->baseClass; ?> {
 
 <?php if($i18n):?>
-	public $searchI18n;
+	public $filterI18n;
 <?php endif;?>
 
 	public static function model($className=__CLASS__) {
@@ -152,7 +152,7 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 <?php if($column->isForeignKey && isset($columns[$name]) && $columns[$name]->isPrimaryKey) continue;?>
 <?php if(strcasecmp($name, 'language_id')===0 && $column->isForeignKey) continue; ?>
 <?php $partial = ($column->type==='string' and !$column->isForeignKey); ?>
-		$criteria->compare('<?php echo $i18nRelationName.'.'.$name; ?>', $this->searchI18n-><?php echo $name; ?><?php echo $partial ? ', true' : ''; ?>);
+		$criteria->compare('<?php echo $i18nRelationName.'.'.$name; ?>', $this->filterI18n-><?php echo $name; ?><?php echo $partial ? ', true' : ''; ?>);
 <?php endforeach;?>
 <?php endif;?>
 
