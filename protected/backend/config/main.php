@@ -103,8 +103,13 @@ $backCfg = array(
 	'components'=>array(
 		'user'=>array(
 			'class'=>'RWebUser',
+
 			// enable cookie-based authentication
-			'allowAutoLogin'=>true,
+        	'allowAutoLogin'=>true,
+			'autoRenewCookie'=>true,
+			// Notice that the second parameter of Yii::app()->user->login($identity, $duration) can not be setted as 0 if you want to enable the authTimeout
+			'authTimeout'=>60 * 20,
+
 			'stateKeyPrefix'=>'back',
 			'loginUrl'=>array('site/login'),
 			'returnUrl'=>array('site/index'),
