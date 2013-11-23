@@ -17,5 +17,8 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Error Page' => '系統提示',
+  'Create Time' => '',
+  'Pic Type' => '',
+  'PicType|PicTypes' => '',
+  'Update Time' => '',
 );

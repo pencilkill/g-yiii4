@@ -17,20 +17,11 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Analysis Google' => 'Google代碼',
-  'Mail Email Contact' => '聯絡我們',
-  'Mail Smtp Host' => '服務器',
-  'Mail Smtp Password' => '密碼',
-  'Mail Smtp Port' => '端口',
-  'Mail Smtp User' => '帳號',
-  'Meta Description' => '描述',
-  'Meta Keywords' => '關鍵詞',
-  'Meta Title' => '網站名稱',
-  'Analysis' => '流量分析',
-  'Mail' => '郵件主機',
-  'Mail Email' => '郵箱',
-  'Mail Smtp' => '主機',
-  'Meta' => '搜索優化',
-  'Setting' => '設置',
-  'Update' => '更新',
+  'Code' => '',
+  'Image' => '',
+  'Language' => '',
+  'Language|Languages' => '',
+  'Sort' => '',
+  'Status' => '',
+  'Title' => '',
 );

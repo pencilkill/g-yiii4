@@ -17,7 +17,12 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Key' => '',
-  'Value' => '',
-  'Setting|Settings' => '設置',
+  'Create Time' => '',
+  'Date Added' => '',
+  'Product' => '',
+  'Product|Products' => '',
+  'Sort' => '',
+  'Status' => '',
+  'Top' => '',
+  'Update Time' => '',
 );

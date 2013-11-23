@@ -28,7 +28,7 @@ $this->breadcrumbs = array(
       </div>
     </div>
     <div class="content">
-		<div id="tabs" class="htabs">
+		<div class="htabs">
 			<a href="#tab-meta"><?php  echo Yii::t('setting', 'Meta')?></a>
 			<a href="#tab-mail"><?php  echo Yii::t('setting', 'Mail')?></a>
 			<a href="#tab-analysis"><?php  echo Yii::t('setting', 'Analysis')?></a>
@@ -44,14 +44,14 @@ $this->breadcrumbs = array(
 		<!-- Meta begin -->
 		<div id="tab-meta">
 
-		  <div id="meta-languages" class="htabs">
+		  <div id="meta-languages" class="<?php echo $this->i18nStyle == SettingController::I18N_HORIZONTAL_STYLE ? 'htabs' : 'vtabs'?>">
 		    <?php foreach ($this->languages as $language) : ?>
 		    <a href="#meta-languages-<?php echo $language['language_id']?>"><?php echo $language['title']; ?></a>
 		    <?php endforeach; ?>
 		  </div>
 
 		  <?php foreach ($this->languages as $language) : ?>
-		  <div id="meta-languages-<?php echo $language['language_id']?>">
+		  <div id="meta-languages-<?php echo $language['language_id']?>" class="<?php echo $this->i18nStyle == SettingController::I18N_HORIZONTAL_STYLE ? '' : 'vtabs-content'?>">
 
 				<table class="form">
 
@@ -99,7 +99,7 @@ $this->breadcrumbs = array(
 		<!-- Mail begin -->
 		<div id="tab-mail">
 
-		  <div id="mail-htabs" class="htabs">
+		  <div class="htabs">
 		    <a href="#mail-htabs-email"><?php echo Yii::t('setting', 'Mail Email')?></a>
 		    <a href="#mail-htabs-smtp"><?php echo Yii::t('setting', 'Mail Smtp')?></a>
 		  </div>
@@ -206,7 +206,3 @@ $this->breadcrumbs = array(
 	</div><!-- form -->
   </div>
 </div>
-<script type="text/javascript">
-$('[id$="-languages"] a').tabs();
-$('[id$="-htabs"] a').tabs();
-</script>

@@ -17,15 +17,7 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Super' => '',
-  'Admin' => '管理員',
-  'Admin|Admins' => '管理員',
-  'Confirm Password' => '確認密碼',
-  'Create Time' => '創建時間',
-  'Email' => '郵箱',
-  'Name' => '姓名',
-  'Password' => '密碼',
-  'Status' => '啟用',
-  'Update Time' => '更新時間',
-  'Username' => '用戶名',
+  'Pic' => '',
+  'Product2image' => '',
+  'Product2image|Product2images' => '',
 );

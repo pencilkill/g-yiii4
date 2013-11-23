@@ -17,11 +17,11 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Code' => '代碼',
-  'Image' => '圖片',
-  'Language' => '語言',
-  'Language|Languages' => '語言',
-  'Sort' => '排序',
-  'Status' => '啟用',
-  'Title' => '標題',
+  'Code' => '',
+  'Image' => '',
+  'Language' => '',
+  'Language|Languages' => '',
+  'Sort' => '',
+  'Status' => '',
+  'Title' => '',
 );

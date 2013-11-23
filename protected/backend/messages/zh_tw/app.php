@@ -44,6 +44,7 @@ return array (
   'Save' => '送出',
   'Search' => '搜索',
   'Tabs Basic' => '基本設置',
+  'Tabs Language' => '多語言',
   'Update' => '編輯',
   'Upload Successfully' => '文件上傳成功',
   'Welcome to administration panel:' => '您已登錄為：',

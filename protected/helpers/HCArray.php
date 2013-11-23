@@ -142,10 +142,12 @@ class HCArray {
 	 */
 	public static function map_recursive($callback, array $array)
 	{
+		$self = __FUNCTION__;
+
 		foreach ($array as $key => $val)
 		{
 			// Map the callback to the key
-			$array[$key] = is_array($val) ? arr::map_recursive($callback, $val) : call_user_func($callback, $val);
+			$array[$key] = is_array($val) ? self::$self($callback, $val) : call_user_func($callback, $val);
 		}
 
 		return $array;
@@ -207,6 +209,8 @@ class HCArray {
 	 */
 	public static function merge()
 	{
+		$self = __FUNCTION__;
+
 		$total = func_num_args();
 
 		$result = array();
@@ -219,7 +223,7 @@ class HCArray {
 					if (is_array($val))
 					{
 						// Arrays are merged recursively
-						$result[$key] = arr::merge($result[$key], $val);
+						$result[$key] = self::$self($result[$key], $val);
 					}
 					elseif (is_int($key))
 					{
@@ -296,6 +300,8 @@ class HCArray {
 	 */
 	public static function to_object(array $array, $class = 'stdClass')
 	{
+		static $self = __FUNCTION__;
+
 		$object = new $class;
 
 		foreach ($array as $key => $value)
@@ -303,7 +309,7 @@ class HCArray {
 			if (is_array($value))
 			{
 				// Convert the array to an object
-				$value = arr::to_object($value, $class);
+				$value = self::$self($value, $class);
 			}
 
 			// Add the value to the object
@@ -314,12 +320,60 @@ class HCArray {
 	}
 
 	public static function sortNestedArray(&$array, $sort) {
+		static $self = __FUNCTION__;
+
 		$sort($array);
+
 		foreach ($array as $key=>$val) {
 			if (is_array($array[$key])) {
-				self::sortNestedArray($array[$key], $sort);
+				self::$self($array[$key], $sort);
 			}
 		}
+	}
+
+	public static function to_xml($array, $parent, $xml=null){
+		static $self = __FUNCTION__;
+
+		$index = 0;
+
+		if($xml == null){
+			$xml = new SimpleXMLElement('<' . $parent . '/>');
+
+			$child = $xml;
+		}else{
+			$child = $xml->addChild($parent);
+		}
+
+		if(is_array($array)){
+
+			reset($array);
+
+			if(is_int(key($array))) unset($xml->$parent);
+
+			foreach($array as $key=>$element){
+
+				if(is_int($key)){
+
+					$xml = self::$self($element,$parent,$xml);
+
+				}else{
+
+					$child = self::$self($element,$key,$child);
+
+				}
+
+			}
+
+		}else{
+
+			$index = ($xml->$parent->count())-1;
+
+			$xml->$parent->$index = $array;
+
+		}
+
+		return $xml;
+
 	}
 
 } // End arr

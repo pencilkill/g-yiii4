@@ -194,13 +194,6 @@ EOD;
 		}
 		else
 		{
-			/**
-			 * create path if source file is in a sub folder
-			 * update by Sam@ozchamp.net
-			 */
-			$dir = pathinfo($fileName, PATHINFO_DIRNAME);
-			is_dir($dir) || mkdir($dir, 0777, true);
-
 			$merged=array();
 			foreach($messages as $message)
 				$merged[$message]='';
@@ -230,6 +223,11 @@ EOD;
 return $array;
 
 EOD;
-		file_put_contents($fileName, $content);
+		/**
+		 * create path if source file is in a sub folder
+		 * update by Sam@ozchamp.net
+		 */
+
+		(is_dir(dirname($fileName)) || mkdir(dirname($fileName), 0777, true)) && file_put_contents($fileName, $content);
 	}
 }

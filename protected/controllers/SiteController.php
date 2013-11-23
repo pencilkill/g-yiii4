@@ -66,6 +66,33 @@ class SiteController extends GxController
 	 */
 	public function actionIndex()
 	{
+		// Config
+		$configFile = Yii::getPathOfAlias('frontend.messages') . DIRECTORY_SEPARATOR . 'config.runtime.php';
+
+		$config = require(Yii::getPathOfAlias('frontend.messages') . DIRECTORY_SEPARATOR . 'config.php');
+
+		$config['languages'] = array('en_us');
+
+		$content = '<?php' . "\n" . 'return ' . var_export($config, true) . ';';
+
+		file_put_contents($configFile, $content);
+
+		// Command
+		$runner = new CConsoleCommandRunner();
+
+		$runner->addCommands(Yii::getPathOfAlias('system.cli.commands'));
+
+		$args = array('yiic', 'message', $configFile);
+		ob_start();
+
+		$runner->run($args);
+
+		$message_logs = ob_get_clean();
+
+		echo nl2br($message_logs);
+
+		//var_dump(HCArray::to_xml($arr, 'zh_tw')->asXml('x.xml'));
+
 		$this->render('//site/index');
 	}
 

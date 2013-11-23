@@ -18,6 +18,12 @@ return array(
 		'/messages',
 		'/vendors',
 		'/web/js',
+		// exclude addon
+		'/runtime',
+		'/backend',
+		'/extensions',
+		'/helpers',
+		'/modules/rights',
 	),
 	'translator' => 'Yii::t',
 	'removeOld' => true,

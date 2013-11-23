@@ -17,8 +17,8 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Create Time' => '創建時間',
-  'Pic Type' => '圖片分組',
-  'PicType|PicTypes' => '圖片分組',
-  'Update Time' => '更新時間',
+  'Create Time' => '',
+  'Pic Type' => '',
+  'PicType|PicTypes' => '',
+  'Update Time' => '',
 );

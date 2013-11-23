@@ -18,6 +18,9 @@ return array(
 		'/messages',
 		'/vendors',
 		'/web/js',
+
+		// exclude addon
+		'/runtime',
 	),
 	'translator' => 'Yii::t',
 	'removeOld' => true,

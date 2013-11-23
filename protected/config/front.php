@@ -11,6 +11,15 @@ return array(
 	),
 	// application components
 	'components'=>array(
+		'coreMessages'=>array(
+			// Set basePath as null, it will customize coreMessages
+			// Notice that app will not translate from coreMessage of Yii::app()->language,
+			// it will translate from coreMessage of Yii::app()->sourceLanguage if there is no onMissingTranslation event
+            'basePath'=>null,
+        ),
+        'messages'=>array(
+        	'class'=>'frontend.extensions.CXmlMessageSource',
+        ),
 		// example to config widget
 		'widgetFactory' => array(
 			'widgets' => array(

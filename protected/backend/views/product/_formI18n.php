@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="content">
-		<div id="tabs" class="htabs">
+		<div class="htabs">
 			<a href="#tab-basic"><?php  echo Yii::t('app', 'Tabs Basic')?></a>
   			<?php  foreach($this->languages as $val):?>
 			<a href="#tab-language-<?php  echo $val['language_id']?>"><?php  echo $val['title']?></a>

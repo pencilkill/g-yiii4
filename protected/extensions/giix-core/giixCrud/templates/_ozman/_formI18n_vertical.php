@@ -27,9 +27,7 @@
     <div class="content">
 		<div class="htabs">
 			<a href="#tab-basic"><?php echo '<?php '; ?> echo Yii::t('app', 'Tabs Basic')?></a>
-  			<?php echo '<?php '; ?> foreach($this->languages as $val):?>
-			<a href="#tab-language-<?php echo '<?php '; ?> echo $val['language_id']?>"><?php echo '<?php '; ?> echo $val['title']?></a>
-  			<?php echo '<?php '; ?> endforeach;?>
+			<a href="#tab-lanugage"><?php echo '<?php '; ?> echo Yii::t('app', 'Tabs Language')?></a>
 			<!--<a href="#tab-swfupload"><?php echo '<?php '; ?> echo Yii::t('app', 'Product Images')?></a>-->
 		</div>
 <?php $ajax = ($this->enable_ajax_validation) ? 'true' : 'false'; ?>
@@ -47,11 +45,18 @@
 			<?php echo '<?php '; ?> echo $this->renderPartial('_basic', array('form' => $form, 'model' => $model), true)?>
 		</div>
 
-		<?php echo '<?php '; ?> foreach($this->languages as $val):?>
-		<div id="tab-language-<?php echo '<?php '; ?> echo $val['language_id']?>">
-			<?php echo '<?php '; ?> echo $this->renderPartial('//<?php echo lcfirst($this->i18nRelation[3])?>/_i18n', array('form' => $form, 'model' => $i18ns[$val['language_id']], 'language_id' => $val['language_id']), true)?>
+		<div id="tab-language">
+			<div class="vtabs">
+				<?php echo '<?php '; ?> foreach($this->languages as $val):?>
+					<a href="#tab-language-<?php echo '<?php '; ?> echo $val['language_id']?>"><?php echo '<?php '; ?> echo $val['title']?></a>
+	  			<?php echo '<?php '; ?> endforeach;?>
+			</div>
+			<?php echo '<?php '; ?> foreach($this->languages as $val):?>
+			<div id="tab-language-<?php echo '<?php '; ?> echo $val['language_id']?>" class="vtabs-content">
+				<?php echo '<?php '; ?> echo $this->renderPartial('//<?php echo lcfirst($this->i18nRelation[3])?>/_i18n', array('form' => $form, 'model' => $i18ns[$val['language_id']], 'language_id' => $val['language_id']), true)?>
+			</div>
+			<?php echo '<?php '; ?> endforeach;?>
 		</div>
-		<?php echo '<?php '; ?> endforeach;?>
 
 		<!--<div id="tab-swfupload">
 			<?php echo '<?php '; ?> //echo $this->renderPartial('_swfupload', array('gallery' => $gallery, 'galleries' => $galleries,), true)?>

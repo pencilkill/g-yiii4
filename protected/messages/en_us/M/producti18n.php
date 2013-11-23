@@ -17,18 +17,10 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Admin' => '管理員',
-  'Account' => '帳號設定',
-  'Catalog' => '商品管理',
-  'Category' => '目錄',
-  'Contact' => '聯絡我們',
-  'Dashboard' => '管理首頁',
-  'Exit System' => '退出系統',
-  'Information' => '單一頁面',
-  'News' => '最新消息',
-  'Pic' => '圖片管理',
-  'Product' => '商品',
-  'Setting' => '網站設定',
-  'Site Frontend' => '網站首頁',
-  'System' => '系統設定',
+  'Description' => '',
+  'Keywords' => '',
+  'Pic' => '',
+  'Product I18n' => '',
+  'ProductI18n|ProductI18ns' => '',
+  'Title' => '',
 );

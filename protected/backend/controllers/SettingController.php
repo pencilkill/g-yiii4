@@ -8,8 +8,15 @@
  *
  * A setting can be added from view file directly
  * It will delete the setting which is not posted from view file while exists in db already
+ *
+ *
+ * @property i18nStyle, String, horizontal = 1 or verticality = 2
  */
 class SettingController extends GxController {
+	const I18N_HORIZONTAL_STYLE = 1;
+	const I18N_VERTICAL_STYLE = 2;
+
+	public $i18nStyle = 2;
 
 	public function actionIndex() {
 		$model = Setting::model();
