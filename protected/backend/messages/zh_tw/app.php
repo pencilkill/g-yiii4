@@ -17,7 +17,6 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  '操作' => '',
   'Advanced Search' => '高級搜索',
   'All' => '全部',
   'Cancel' => '取消',

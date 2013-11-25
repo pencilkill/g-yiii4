@@ -6,7 +6,7 @@
 
 <h1>Welcome to <i><?php echo CHtml::encode(Yii::app()->name); ?></i></h1>
 
-<p><?php echo Yii::t('V/site', 'Congratulations! You have successfully created your Yii application.')?></p>
+<p><?php echo Yii::t('app', 'Congratulations! You have successfully created your Yii application.')?></p>
 
 <p>You may change the content of this page by modifying the following two files:</p>
 <ul>

@@ -38,7 +38,11 @@
 			<td>
 				<select id="<?php echo CHtml::activeId($model, 'image')?>" name="<?php echo CHtml::activeName($model, 'image')?>" length="5">
 					<?php foreach($images as $val):?>
+						<?php if($val['value'] == CHtml::value($model, 'image')):?>
+						<option value="<?php echo $val['value']?>" data-image="<?php echo $val['data-image']?>" selected="selected"><?php echo $val['text']?></option>
+						<?php ;else:?>
 						<option value="<?php echo $val['value']?>" data-image="<?php echo $val['data-image']?>"><?php echo $val['text']?></option>
+						<?php endif;?>
 					<?php endforeach;?>
 				</select>
 				<?php echo $form->error($model,'image'); ?>

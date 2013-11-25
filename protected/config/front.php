@@ -17,9 +17,6 @@ return array(
 			// it will translate from coreMessage of Yii::app()->sourceLanguage if there is no onMissingTranslation event
             'basePath'=>null,
         ),
-        'messages'=>array(
-        	'class'=>'frontend.extensions.CXmlMessageSource',
-        ),
 		// example to config widget
 		'widgetFactory' => array(
 			'widgets' => array(

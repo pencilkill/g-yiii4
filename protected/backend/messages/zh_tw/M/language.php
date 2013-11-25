@@ -24,4 +24,5 @@ return array (
   'Sort' => '排序',
   'Status' => '啟用',
   'Title' => '標題',
+  '{attribute} can be allowed a-z or \'_\' only, and \'_\' can not be first char and last char.' => '{attribute} 只能是英文小寫字母與下劃線組合，且下劃線不在開頭與結尾。',
 );

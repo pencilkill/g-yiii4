@@ -21,16 +21,7 @@ class LanguageController extends GxController {
 	public function actionCreate() {
 		$model = new Language;
 
-		$imagesRaw = CFileHelper::findFiles(Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR . '_ozman/image/flags', array('fileTypes' => array('png')));
-
-		$images = array();
-		array_walk($imagesRaw, function($v) use(&$images){
-			$images[] = array(
-				'value' => strtr($v, array(Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR => '')),
-				'data-image' => strtr($v, array(Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR => '')),
-				'text' => strtoupper(pathinfo($v, PATHINFO_FILENAME)),
-			);
-		});
+		$images = self::getLanguageFlags();
 
 		$this->performAjaxValidationEx(array(
 				array(
@@ -63,16 +54,7 @@ class LanguageController extends GxController {
 	public function actionUpdate($id) {
 		$model = $this->loadModel($id, 'Language');
 
-		$imagesRaw = CFileHelper::findFiles(Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR . '_ozman/image/flags', array('fileTypes' => array('png')));
-
-		$images = array();
-		array_walk($imagesRaw, function($v) use(&$images){
-			$images[] = array(
-				'value' => strtr($v, array(Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR => '')),
-				'data-image' => strtr($v, array(Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR => '')),
-				'text' => strtoupper(pathinfo($v, PATHINFO_FILENAME)),
-			);
-		});
+		$images = self::getLanguageFlags();
 
 		$this->performAjaxValidationEx(array(
 				array(
@@ -193,4 +175,19 @@ class LanguageController extends GxController {
 		}
 	}
 
+	public static function getLanguageFlags(){
+		$images = array();
+
+		$imagesRaw = CFileHelper::findFiles(Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR . '_ozman/image/flags', array('fileTypes' => array('png')));
+
+		array_walk($imagesRaw, function($v) use(&$images){
+			$images[] = array(
+				'value' => strtr($v, array(Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR => '')),
+				'data-image' => strtr($v, array(Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR => '')),
+				'text' => strtoupper(pathinfo($v, PATHINFO_FILENAME)),
+			);
+		});
+
+		return $images;
+	}
 }

@@ -18,4 +18,5 @@
  */
 return array (
   'List' => '',
+  'Congratulations! You have successfully created your Yii application.' => '您已經成功創建第一個YII應用，祝賀您！',
 );
