@@ -20,12 +20,16 @@
 					'itemTemplate' => '{content}',
 					'options' => array(
 						'cursor' => 'crosshair',
-						'placeholder' => 'ui-state-highlight',
+						'placeholder' => 'ui-state-highlight ',
 						'forceHelperSize' => true,
 						'forcePlaceholderSize' => true,
 						'start' => 'js:function(e, ui ){
-						     ui.placeholder.height(ui.helper.innerHeight());
-						     ui.placeholder.width(ui.helper.innerWidth());
+						     ui.placeholder.css({
+						     	\'heigth\':ui.helper.innerHeight(),
+						     	\'width\':ui.helper.innerWidth(),
+						     	\'display\':\'inline-block\',
+						     	\'list-style\':\'none\'
+						     });
 						}',
 					),
 					'htmlOptions' => array(

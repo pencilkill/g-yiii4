@@ -1,4 +1,4 @@
-<li>
+<li style="display:inline-block; margin:10px; ">
 	<table style="border:1px solid gray;">
 		<tr>
 			<td style="width:<?php echo $resize['width']?>px; height: <?php echo $resize['height']?>px;" align="center">
