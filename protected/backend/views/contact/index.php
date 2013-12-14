@@ -86,7 +86,7 @@ $this->breadcrumbs = array(
 			'type' => 'raw',
 			'name' => 'status',
 			'value' => 'CHtml::dropDownList("edit[$data->contact_id][status]", $data->status, Contact::$statusList, array("class"=>"editable"))',
-			'filter' => Contact::$statusList,
+			'filter' => array('0' => Yii::t('app', 'Unnoticed'), '1' => Yii::t('app', 'Noticed')),
 		),
 
 		array(

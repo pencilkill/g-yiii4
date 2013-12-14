@@ -40,6 +40,8 @@ class PicTypeController extends GxController {
 				}else{
 					$this->redirect(array('index'));
 				}
+			}else{
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
 			}
 		}
 
@@ -69,6 +71,8 @@ class PicTypeController extends GxController {
 				}else{
 					$this->redirect(array('index'));
 				}
+			}else{
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
 			}
 		}
 

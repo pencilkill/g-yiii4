@@ -162,7 +162,7 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 					'*',
 				),
 			),
-<?php if(strrpos($modelClass, 'I18n', -4) === false):?>
+<?php if(substr($modelClass, -4) !== 'I18n' && strpos($modelClass, '2') == false):?>
 			'pagination' => array(
 				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
 				'pageVar' => 'page',

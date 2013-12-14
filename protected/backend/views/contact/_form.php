@@ -46,7 +46,7 @@
 				<?php echo $form->labelEx($model,'gender'); ?>
 			</td>
 			<td>
-				<?php echo Contact::$genderList[CHtml::value($model, 'gender')]; ?>
+				<?php echo $form->dropDownList($model,'gender',array('0' => Yii::t('app', 'Female'), '1' => Yii::t('app', 'Male'))); ?>
 				<?php echo $form->error($model,'gender'); ?>
 			</td>
 		</tr><!-- row -->
@@ -133,7 +133,7 @@
 				<?php echo $form->labelEx($model,'status'); ?>
 			</td>
 			<td>
-				<?php echo $form->dropDownList($model, 'status', Contact::$statusList); ?>
+				<?php echo $form->dropDownList($model, 'status', array('0' => Yii::t('app', 'Unnoticed'), '1' => Yii::t('app', 'Noticed'))); ?>
 				<?php echo $form->error($model,'status'); ?>
 			</td>
 		</tr><!-- row -->

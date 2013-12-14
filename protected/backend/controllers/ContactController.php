@@ -41,6 +41,8 @@ class ContactController extends GxController {
 				}else{
 					$this->redirect(array('index'));
 				}
+			}else{
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
 			}
 		}
 

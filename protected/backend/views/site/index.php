@@ -2,7 +2,7 @@
 /* @var $this SiteController */
 
 $this->breadcrumbs = array(
-	Yii::t('app', '操作'),
+	Yii::t('app', 'Operation'),
 );
 ?>
 <style type="text/css">

@@ -113,6 +113,8 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 				}else{
 					$this->redirect(array('index'));
 				}
+			}else{
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
 			}
 		}
 
@@ -185,6 +187,8 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 				}else{
 					$this->redirect(array('index'));
 				}
+			}else{
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
 			}
 		}
 
