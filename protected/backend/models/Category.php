@@ -107,11 +107,17 @@ class Category extends BaseCategory
     	}
     }
 
+    public function beforeSave(){
+    	if(parent::beforeSave()){
+    		$this->parent_id = $this->parent_id ? $this->parent_id : new CDbExpression('NULL');
+    	}
+    }
+
     public function beforeDelete(){
     	if(! parent::beforeDelete()) return false;
 
     	if((sizeOf($this->children) || sizeOf($this->product2categories))){
-    		Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure').Yii::t('app', 'Including Items'));
+    		Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure Including SubItems'));
 
     		return false;
     	}else{

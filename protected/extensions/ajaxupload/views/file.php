@@ -1,5 +1,5 @@
 <div style="border: 1px solid #EEEEEE; padding: 10px; display: inline-block;">
-<?php echo CHtml::activeHiddenField($model, $attribute, $htmlOptions);?>
+<?php echo CHtml::hiddenField($name, $value, $htmlOptions);?>
 <?php if(!empty($preview)):?>
 <a href="<?php echo $preview?>" taget="_blank" alt="" id="<?php echo $prefix?>_preview">View</a>
 <?php ;else:?>

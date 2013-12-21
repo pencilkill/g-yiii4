@@ -48,16 +48,33 @@ class AjaxFileUploadWidget extends CInputWidget
 			Yii::app()->clientScript->registerScriptFile($baseUrl . '/handler.js', CClientScript::POS_HEAD);
 		}
 
+		// preview , value
 		if(isset($this->htmlOptions['value'])){
-			$preview = $this->htmlOptions['value'];
+			$value = $this->htmlOptions['value'];
+			unset($this->htmlOptions['value']);
 		}else if(isset($this->value)){
-			$preview = $this->value;
+			$value = $this->value;
+		}else if(isset($this->model, $this->attribute)){
+			$value = CHtml::value($this->model, $this->attribute);
 		}else{
-			$preview = CHtml::resolveValue($this->model, $this->attribute);
+			$value = '';
 		}
 
+		if(isset($this->htmlOptions['name'])){
+			$name = $this->htmlOptions['name'];
+			unset($this->htmlOptions['name']);
+		}else if(isset($this->name)){
+			$name = $this->name;
+		}else if(isset($this->model, $this->attribute)){
+			$name = CHtml::activeName($this->model, $this->attribute);
+		}else{
+			$name = '';
+		}
+
+		$preview = $value;
+
 		if(isset($this->previewUrl) && is_array($this->previewUrl)){
-			$previewUrlParam = array('file' => $preview);
+			$previewUrlParam = array('file' => $value);
 			if(isset($this->previewUrl[1])){
 				$previewUrlParam = array_merge_recursive($previewUrlParam, $this->previewUrl[1]);
 			}
@@ -90,8 +107,8 @@ class AjaxFileUploadWidget extends CInputWidget
 		Yii::app()->getClientScript()->registerScript(__CLASS__.$prefix, "jQuery('#{$prefix}').ajaxUploadHandler($settings);");
 
 		$this->render('file', array(
-			'model' => $this->model,
-			'attribute' => $this->attribute,
+			'name' => $name,
+			'value' => $value,
 			'htmlOptions' => $this->htmlOptions,
 			'prefix' => $prefix,
 			'preview' => $preview,

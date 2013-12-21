@@ -1,5 +1,5 @@
 <div style="border: 1px solid #EEEEEE; padding: 10px; display: inline-block;">
-<?php echo CHtml::activeHiddenField($model, $attribute, $htmlOptions);?>
+<?php echo CHtml::hiddenField($name, $value, $htmlOptions);?>
 <table>
 	<tr>
 		<td colspan="3" style="width: <?php echo $resize['width']?>px; height: <?php echo $resize['width']?>px;" align="center">

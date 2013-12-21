@@ -37,6 +37,10 @@
 	$relationType = $relationData[0];
 	$relationModel = $relationData[1];
 
+	if($relationModel == $i18nClassName){
+		echo $relationModel . ' $' . substr($name, 0, -1) . "\n * @property ";
+	}
+
 	switch($relationType) {
 		case GxActiveRecord::BELONGS_TO:
 		case GxActiveRecord::HAS_ONE:
@@ -97,10 +101,15 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 <?php $pattern = "/^\s*array\(\s*self::HAS_MANY\s*,\s*'{$i18nClassName}',\s*/i";?>
 <?php foreach($relations as $name=>$relation): ?>
 <?php
-	if(preg_match($pattern, $relation)) {
+	if(preg_match($pattern, $relation))
+	{
 		$i18nRelationName = $name;
+?>
+			<?php echo "'" . substr($name, 0, -1) . "' => " . preg_replace('/\)\s*$/', ', \'condition\' => \'' . substr($name, 0, -1) . '.language_id=:language_id\', \'params\' => array(\':language_id\' => Yii::app()->getController()->language_id)),' . "\n", strtr($relation, array('self::HAS_MANY' => 'self::HAS_ONE')));?>
+<?php
 		$relation = preg_replace('/\)\s*$/', ', \'index\' => \'language_id\')', $relation);
-	}?>
+	}
+?>
 			<?php echo "'{$name}' => {$relation},\n"; ?>
 <?php endforeach; ?>
 		);
@@ -167,6 +176,8 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
 				'pageVar' => 'page',
 			),
+<?php ;else:?>
+			'pagination' => false,
 <?php endif;?>
 		));
 	}

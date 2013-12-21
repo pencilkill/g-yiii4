@@ -303,7 +303,7 @@ class CActiveForm extends CWidget
 	 * @see error
 	 * @since 1.1.7
 	 */
-	protected $attributes=array();
+	public $attributes=array();
 	/**
 	 * @var string the ID of the container element for error summary
 	 * @see errorSummary

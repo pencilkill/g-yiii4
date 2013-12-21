@@ -16,6 +16,13 @@
  */
 class GxActiveForm extends CActiveForm {
 
+	public function init(){
+		parent::init();
+
+		Yii::import('frontend.behaviors.CActiveFormBehavior');
+
+		$this->attachBehavior('CActiveFormBehavior', 'CActiveFormBehavior');
+	}
 	/**
 	 * Renders a checkbox list for a model attribute.
 	 * This method is a wrapper of {@link GxHtml::activeCheckBoxList}.
@@ -50,26 +57,41 @@ class GxActiveForm extends CActiveForm {
 			$models=array($models);
 
 		foreach($models as $model){
-			if(! isset($model['model'])) continue;
-			$mods = $model['model'];
+			if(empty($model['model'])) continue;
+
 			$attributes = isset($model['attributes']) ? $model['attributes'] : null;
 			$many = isset($model['many']) ? $model['many'] : false;
 
 			if($many){
-				foreach($mods as $i=>$mod)
-				{
-					if($loadInput && isset($_POST[get_class($mod)][$i]))
-						$mod->attributes=$_POST[get_class($mod)][$i];
-					$mod->validate($attributes);
-					foreach($mod->getErrors() as $attribute=>$errors)
-						$result[CHtml::activeId($mod,'['.$i.']'.$attribute)]=$errors;
-				}
+
+					$posts = $mods = array();
+
+					$mods = HCArray::array_last_dimension($model['model']);
+
+					$modelName = CHtml::modelName($mods[key($mods)]);
+
+					if($loadInput && isset($_POST[$modelName])){
+						$posts = HCArray::array_last_dimension($_POST[$modelName]);
+					}
+
+					foreach($mods as $key=>$mod)
+					{
+						$mod->setAttributes(isset($posts[$key]) ? $posts[$key] : array());
+						$mod->validate($attributes);
+						foreach($mod->getErrors() as $attribute=>$errors){
+							$result[CHtml::activeId($mod,$key.$attribute)]=$errors;
+						}
+					}
 			}else{
-				if($loadInput && isset($_POST[get_class($mods)]))
-				$mods->attributes=$_POST[get_class($mods)];
-				$mods->validate($attributes);
-				foreach($mods->getErrors() as $attribute=>$errors)
-					$result[CHtml::activeId($mods,$attribute)]=$errors;
+				$modelName = CHtml::modelName($model['model']);
+
+				if($loadInput && isset($_POST[$modelName])){
+					$model['model']->setAttributes($_POST[$modelName]);
+				}
+				$model['model']->validate($attributes);
+				foreach($model['model']->getErrors() as $attribute=>$errors){
+					$result[CHtml::activeId($model['model'],$attribute)]=$errors;
+				}
 			}
 		}
 

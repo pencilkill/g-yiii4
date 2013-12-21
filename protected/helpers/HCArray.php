@@ -76,7 +76,7 @@ class HCArray {
 	public static function remove($key, & $array)
 	{
 		if ( ! array_key_exists($key, $array))
-			return NULL;
+		return NULL;
 
 		$val = $array[$key];
 		unset($array[$key]);
@@ -142,12 +142,10 @@ class HCArray {
 	 */
 	public static function map_recursive($callback, array $array)
 	{
-		$self = __FUNCTION__;
-
 		foreach ($array as $key => $val)
 		{
 			// Map the callback to the key
-			$array[$key] = is_array($val) ? self::$self($callback, $val) : call_user_func($callback, $val);
+			$array[$key] = is_array($val) ? arr::map_recursive($callback, $val) : call_user_func($callback, $val);
 		}
 
 		return $array;
@@ -188,7 +186,7 @@ class HCArray {
 		if ($high == count($haystack) OR $haystack[$high] != $needle)
 		{
 			if ($nearest === FALSE)
-				return FALSE;
+			return FALSE;
 
 			// return the nearest value
 			$high_distance = $haystack[ceil($low)] - $needle;
@@ -209,8 +207,6 @@ class HCArray {
 	 */
 	public static function merge()
 	{
-		$self = __FUNCTION__;
-
 		$total = func_num_args();
 
 		$result = array();
@@ -223,7 +219,7 @@ class HCArray {
 					if (is_array($val))
 					{
 						// Arrays are merged recursively
-						$result[$key] = self::$self($result[$key], $val);
+						$result[$key] = arr::merge($result[$key], $val);
 					}
 					elseif (is_int($key))
 					{
@@ -281,7 +277,7 @@ class HCArray {
 	public static function range($step = 10, $max = 100)
 	{
 		if ($step < 1)
-			return array();
+		return array();
 
 		$array = array();
 		for ($i = $step; $i <= $max; $i += $step)
@@ -300,8 +296,6 @@ class HCArray {
 	 */
 	public static function to_object(array $array, $class = 'stdClass')
 	{
-		static $self = __FUNCTION__;
-
 		$object = new $class;
 
 		foreach ($array as $key => $value)
@@ -309,7 +303,7 @@ class HCArray {
 			if (is_array($value))
 			{
 				// Convert the array to an object
-				$value = self::$self($value, $class);
+				$value = arr::to_object($value, $class);
 			}
 
 			// Add the value to the object
@@ -320,60 +314,208 @@ class HCArray {
 	}
 
 	public static function sortNestedArray(&$array, $sort) {
-		static $self = __FUNCTION__;
-
 		$sort($array);
-
 		foreach ($array as $key=>$val) {
 			if (is_array($array[$key])) {
-				self::$self($array[$key], $sort);
+				self::sortNestedArray($array[$key], $sort);
 			}
 		}
 	}
 
-	public static function to_xml($array, $parent, $xml=null){
-		static $self = __FUNCTION__;
+	/**
+	 * Returns the values from a single column of the input array, identified by
+	 * the $columnKey.
+	 *
+	 * Optionally, you may provide an $indexKey to index the values in the returned
+	 * array by the values from the $indexKey column in the input array.
+	 *
+	 * @param array $input A multi-dimensional array (record set) from which to pull
+	 *                     a column of values.
+	 * @param mixed $columnKey The column of values to return. This value may be the
+	 *                         integer key of the column you wish to retrieve, or it
+	 *                         may be the string key name for an associative array.
+	 * @param mixed $indexKey (Optional.) The column to use as the index/keys for
+	 *                        the returned array. This value may be the integer key
+	 *                        of the column, or it may be the string key name.
+	 * @return array
+	 */
+	public static function array_column($input = null, $columnKey = null, $indexKey = null)
+	{
+		// Using func_get_args() in order to check for proper number of
+		// parameters and trigger errors exactly as the built-in array_column()
+		// does in PHP 5.5.
+		$argc = func_num_args();
+		$params = func_get_args();
 
-		$index = 0;
-
-		if($xml == null){
-			$xml = new SimpleXMLElement('<' . $parent . '/>');
-
-			$child = $xml;
-		}else{
-			$child = $xml->addChild($parent);
+		if ($argc < 2) {
+			trigger_error("array_column() expects at least 2 parameters, {$argc} given", E_USER_WARNING);
+			return null;
 		}
 
-		if(is_array($array)){
+		if (!is_array($params[0])) {
+			trigger_error('array_column() expects parameter 1 to be array, ' . gettype($params[0]) . ' given', E_USER_WARNING);
+			return null;
+		}
 
-			reset($array);
+		if (!is_int($params[1])
+		&& !is_float($params[1])
+		&& !is_string($params[1])
+		&& $params[1] !== null
+		&& !(is_object($params[1]) && method_exists($params[1], '__toString'))
+		) {
+			trigger_error('array_column(): The column key should be either a string or an integer', E_USER_WARNING);
+			return false;
+		}
 
-			if(is_int(key($array))) unset($xml->$parent);
+		if (isset($params[2])
+		&& !is_int($params[2])
+		&& !is_float($params[2])
+		&& !is_string($params[2])
+		&& !(is_object($params[2]) && method_exists($params[2], '__toString'))
+		) {
+			trigger_error('array_column(): The index key should be either a string or an integer', E_USER_WARNING);
+			return false;
+		}
 
-			foreach($array as $key=>$element){
+		$paramsInput = $params[0];
+		$paramsColumnKey = ($params[1] !== null) ? (string) $params[1] : null;
 
-				if(is_int($key)){
+		$paramsIndexKey = null;
+		if (isset($params[2])) {
+			if (is_float($params[2]) || is_int($params[2])) {
+				$paramsIndexKey = (int) $params[2];
+			} else {
+				$paramsIndexKey = (string) $params[2];
+			}
+		}
 
-					$xml = self::$self($element,$parent,$xml);
+		$resultArray = array();
 
-				}else{
+		foreach ($paramsInput as $row) {
 
-					$child = self::$self($element,$key,$child);
+			$key = $value = null;
+			$keySet = $valueSet = false;
 
+			if ($paramsIndexKey !== null && array_key_exists($paramsIndexKey, $row)) {
+				$keySet = true;
+				$key = (string) $row[$paramsIndexKey];
+			}
+
+			if ($paramsColumnKey === null) {
+				$valueSet = true;
+				$value = $row;
+			} elseif (is_array($row) && array_key_exists($paramsColumnKey, $row)) {
+				$valueSet = true;
+				$value = $row[$paramsColumnKey];
+			}
+
+			if ($valueSet) {
+				if ($keySet) {
+					$resultArray[$key] = $value;
+				} else {
+					$resultArray[] = $value;
 				}
-
 			}
-
-		}else{
-
-			$index = ($xml->$parent->count())-1;
-
-			$xml->$parent->$index = $array;
 
 		}
 
-		return $xml;
-
+		return $resultArray;
 	}
 
+	/**
+	 * @author Sam@ozchamp.net
+	 *
+	 * Get list of all values from a multidimentional array
+	 * Using array_walk_recursive cause RecursiveArrayIterator will miss object element
+	 *
+	 * @param array $array Multidimensional array to extract values from
+	 * @return array
+	 */
+	public static function array_values_dimensions(array $array)
+	{
+		$argc = func_num_args();
+		$params = func_get_args();
+
+		if ($argc < 1) {
+			trigger_error("array_values_dimensions() expects at least 1 parameter, {$argc} given", E_USER_WARNING);
+			return null;
+		}
+
+		if (!is_array($params[0])) {
+			trigger_error('array_values_dimensions() expects parameter 1 to be array, ' . gettype($params[0]) . ' given', E_USER_WARNING);
+			return null;
+		}
+
+		$return = array();
+
+		array_walk_recursive($params[0], function($val, $key) use(&$return){$return[] = $val;});
+
+		return $return;
+	}
+
+	/**
+	 * @author Sam@ozchamp.net
+	 *
+	 * @param $array
+	 * @param $maxDepth
+	 * @param $leftSymbol
+	 * @param $rightSymbol
+	 *
+	 * Get last dimension values from  a multidimentional array
+	 *
+	 * @example
+	 	$_POST['example'][2][7]['c'] = 'lemon';
+		$_POST['example'][2][7]['a'] = 'lemon1';
+		$_POST['example'][3][7]['b'] = 'lemon2';
+		$_POST['example'][3][7]['d'] = 'lemon3';
+		print_r(array_last_dimension($_POST['example']));
+	 *
+	 */
+public static function array_last_dimension(array $array = NULL, string $leftSymbol = NULL, string $rightSymbol = NULL){
+		$argc = func_num_args();
+		$params = func_get_args();
+
+		if ($argc < 1) {
+			trigger_error("array_last_dimension() expects at least 1 parameter, {$argc} given", E_USER_WARNING);
+			return null;
+		}
+
+		if (!is_array($params[0])) {
+			trigger_error('array_last_dimension() expects parameter 1 to be array, ' . gettype($params[0]) . ' given', E_USER_WARNING);
+			return null;
+		}
+
+
+		if(!isset($params[1]) || is_null($params[1])){
+			$params[1] = '[';
+		}else{
+			$params[1] = (string)$params[1];
+		}
+
+		if(!isset($params[2]) || is_null($params[2])){
+			$params[2] = ']';
+		}else{
+			$params[2] = (string)$params[2];
+		}
+
+		$iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($params[0]), RecursiveIteratorIterator::LEAVES_ONLY);
+		$iterator->rewind();
+
+		$maxDepth = max($iterator->getDepth() -1, 0);
+
+		$iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($params[0]), RecursiveIteratorIterator::SELF_FIRST);
+		$iterator->setMaxDepth($maxDepth);
+
+		$inputs = array();
+		foreach($iterator as $key => $value){
+			if($iterator->getDepth() == $maxDepth){
+				for($i = $maxDepth - 1, $key = $params[1] . $key . $params[2]; $i >= 0; $i--) {
+					$key = $params[1] . $iterator->getSubIterator($i)->key() . $params[2] . $key;
+				}
+				$inputs[$key] = $value;
+			}
+		}
+
+		return $inputs;
+	}
 } // End arr

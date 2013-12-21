@@ -1,5 +1,5 @@
 <?php echo "<?php\n";?>
-$this->widget('ext.swfupload.CSwfUpload', array(
+$this->widget('frontend.extensions.swfupload.CSwfUpload', array(
         'config' => array(
             'upload_url' => Yii::app()->createUrl('action/upload'),
             'post_params' => array('PHPSESSID'=>$_COOKIE['PHPSESSID']),

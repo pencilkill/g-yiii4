@@ -1,5 +1,12 @@
 <?php
-$modelClass = get_class($gallery);
+/*
+ * ************** start swfupload extension translations *********
+Yii::t('app', 'Select A Image');
+Yii::t('app', 'Confirm Gallery Image Delete?');
+Yii::t('app', 'Gallery Image Delete');
+ * ************** end of swfupload extension translations *********
+*/
+$modelClass = is_object($gallery) ? CHtml::modelName($gallery) : $gallery;
 $languages = 0;
 
 $this->widget('frontend.extensions.swfupload.CSwfUpload', array(

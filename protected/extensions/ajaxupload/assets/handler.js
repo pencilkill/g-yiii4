@@ -37,7 +37,9 @@
 				var imageId = hiddenId + '_preview';
 				// the element created by ajaxupload which is float to support ajaxupload
 				var fileId = hiddenId+'_upload';
-						
+				
+				$(this).data('settings', _options);
+				
 				imageUploader(fileId, _options);
 				
 			}

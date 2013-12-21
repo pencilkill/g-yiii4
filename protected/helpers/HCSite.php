@@ -18,7 +18,7 @@ class HCSite {
 		$imageCache = Yii::app()->image->load($imageFile);
 		if(isset($option['resize'])){
 			$resize=$option['resize'];
-			$imageCache->resize($resize['width'], $resize['height'], isset($resize['master'])?$resize['master']:2);
+			$imageCache->resize($resize['width'], $resize['height'], isset($resize['master']) ? $resize['master'] : Image::AUTO);
 		}
 		if(isset($option['crop'])){
 			$crop=$option['crop'];
@@ -67,7 +67,11 @@ class HCSite {
 		$src = strtr(strtr($imageFile, array('\\' => '/')), array(Yii::getPathOfAlias('webroot') . '/' => ''));
 
 		if($width && $height){
-			$src = Yii::app()->image->load($imageFile)->resize($width, $height, $master)->cache(false);
+			$image = Yii::app()->image->load($imageFile);
+
+			$master = $master===NULL ? Image::AUTO : $master;
+
+			$src = $image->resize($width, $height, $master)->cache(false);
 		}
 
 		return $src;

@@ -53,15 +53,29 @@ class AjaxImageUploadWidget extends CInputWidget
 		$imageCache = array_merge_recursive($imageCache, $this->imageCache);
 
 		if(isset($this->htmlOptions['value'])){
-			$preview = $this->htmlOptions['value'];
+			$value = $this->htmlOptions['value'];
+			unset($this->htmlOptions['value']);
 		}else if(isset($this->value)){
-			$preview = $this->value;
+			$value = $this->value;
+		}else if(isset($this->model, $this->attribute)){
+			$value = CHtml::value($this->model, $this->attribute);
 		}else{
-			$preview = CHtml::resolveValue($this->model, $this->attribute);
+			$value = '';
+		}
+
+		if(isset($this->htmlOptions['name'])){
+			$name = $this->htmlOptions['name'];
+			unset($this->htmlOptions['name']);
+		}else if(isset($this->name)){
+			$name = $this->name;
+		}else if(isset($this->model, $this->attribute)){
+			$name = CHtml::activeName($this->model, $this->attribute);
+		}else{
+			$name = '';
 		}
 
 		// thumb
-		$preview = HCSite::cache($preview, $imageCache);
+		$preview = HCSite::cache($value, $imageCache);
 		// thumb no image
 		$previewX = HCSite::cache(null, $imageCache);
 
@@ -89,8 +103,8 @@ class AjaxImageUploadWidget extends CInputWidget
 		Yii::app()->getClientScript()->registerScript(__CLASS__.$prefix, "jQuery('#{$prefix}').ajaxUploadHandler($settings);");
 
 		$this->render('image', array(
-			'model' => $this->model,
-			'attribute' => $this->attribute,
+			'name' => $name,
+			'value' => $value,
 			'htmlOptions' => $this->htmlOptions,
 			'prefix' => $prefix,
 			'preview' => $preview,
