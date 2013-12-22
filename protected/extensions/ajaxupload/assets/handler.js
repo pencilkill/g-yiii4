@@ -72,7 +72,7 @@
     	
         return this.each(function() {
         	var btnId = _options.btnId ? _options.splice('btnId') : '#' + this.id + '_upload';	// remove after getting
-        	var previewId = _options.previewId ? _options_options.splice('previewId') : (this.previewId ? this.previewId : '#' + this.id + '_preview');
+        	var previewId = _options.previewId ? _options.splice('previewId') : (this.previewId ? this.previewId : '#' + this.id + '_preview');
         	var hiddenId = '#' + this.id;
         	
         	$(btnId).attr({
