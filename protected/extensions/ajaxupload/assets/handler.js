@@ -19,7 +19,7 @@
     	}
     	
     	function onSubmit(file, extension) {
-    		var btn = $(this._button);	// or just use $(this)
+    		var btn = $(this._button);
     		
     		btn.after('<img src="' + _options.baseUrl + '/images/loading.gif" class="ajaxUploadLoading" style="padding-left: 5px;" />');
     		btn.attr('disabled', true);
