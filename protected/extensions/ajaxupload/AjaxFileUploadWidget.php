@@ -55,7 +55,7 @@ class AjaxFileUploadWidget extends CInputWidget
 		}else if(isset($this->value)){
 			$value = $this->value;
 		}else if(isset($this->model, $this->attribute)){
-			$value = CHtml::value($this->model, $this->attribute);
+			$value = CHtml::resolveValue($this->model, $this->attribute);
 		}else{
 			$value = '';
 		}
@@ -76,7 +76,7 @@ class AjaxFileUploadWidget extends CInputWidget
 		if(isset($this->previewUrl) && is_array($this->previewUrl)){
 			$previewUrlParam = array('file' => $value);
 			if(isset($this->previewUrl[1])){
-				$previewUrlParam = array_merge_recursive($previewUrlParam, $this->previewUrl[1]);
+				$previewUrlParam = CMap::mergeArray($previewUrlParam, $this->previewUrl[1]);
 			}
 
 			$preview = Yii::app()->getUrlManager()->createUrl($this->previewUrl[0], $previewUrlParam);
@@ -100,7 +100,7 @@ class AjaxFileUploadWidget extends CInputWidget
 		);
 
 
-		$settings = array_merge_recursive($settings, $this->settings);
+		$settings = CMap::mergeArray($settings, $this->settings);
 		$settings = CJavaScript::encode($settings);
 
 		// register id append $prefix to make sure unique

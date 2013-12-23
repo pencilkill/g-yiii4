@@ -136,7 +136,7 @@ class SiteController extends Controller
 			// thumb
 			$resize = array('width'=>120, 'height'=>120, 'master'=>2);
 			if(Yii::app()->getRequest()->getParam('resize')){
-				$resize = array_merge_recursive($resize, Yii::app()->getRequest()->getParam('resize'));
+				$resize = CMap::mergeArray($resize, Yii::app()->getRequest()->getParam('resize'));
 			}
 			// This will display the thumbnail of the uploaded file to the view
 			// image wiget will check whether the file exists
@@ -208,7 +208,7 @@ class SiteController extends Controller
 				// thumb
 				$resize = array('width'=>120, 'height'=>120, 'master'=>2);
 				if(Yii::app()->getRequest()->getParam('resize')){
-					$resize = array_merge($resize, Yii::app()->getRequest()->getParam('resize'));
+					$resize = CMap::mergeArray($resize, Yii::app()->getRequest()->getParam('resize'));
 				}
 				// This will display the thumbnail of the uploaded file to the view
 				// image wiget will check whether the file exists

@@ -50,7 +50,7 @@ class AjaxImageUploadWidget extends CInputWidget
 
 		// default thumb setting
 		$imageCache = array('resize'=>array('width' => 120, 'height' => 120));
-		$imageCache = array_merge_recursive($imageCache, $this->imageCache);
+		$imageCache = CMap::mergeArray($imageCache, $this->imageCache);
 
 		if(isset($this->htmlOptions['value'])){
 			$value = $this->htmlOptions['value'];
@@ -58,7 +58,7 @@ class AjaxImageUploadWidget extends CInputWidget
 		}else if(isset($this->value)){
 			$value = $this->value;
 		}else if(isset($this->model, $this->attribute)){
-			$value = CHtml::value($this->model, $this->attribute);
+			$value = CHtml::resolveValue($this->model, $this->attribute);
 		}else{
 			$value = '';
 		}
@@ -96,7 +96,7 @@ class AjaxImageUploadWidget extends CInputWidget
 		);
 
 
-		$settings = array_merge_recursive($settings, $this->settings);
+		$settings = CMap::mergeArray($settings, $this->settings);
 		$settings = CJavaScript::encode($settings);
 
 		// register id append $prefix to make sure unique

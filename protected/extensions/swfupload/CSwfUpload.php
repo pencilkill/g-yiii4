@@ -104,7 +104,7 @@ class CSwfUpload extends CWidget
 		if($this->galleries){
 			$galleries = is_array($this->galleries) ? $this->galleries : array($this->galleries);
 			$fullPath = Yii::getPathOfAlias('webroot').'/';
-			$resize = array_merge(array('width'=>120, 'height'=>120, 'master'=>2), isset($postParams['resize']) ? $postParams['resize'] : array());
+			$resize = CMap::mergeArray(array('width'=>120, 'height'=>120, 'master'=>2), isset($postParams['resize']) ? $postParams['resize'] : array());
 			foreach ($galleries as $image) {
 				if( ! is_file($fullPath.$image->pic)) continue;
 				// thumb

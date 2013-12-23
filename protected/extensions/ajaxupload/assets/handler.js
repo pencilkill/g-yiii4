@@ -41,9 +41,9 @@
 	    			var tagName = preview.prop('tagName').toString().toUpperCase();
 	    			
 	    			if(tagName=='IMG'){
-	    				preview.attr('src', json.src);
+	    				preview.attr({'src':json.src});
 	    			}else if(tagName=='A'){
-	    				preview.attr('href', json.file);
+	    				preview.attr({'href':json.file, 'style':'visibility: visible;'}).show();
 	    			}
     			}
     			
