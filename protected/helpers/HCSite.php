@@ -236,4 +236,84 @@ class HCSite {
 
     	exit();
 	}
+	/**
+	 *
+	 * @param $email
+	 * @param $separator
+	 */
+	public static function validEmail($email, $separator = ','){
+		$email = trim($email);
+
+		$valid = true;
+
+		foreach (explode($separator, $email) as $val){
+			if(!($val && filter_var($val, FILTER_VALIDATE_EMAIL))){
+				$valid = false;
+
+				break;
+			}
+		}
+
+		return $valid;
+	}
+	
+	/**
+	 *
+	 * @param CActiveRecord $model,
+	 * @param MANYRelation $relationName, CHASMANY or CMANYMANY
+	 * @param Attribure $textAttribute,
+	 * @param String $url,
+	 * @param String $path, default '',
+	 * @return String, ul,li code
+	 */
+	public static function superFish($model, $relationName, $textAttribute, $url, $path = ''){
+		$pk = $model->tableSchema->primaryKey;
+		$path = $path . ($path ? '_' : '') . $model->$pk;
+		$models = $model->$relationName;
+		$modelClass = CHtml::modelName($model);
+		
+		$u = array('path' => $path, 'id' => $model->$pk);
+		
+		$link = $url . (($url && strpos($url, '?')===false) ? '?' : '&') . http_build_query($u);
+
+		$html = '';
+		$html .= '<li><a href="' . $link . '">' . CHtml::value($model, $textAttribute) . '</a>';
+		if($models){
+			$html .= '<ul>';
+		}
+		foreach($models as $model){
+			$html .= self::superFish($model, $relationName, $textAttribute, $url, $path);
+		}
+		if($models){
+			$html .= '</ul>';
+		}
+		$html .= '</li>';
+		
+		return $html;
+	}
+	
+	/**
+	 *
+	 * @param CActiveRecord $model,
+	 * @param MANYRelation $relationName, CHASMANY or CMANYMANY
+	 * @param Attribure $textAttribute,
+	 * @param String $url,
+	 * @param String $path, default '',
+	 * @return String, ul,li code
+	 */
+	public static function superFishs($models, $relationName, $textAttribute, $url, $path = ''){
+		$html = '';
+		
+		if(is_array($models)){
+			$html .= '<ul>';
+			foreach($models as $model){
+				$html .= self::superFish($model, $relationName, $textAttribute, $url, $path = '');
+			}
+			$html .= '</ul>';
+		}else{
+			$html .= self::superFish($models, $relationName, $textAttribute, $url, $path = '');
+		}
+		
+		return $html;
+	}
 }//End of CSite
