@@ -13,15 +13,32 @@
  * - $representingColumn: the name of the representing column for the table (string) or
  *   the names of the representing columns (array)
  */
-
+	$primaryKey = NULL;
+	foreach($columns as $name => $column){
+		if($column->isPrimaryKey){
+			$primaryKey = $name;
+			break;
+		}
+	}
+	
 	$defaultScopes = array('status' => '1');
 	$defaultScopeCondition = array();
 	if($defaultScopes = array_intersect_key($defaultScopes, $columns)){
 		foreach($defaultScopes as $key => $val){
-			$defaultScopeCondition[] = "{\$this->getTableAlias(false, false)}.{$key} = '{$val}'";
+			$defaultScopeCondition[] = "{\$alias}.{$key} = '{$val}'";
 		}
 	}
 	$defaultScopeCondition = implode(', ', $defaultScopeCondition);
+	
+	$defaultScopes = array('sort_id' => 'DESC');
+	$defaultScopeSort = array();
+	if($defaultScopes = array_intersect_key($defaultScopes, $columns)){
+		foreach($defaultScopes as $key => $val){
+			$defaultScopeSort[] = "{\$alias}.{$key} {$val}";
+		}
+	}
+	$defaultScopeSort[] = "{\$alias}.{$primaryKey} DESC";
+	$defaultScopeSort = implode(', ', $defaultScopeSort);
 ?>
 <?php echo "<?php\n"; ?>
 
@@ -32,11 +49,18 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
-<?php if($defaultScopeCondition):?>
+<?php if($defaultScopeCondition || $defaultScopeSort):?>
 
 	public function defaultScope(){
+		$alias = $this->getTableAlias(false, false);
+		
 		return CMap::mergeArray(parent::defaultScope(), array(
+<?php if($defaultScopeCondition):?>
 			'condition' => "<?php echo $defaultScopeCondition?>",
+<?php endif;?>
+<?php if($defaultScopeSort):?>
+			'order' => "<?php echo $defaultScopeSort?>"
+<?php endif;?>
 		));
 	}
 <?php endif;?>
