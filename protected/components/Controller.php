@@ -32,7 +32,7 @@ class Controller extends CController
 	public function init() {
 		parent::init();
 		// default head
-		$this->setDefaultHead();
+		$this->setDefaultMeta();
 		// assetsUrl
 		$this->assetsUrl = $this->assetsUrl();
 	}
@@ -81,7 +81,7 @@ class Controller extends CController
      * The core jquery script is not included, it will be registered in main layout if necessary
      * We can change title and meta dynamically using the meta unique id which is the fifth parameter for app registerMetaTag()
      */
-    public function setDefaultHead(){
+    public function setDefaultMeta(){
     	$li = Yii::app()->params->languageId;
     	$mt = 'meta_title_'.$li;
     	$mk = 'meta_keywords_'.$li;
