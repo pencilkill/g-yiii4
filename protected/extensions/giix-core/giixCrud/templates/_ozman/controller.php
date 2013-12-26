@@ -131,13 +131,6 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 <?php if($this->i18nRelation):?>
 
 		$i18ns = $model-><?php echo $this->i18nRelation[0]?>;
-
-		foreach($this->languages as $val){
-			if(!isset($i18ns[$val['language_id']])){
-				$i18n = new <?php echo $this->i18nRelation[3]?>;
-				$i18ns[$val['language_id']] = $i18n;
-			}
-		}
 <?php endif; ?>
 
 <?php if ($this->enable_ajax_validation): ?>

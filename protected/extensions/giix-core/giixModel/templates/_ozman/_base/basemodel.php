@@ -144,7 +144,7 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 		$criteria->compare('<?php echo $name; ?>', $this-><?php echo $name; ?><?php echo $partial ? ', true' : ''; ?>);
 <?php endforeach; ?>
 
-<?php if($i18n):?>
+<?php if($i18n && !empty($i18nRelationName)):?>
 		$criteria->with = array('<?php echo $i18nRelationName?>');
 		$criteria->group = 't.<?php echo $compareGroupId?>';
 		$criteria->together = true;

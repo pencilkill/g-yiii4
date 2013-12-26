@@ -6,7 +6,7 @@ $.fn.tabs = function() {
 		
 		$(obj.attr('href')).hide();
 		
-		$(obj).click(function() {
+		$(obj).click(function(e) {
 			$(selector).removeClass('selected');
 			
 			$(selector).each(function(i, element) {
@@ -17,7 +17,7 @@ $.fn.tabs = function() {
 			
 			$($(this).attr('href')).show();
 			
-			return false;
+			e.preventDefault();
 		});
 	});
 

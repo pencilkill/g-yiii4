@@ -66,6 +66,7 @@ class SiteController extends GxController
 	 */
 	public function actionIndex()
 	{
+		echo $this->assetsUrl;
 		$this->render('//site/index');
 	}
 

@@ -136,7 +136,7 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 		$criteria->compare('<?php echo $name; ?>', $this-><?php echo $name; ?><?php echo $partial ? ', true' : ''; ?>);
 <?php endforeach; ?>
 
-<?php if($i18n):?>
+<?php if($i18n && !empty($i18nRelationName)):?>
 		$criteria->with = array(
 			'<?php echo $i18nRelationName?>' => array(
 				'scopes' => array(
@@ -169,9 +169,14 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 					'*',
 				),
 			),
+<?php if(substr($modelClass, -4) !== 'I18n' && strpos($modelClass, '2') == false):?>
 			'pagination' => array(
-				'pageSize'=>10,
+				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
+				'pageVar' => 'page',
 			),
+<?php ;else:?>
+			'pagination' => false,
+<?php endif;?>
 		));
 	}
 

@@ -119,7 +119,7 @@ class BeforeRequestBehavior extends CBehavior
 	}
 
 	// set current theme
-	public function setTheme($theme){
+	public function setTheme($theme=null){
 		$this->owner->theme = $theme;
 	}
 }

@@ -24,7 +24,7 @@ class Controller extends CController
 	/**
 	 * @var assetsUrl
 	 */
-	public $assetsUrl = '';
+	public $assetsUrl;
 
 	/**
 	 * see app behavior to get more about init()
@@ -34,7 +34,7 @@ class Controller extends CController
 		// default head
 		$this->setDefaultHead();
 		// assetsUrl
-		$this->assetsUrl = $this->assetsUrl(Yii::app()->theme->basePath . DIRECTORY_SEPARATOR . 'assets');
+		$this->assetsUrl = $this->assetsUrl();
 	}
 
 	/**
@@ -82,24 +82,34 @@ class Controller extends CController
      * We can change title and meta dynamically using the meta unique id which is the fifth parameter for app registerMetaTag()
      */
     public function setDefaultHead(){
-    	$l = Yii::app()->params->languageId;
-    	$t = 'meta_title_'.$l;
-    	$k = 'meta_keywords_'.$l;
-    	$d = 'meta_description_'.$l;
+    	$li = Yii::app()->params->languageId;
+    	$mt = 'meta_title_'.$li;
+    	$mk = 'meta_keywords_'.$li;
+    	$md = 'meta_description_'.$li;
 
     	// title
-    	$this->pageTitle = Yii::app()->config->get($t);
+    	$this->pageTitle = Yii::app()->config->get($mt);
     	// metaTags
-    	Yii::app()->clientScript->registerMetaTag(Yii::app()->config->get($k), 'keywords', null, null, 'keywords');
-    	Yii::app()->clientScript->registerMetaTag(Yii::app()->config->get($d), 'description', null, null, 'description');
+    	Yii::app()->clientScript->registerMetaTag(Yii::app()->config->get($mk), 'keywords', null, null, 'keywords');
+    	Yii::app()->clientScript->registerMetaTag(Yii::app()->config->get($md), 'description', null, null, 'description');
     }
 
     /**
      * Using to get assetsUrl dynamically
      * @see this->init()
-     * @param $themePath
+     * @param $assets
      */
-    public function assetsUrl($themePath){
-    	return Yii::app()->assetManager->publish($themePath);
+    public function assetsUrl($assets = 'assets'){
+    	$publishPath = null;
+
+    	if(empty($publishPath) && Yii::app()->theme && is_dir($path = Yii::app()->theme->basePath . DIRECTORY_SEPARATOR . $assets)){
+	    	$publishPath = Yii::app()->assetManager->publish($path);
+    	}
+
+    	if(empty($publishPath) && is_dir($path = Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR . $assets)){
+	    	$publishPath = Yii::app()->baseUrl . '/' . $assets;
+    	}
+
+    	return $publishPath;
     }
 }

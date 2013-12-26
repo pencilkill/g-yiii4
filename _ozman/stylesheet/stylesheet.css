@@ -290,6 +290,9 @@ a.button, .list a.button {
 	-khtml-border-radius: 10px 10px 10px 10px;
 	border-radius: 10px 10px 10px 10px;
 }
+a.button.small, .list a.button.small {
+	padding: 3px 9px 3px 9px;
+}
 .search-form .row {
 	display: inline-block;
 	margin-left: 10px;

@@ -113,6 +113,8 @@ $backCfg = array(
 			'stateKeyPrefix'=>'back',
 			'loginUrl'=>array('site/login'),
 			'returnUrl'=>array('site/index'),
+			// ajax session timeout
+			'loginRequiredAjaxResponse' => 'YII_LOGIN_REQUIRED',
 		),
 
 		'authManager'=>array(

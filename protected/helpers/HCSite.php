@@ -256,25 +256,28 @@ class HCSite {
 
 		return $valid;
 	}
-	
+
 	/**
+	 * Internal called by superFish
 	 *
+	 * @param Sting $pk,
 	 * @param CActiveRecord $model,
 	 * @param MANYRelation $relationName, CHASMANY or CMANYMANY
 	 * @param Attribure $textAttribute,
 	 * @param String $url,
+	 * @param Char $amp, URL query string separator
 	 * @param String $path, default '',
 	 * @return String, ul,li code
 	 */
-	public static function superFish($model, $relationName, $textAttribute, $url, $path = ''){
-		$pk = $model->tableSchema->primaryKey;
+	private static function superFishNode($pk, $model, $relationName, $textAttribute, $url, $amp, $path = ''){
+		static $fn = __FUNCTION__;
+
 		$path = $path . ($path ? '_' : '') . $model->$pk;
 		$models = $model->$relationName;
-		$modelClass = CHtml::modelName($model);
-		
+
 		$u = array('path' => $path, 'id' => $model->$pk);
-		
-		$link = $url . (($url && strpos($url, '?')===false) ? '?' : '&') . http_build_query($u);
+
+		$link = $url . $amp . http_build_query($u);
 
 		$html = '';
 		$html .= '<li><a href="' . $link . '">' . CHtml::value($model, $textAttribute) . '</a>';
@@ -282,16 +285,16 @@ class HCSite {
 			$html .= '<ul>';
 		}
 		foreach($models as $model){
-			$html .= self::superFish($model, $relationName, $textAttribute, $url, $path);
+			$html .= self::$fn($pk, $model, $relationName, $textAttribute, $url, $amp , $path);
 		}
 		if($models){
 			$html .= '</ul>';
 		}
 		$html .= '</li>';
-		
+
 		return $html;
 	}
-	
+
 	/**
 	 *
 	 * @param CActiveRecord $model,
@@ -301,19 +304,31 @@ class HCSite {
 	 * @param String $path, default '',
 	 * @return String, ul,li code
 	 */
-	public static function superFishs($models, $relationName, $textAttribute, $url, $path = ''){
+	public static function superFish($models, $relationName, $textAttribute, $url, $path = ''){
 		$html = '';
-		
-		if(is_array($models)){
-			$html .= '<ul>';
-			foreach($models as $model){
-				$html .= self::superFish($model, $relationName, $textAttribute, $url, $path = '');
+
+		$model = is_array($models) ? end($models) : $models;
+
+		if($model && array_key_exists($relationName, $model->relations())){
+			// pk
+			$pk = $model->tableSchema->primaryKey;
+			// parse url
+			$url = is_array($url) ? CHtml::normalizeUrl($url) : $url;
+			// url amp
+			$amp = ($url && strpos($url, '?')===false) ? '?' : '&';
+
+
+			if(is_array($models)){
+				$html .= '<ul>';
+				foreach($models as $model){
+					$html .= self::superFishNode($pk, $model, $relationName, $textAttribute, $url, $amp, $path = '');
+				}
+				$html .= '</ul>';
+			}else{
+				$html .= self::superFishNode($pk, $models, $relationName, $textAttribute, $url, $amp, $path = '');
 			}
-			$html .= '</ul>';
-		}else{
-			$html .= self::superFish($models, $relationName, $textAttribute, $url, $path = '');
 		}
-		
+
 		return $html;
 	}
 }//End of CSite

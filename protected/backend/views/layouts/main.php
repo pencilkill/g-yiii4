@@ -15,7 +15,19 @@
 <script type="text/javascript" src="_ozman/javascript/jquery/tabs.js"></script>
 <script type="text/javascript" src="_ozman/javascript/jquery/superfish/js/superfish.js"></script>
 <script type="text/javascript" src="_ozman/javascript/jquery/main.js"></script>
-
+<?php
+    if (Yii::app()->user->loginRequiredAjaxResponse){
+        Yii::app()->clientScript->registerScript('ajaxLoginRequired', '
+            jQuery("body").ajaxComplete(
+                function(event, request, options) {
+                    if (request.responseText == "'.Yii::app()->user->loginRequiredAjaxResponse.'") {
+                        window.location.href = "'.CHtml::normalizeUrl(Yii::app()->user->loginUrl) .'";
+                    }
+                }
+            );
+        ');
+    }
+?>
 </head>
 
 

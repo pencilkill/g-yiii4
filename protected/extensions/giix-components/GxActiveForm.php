@@ -49,7 +49,7 @@ class GxActiveForm extends CActiveForm {
 	 * @see validateTabular()
 	 * @return string the JSON representation of the validation error messages.
 	 */
-	public static function validateEx($models, $loadInput=true)
+public static function validateEx($models, $loadInput=true)
 	{
 		$result=array();
 
@@ -63,23 +63,19 @@ class GxActiveForm extends CActiveForm {
 			$many = isset($model['many']) ? $model['many'] : false;
 
 			if($many){
+					$modelName = CHtml::modelName($model['model']);
 
-					$posts = $mods = array();
-
-					$mods = HCArray::array_last_dimension($model['model']);
-
-					$modelName = CHtml::modelName($mods[key($mods)]);
-
+					$posts = array();
 					if($loadInput && isset($_POST[$modelName])){
 						$posts = HCArray::array_last_dimension($_POST[$modelName]);
 					}
 
-					foreach($mods as $key=>$mod)
+					foreach($posts as $keyPrefix=>$values)
 					{
-						$mod->setAttributes(isset($posts[$key]) ? $posts[$key] : array());
-						$mod->validate($attributes);
-						foreach($mod->getErrors() as $attribute=>$errors){
-							$result[CHtml::activeId($mod,$key.$attribute)]=$errors;
+						$model['model']->setAttributes($values);
+						$model['model']->validate($attributes);
+						foreach($model['model']->getErrors() as $attribute=>$errors){
+							$result[CHtml::activeId($model['model'], $keyPrefix . $attribute)]=$errors;
 						}
 					}
 			}else{
