@@ -1,5 +1,4 @@
 <?php
-require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'PHPMailer.php';
 /**
  *  Notice: the sender email host should be matched with the smtp host to avoid smtp host refusing
  *  Specified the Sender before using SetFrom method in this case please
@@ -32,25 +31,29 @@ require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'PHPMailer.php';
     $mail->ClearReplyTos();
     $mail->ClearAttachments();
  */
-class Mail extends PHPMailer{
-	public function init(){
-		parent::init();
+class Mail{
+	public static function instance(){
+		require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'PHPMailer.php';
+
+		$_PHPMailer = new PHPMailer;
 
 		//
-		$this->UseSendmailOptions = false;
+		$_PHPMailer->UseSendmailOptions = false;
 		//
-		$this->CharSet = 'UTF-8';
-		$this->IsSMTP();
-		$this->SMTPAuth = true;
-		$this->SMTPKeepAlive = true;
+		$_PHPMailer->CharSet = 'UTF-8';
+		$_PHPMailer->IsSMTP();
+		$_PHPMailer->SMTPAuth = true;
+		$_PHPMailer->SMTPKeepAlive = true;
 		//
-		$this->Host = Yii::app()->config->get('mail_smtp_host');
-		$this->Username = Yii::app()->config->get('mail_smtp_user');
-		$this->Password = Yii::app()->config->get('mail_smtp_password');
-		$this->Port = Yii::app()->config->get('mail_smtp_port');
+		$_PHPMailer->Host = Yii::app()->config->get('mail_smtp_host');
+		$_PHPMailer->Username = Yii::app()->config->get('mail_smtp_user');
+		$_PHPMailer->Password = Yii::app()->config->get('mail_smtp_password');
+		$_PHPMailer->Port = Yii::app()->config->get('mail_smtp_port');
 		//
-		$this->Sender = Yii::app()->config->get('mail_smtp_user');	// Specified Sender before using SetFrom()
+		$_PHPMailer->Sender = Yii::app()->config->get('mail_smtp_user');	// Specified Sender before using SetFrom()
 		//...
-		$this->IsHTML(true);
+		$_PHPMailer->IsHTML(true);
+
+		return $_PHPMailer;
 	}
 }

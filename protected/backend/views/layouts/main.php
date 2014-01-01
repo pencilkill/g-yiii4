@@ -134,15 +134,24 @@ jQuery(function($) {
 	if (!route) {
 		$('#dashboard').addClass('selected');
 	} else {
+		prefix = '#menu a:regex(href, .*?[\?\&]?r[^=]*\=[^=]*';
+		suffix = '[\?\&]?.*)';
+
 		part = route.split('/');
 
-		url = part[0];
-
-		if (part[1]) {
-			url += '/' + part[1];
+		o = $(prefix + part.join('/') + suffix);
+		try{
+			do{
+				o = $(prefix + part.join('/') + suffix);
+				part.pop();
+			}while(part.length && !o.length);
+		}catch(e){
+			//
+		}finally{
+			if(o.length){
+				o.first().parents('li[id]').addClass('selected');
+			}
 		}
-
-		$('a[href*=\'' + url + '\']').parents('li[id]').addClass('selected');
 	}
 });
 </script>

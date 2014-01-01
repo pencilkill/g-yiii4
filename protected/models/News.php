@@ -9,8 +9,12 @@ class News extends BaseNews
 	}
 
 	public function defaultScope(){
+		$alias = $this->getTableAlias(false, false);
+
 		return CMap::mergeArray(parent::defaultScope(), array(
-			'condition' => "{$this->getTableAlias(false, false)}.status = '1'",
+			'condition' => "{$alias}.status=:status",
+			'params' => array(':status' => 1),
+			'order' => "{$alias}.sort_id DESC, {$alias}.news_id DESC"
 		));
 	}
 }

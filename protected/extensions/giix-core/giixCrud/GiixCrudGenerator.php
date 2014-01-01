@@ -16,6 +16,12 @@
  */
 class GiixCrudGenerator extends CCodeGenerator {
 
+	/**
+	 * @var ar
+	 * fix i18n relation condition template params
+	 */
+	public $language_id;
+
 	public $codeModel = 'ext.giix-core.giixCrud.GiixCrudCode';
 
 	/**

@@ -66,7 +66,9 @@ class SiteController extends GxController
 	 */
 	public function actionIndex()
 	{
-		echo $this->assetsUrl;
+		//News::model()->findAll();
+		$model = new News('search');
+		$model->search()->getData();
 		$this->render('//site/index');
 	}
 

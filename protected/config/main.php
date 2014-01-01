@@ -34,18 +34,19 @@ return array(
 	'name'=>'元伸科技',
 
 	// preloading 'log' component
-	/*
+
 	'preload'=>array(
 		'log',
 	),
-	*/
+
 
 	// autoloading model and component classes
 	'import'=>array(
 		//required for module giix
-		'ext.giix-components.*',
+		'frontend.extensions.giix-components.*',
 		//helpers
 		'frontend.helpers.*',
+		'frontend.extensions.mail.Mail',	// Just import and new it before we use it, cause component is life cycle, init is so boring ~~
 	),
 
 	'modules'=>array(
@@ -55,7 +56,7 @@ return array(
 			'class'=>'system.gii.GiiModule',
 			//uncomment the following to disable giix
 			'generatorPaths' => array(
-            	'ext.giix-core', // giix generators
+            	'frontend.extensions.giix-core', // giix generators
         	),
 			'password'=>'3661000',
 			// If removed, Gii defaults to localhost only. Edit carefully to taste.
@@ -97,12 +98,19 @@ return array(
 		'db'=>require_once(dirname(__FILE__).'/DB.php'),
 
 		'config' => array(
-         	'class' => 'ext.EConfig',
+         	'class' => 'frontend.extensions.EConfig',
 			'strictMode' => false,
 		),
 
+		'curl' => array(
+			'class' => 'frontend.extensions.curl.Curl',
+			'options' => array(
+				CURLOPT_SSL_VERIFYPEER => true,
+			),
+		),
+
 		'image'=>array(
-            'class'=>'ext.image.CImageComponent',
+            'class'=>'frontend.extensions.image.CImageComponent',
             // GD or ImageMagick
             'driver'=>'GD',
             // ImageMagick setup path
@@ -112,10 +120,7 @@ return array(
 		 'assetManager' => array(
 		 	'forceCopy' => (boolean)YII_DEBUG,
 		 ),
-		 // mail
-		 'mail'=>array(
-            'class'=>'frontend.extensions.mail.Mail',
-        ),
+
 		// example to config widget
 		'widgetFactory' => array(
 			'widgets' => array(
@@ -149,7 +154,7 @@ return array(
 				*/
 
 				array(
-					'class'=>'ext.toolbar.YiiDebugToolbarRoute',
+					'class'=>'frontend.extensions.toolbar.YiiDebugToolbarRoute',
 	                'ipFilters'=>array('127.0.0.1'),
 				),
 

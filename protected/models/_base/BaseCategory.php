@@ -20,7 +20,7 @@
  */
 abstract class BaseCategory extends GxActiveRecord {
 
-	public $filterI18n;
+	public $filterI18n = null;
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
@@ -50,7 +50,7 @@ abstract class BaseCategory extends GxActiveRecord {
 
 	public function relations() {
 		return array(
-			'categoryI18ns' => array(self::HAS_ONE, 'CategoryI18n', 'category_id', 'scopes' => array('t' => array(Yii::app()->params->languageId))),
+			'categoryI18ns' => array(self::HAS_ONE, 'CategoryI18n', 'category_id', 'joinType' => 'RIGHT OUTER JOIN',  'scopes' => array('i8' => array(Yii::app()->params->languageId))),
 			'product2categories' => array(self::HAS_MANY, 'Product2category', 'category_id'),
 		);
 	}
@@ -73,43 +73,46 @@ abstract class BaseCategory extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->getTableAlias(false, false);
+
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('category_id', $this->category_id);
-		$criteria->compare('parent_id', $this->parent_id);
-		$criteria->compare('sort_id', $this->sort_id);
-		$criteria->compare('create_time', $this->create_time, true);
-		$criteria->compare('update_time', $this->update_time, true);
+		$criteria->compare("{$alias}.category_id", $this->category_id);
+		$criteria->compare("{$alias}.parent_id", $this->parent_id);
+		$criteria->compare("{$alias}.sort_id", $this->sort_id);
+		$criteria->compare("{$alias}.create_time", $this->create_time, true);
+		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 
-		//$criteria->with('categoryI18ns:t');
-		$criteria->with = array(
-			'categoryI18ns' => array(
-				'scopes' => array(
-					't' => array(Yii::app()->params->languageId),
+		if($this->filterI18n !== null){
+			$criteria->with = array(
+				'categoryI18ns' => array(
+					'scopes' => array(
+						'i8' => array(Yii::app()->params->languageId),
+					),
 				),
-			),
-		);
-		$criteria->group = 't.category_id';
-		$criteria->together = true;
+			);
+			$criteria->group = "{$alias}.category_id";
+			$criteria->together = true;
 
-		//$criteria->compare('categoryI18ns.language_id', Yii::app()->params->languageId);
-		$criteria->compare('categoryI18ns.title', $this->filterI18n->title, true);
-		$criteria->compare('categoryI18ns.keywords', $this->filterI18n->keywords, true);
-		$criteria->compare('categoryI18ns.description', $this->filterI18n->description, true);
+			$criteria->compare('categoryI18ns.title', $this->filterI18n->title, true);
+			$criteria->compare('categoryI18ns.keywords', $this->filterI18n->keywords, true);
+			$criteria->compare('categoryI18ns.description', $this->filterI18n->description, true);
+		}
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort' => array(
 				'attributes'=>array(
 					'sort_id'=>array(
-						'desc'=>'sort_id DESC',
-						'asc'=>'sort_id',
+						'desc'=>"{$alias}.sort_id DESC",
+						'asc'=>"{$alias}.sort_id",
 					),
 					'*',
 				),
 			),
 			'pagination' => array(
-				'pageSize'=>10,
+				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
+				'pageVar' => 'page',
 			),
 		));
 	}

@@ -20,16 +20,19 @@
 			break;
 		}
 	}
-	
-	$defaultScopes = array('status' => '1');
+
+	$defaultScopes = array('status' => 1);
 	$defaultScopeCondition = array();
+	$defaultScopeParams = array();
 	if($defaultScopes = array_intersect_key($defaultScopes, $columns)){
 		foreach($defaultScopes as $key => $val){
-			$defaultScopeCondition[] = "{\$alias}.{$key} = '{$val}'";
+			$defaultScopeCondition[] = "{\$alias}.{$key}=:{$key}";
+			$defaultScopeParams[] = "':{$key}' => $val";
 		}
 	}
 	$defaultScopeCondition = implode(', ', $defaultScopeCondition);
-	
+	$defaultScopeParams = 'array(' . implode(', ', $defaultScopeParams) . ')';
+
 	$defaultScopes = array('sort_id' => 'DESC');
 	$defaultScopeSort = array();
 	if($defaultScopes = array_intersect_key($defaultScopes, $columns)){
@@ -53,10 +56,11 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 
 	public function defaultScope(){
 		$alias = $this->getTableAlias(false, false);
-		
+
 		return CMap::mergeArray(parent::defaultScope(), array(
 <?php if($defaultScopeCondition):?>
 			'condition' => "<?php echo $defaultScopeCondition?>",
+			'params' => <?php echo $defaultScopeParams?>,
 <?php endif;?>
 <?php if($defaultScopeSort):?>
 			'order' => "<?php echo $defaultScopeSort?>"
@@ -66,14 +70,15 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 <?php endif;?>
 <?php if(substr(strtolower($modelClass), -4) == 'i18n'):?>
 
-	public function t($languageId=null){
+	public function i8($languageId=null){
 		if(empty($languageId)){
 			$languageId = Yii::app()->params->languageId;
 		}
 
 		$this->getDbCriteria()->mergeWith(array(
-			'condition' => "{$this->tableAlias}.language_id = '{$languageId}'",
-		));
+			'condition' => "{$this->tableAlias}.language_id=:language_id",
+			'params' => array(':language_id' => $languageId),
+ 		));
 
 		return $this;
 	}

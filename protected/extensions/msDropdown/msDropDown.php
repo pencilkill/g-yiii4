@@ -1,4 +1,4 @@
-<?php
+*<?php
 /**
  * msDropDown class file.
  * Simply register script and css file
@@ -27,7 +27,7 @@ class msDropDown extends CInputWidget
 	}
 
 	protected function registerClientScript() {
-		$basePath = Yii::getPathOfAlias('ext.msDropDown');
+		$basePath = Yii::getPathOfAlias('frontend.extensions.msDropdown');
 		$baseUrl = Yii::app()->getAssetManager()->publish($basePath.'/assets');
 
 		$cs = Yii::app()->clientScript;

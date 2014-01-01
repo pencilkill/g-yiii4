@@ -12,6 +12,7 @@
  * @property integer $news_i18n_id
  * @property integer $news_id
  * @property integer $language_id
+ * @property integer $status
  * @property string $pic
  * @property string $title
  * @property string $keywords
@@ -42,11 +43,11 @@ abstract class BaseNewsI18n extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('news_id, language_id, title', 'required'),
-			array('news_id, language_id', 'numerical', 'integerOnly'=>true),
+			array('news_id, language_id, status', 'numerical', 'integerOnly'=>true),
 			array('pic, title', 'length', 'max'=>256),
 			array('keywords, description', 'safe'),
-			array('pic, keywords, description', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('news_i18n_id, news_id, language_id, pic, title, keywords, description', 'safe', 'on'=>'search'),
+			array('status, pic, keywords, description', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('news_i18n_id, news_id, language_id, status, pic, title, keywords, description', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -67,6 +68,7 @@ abstract class BaseNewsI18n extends GxActiveRecord {
 			'news_i18n_id' => Yii::t('M/newsi18n', 'News I18n'),
 			'news_id' => null,
 			'language_id' => null,
+			'status' => Yii::t('M/newsi18n', 'Status'),
 			'pic' => Yii::t('M/newsi18n', 'Pic'),
 			'title' => Yii::t('M/newsi18n', 'Title'),
 			'keywords' => Yii::t('M/newsi18n', 'Keywords'),
@@ -77,24 +79,29 @@ abstract class BaseNewsI18n extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->getTableAlias(false, false);
+
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('news_i18n_id', $this->news_i18n_id);
-		$criteria->compare('news_id', $this->news_id);
-		$criteria->compare('language_id', $this->language_id);
-		$criteria->compare('pic', $this->pic, true);
-		$criteria->compare('title', $this->title, true);
-		$criteria->compare('keywords', $this->keywords, true);
-		$criteria->compare('description', $this->description, true);
+		$criteria->compare('{$alias}.news_i18n_id', $this->news_i18n_id);
+		$criteria->compare('{$alias}.news_id', $this->news_id);
+		$criteria->compare('{$alias}.language_id', $this->language_id);
+		$criteria->compare('{$alias}.status', $this->status);
+		$criteria->compare('{$alias}.pic', $this->pic, true);
+		$criteria->compare('{$alias}.title', $this->title, true);
+		$criteria->compare('{$alias}.keywords', $this->keywords, true);
+		$criteria->compare('{$alias}.description', $this->description, true);
 
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
-			'sort'=>array(
+			'sort' => array(
 				'attributes'=>array(
 					'*',
 				),
 			),
+			'pagination' => false,
 		));
 	}
+
 }

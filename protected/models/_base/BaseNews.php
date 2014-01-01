@@ -21,7 +21,7 @@
  */
 abstract class BaseNews extends GxActiveRecord {
 
-	public $filterI18n;
+	public $filterI18n = null;
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
@@ -50,7 +50,7 @@ abstract class BaseNews extends GxActiveRecord {
 
 	public function relations() {
 		return array(
-			'newsI18ns' => array(self::HAS_ONE, 'NewsI18n', 'news_id', 'scopes' => array('t' => array(Yii::app()->params->languageId))),
+			'newsI18ns' => array(self::HAS_ONE, 'NewsI18n', 'news_id', 'joinType' => 'RIGHT OUTER JOIN',  'scopes' => array('i8' => array(Yii::app()->params->languageId))),
 		);
 	}
 
@@ -73,45 +73,51 @@ abstract class BaseNews extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->getTableAlias(false, false);
+
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('news_id', $this->news_id);
-		$criteria->compare('top', $this->top);
-		$criteria->compare('sort_id', $this->sort_id);
-		$criteria->compare('status', $this->status);
-		$criteria->compare('date_added', $this->date_added, true);
-		$criteria->compare('create_time', $this->create_time, true);
-		$criteria->compare('update_time', $this->update_time, true);
+		$criteria->compare("{$alias}.news_id", $this->news_id);
+		$criteria->compare("{$alias}.top", $this->top);
+		$criteria->compare("{$alias}.sort_id", $this->sort_id);
+		$criteria->compare("{$alias}.status", $this->status);
+		$criteria->compare("{$alias}.date_added", $this->date_added, true);
+		$criteria->compare("{$alias}.create_time", $this->create_time, true);
+		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 
-		$criteria->with = array(
-			'newsI18ns' => array(
-				'scopes' => array(
-					't' => array(Yii::app()->params->languageId),
+		if($this->filterI18n !== null){
+			$criteria->with = array(
+				'newsI18ns' => array(
+					'scopes' => array(
+						'i8' => array(Yii::app()->params->languageId),
+					),
 				),
-			),
-		);
-		$criteria->group = 't.news_id';
-		$criteria->together = true;
+			);
+			$criteria->group = "{$alias}.news_id";
+			$criteria->together = true;
 
-		$criteria->compare('newsI18ns.pic', $this->filterI18n->pic, true);
-		$criteria->compare('newsI18ns.title', $this->filterI18n->title, true);
-		$criteria->compare('newsI18ns.keywords', $this->filterI18n->keywords, true);
-		$criteria->compare('newsI18ns.description', $this->filterI18n->description, true);
+			$criteria->compare('newsI18ns.pic', $this->filterI18n->pic, true);
+			$criteria->compare('newsI18ns.title', $this->filterI18n->title, true);
+			$criteria->compare('newsI18ns.keywords', $this->filterI18n->keywords, true);
+			$criteria->compare('newsI18ns.description', $this->filterI18n->description, true);
+		}
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
-			'sort'=>array(
+			'sort' => array(
 				'attributes'=>array(
 					'sort_id'=>array(
-						'desc'=>'sort_id DESC',
-						'asc'=>'sort_id',
+						'desc'=>"{$alias}.sort_id DESC",
+						'asc'=>"{$alias}.sort_id",
 					),
 					'*',
 				),
 			),
 			'pagination' => array(
-				'pageSize'=>10,
+				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
+				'pageVar' => 'page',
 			),
 		));
 	}
+
 }

@@ -55,8 +55,8 @@
  */
 abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->baseClass; ?> {
 
-<?php if($i18n):?>
-	public $filterI18n;
+<?php if($i18n && $i18nClassName):?>
+	public $filterI18n = null;
 <?php endif;?>
 
 	public static function model($className=__CLASS__) {
@@ -100,7 +100,7 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 	if(preg_match($pattern, $relation)) {
 		$i18nRelationName = $name;
 		$relation = preg_replace('/(^\s*)array\(\s*self::HAS_MANY\s*/', '\\1array(self::HAS_ONE', $relation);
-		$relation = preg_replace('/^([^\)]*?)(\)\s*)/', '\\1, \'scopes\' => array(\'t\' => array(Yii::app()->params->languageId)))', $relation);
+		$relation = preg_replace('/^([^\)]*?)(\)\s*)/', '\\1, \'joinType\' => \'RIGHT OUTER JOIN\',  \'scopes\' => array(\'i8\' => array(Yii::app()->params->languageId)))', $relation);
 	}?>
 			<?php echo "'{$name}' => {$relation},\n"; ?>
 <?php endforeach; ?>
@@ -128,32 +128,37 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 	}
 
 	public function search() {
+		$alias = $this->getTableAlias(false, false);
+
 		$criteria = new CDbCriteria;
 
 <?php foreach($columns as $name=>$column): ?>
 <?php $partial = ($column->type==='string' and !$column->isForeignKey); ?>
 <?php if($column->isPrimaryKey) $compareGroupId = $name;?>
-		$criteria->compare('<?php echo $name; ?>', $this-><?php echo $name; ?><?php echo $partial ? ', true' : ''; ?>);
+		$criteria->compare("{$alias}.<?php echo $name; ?>", $this-><?php echo $name; ?><?php echo $partial ? ', true' : ''; ?>);
 <?php endforeach; ?>
 
 <?php if($i18n && !empty($i18nRelationName)):?>
-		$criteria->with = array(
-			'<?php echo $i18nRelationName?>' => array(
-				'scopes' => array(
-					't' => array(Yii::app()->params->languageId),
+		if($this->filterI18n !== null){
+			$criteria->with = array(
+				'<?php echo $i18nRelationName?>' => array(
+					'scopes' => array(
+						'i8' => array(Yii::app()->params->languageId),
+					),
 				),
-			),
-		);
-		$criteria->group = 't.<?php echo $compareGroupId?>';
-		$criteria->together = true;
+			);
+			$criteria->group = "{$alias}.<?php echo $compareGroupId?>";
+			$criteria->together = true;
 
 <?php foreach($i18n->columns as $name=>$column):?>
 <?php if($column->autoIncrement) continue;?>
 <?php if($column->isForeignKey && isset($columns[$name]) && $columns[$name]->isPrimaryKey) continue;?>
 <?php if(strcasecmp($name, 'language_id')===0 && $column->isForeignKey) continue; ?>
+<?php if(strcasecmp($name, 'status')===0) continue; ?>
 <?php $partial = ($column->type==='string' and !$column->isForeignKey); ?>
-		$criteria->compare('<?php echo $i18nRelationName.'.'.$name; ?>', $this->filterI18n-><?php echo $name; ?><?php echo $partial ? ', true' : ''; ?>);
+			$criteria->compare('<?php echo $i18nRelationName.'.'.$name; ?>', $this->filterI18n-><?php echo $name; ?><?php echo $partial ? ', true' : ''; ?>);
 <?php endforeach;?>
+		}
 <?php endif;?>
 
 		return new CActiveDataProvider($this, array(
@@ -162,8 +167,8 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 				'attributes'=>array(
 <?php if(array_key_exists('sort_id', $columns)):?>
 					'sort_id'=>array(
-						'desc'=>'sort_id DESC',
-						'asc'=>'sort_id',
+						'desc'=>"{$alias}.sort_id DESC",
+						'asc'=>"{$alias}.sort_id",
 					),
 <?php endif;?>
 					'*',
