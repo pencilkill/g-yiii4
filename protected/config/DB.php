@@ -1,6 +1,7 @@
 <?php
 if(strpos(strtolower($_SERVER['HTTP_HOST']),'local')!==false){
 	return array(
+		'initSQLs'=>array('SET time_zone=\'+08:00\';'),
 		'emulatePrepare' => true,
 		'charset' => 'utf8',
 		'tablePrefix' => '',
@@ -13,6 +14,7 @@ if(strpos(strtolower($_SERVER['HTTP_HOST']),'local')!==false){
 	);
 }elseif(strpos(strtolower($_SERVER['HTTP_HOST']),'works.tw')!==false){
 	return array(
+		'initSQLs'=>array('SET time_zone=\'+08:00\';'),
 		'emulatePrepare' => true,
 		'charset' => 'utf8',
 		'tablePrefix' => '',
@@ -25,6 +27,7 @@ if(strpos(strtolower($_SERVER['HTTP_HOST']),'local')!==false){
 	);
 }else{
 	return array(
+		'initSQLs'=>array('SET time_zone=\'+08:00\';'),
 		'emulatePrepare' => true,
 		'charset' => 'utf8',
 		'tablePrefix' => '',

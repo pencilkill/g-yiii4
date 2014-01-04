@@ -31,7 +31,8 @@ jQuery(function($) {
 								returnUrl : window.location.href
 							},
 							deleteConfirmation : 'Confirm Grid View Delete?',
-							selectNoneMessage : 'No results found'
+							selectNoneMessage : 'No results found',
+							warningMessage : 'Operation Failure Including Items',
 						}, params || {});
 
 		if (!(params.id && params.url && params.checkBoxColumn))
@@ -50,6 +51,8 @@ jQuery(function($) {
 						var ret = $.parseJSON(data);
 						if (ret != null && ret.success != null && ret.success) {
 							$.fn.yiiGridView.update(params.id);
+						}else{
+							location.assign(location.href);
 						}
 					});
 		} else {

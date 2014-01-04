@@ -142,6 +142,7 @@ if ($count >= 7){
 			, postData : {returnUrl : '<?php echo '<?php'; ?> echo Yii::app()->getRequest()->url?>'}
 			, deleteConfirmation : '<?php echo '<?php'; ?> echo Yii::t('app', 'Confirm Grid View Delete?')?>'
 			, selectNoneMessage : '<?php echo '<?php'; ?> echo Yii::t('app', 'No results found.');?>'
+			, warningMessage : '<?php echo '<?php'; ?> echo Yii::t('app', 'Operation Failure Including Items.');?>'
 		};
 	 GridViewDelete(params);
  }

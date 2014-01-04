@@ -109,6 +109,7 @@ $this->breadcrumbs = array(
 			, postData : {returnUrl : '<?php echo Yii::app()->getRequest()->url?>'}
 			, deleteConfirmation : '<?php echo Yii::t('app', 'Confirm Grid View Delete?')?>'
 			, selectNoneMessage : '<?php echo Yii::t('app', 'No results found.');?>'
+			, warningMessage : '<?php echo Yii::t('app', 'Operation Failure Including Items.');?>'
 		};
 	 GridViewDelete(params);
  }

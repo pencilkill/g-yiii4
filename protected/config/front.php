@@ -4,6 +4,11 @@
  * see mian configuration to get more informaiton
  */
 return array(
+	// preloading 'log' component
+	'preload'=>array(
+		'log',
+	),
+
 	'import'=>array(
 		'frontend.models.*',
 		'frontend.components.*',

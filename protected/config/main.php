@@ -33,12 +33,7 @@ return array(
 
 	'name'=>'元伸科技',
 
-	// preloading 'log' component
-
-	'preload'=>array(
-		'log',
-	),
-
+	'timeZone' => 'PRC',
 
 	// autoloading model and component classes
 	'import'=>array(

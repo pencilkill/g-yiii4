@@ -1,0 +1,36 @@
+category 分類添加表內關聯，自動生成has_many，留意DB默認null值時條件寫法" IS NULL" 或者 array(NULL)
+pic,pic_type,pic_i18n表名更新為 picture, 更新MVC 以防出現pic0這樣的屬性, 或與 image插件衝突
+prouduct2image表名更新為 product_image, 以區分中間表類型的表名 “2”
+contact 模型中，genderList取消，改為直接用數組，確保完整的多語言
+後臺view layout main中的 geturi JS方法轉小寫功能要取消，以避免在大小寫敏感的系統下主menu的定位異常
+後臺controller中語言的status條件解除，語言狀態只針對前臺
+需添加giix selfRelation代碼模板，包括 getCategories, getDropListData, getCategoryIds
+需修改giix CRUD代碼模板，textfield默認size=50，包括 getCategories, getDropListData, getCategoryIds
+更新mkdir調用，採用Yii自帶的CFileHelper::mkdir，原生的mkdir可以級聯創建目錄，但是不能級聯修改目錄權限(需要修改CFileHeler::mkdir訪問權限)
+後臺I18n關係添加HAS_ONE，默認當前後臺語言，列表值不用columnValue，刪除 controller->columnValue，controller->columnEdit
+後臺I18n關係統一用 i18n，i18ns 作為關係名稱
+後臺部分的關聯表需添加 'pagination' => false 而非不寫 'pagination'
+後臺layout中，column2改寫為無header,footer的佈局，添加fancybox插件，用於後臺做彈出框式的編輯，請留意動態改變相應的系統提示佈局 Yii::app()->errorHandler->errorAction
+後臺giix CRUD模板部分需要檢查 <div id="messageBox"></div> 標籤
+多個Model單個表單的情形下，統一用Model作為POST主鍵名，不用關係名，嘗試用RecursiveIteratorIterator來做 setAttributes
+框架渲染數據啟用總線類型，類似opencart，屬性名稱 dataBus
+啟用client數據驗證，不通過時不提交，服務器端只需對要驗證的數據做先行賦值驗證。因為如果做跳轉提交，則要返回整個表單的當前數據，否則造成數據丟失！！！
+添加pdfable擴展，後臺controller添加setpdfable()方法
+加強表單的多模型驗證方法，這要求盡量的保持數字索引
+JS代碼片斷輸出方式 CHtml::decode(CJavaScript::quote($html))
+CActiveForm 添加 getActiveFormAttribute系列方法
+beforeDelete檢查$event參數，或者在Base那邊重寫覆蓋，否則報錯
+後臺ajaxupload文檔說明修改，js拋出異常是回調方式不正確，插件本身沒問題
+後臺ajaxupload，啟用data變量傳遞 previewId等數據，handler.js已改寫。
+後臺ajaxupload，在site/ajaxUpload方法中，CUploadedFile::getInstanceByName('userfile')的'userfile'需要動態獲取。
+後臺swfupload，handler.js中的addImage方法沒有兼容原方法，需要調整兼容錯誤模式方法
+DB 索引有冗餘，必須清除
+Ajax request user session timeout, 包括 file upload 類型的非 Yii::app()->request->isAjaxRequest，在RWebUser上修改loginrequired()方法來解決，或者在適當的地方先行做空的jQuery.ajax請求來預處理
+後臺update方法不檢查語言，後臺添加語言時用relations自動插入對應的新數據，語言controller完整更新
+後臺模板部分調整，調整方向關聯表的數據更新方式：刪除再插入，不作原AR的更新，原AR只更新主表
+前後臺cache共用問題
+relation HAS_ONE, on的條件附加在ON的JOIN上，condition則在主WHERE語句上，這在I18N上filter主記錄時候要留意，導致主記錄未篩選，I18N則沒有，無法完成啟用禁用功能
+Mail功能在項目配置中只作導入，不作組件，郵件發送場景不只一處。只作導入，郵件的附件，內容這些發送完無須手動清除，其他場景則直接 new。
+添加 CURL 擴展
+列表批量刪除提示
+後臺列表，model->search() 加 defaultOrder
