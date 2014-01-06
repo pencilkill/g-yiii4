@@ -66,17 +66,19 @@ abstract class BaseProduct2category extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+	
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('t.product2category_id', $this->product2category_id);
-		$criteria->compare('t.product_id', $this->product_id);
-		$criteria->compare('t.category_id', $this->category_id);
+		$criteria->compare("{$alias}.product2category_id", $this->product2category_id);
+		$criteria->compare("{$alias}.product_id", $this->product_id);
+		$criteria->compare("{$alias}.category_id", $this->category_id);
 
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => 't.product2category_id ASC',
+				'defaultOrder' => "{$alias}.product2category_id ASC",
 				'multiSort'=>true,
 				'attributes'=>array(
 					'*',

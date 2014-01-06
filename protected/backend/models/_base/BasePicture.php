@@ -55,7 +55,7 @@ abstract class BasePicture extends GxActiveRecord {
 	public function relations() {
 		return array(
 			'pictureType' => array(self::BELONGS_TO, 'PictureType', 'picture_type_id'),
-			'pictureI18n' => array(self::HAS_ONE, 'PictureI18n', 'picture_id', 'condition' => 'pictureI18n.language_id=:language_id', 'params' => array(':language_id' => Yii::app()->controller->language_id)),
+			'pictureI18n' => array(self::HAS_ONE, 'PictureI18n', 'picture_id', 'scopes' => array('t' => array())),
 			'pictureI18ns' => array(self::HAS_MANY, 'PictureI18n', 'picture_id', 'index' => 'language_id'),
 		);
 	}
@@ -80,18 +80,20 @@ abstract class BasePicture extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+	
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('t.picture_id', $this->picture_id);
-		$criteria->compare('t.sort_order', $this->sort_order);
-		$criteria->compare('t.pic', $this->pic, true);
-		$criteria->compare('t.picture_type_id', $this->picture_type_id);
-		$criteria->compare('t.status', $this->status);
-		$criteria->compare('t.create_time', $this->create_time, true);
-		$criteria->compare('t.update_time', $this->update_time, true);
+		$criteria->compare("{$alias}.picture_id", $this->picture_id);
+		$criteria->compare("{$alias}.sort_order", $this->sort_order);
+		$criteria->compare("{$alias}.pic", $this->pic, true);
+		$criteria->compare("{$alias}.picture_type_id", $this->picture_type_id);
+		$criteria->compare("{$alias}.status", $this->status);
+		$criteria->compare("{$alias}.create_time", $this->create_time, true);
+		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 
 		$criteria->with = array('pictureI18ns');
-		$criteria->group = 't.picture_id';
+		$criteria->group = "{$alias}.picture_id";
 		$criteria->together = true;
 
 		$criteria->compare('pictureI18ns.url', $this->filterI18n->url, true);
@@ -102,12 +104,12 @@ abstract class BasePicture extends GxActiveRecord {
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => 't.sort_order DESC, t.picture_id ASC',
+				'defaultOrder' => "{$alias}.sort_order DESC, {$alias}.picture_id ASC",
 				'multiSort'=>true,
 				'attributes'=>array(
 					'sort_order'=>array(
-						'desc'=>'t.sort_order DESC',
-						'asc'=>'t.sort_order ASC',
+						'desc'=>"{$alias}.sort_order DESC",
+						'asc'=>"{$alias}.sort_order ASC",
 					),
 					'*',
 				),

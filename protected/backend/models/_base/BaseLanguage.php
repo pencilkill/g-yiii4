@@ -12,14 +12,13 @@
  * @property integer $language_id
  * @property string $code
  * @property string $title
- * @property string $image
- * @property integer $sort_id
+ * @property integer $sort_order
  * @property integer $status
  *
  * @property CategoryI18n[] $categoryI18ns
  * @property InformationI18n[] $informationI18ns
  * @property NewsI18n[] $newsI18ns
- * @property PicI18n[] $picI18ns
+ * @property PictureI18n[] $pictureI18ns
  * @property ProductI18n[] $productI18ns
  */
 abstract class BaseLanguage extends GxActiveRecord {
@@ -34,7 +33,7 @@ abstract class BaseLanguage extends GxActiveRecord {
 	}
 
 	public static function label($n = 1) {
-		return Yii::t('M/language', 'Language|Languages', $n);
+		return Yii::t('m/language', 'Language|Languages', $n);
 	}
 
 	public static function representingColumn() {
@@ -44,12 +43,11 @@ abstract class BaseLanguage extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('code, title', 'required'),
-			array('sort_id, status', 'numerical', 'integerOnly'=>true),
+			array('sort_order, status', 'numerical', 'integerOnly'=>true),
 			array('code', 'length', 'max'=>8),
 			array('title', 'length', 'max'=>64),
-			array('image', 'length', 'max'=>255),
-			array('image, sort_id, status', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('language_id, code, title, image, sort_id, status', 'safe', 'on'=>'search'),
+			array('sort_order, status', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('language_id, code, title, sort_order, status', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -58,7 +56,7 @@ abstract class BaseLanguage extends GxActiveRecord {
 			'categoryI18ns' => array(self::HAS_MANY, 'CategoryI18n', 'language_id'),
 			'informationI18ns' => array(self::HAS_MANY, 'InformationI18n', 'language_id'),
 			'newsI18ns' => array(self::HAS_MANY, 'NewsI18n', 'language_id'),
-			'picI18ns' => array(self::HAS_MANY, 'PicI18n', 'language_id'),
+			'pictureI18ns' => array(self::HAS_MANY, 'PictureI18n', 'language_id'),
 			'productI18ns' => array(self::HAS_MANY, 'ProductI18n', 'language_id'),
 		);
 	}
@@ -70,38 +68,40 @@ abstract class BaseLanguage extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'language_id' => Yii::t('M/language', 'Language'),
-			'code' => Yii::t('M/language', 'Code'),
-			'title' => Yii::t('M/language', 'Title'),
-			'image' => Yii::t('M/language', 'Image'),
-			'sort_id' => Yii::t('M/language', 'Sort'),
-			'status' => Yii::t('M/language', 'Status'),
+			'language_id' => Yii::t('m/language', 'Language'),
+			'code' => Yii::t('m/language', 'Code'),
+			'title' => Yii::t('m/language', 'Title'),
+			'sort_order' => Yii::t('m/language', 'Sort Order'),
+			'status' => Yii::t('m/language', 'Status'),
 			'categoryI18ns' => null,
 			'informationI18ns' => null,
 			'newsI18ns' => null,
-			'picI18ns' => null,
+			'pictureI18ns' => null,
 			'productI18ns' => null,
 		);
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+	
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('language_id', $this->language_id);
-		$criteria->compare('code', $this->code, true);
-		$criteria->compare('title', $this->title, true);
-		$criteria->compare('image', $this->image, true);
-		$criteria->compare('sort_id', $this->sort_id);
-		$criteria->compare('status', $this->status);
+		$criteria->compare("{$alias}.language_id", $this->language_id);
+		$criteria->compare("{$alias}.code", $this->code, true);
+		$criteria->compare("{$alias}.title", $this->title, true);
+		$criteria->compare("{$alias}.sort_order", $this->sort_order);
+		$criteria->compare("{$alias}.status", $this->status);
 
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
+				'defaultOrder' => "{$alias}.sort_order DESC, {$alias}.language_id ASC",
+				'multiSort'=>true,
 				'attributes'=>array(
-					'sort_id'=>array(
-						'desc'=>'sort_id DESC',
-						'asc'=>'sort_id',
+					'sort_order'=>array(
+						'desc'=>"{$alias}.sort_order DESC",
+						'asc'=>"{$alias}.sort_order ASC",
 					),
 					'*',
 				),

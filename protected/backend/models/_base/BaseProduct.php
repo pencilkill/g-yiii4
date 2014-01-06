@@ -51,7 +51,7 @@ abstract class BaseProduct extends GxActiveRecord {
 	public function relations() {
 		return array(
 			'product2categories' => array(self::HAS_MANY, 'Product2category', 'product_id'),
-			'productI18n' => array(self::HAS_ONE, 'ProductI18n', 'product_id', 'condition' => 'productI18n.language_id=:language_id', 'params' => array(':language_id' => Yii::app()->controller->language_id)),
+			'productI18n' => array(self::HAS_ONE, 'ProductI18n', 'product_id', 'scopes' => array('t' => array())),
 			'productI18ns' => array(self::HAS_MANY, 'ProductI18n', 'product_id', 'index' => 'language_id'),
 			'productImages' => array(self::HAS_MANY, 'ProductImage', 'product_id'),
 		);
@@ -75,15 +75,17 @@ abstract class BaseProduct extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+	
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('t.product_id', $this->product_id);
-		$criteria->compare('t.sort_order', $this->sort_order);
-		$criteria->compare('t.create_time', $this->create_time, true);
-		$criteria->compare('t.update_time', $this->update_time, true);
+		$criteria->compare("{$alias}.product_id", $this->product_id);
+		$criteria->compare("{$alias}.sort_order", $this->sort_order);
+		$criteria->compare("{$alias}.create_time", $this->create_time, true);
+		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 
 		$criteria->with = array('productI18ns');
-		$criteria->group = 't.product_id';
+		$criteria->group = "{$alias}.product_id";
 		$criteria->together = true;
 
 		$criteria->compare('productI18ns.status', $this->filterI18n->status);
@@ -95,12 +97,12 @@ abstract class BaseProduct extends GxActiveRecord {
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => 't.sort_order DESC, t.product_id ASC',
+				'defaultOrder' => "{$alias}.sort_order DESC, {$alias}.product_id ASC",
 				'multiSort'=>true,
 				'attributes'=>array(
 					'sort_order'=>array(
-						'desc'=>'t.sort_order DESC',
-						'asc'=>'t.sort_order ASC',
+						'desc'=>"{$alias}.sort_order DESC",
+						'asc'=>"{$alias}.sort_order ASC",
 					),
 					'*',
 				),

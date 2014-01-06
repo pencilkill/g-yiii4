@@ -107,7 +107,7 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 	if($i18n && preg_match("/^\s*array\(\s*self::HAS_MANY\s*,\s*'{$i18n->className}'\s*,/i", $relation))
 	{
 ?>
-			<?php echo "'" . $i18n->relationName . "' => " . preg_replace('/\)\s*$/', ', \'condition\' => \'' . $i18n->relationName . '.' . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . '=:' . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . '\', \'params\' => array(\':' . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . '\' => Yii::app()->controller->language_id)),' . "\n", strtr($relation, array('self::HAS_MANY' => 'self::HAS_ONE')));?>
+			<?php echo "'" . $i18n->relationName . "' => " . preg_replace('/\)\s*$/', ', \'scopes\' => array(\'t\' => array())),' . "\n", strtr($relation, array('self::HAS_MANY' => 'self::HAS_ONE')));?>
 <?php
 		$relation = preg_replace('/\)\s*$/', ', \'index\' => \'' . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . '\')', $relation);
 	}
@@ -138,15 +138,17 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+	
 		$criteria = new CDbCriteria;
 
 <?php foreach($columns as $name=>$column): ?>
-		$criteria->compare('t.<?php echo $name; ?>', $this-><?php echo $name; ?><?php echo ($column->type==='string' and !$column->isForeignKey) ? ', true' : ''; ?>);
+		$criteria->compare("{$alias}.<?php echo $name; ?>", $this-><?php echo $name; ?><?php echo ($column->type==='string' and !$column->isForeignKey) ? ', true' : ''; ?>);
 <?php endforeach; ?>
 
 <?php if($i18n):?>
 		$criteria->with = array('<?php echo $i18n->relationNamePluralized?>');
-		$criteria->group = 't.<?php echo $table->primaryKey?>';
+		$criteria->group = "{$alias}.<?php echo $table->primaryKey?>";
 		$criteria->together = true;
 
 <?php foreach($i18n->table->columns as $name=>$column):?>
@@ -160,13 +162,13 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => '<?php echo array_key_exists('sort_order', $columns) ? 't.sort_order DESC, ' : ''?>t.<?php echo $table->primaryKey?> ASC',
+				'defaultOrder' => "<?php echo array_key_exists('sort_order', $columns) ? '{$alias}.sort_order DESC, ' : ''?>{$alias}.<?php echo $table->primaryKey?> ASC",
 				'multiSort'=>true,
 				'attributes'=>array(
 <?php if(array_key_exists('sort_order', $columns)):?>
 					'sort_order'=>array(
-						'desc'=>'t.sort_order DESC',
-						'asc'=>'t.sort_order ASC',
+						'desc'=>"{$alias}.sort_order DESC",
+						'asc'=>"{$alias}.sort_order ASC",
 					),
 <?php endif;?>
 					'*',

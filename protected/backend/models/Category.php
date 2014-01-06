@@ -38,12 +38,10 @@ class Category extends BaseCategory
 
 	public static function getCategories($modelName = __CLASS__, $parent = NULL, $textAttribute = 'categoryI18n.title', $level=0) {
 		if(is_array($modelName)){	// models
-			$modelName = array_shift($modelName);	// model or modelName
+			$modelName = array_shift($modelName);	// model
 		}
 
-		if(is_object($modelName)){	// model
-			$modelName = CHtml::modelName($modelName);	// modelName
-		}
+		$modelName = CHtml::modelName($modelName);	// modelName
 
 		$primaryKey = $modelName::model()->tableSchema->primaryKey;
 
@@ -83,12 +81,10 @@ class Category extends BaseCategory
 	 */
 	public static function getDropListData($modelName = __CLASS__, $parent = NULL, $textAttribute = 'categoryI18n.title', $level=0) {
 		if(is_array($modelName)){	// models
-			$modelName = array_shift($modelName);	// model or modelName
+			$modelName = array_shift($modelName);	// model
 		}
 
-		if(is_object($modelName)){	// model
-			$modelName = CHtml::modelName($modelName);	// modelName
-		}
+		$modelName = CHtml::modelName($modelName);	// modelName
 
 		$primaryKey = $modelName::model()->tableSchema->primaryKey;
 
@@ -120,12 +116,10 @@ class Category extends BaseCategory
 	 */
 	public static function getCategoryIds($modelName = __CLASS__, $parent = NULL, $self = false) {
 		if(is_array($modelName)){	// models
-			$modelName = array_shift($modelName);	// model or modelName
+			$modelName = array_shift($modelName);	// model
 		}
 
-		if(is_object($modelName)){	// model
-			$modelName = CHtml::modelName($modelName);	// modelName
-		}
+		$modelName = CHtml::modelName($modelName);	// modelName
 
 		$primaryKey = $modelName::model()->tableSchema->primaryKey;
 
@@ -165,7 +159,7 @@ class Category extends BaseCategory
     public function beforeDelete(){
     	if(! parent::beforeDelete()) return false;
 
-    	if(sizeOf($this->categories)){
+    	if(sizeOf($this->categories) || sizeOf($this->product2category)){
     		Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure Including SubItems'));
 
     		return false;

@@ -31,7 +31,7 @@ class GiixCrudCode extends CrudCode {
 	 */
 	public $baseControllerClass = 'GxController';
 	/**
-	 * i18nRelationName
+	 * i18n
 	 */
 	public $i18n = null;
 	/**
@@ -193,24 +193,24 @@ class GiixCrudCode extends CrudCode {
 	 * @param string languageColumn The language column field name.
 	 * @return string The source code line for the active field.
 	 */
-	public function generateActiveFieldI18n($modelClass, $column) {
-		$languageColumn = GiixModelCode::I18N_LANGUAGE_COLUMN_NAME;
+	public function generateActiveI18nField($modelClass, $column) {
+		$languageColumnName = GiixModelCode::I18N_LANGUAGE_COLUMN_NAME;
 
 		if (false && $column->isForeignKey) {
 			$relation = $this->findRelation($modelClass, $column);
 			$relatedModelClass = $relation[3];
-			return "echo \$form->dropDownList(\$model, \"[{\${$languageColumn}}]{$column->name}\", GxHtml::listDataEx({$relatedModelClass}::model()->findAllAttributes(null, true)))";
+			return "echo \$form->dropDownList(\$model, \"[{\${$languageColumnName}}]{$column->name}\", GxHtml::listDataEx({$relatedModelClass}::model()->findAllAttributes(null, true)))";
 		}
 
 		if (strtoupper($column->dbType) == 'TINYINT(1)'
 				|| strtoupper($column->dbType) == 'BIT'
 				|| strtoupper($column->dbType) == 'BOOL'
 				|| strtoupper($column->dbType) == 'BOOLEAN') {
-			return "echo \$form->checkBox(\$model, \"[{\${$languageColumn}}]{$column->name}\")";
+			return "echo \$form->checkBox(\$model, \"[{\${$languageColumnName}}]{$column->name}\")";
 		} else if (strtoupper($column->dbType) == 'DATE' || strtoupper($column->dbType) == 'DATETIME') {
 			return "\$form->widget('zii.widgets.jui.CJuiDatePicker', array(
-			'name' => \"{$modelClass}[{\${$languageColumn}}][{$column->name}]\",
-			'attribute' => '[{\${$languageColumn}}]{$column->name}',
+			'name' => \"{$modelClass}[{\${$languageColumnName}}][{$column->name}]\",
+			'attribute' => '[{\${$languageColumnName}}]{$column->name}',
 			'options' => array(
 				'showButtonPanel' => false,
 				'changeYear' => true,
@@ -220,11 +220,11 @@ class GiixCrudCode extends CrudCode {
 			),
 			'htmlOptions' => array(
 				'readonly' => 'readonly',
-				'value' => CHtml::value(\$model, \"[{\${$languageColumn}}]{$column->name}\") ? date('Y-m-d', strtotime(CHtml::value(\$model, \"[{\${$languageColumn}}]{$column->name}\"))) : date('Y-m-d'),
+				'value' => CHtml::value(\$model, \"[{\${$languageColumnName}}]{$column->name}\") ? date('Y-m-d', strtotime(CHtml::value(\$model, \"[{\${$languageColumnName}}]{$column->name}\"))) : date('Y-m-d'),
 			),
 			));\n";
 		} else if (stripos($column->dbType, 'text') !== false) { // Start of CrudCode::generateActiveField code.
-			return "echo \$form->textArea(\$model, \"[{\${$languageColumn}}]{$column->name}\", array(\"cols\" => 50, \"rows\" => 5, \"class\" => ''))";
+			return "echo \$form->textArea(\$model, \"[{\${$languageColumnName}}]{$column->name}\", array(\"cols\" => 50, \"rows\" => 5, \"class\" => ''))";
 		} else {
 			$passwordI18n = Yii::t('app', 'password');
 			$passwordI18n = (isset($passwordI18n) && $passwordI18n !== '') ? '|' . $passwordI18n : '';
@@ -235,9 +235,9 @@ class GiixCrudCode extends CrudCode {
 				$inputField='textField';
 
 			if ($column->type !== 'string' || $column->size === null)
-				return "echo \$form->{$inputField}(\$model, \"[{\${$languageColumn}}]{$column->name}\")";
+				return "echo \$form->{$inputField}(\$model, \"[{\${$languageColumnName}}]{$column->name}\")";
 			else
-				return "echo \$form->{$inputField}(\$model, \"[{\${$languageColumn}}]{$column->name}\", array('maxlength' => {$column->size}))";
+				return "echo \$form->{$inputField}(\$model, \"[{\${$languageColumnName}}]{$column->name}\", array('maxlength' => {$column->size}))";
 		} // End of CrudCode::generateActiveField code.
 	}
 

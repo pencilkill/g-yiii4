@@ -67,18 +67,20 @@ abstract class BasePictureType extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+	
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('t.picture_type_id', $this->picture_type_id);
-		$criteria->compare('t.picture_type', $this->picture_type, true);
-		$criteria->compare('t.create_time', $this->create_time, true);
-		$criteria->compare('t.update_time', $this->update_time, true);
+		$criteria->compare("{$alias}.picture_type_id", $this->picture_type_id);
+		$criteria->compare("{$alias}.picture_type", $this->picture_type, true);
+		$criteria->compare("{$alias}.create_time", $this->create_time, true);
+		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => 't.picture_type_id ASC',
+				'defaultOrder' => "{$alias}.picture_type_id ASC",
 				'multiSort'=>true,
 				'attributes'=>array(
 					'*',

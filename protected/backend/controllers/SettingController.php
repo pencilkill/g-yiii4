@@ -16,7 +16,7 @@ class SettingController extends GxController {
 	const I18N_HORIZONTAL_STYLE = 1;
 	const I18N_VERTICAL_STYLE = 2;
 
-	public $i18nStyle = 2;
+	public $i18nStyle = self::I18N_HORIZONTAL_STYLE;
 
 	public function actionIndex() {
 		$model = Setting::model();
@@ -28,42 +28,16 @@ class SettingController extends GxController {
 		if(isset($_POST['Setting'])){
 			$settings = CMap::mergeArray($settings, $_POST['Setting']);
 		}
-
-		$values = array();
-
-		// create class string dynamicly
-		$behaviorClassName = 'SettingBehavior';
-
-		$behaviorClassString = 'class '.$behaviorClassName.' extends CActiveRecordBehavior {';
-		foreach ($settings as $key => $value){
-			// Key should be compatibel with PHP variable : A-Z,a-z,0-9,_
-			if(preg_match('/[^a-z_0-9]/i', $key)){
-				throw new Exception('Setting key :'.$key.' is illegal !');
-
-				Yii::app()->end();
-			}
-			$behaviorClassString .= 'public $'. $key . ';';		// Seeing model save
-
-			$values[$key] = $value;
-		}
-		$behaviorClassString .= '}';
-
-		// Defined class
-		eval($behaviorClassString);
-
-		// attach behavior
-		$model->attachBehavior($behaviorClassName, new $behaviorClassName);
-
-		// set value(set attribute)
-		foreach($values as $name => $value){
-			$model->$behaviorClassName->$name = $value;
+		
+		foreach($settings as $name => $value){
+			$model->$name = $value;
 		}
 
 		$this->performAjaxValidation($model, 'setting-form');
 		// Update
 		if(isset($_POST['Setting'])){
 			if($model->validate()){
-				foreach($values as $pk => $value){
+				foreach($settings as $pk => $value){
 					if(isset($_POST['Setting'][$pk])){
 						// Update setting
 						$row = $model->findByPk($pk);
@@ -79,7 +53,7 @@ class SettingController extends GxController {
 						$row->save(false);
 					}else{
 						// Delete setting
-						$model->deleteByPk($pk);
+						Setting::model()->deleteByPk($pk);
 					}
 				}
 				Yii::app()->user->setFlash('success', Yii::t('app', 'Operation Success'));

@@ -50,7 +50,7 @@ abstract class BaseNews extends GxActiveRecord {
 
 	public function relations() {
 		return array(
-			'newsI18n' => array(self::HAS_ONE, 'NewsI18n', 'news_id', 'condition' => 'newsI18n.language_id=:language_id', 'params' => array(':language_id' => Yii::app()->controller->language_id)),
+			'newsI18n' => array(self::HAS_ONE, 'NewsI18n', 'news_id', 'scopes' => array('t' => array())),
 			'newsI18ns' => array(self::HAS_MANY, 'NewsI18n', 'news_id', 'index' => 'language_id'),
 		);
 	}
@@ -73,17 +73,19 @@ abstract class BaseNews extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+	
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('t.news_id', $this->news_id);
-		$criteria->compare('t.top', $this->top);
-		$criteria->compare('t.sort_order', $this->sort_order);
-		$criteria->compare('t.date_added', $this->date_added, true);
-		$criteria->compare('t.create_time', $this->create_time, true);
-		$criteria->compare('t.update_time', $this->update_time, true);
+		$criteria->compare("{$alias}.news_id", $this->news_id);
+		$criteria->compare("{$alias}.top", $this->top);
+		$criteria->compare("{$alias}.sort_order", $this->sort_order);
+		$criteria->compare("{$alias}.date_added", $this->date_added, true);
+		$criteria->compare("{$alias}.create_time", $this->create_time, true);
+		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 
 		$criteria->with = array('newsI18ns');
-		$criteria->group = 't.news_id';
+		$criteria->group = "{$alias}.news_id";
 		$criteria->together = true;
 
 		$criteria->compare('newsI18ns.status', $this->filterI18n->status);
@@ -95,12 +97,12 @@ abstract class BaseNews extends GxActiveRecord {
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => 't.sort_order DESC, t.news_id ASC',
+				'defaultOrder' => "{$alias}.sort_order DESC, {$alias}.news_id ASC",
 				'multiSort'=>true,
 				'attributes'=>array(
 					'sort_order'=>array(
-						'desc'=>'t.sort_order DESC',
-						'asc'=>'t.sort_order ASC',
+						'desc'=>"{$alias}.sort_order DESC",
+						'asc'=>"{$alias}.sort_order ASC",
 					),
 					'*',
 				),

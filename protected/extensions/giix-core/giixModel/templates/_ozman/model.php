@@ -35,6 +35,18 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
+<?php if(substr($tableName, -5) == GiixModelCode::I18N_TABLE_SUFFIX){?>
+	
+	public function t($<?php echo GiixModelCode::I18N_LANGUAGE_COLUMN_NAME?> = null){
+		$<?php echo GiixModelCode::I18N_LANGUAGE_COLUMN_NAME?> = empty($<?php echo GiixModelCode::I18N_LANGUAGE_COLUMN_NAME?>) ? Yii::app()->controller->language_id : $<?php echo GiixModelCode::I18N_LANGUAGE_COLUMN_NAME?>;
+
+		$this->getDbCriteria()->mergeWith(array(
+			'condition' => "{$this->tableAlias}.<?php echo GiixModelCode::I18N_LANGUAGE_COLUMN_NAME?>= '{$<?php echo GiixModelCode::I18N_LANGUAGE_COLUMN_NAME?>}'",
+		));
+
+		return $this;
+	}
+<?php }?>
 <?php if($selfRelation):?>
 
 	public function rules() {
@@ -67,12 +79,10 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 
 	public static function getCategories($modelName = __CLASS__, $parent = NULL, $textAttribute = '<?php echo $i18n ? "{$i18n->relationName}.title" : ''?>', $level=0) {
 		if(is_array($modelName)){	// models
-			$modelName = array_shift($modelName);	// model or modelName
+			$modelName = array_shift($modelName);	// model
 		}
 
-		if(is_object($modelName)){	// model
-			$modelName = CHtml::modelName($modelName);	// modelName
-		}
+		$modelName = CHtml::modelName($modelName);	// modelName
 
 		$primaryKey = $modelName::model()->tableSchema->primaryKey;
 
@@ -112,12 +122,10 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 	 */
 	public static function getDropListData($modelName = __CLASS__, $parent = NULL, $textAttribute = '<?php echo $i18n ? "{$i18n->relationName}.title" : ''?>', $level=0) {
 		if(is_array($modelName)){	// models
-			$modelName = array_shift($modelName);	// model or modelName
+			$modelName = array_shift($modelName);	// model
 		}
 
-		if(is_object($modelName)){	// model
-			$modelName = CHtml::modelName($modelName);	// modelName
-		}
+		$modelName = CHtml::modelName($modelName);	// modelName
 
 		$primaryKey = $modelName::model()->tableSchema->primaryKey;
 
@@ -149,12 +157,10 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 	 */
 	public static function getCategoryIds($modelName = __CLASS__, $parent = NULL, $self = false) {
 		if(is_array($modelName)){	// models
-			$modelName = array_shift($modelName);	// model or modelName
+			$modelName = array_shift($modelName);	// model
 		}
 
-		if(is_object($modelName)){	// model
-			$modelName = CHtml::modelName($modelName);	// modelName
-		}
+		$modelName = CHtml::modelName($modelName);	// modelName
 
 		$primaryKey = $modelName::model()->tableSchema->primaryKey;
 
