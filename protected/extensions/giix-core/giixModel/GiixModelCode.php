@@ -17,6 +17,8 @@ Yii::import('ext.giix-core.helpers.*');
  * @author Rodrigo Coelho <rodrigo@giix.org>
  */
 class GiixModelCode extends ModelCode {
+	const I18N_TABLE_SUFFIX = '_i18n';
+	const I18N_LANGUAGE_COLUMN_NAME = 'language_id';
 
 	/**
 	 * @var string The (base) model base class name.
@@ -58,8 +60,9 @@ class GiixModelCode extends ModelCode {
 				}
 			}
 		}
-		else
+		else{
 			$tables=array($this->getTableSchema($this->tableName));
+		}
 
 		$this->files = array();
 		$templatePath = $this->templatePath;
@@ -70,32 +73,39 @@ class GiixModelCode extends ModelCode {
 			$tableName = $this->removePrefix($table->name);
 			$className = $this->generateClassName($table->name);
 
-			// Generate the pivot model data.
+			// Generate the pivot model data, setup i18n.
+			$i18n = null;
 			$pivotModels = array();
 			if (isset($this->relations[$className])) {
 				foreach ($this->relations[$className] as $relationName => $relationData) {
-					if (preg_match('/^array\(self::MANY_MANY,.*?,\s*\'(.+?)\(/', $relationData, $matches)) {
+					if (preg_match('/^array\s*\(\s*self::MANY_MANY\s*,.*?,\s*\'(.+?)\(/', $relationData, $matches)) {
 						// Clean the table name if needed.
 						$pivotTableName = str_replace(array('{', '}'), '', $matches[1]);
 						$pivotModels[$relationName] = $this->generateClassName($pivotTableName);
 					}
+
+					if (preg_match("/^array\s*\(\s*self::HAS_MANY\s*,\s*'{$this->generateClassName($table->name . self::I18N_TABLE_SUFFIX)}'\s*,\s*'{$table->primaryKey}'\s*,?/", $relationData)) {
+						$i18n = new stdClass();
+
+						$i18n->table = $this->getTableSchema($tableName . self::I18N_TABLE_SUFFIX);
+						$i18n->className = $this->generateClassName($i18n->table->name);
+						$i18n->relationName = $this->generateRelationName($i18n->table->name, $i18n->table->name, false);
+						$i18n->relationNamePluralized = $this->generateRelationName($i18n->table->name, $i18n->table->name, true);
+					}
 				}
 			}
-
-			$i18n = Yii::app()->db->schema->getTable($tableName.'_i18n');
-			if($i18n) $i18nClassName = $this->generateClassName($i18n->name);
 
 			$params = array(
 				'tableName' => $schema === '' ? $tableName : $schema . '.' . $tableName,
 				'modelClass' => $className,
 				'columns' => $table->columns,
-				'i18n' => $i18n,
-				'i18nClassName' => $i18n ? $this->generateClassName($i18n->name) : null,
 				'labels' => $this->generateLabelsEx($table, $className),
 				'rules' => $this->generateRules($table),
 				'relations' => isset($this->relations[$className]) ? $this->relations[$className] : array(),
 				'representingColumn' => $this->getRepresentingColumn($table), // The representing column for the table.
 				'pivotModels' => $pivotModels, // The pivot models.
+				'table' => $table,
+				'i18n' => $i18n,
 			);
 			// Setup base model information.
 			$this->baseModelPath = $this->modelPath . '._base';
@@ -160,7 +170,7 @@ class GiixModelCode extends ModelCode {
 				if ($label === 'Id')
 					$label = 'ID';
 
-				$label = "Yii::t('M".'/'.strtolower($className)."', '{$label}')";
+				$label = "Yii::t('m".'/'.strtolower($className)."', '{$label}')";
 			}
 			$labels[$column->name] = $label;
 		}
@@ -377,5 +387,5 @@ class GiixModelCode extends ModelCode {
 <p style="margin: 2px 0; position: relative; text-align: right; top: -15px; color: #668866;">icons by <a href="http://www.famfamfam.com/lab/icons/silk/" style="color: #668866;">famfamfam.com</a></p>
 EOM;
 	}
-
+	// i18n
 }

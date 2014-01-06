@@ -11,14 +11,15 @@
  *
  * @property integer $category_id
  * @property integer $parent_id
- * @property integer $sort_id
+ * @property integer $sort_order
  * @property string $create_time
  * @property string $update_time
  *
+ * @property Category $parent
+ * @property Category[] $categories
+ * @property CategoryI18n $categoryI18n
  * @property CategoryI18n[] $categoryI18ns
  * @property Product2category[] $product2categories
- * @property Children[] $children
- * @property Parent $parent
  */
 abstract class BaseCategory extends GxActiveRecord {
 
@@ -33,7 +34,7 @@ abstract class BaseCategory extends GxActiveRecord {
 	}
 
 	public static function label($n = 1) {
-		return Yii::t('M/category', 'Category|Categories', $n);
+		return Yii::t('m/category', 'Category|Categories', $n);
 	}
 
 	public static function representingColumn() {
@@ -42,16 +43,18 @@ abstract class BaseCategory extends GxActiveRecord {
 
 	public function rules() {
 		return array(
-			array('parent_id', 'required'),
-			array('parent_id, sort_id', 'numerical', 'integerOnly'=>true),
+			array('parent_id, sort_order', 'numerical', 'integerOnly'=>true),
 			array('create_time, update_time', 'safe'),
-			array('sort_id, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('category_id, parent_id, sort_id, create_time, update_time', 'safe', 'on'=>'search'),
+			array('parent_id, sort_order, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('category_id, parent_id, sort_order, create_time, update_time', 'safe', 'on'=>'search'),
 		);
 	}
 
 	public function relations() {
 		return array(
+			'parent' => array(self::BELONGS_TO, 'Category', 'parent_id'),
+			'categories' => array(self::HAS_MANY, 'Category', 'parent_id'),
+			'categoryI18n' => array(self::HAS_ONE, 'CategoryI18n', 'category_id', 'condition' => 'categoryI18n.language_id=:language_id', 'params' => array(':language_id' => Yii::app()->controller->language_id)),
 			'categoryI18ns' => array(self::HAS_MANY, 'CategoryI18n', 'category_id', 'index' => 'language_id'),
 			'product2categories' => array(self::HAS_MANY, 'Product2category', 'category_id'),
 		);
@@ -64,11 +67,13 @@ abstract class BaseCategory extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'category_id' => Yii::t('M/category', 'Category'),
-			'parent_id' => Yii::t('M/category', 'Parent'),
-			'sort_id' => Yii::t('M/category', 'Sort'),
-			'create_time' => Yii::t('M/category', 'Create Time'),
-			'update_time' => Yii::t('M/category', 'Update Time'),
+			'category_id' => Yii::t('m/category', 'Category'),
+			'parent_id' => null,
+			'sort_order' => Yii::t('m/category', 'Sort Order'),
+			'create_time' => Yii::t('m/category', 'Create Time'),
+			'update_time' => Yii::t('m/category', 'Update Time'),
+			'parent' => null,
+			'categories' => null,
 			'categoryI18ns' => null,
 			'product2categories' => null,
 		);
@@ -77,11 +82,11 @@ abstract class BaseCategory extends GxActiveRecord {
 	public function search() {
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('category_id', $this->category_id);
-		$criteria->compare('parent_id', $this->parent_id);
-		$criteria->compare('sort_id', $this->sort_id);
-		$criteria->compare('create_time', $this->create_time, true);
-		$criteria->compare('update_time', $this->update_time, true);
+		$criteria->compare('t.category_id', $this->category_id);
+		$criteria->compare('t.parent_id', $this->parent_id);
+		$criteria->compare('t.sort_order', $this->sort_order);
+		$criteria->compare('t.create_time', $this->create_time, true);
+		$criteria->compare('t.update_time', $this->update_time, true);
 
 		$criteria->with = array('categoryI18ns');
 		$criteria->group = 't.category_id';
@@ -94,15 +99,17 @@ abstract class BaseCategory extends GxActiveRecord {
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
+				'defaultOrder' => 't.sort_order DESC, t.category_id ASC',
+				'multiSort'=>true,
 				'attributes'=>array(
-					'sort_id'=>array(
-						'desc'=>'sort_id DESC',
-						'asc'=>'sort_id',
+					'sort_order'=>array(
+						'desc'=>'t.sort_order DESC',
+						'asc'=>'t.sort_order ASC',
 					),
 					'*',
 				),
 			),
-			'pagination'=>array(
+			'pagination' => array(
 				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
 				'pageVar' => 'page',
 			),

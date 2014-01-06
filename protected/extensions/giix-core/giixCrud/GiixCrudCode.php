@@ -33,7 +33,7 @@ class GiixCrudCode extends CrudCode {
 	/**
 	 * i18nRelationName
 	 */
-	public $i18nRelation = null;
+	public $i18n = null;
 	/**
 	 * @var ar
 	 * default language code is Yii::app()->language code which using to get language_id if the request does not set a language id
@@ -73,7 +73,7 @@ class GiixCrudCode extends CrudCode {
 		$criteria = new CDbCriteria;
 		$criteria->alias = 't';
 		$criteria->compare('t.status', '1');
-		$criteria->order = "FIELD(t.code, '".Yii::app()->language."') DESC, t.sort_id DESC";
+		$criteria->order = "FIELD(t.code, '" . Yii::app()->language . "') DESC, t.sort_order DESC";
 
 		$languages = Language::model()->findAll($criteria);
 
@@ -163,7 +163,7 @@ class GiixCrudCode extends CrudCode {
 			),
 			));\n";
 		} else if (stripos($column->dbType, 'text') !== false) { // Start of CrudCode::generateActiveField code.
-			return "echo \$form->textArea(\$model, '{$column->name}')";
+			return "echo \$form->textArea(\$model, '{$column->name}', array(\"cols\" => 50, \"rows\" => 5, \"class\" => ''))";
 		} else {
 			$passwordI18n = Yii::t('app', 'password');
 			$passwordI18n = (isset($passwordI18n) && $passwordI18n !== '') ? '|' . $passwordI18n : '';
@@ -193,7 +193,9 @@ class GiixCrudCode extends CrudCode {
 	 * @param string languageColumn The language column field name.
 	 * @return string The source code line for the active field.
 	 */
-	public function generateActiveFieldI18n($modelClass, $column, $languageColumn = 'language_id') {
+	public function generateActiveFieldI18n($modelClass, $column) {
+		$languageColumn = GiixModelCode::I18N_LANGUAGE_COLUMN_NAME;
+
 		if (false && $column->isForeignKey) {
 			$relation = $this->findRelation($modelClass, $column);
 			$relatedModelClass = $relation[3];
@@ -222,7 +224,7 @@ class GiixCrudCode extends CrudCode {
 			),
 			));\n";
 		} else if (stripos($column->dbType, 'text') !== false) { // Start of CrudCode::generateActiveField code.
-			return "echo \$form->textArea(\$model, \"[{\${$languageColumn}}]{$column->name}\", array('cols' => 50, 'rows' => 5, 'class' => ''))";
+			return "echo \$form->textArea(\$model, \"[{\${$languageColumn}}]{$column->name}\", array(\"cols\" => 50, \"rows\" => 5, \"class\" => ''))";
 		} else {
 			$passwordI18n = Yii::t('app', 'password');
 			$passwordI18n = (isset($passwordI18n) && $passwordI18n !== '') ? '|' . $passwordI18n : '';

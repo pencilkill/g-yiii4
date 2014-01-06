@@ -3,7 +3,7 @@
  * The following variables are available in this template:
  * - $this: the CrudCode object
  */
-	$updateColumns = array('top', 'sort_id', 'status');
+	$updateColumns = array('top', 'sort_order', 'status');
 
 	$skipColumns = array('create_time', 'update_time', 'password', 'lang');
 ?>
@@ -56,7 +56,7 @@ echo "<?php\n
 			<div class="buttons">
 				<?php echo '<?php'?> echo GxHtml::link(Yii::t('app', 'Advanced Search'), '#', array('class' => 'search-button button', 'style' => 'display: none;')); ?>
 				<a onclick="location='<?php echo '<?php'?> echo $this->createUrl('create')?>';" class="button"><?php echo '<?php'?> echo Yii::t('app', 'Create')?></a>
-				<a onclick="GVUpdate();" class="button" <?php if(array_intersect($updateColumns, array_keys($this->tableSchema->columns))):?>style="display:none;"<?php endif;?>><?php echo '<?php'?> echo Yii::t('app', 'Save')?></a>
+				<a onclick="GVUpdate();" class="button"><?php echo '<?php'?> echo Yii::t('app', 'Save')?></a>
 				<a onclick="GVDelete();" class="button"><?php echo '<?php'?> echo Yii::t('app', 'Delete')?></a>
 			</div>
 		</div>

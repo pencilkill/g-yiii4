@@ -11,12 +11,12 @@
  *
  * @property integer $news_id
  * @property integer $top
- * @property integer $sort_id
- * @property integer $status
+ * @property integer $sort_order
  * @property string $date_added
  * @property string $create_time
  * @property string $update_time
  *
+ * @property NewsI18n $newsI18n
  * @property NewsI18n[] $newsI18ns
  */
 abstract class BaseNews extends GxActiveRecord {
@@ -32,7 +32,7 @@ abstract class BaseNews extends GxActiveRecord {
 	}
 
 	public static function label($n = 1) {
-		return Yii::t('M/news', 'News|News', $n);
+		return Yii::t('m/news', 'News|News', $n);
 	}
 
 	public static function representingColumn() {
@@ -41,15 +41,16 @@ abstract class BaseNews extends GxActiveRecord {
 
 	public function rules() {
 		return array(
-			array('top, sort_id, status', 'numerical', 'integerOnly'=>true),
+			array('top, sort_order', 'numerical', 'integerOnly'=>true),
 			array('date_added, create_time, update_time', 'safe'),
-			array('top, sort_id, status, date_added, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('news_id, top, sort_id, status, date_added, create_time, update_time', 'safe', 'on'=>'search'),
+			array('top, sort_order, date_added, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('news_id, top, sort_order, date_added, create_time, update_time', 'safe', 'on'=>'search'),
 		);
 	}
 
 	public function relations() {
 		return array(
+			'newsI18n' => array(self::HAS_ONE, 'NewsI18n', 'news_id', 'condition' => 'newsI18n.language_id=:language_id', 'params' => array(':language_id' => Yii::app()->controller->language_id)),
 			'newsI18ns' => array(self::HAS_MANY, 'NewsI18n', 'news_id', 'index' => 'language_id'),
 		);
 	}
@@ -61,13 +62,12 @@ abstract class BaseNews extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'news_id' => Yii::t('M/news', 'News'),
-			'top' => Yii::t('M/news', 'Top'),
-			'sort_id' => Yii::t('M/news', 'Sort'),
-			'status' => Yii::t('M/news', 'Status'),
-			'date_added' => Yii::t('M/news', 'Date Added'),
-			'create_time' => Yii::t('M/news', 'Create Time'),
-			'update_time' => Yii::t('M/news', 'Update Time'),
+			'news_id' => Yii::t('m/news', 'News'),
+			'top' => Yii::t('m/news', 'Top'),
+			'sort_order' => Yii::t('m/news', 'Sort Order'),
+			'date_added' => Yii::t('m/news', 'Date Added'),
+			'create_time' => Yii::t('m/news', 'Create Time'),
+			'update_time' => Yii::t('m/news', 'Update Time'),
 			'newsI18ns' => null,
 		);
 	}
@@ -75,18 +75,18 @@ abstract class BaseNews extends GxActiveRecord {
 	public function search() {
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('news_id', $this->news_id);
-		$criteria->compare('top', $this->top);
-		$criteria->compare('sort_id', $this->sort_id);
-		$criteria->compare('status', $this->status);
-		$criteria->compare('date_added', $this->date_added, true);
-		$criteria->compare('create_time', $this->create_time, true);
-		$criteria->compare('update_time', $this->update_time, true);
+		$criteria->compare('t.news_id', $this->news_id);
+		$criteria->compare('t.top', $this->top);
+		$criteria->compare('t.sort_order', $this->sort_order);
+		$criteria->compare('t.date_added', $this->date_added, true);
+		$criteria->compare('t.create_time', $this->create_time, true);
+		$criteria->compare('t.update_time', $this->update_time, true);
 
 		$criteria->with = array('newsI18ns');
 		$criteria->group = 't.news_id';
 		$criteria->together = true;
 
+		$criteria->compare('newsI18ns.status', $this->filterI18n->status);
 		$criteria->compare('newsI18ns.pic', $this->filterI18n->pic, true);
 		$criteria->compare('newsI18ns.title', $this->filterI18n->title, true);
 		$criteria->compare('newsI18ns.keywords', $this->filterI18n->keywords, true);
@@ -95,10 +95,12 @@ abstract class BaseNews extends GxActiveRecord {
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
+				'defaultOrder' => 't.sort_order DESC, t.news_id ASC',
+				'multiSort'=>true,
 				'attributes'=>array(
-					'sort_id'=>array(
-						'desc'=>'sort_id DESC',
-						'asc'=>'sort_id',
+					'sort_order'=>array(
+						'desc'=>'t.sort_order DESC',
+						'asc'=>'t.sort_order ASC',
 					),
 					'*',
 				),

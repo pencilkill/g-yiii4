@@ -4,6 +4,7 @@
  * In addition to the default model Code, this adds the CSaveRelationsBehavior
  * to the model class definition.
  * - $this: the ModelCode object
+ * - $table: the table object
  * - $tableName: the table name for this class (prefix is already removed if necessary)
  * - $modelClass: the model class name
  * - $columns: list of table columns (name=>CDbColumnSchema)
@@ -12,40 +13,17 @@
  * - $relations: list of relations (name=>relation declaration)
  * - $representingColumn: the name of the representing column for the table (string) or
  *   the names of the representing columns (array)
+ * - $i18n: the i18n object
  */
 ?>
 <?php
+	$selfRelationName = $this->generateRelationName($table->name, $table->name, true);
 	$selfRelation = false;
 	$selfRelationColumn = '';
-	$i18nRelationName = '';
-	$primaryKey = '';
 
-	foreach(array_keys($relations) as $name){
-		$relationData = $this->getRelationData($modelClass, $name);
-		$relationType = $relationData[0];
-		$relationModel = $relationData[1];
-
-		if($relationModel == $modelClass){
-			$pattern = "/^\s*array\(\s*self::BELONGS_TO\s*,\s*'{$modelClass}',\s*'(\w+)'/i";
-
-			preg_match($pattern, $relations[$name], $relationColumn);
-
-			if($relationColumn){
-				$selfRelation = true;
-				$selfRelationColumn = $relationColumn[1];
-			}
-		}
-
-		if($i18n && $relationModel == $i18nClassName){
-			$i18nRelationName = $name;
-		}
-	}
-
-	foreach($columns as $name => $column){
-		if($column->isPrimaryKey){
-			$primaryKey = $name;
-			break;
-		}
+	if(array_key_exists($selfRelationName, $relations) && preg_match("/^\s*array\s*\(\s*self::HAS_MANY\s*,\s*'{$modelClass}'\s*,\s*'(\w+)'\s*,?/i", $relations[$selfRelationName], $relationColumn)){
+		$selfRelation = true;
+		$selfRelationColumn = $relationColumn[1];
 	}
 ?>
 <?php echo "<?php\n"; ?>
@@ -57,69 +35,142 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
-<?php if($selfRelation && $primaryKey):?>
+<?php if($selfRelation):?>
 
-	public static function getCategories($parent=NULL, $level=0) {
+	public function rules() {
+		return CMap::mergeArray(
+			parent::rules(),
+			array(
+				array('<?php echo "{$selfRelationColumn}"?>', 'validParentId', 'on' => 'update'),
+			)
+		);
+	}
+
+	public function validParentId(){
+    	$categoryIds = self::getCategoryIds($this-><?php echo $table->primaryKey?>, true);
+
+    	if(in_array($this-><?php echo $selfRelationColumn?>, $categoryIds)){
+    		$this->addError('<?php echo $selfRelationColumn?>', Yii::t('m/<?php echo strtolower($modelClass)?>', 'Parent_id can not be self or children'));
+    	}
+    }
+
+	/**
+	 * Get all child node base on $parent
+	 * category level will be added on for each node
+	 * please note that default level is custom variable, you can set it as zero while the root node is not zero
+	 *
+	 * @param $parent, root node
+	 * @param $textAttribute, attribute to show
+	 * @param $level
+	 * @return array
+	 */
+
+	public static function getCategories($modelName = __CLASS__, $parent = NULL, $textAttribute = '<?php echo $i18n ? "{$i18n->relationName}.title" : ''?>', $level=0) {
+		if(is_array($modelName)){	// models
+			$modelName = array_shift($modelName);	// model or modelName
+		}
+
+		if(is_object($modelName)){	// model
+			$modelName = CHtml::modelName($modelName);	// modelName
+		}
+
+		$primaryKey = $modelName::model()->tableSchema->primaryKey;
+
 		$storage = array();
-		$language_id = Yii::app()->getController()->language_id;
 		$callback = null;
 
-		$callback = function($parent, $level, $language_id) use ($storage, &$callback){
+		$callback = function($parent, $level) use ($storage, &$callback, $modelName, $primaryKey, $textAttribute){
 			$criteria = new CDbCriteria;
-			if($parent === NULL){
-				$criteria->addCondition('<?php echo $selfRelationColumn?> IS NULL');
-			}else{
-				$criteria->compare('<?php echo $selfRelationColumn?>', $parent);
-			}
-<?php if($i18n):?>
+			$criteria->compare('<?php echo "t.{$selfRelationColumn}"?>', is_array($parent) ? $parent : array($parent));
+			$criteria->order = '<?php echo array_key_exists('sort_order', $columns) ? 't.sort_order DESC, ' : ''?>t.<?php echo $table->primaryKey?> ASC';
 
-			$criteria->with = array(
-				'<?php echo $i18nRelationName?>'=>array(
-					'condition'=>'language_id=:language_id',
-					'params' => array(':language_id' => $language_id)
-				)
-			);
-			$criteria->group = 't.<?php echo $primaryKey?>';
-			$criteria->together = true;
-<?php endif;?>
-
-			$categories = <?php echo $modelClass?>::model()->findAll($criteria);
+			$categories = $modelName::model()->findAll($criteria);
 
 			foreach ($categories as $category) {
-				$subCategories = call_user_func($callback, $category-><?php echo $primaryKey?>, $level+1, $language_id);
+				$subCategories = call_user_func($callback, $category->$primaryKey, $level+1);
 				$storage[] = array(
-					'<?php echo $primaryKey?>' => $category-><?php echo $primaryKey?>,
-					'<?php echo $selfRelationColumn?>' => $category-><?php echo $selfRelationColumn?>,
+					$primaryKey => $category->$primaryKey,
+					'parent_id' => $category->parent_id,
 					'level' => $level,
-					'title' => $category-><?php echo $i18nRelationName?>[$language_id]->title,
+					'title' => CHtml::value($category, $textAttribute),
 					'totalSubCategories' => sizeOf($subCategories),
 				);
-				$storage = array_merge($storage, $subCategories);
+				$storage = CMap::mergeArray($storage, $subCategories);
 			}
 
 			return $storage;
 		};
 
-		return $callback($parent, $level, $language_id);
+		return $callback($parent, $level);
 	}
+	/**
+	 * @see self::getCategories()
+	 *
+	 * @param $parent
+	 * @param $textAttribute, attribute to show
+	 * @param $level
+	 */
+	public static function getDropListData($modelName = __CLASS__, $parent = NULL, $textAttribute = '<?php echo $i18n ? "{$i18n->relationName}.title" : ''?>', $level=0) {
+		if(is_array($modelName)){	// models
+			$modelName = array_shift($modelName);	// model or modelName
+		}
 
-	public static function getCategoryIds($parent=NULL, $self=false) {
+		if(is_object($modelName)){	// model
+			$modelName = CHtml::modelName($modelName);	// modelName
+		}
+
+		$primaryKey = $modelName::model()->tableSchema->primaryKey;
+
 		$storage = array();
 		$callback = null;
 
-		$callback = function($parent, $self) use ($storage, &$callback){
-	        $criteria = new CDbCriteria;
-        	if($parent === NULL){
-				$criteria->addCondition('<?php echo $selfRelationColumn?> IS NULL');
-			}else{
-				$criteria->compare('<?php echo $selfRelationColumn?>', $parent);
+		$callback = function($parent, $level) use ($storage, &$callback, $modelName, $primaryKey, $textAttribute){
+			$criteria = new CDbCriteria;
+			$criteria->compare('<?php echo "t.{$selfRelationColumn}"?>', is_array($parent) ? $parent : array($parent));
+			$criteria->order = '<?php echo array_key_exists('sort_order', $columns) ? 't.sort_order DESC, ' : ''?>t.<?php echo $table->primaryKey?> ASC';
+
+			$categories = $modelName::model()->findAll($criteria);
+
+			foreach ($categories as $category) {
+				$storage[$category->$primaryKey] = str_repeat('　', $level) . (CHtml::value($category, $textAttribute));
+
+				$storage = CMap::mergeArray($storage, call_user_func($callback, $category->$primaryKey, $level+1));
 			}
 
-	        $categories = <?php echo $modelClass?>::model()->findAll($criteria);
+			return $storage;
+		};
+
+		return $callback($parent, $level);
+	}
+	/**
+	 *  Get all child node id base on $parent
+	 * @return array
+	 * @param $parent, root node
+	 */
+	public static function getCategoryIds($modelName = __CLASS__, $parent = NULL, $self = false) {
+		if(is_array($modelName)){	// models
+			$modelName = array_shift($modelName);	// model or modelName
+		}
+
+		if(is_object($modelName)){	// model
+			$modelName = CHtml::modelName($modelName);	// modelName
+		}
+
+		$primaryKey = $modelName::model()->tableSchema->primaryKey;
+
+		$storage = array();
+		$callback = null;
+
+		$callback = function($parent, $self) use ($storage, &$callback, $modelName, $primaryKey){
+	        $criteria = new CDbCriteria;
+			$criteria->compare('<?php echo "t.{$selfRelationColumn}"?>', is_array($parent) ? $parent : array($parent));
+			$criteria->order = '<?php echo array_key_exists('sort_order', $columns) ? 't.sort_order DESC, ' : ''?>t.<?php echo $table->primaryKey?> ASC';
+
+	        $categories = $modelName::model()->findAll($criteria);
 
 	        foreach ($categories as $category) {
-	        	$storage[] = $category-><?php echo $primaryKey?>;
-	        	$storage = array_merge($storage, call_user_func($callback, $category-><?php echo $primaryKey?>, $self));
+	        	$storage[] = $category->$primaryKey;
+	        	$storage = CMap::mergeArray($storage, call_user_func($callback, $category->$primaryKey, $self));
 	        }
 
 	        return $storage;
@@ -130,6 +181,26 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 		$self && array_unshift($categoryIds, $parent);
 
 		return $categoryIds;
+    }
+
+    public function beforeSave(){
+    	if(! parent::beforeSave()) return false;
+
+    	$this-><?php echo $selfRelationColumn?> = $this-><?php echo $selfRelationColumn?> ? $this-><?php echo $selfRelationColumn?> : new CDbExpression('NULL');
+
+    	return true;
+    }
+
+    public function beforeDelete(){
+    	if(! parent::beforeDelete()) return false;
+
+    	if(sizeOf($this-><?php echo $selfRelationName?>)){
+    		Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure Including SubItems'));
+
+    		return false;
+    	}
+
+    	return true;
     }
 <?php endif;?>
 }

@@ -165,10 +165,10 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 			'criteria' => $criteria,
 			'sort' => array(
 				'attributes'=>array(
-<?php if(array_key_exists('sort_id', $columns)):?>
-					'sort_id'=>array(
-						'desc'=>"{$alias}.sort_id DESC",
-						'asc'=>"{$alias}.sort_id",
+<?php if(array_key_exists('sort_order', $columns)):?>
+					'sort_order'=>array(
+						'desc'=>"{$alias}.sort_order DESC",
+						'asc'=>"{$alias}.sort_order",
 					),
 <?php endif;?>
 					'*',

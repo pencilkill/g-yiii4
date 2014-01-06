@@ -4,6 +4,9 @@ Yii::import('backend.models._base.BaseCategory');
 
 class Category extends BaseCategory
 {
+	public static function model($className=__CLASS__) {
+		return parent::model($className);
+	}
 
 	public function rules() {
 		return CMap::mergeArray(
@@ -14,79 +17,131 @@ class Category extends BaseCategory
 		);
 	}
 
-	public static function model($className=__CLASS__) {
-		return parent::model($className);
-	}
+	public function validParentId(){
+    	$categoryIds = self::getCategoryIds($this->category_id, true);
 
-	public function relations() {
-		return CMap::mergeArray(
-			parent::relations(),
-			array(
-				'children' => array(self::HAS_MANY, 'Category', 'parent_id'),
-				'parent' => array(self::BELONGS_TO, 'Category', 'parent_id'),
-			)
-		);
-	}
-
-	/**
-	 *  Get all child node base on $parent
-	 *  category level will be added on for each node
-	 *  please note that default level is custom variable, you can set it as zero while the root node is not zero
-	 * @return array
-	 * @param $parent, root node
-	 * @param $level
-	 */
-	public static function getCategories($parent=0, $level=0) {
-		$storage = array();
-		$language_id = Yii::app()->getController()->language_id;
-		$callback = null;
-
-		$callback = function($parent, $level, $language_id) use ($storage, &$callback){
-	        $criteria = new CDbCriteria;
-	        $criteria->addCondition(array("parent_id='{$parent}'"));
-
-	        $criteria->with = array('categoryI18ns'=>array('condition'=>"language_id='{$language_id}'"));
-			$criteria->group = 't.category_id';
-			$criteria->together = true;
-
-	        $model = Category::model()->findAll($criteria);
-
-	        foreach ($model as $key) {
-	        	$subCategories = call_user_func($callback, $key->category_id, $level+1, $language_id);
-	        	$storage[] = array(
-	        		'category_id' => $key->category_id,
-	        		'parent_id' => $key->parent_id,
-	        		'level' => $level,
-	        		'title' => $key->categoryI18ns[$language_id]->title,
-	        		'totalSubCategories' => sizeOf($subCategories),
-	        	);
-	        	$storage = array_merge($storage, $subCategories);
-	        }
-
-	        return $storage;
-		};
-
-		return $callback($parent, $level, $language_id);
+    	if(in_array($this->parent_id, $categoryIds)){
+    		$this->addError('parent_id', Yii::t('m/category', 'Parent_id can not be self or children'));
+    	}
     }
 
+	/**
+	 * Get all child node base on $parent
+	 * category level will be added on for each node
+	 * please note that default level is custom variable, you can set it as zero while the root node is not zero
+	 *
+	 * @param $parent, root node
+	 * @param $textAttribute, attribute to show
+	 * @param $level
+	 * @return array
+	 */
+
+	public static function getCategories($modelName = __CLASS__, $parent = NULL, $textAttribute = 'categoryI18n.title', $level=0) {
+		if(is_array($modelName)){	// models
+			$modelName = array_shift($modelName);	// model or modelName
+		}
+
+		if(is_object($modelName)){	// model
+			$modelName = CHtml::modelName($modelName);	// modelName
+		}
+
+		$primaryKey = $modelName::model()->tableSchema->primaryKey;
+
+		$storage = array();
+		$callback = null;
+
+		$callback = function($parent, $level) use ($storage, &$callback, $modelName, $primaryKey, $textAttribute){
+			$criteria = new CDbCriteria;
+			$criteria->compare('t.parent_id', is_array($parent) ? $parent : array($parent));
+			$criteria->order = 't.sort_order DESC, t.category_id ASC';
+
+			$categories = $modelName::model()->findAll($criteria);
+
+			foreach ($categories as $category) {
+				$subCategories = call_user_func($callback, $category->$primaryKey, $level+1);
+				$storage[] = array(
+					$primaryKey => $category->$primaryKey,
+					'parent_id' => $category->parent_id,
+					'level' => $level,
+					'title' => CHtml::value($category, $textAttribute),
+					'totalSubCategories' => sizeOf($subCategories),
+				);
+				$storage = CMap::mergeArray($storage, $subCategories);
+			}
+
+			return $storage;
+		};
+
+		return $callback($parent, $level);
+	}
+	/**
+	 * @see self::getCategories()
+	 *
+	 * @param $parent
+	 * @param $textAttribute, attribute to show
+	 * @param $level
+	 */
+	public static function getDropListData($modelName = __CLASS__, $parent = NULL, $textAttribute = 'categoryI18n.title', $level=0) {
+		if(is_array($modelName)){	// models
+			$modelName = array_shift($modelName);	// model or modelName
+		}
+
+		if(is_object($modelName)){	// model
+			$modelName = CHtml::modelName($modelName);	// modelName
+		}
+
+		$primaryKey = $modelName::model()->tableSchema->primaryKey;
+
+		$storage = array();
+		$callback = null;
+
+		$callback = function($parent, $level) use ($storage, &$callback, $modelName, $primaryKey, $textAttribute){
+			$criteria = new CDbCriteria;
+			$criteria->compare('t.parent_id', is_array($parent) ? $parent : array($parent));
+			$criteria->order = 't.sort_order DESC, t.category_id ASC';
+
+			$categories = $modelName::model()->findAll($criteria);
+
+			foreach ($categories as $category) {
+				$storage[$category->$primaryKey] = str_repeat('　', $level) . (CHtml::value($category, $textAttribute));
+
+				$storage = CMap::mergeArray($storage, call_user_func($callback, $category->$primaryKey, $level+1));
+			}
+
+			return $storage;
+		};
+
+		return $callback($parent, $level);
+	}
 	/**
 	 *  Get all child node id base on $parent
 	 * @return array
 	 * @param $parent, root node
 	 */
-	public static function getCategoryIds($parent=0, $self=false) {
+	public static function getCategoryIds($modelName = __CLASS__, $parent = NULL, $self = false) {
+		if(is_array($modelName)){	// models
+			$modelName = array_shift($modelName);	// model or modelName
+		}
+
+		if(is_object($modelName)){	// model
+			$modelName = CHtml::modelName($modelName);	// modelName
+		}
+
+		$primaryKey = $modelName::model()->tableSchema->primaryKey;
+
 		$storage = array();
 		$callback = null;
 
-		$callback = function($parent, $self) use ($storage, &$callback){
+		$callback = function($parent, $self) use ($storage, &$callback, $modelName, $primaryKey){
 	        $criteria = new CDbCriteria;
-	        $criteria->addCondition(array("parent_id='{$parent}'"));
+			$criteria->compare('t.parent_id', is_array($parent) ? $parent : array($parent));
+			$criteria->order = 't.sort_order DESC, t.category_id ASC';
 
-	        $model = Category::model()->findAll($criteria);
+	        $categories = $modelName::model()->findAll($criteria);
 
-	        foreach ($model as $key) {
-	        	$storage[] = $key->category_id;
-	        	$storage = array_merge($storage, call_user_func($callback, $key->category_id, $self));
+	        foreach ($categories as $category) {
+	        	$storage[] = $category->$primaryKey;
+	        	$storage = CMap::mergeArray($storage, call_user_func($callback, $category->$primaryKey, $self));
 	        }
 
 	        return $storage;
@@ -99,30 +154,23 @@ class Category extends BaseCategory
 		return $categoryIds;
     }
 
-    public function validParentId(){
-    	$categoryIds = Category::getCategoryIds($this->category_id, true);
-
-    	if(in_array($this->parent_id, $categoryIds)){
-    		$this->addError('parent_id', Yii::t('M/category', 'Parent_id can not be self or children'));
-    	}
-    }
-
     public function beforeSave(){
-    	if(parent::beforeSave()){
-    		$this->parent_id = $this->parent_id ? $this->parent_id : new CDbExpression('NULL');
-    	}
+    	if(! parent::beforeSave()) return false;
+
+    	$this->parent_id = $this->parent_id ? $this->parent_id : new CDbExpression('NULL');
+
+    	return true;
     }
 
     public function beforeDelete(){
     	if(! parent::beforeDelete()) return false;
 
-    	if((sizeOf($this->children) || sizeOf($this->product2categories))){
+    	if(sizeOf($this->categories)){
     		Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure Including SubItems'));
 
     		return false;
-    	}else{
-	    	return true;
     	}
-    }
 
+    	return true;
+    }
 }

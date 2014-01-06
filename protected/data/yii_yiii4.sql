@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2013 年 10 月 30 日 02:14
+-- 生成日期: 2014 年 01 月 06 日 10:37
 -- 服务器版本: 5.5.24-log
 -- PHP 版本: 5.3.0
 
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
 --
 
 INSERT INTO `admin` (`admin_id`, `name`, `username`, `email`, `password`, `status`, `super`, `create_time`, `update_time`) VALUES
-(1, 'admin', 'admin', 'sam@ozchamp.net', '544a5c496570c9fc4ab46ed2ea7df075', 1, 1, '2013-06-01 00:00:00', '2013-08-22 03:51:54'),
+(1, 'admin', 'admin', 'sam@ozchamp.net', '1a85380e2ae37e8385ecd73b468f632d', 1, 1, '2013-06-01 00:00:00', '2013-08-22 03:51:54'),
 (2, 'administrator', 'administrator', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 1, '2013-06-01 12:03:02', '2013-08-22 03:47:36'),
 (5, 'ozchamp', 'ozchamp', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 0, '2013-08-22 03:27:11', '2013-08-30 02:24:10');
 
@@ -156,20 +156,21 @@ INSERT INTO `authitemchild` (`parent`, `child`) VALUES
 
 CREATE TABLE IF NOT EXISTS `category` (
   `category_id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) NOT NULL,
-  `sort_id` int(11) NOT NULL DEFAULT '0',
+  `parent_id` int(11) DEFAULT NULL,
+  `sort_order` int(5) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`category_id`)
+  PRIMARY KEY (`category_id`),
+  KEY `parent_id` (`parent_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- 转存表中的数据 `category`
 --
 
-INSERT INTO `category` (`category_id`, `parent_id`, `sort_id`, `create_time`, `update_time`) VALUES
-(4, 0, 0, '2013-08-24 04:13:48', '2013-08-30 10:09:16'),
-(7, 0, 1, '2013-08-24 05:23:17', '2013-10-28 19:34:21');
+INSERT INTO `category` (`category_id`, `parent_id`, `sort_order`, `create_time`, `update_time`) VALUES
+(4, NULL, 0, '2013-08-24 04:13:48', '2013-11-09 16:53:42'),
+(7, 4, 1, '2013-08-24 05:23:17', '2013-11-06 17:58:32');
 
 -- --------------------------------------------------------
 
@@ -186,7 +187,6 @@ CREATE TABLE IF NOT EXISTS `category_i18n` (
   `description` text,
   PRIMARY KEY (`category_i18n_id`),
   KEY `category_id` (`category_id`),
-  KEY `lang` (`language_id`),
   KEY `language_id` (`language_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
@@ -209,16 +209,17 @@ INSERT INTO `category_i18n` (`category_i18n_id`, `category_id`, `language_id`, `
 CREATE TABLE IF NOT EXISTS `contact` (
   `contact_id` int(11) NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) NOT NULL DEFAULT '0',
-  `name` varchar(32) NOT NULL,
-  `gender` tinyint(1) DEFAULT NULL,
-  `telphone` varchar(16) NOT NULL,
+  `firstname` varchar(32) NOT NULL,
+  `lastname` varchar(32) NOT NULL,
+  `sex` tinyint(1) NOT NULL DEFAULT '1',
+  `telephone` varchar(16) NOT NULL,
   `cellphone` varchar(16) DEFAULT NULL,
   `fax` varchar(16) DEFAULT NULL,
   `email` varchar(64) NOT NULL,
-  `corporation` varchar(256) DEFAULT NULL,
+  `company` varchar(256) DEFAULT NULL,
   `address` varchar(256) DEFAULT NULL,
   `message` text,
-  `note` text,
+  `remark` text,
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`contact_id`)
@@ -232,30 +233,31 @@ CREATE TABLE IF NOT EXISTS `contact` (
 
 CREATE TABLE IF NOT EXISTS `information` (
   `information_id` int(11) NOT NULL AUTO_INCREMENT,
-  `sort_id` int(11) NOT NULL DEFAULT '0',
-  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `parent_id` int(11) DEFAULT NULL,
+  `sort_order` int(5) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`information_id`)
+  PRIMARY KEY (`information_id`),
+  KEY `parent_id` (`parent_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 
 --
 -- 转存表中的数据 `information`
 --
 
-INSERT INTO `information` (`information_id`, `sort_id`, `status`, `create_time`, `update_time`) VALUES
-(1, 0, 1, '2013-06-30 03:22:08', '2013-10-29 11:24:38'),
-(2, 0, 0, '2013-08-30 03:32:29', '2013-10-29 11:24:38'),
-(3, 0, 1, '2013-08-30 03:35:07', '2013-10-29 11:24:38'),
-(4, 0, 1, '2013-08-30 03:50:44', '2013-10-29 11:24:38'),
-(5, 0, 1, '2013-08-30 03:50:53', '2013-10-29 11:24:38'),
-(6, 0, 1, '2013-08-30 03:51:01', '2013-10-29 11:24:38'),
-(7, 0, 1, '2013-08-30 03:51:09', '2013-10-29 11:24:38'),
-(8, 0, 1, '2013-08-30 03:51:17', '2013-10-29 11:24:38'),
-(9, 0, 1, '2013-08-30 03:51:25', '2013-10-29 11:24:38'),
-(10, 0, 1, '2013-08-30 03:51:33', '2013-10-29 11:24:38'),
-(11, 0, 1, '2013-08-30 03:51:41', '2013-10-29 11:24:38'),
-(12, 0, 1, '2013-08-30 03:51:55', '2013-10-29 11:24:39');
+INSERT INTO `information` (`information_id`, `parent_id`, `sort_order`, `create_time`, `update_time`) VALUES
+(1, NULL, 0, '2013-06-30 03:22:08', '2013-10-29 11:24:38'),
+(2, NULL, 0, '2013-08-30 03:32:29', '2013-10-29 11:24:38'),
+(3, NULL, 0, '2013-08-30 03:35:07', '2013-10-29 11:24:38'),
+(4, NULL, 0, '2013-08-30 03:50:44', '2013-10-29 11:24:38'),
+(5, NULL, 0, '2013-08-30 03:50:53', '2013-10-29 11:24:38'),
+(6, NULL, 0, '2013-08-30 03:51:01', '2013-10-29 11:24:38'),
+(7, NULL, 0, '2013-08-30 03:51:09', '2013-10-29 11:24:38'),
+(8, NULL, 0, '2013-08-30 03:51:17', '2013-10-29 11:24:38'),
+(9, NULL, 0, '2013-08-30 03:51:25', '2013-10-29 11:24:38'),
+(10, NULL, 0, '2013-08-30 03:51:33', '2013-10-29 11:24:38'),
+(11, NULL, 0, '2013-08-30 03:51:41', '2013-10-29 11:24:38'),
+(12, NULL, 0, '2013-08-30 03:51:55', '2013-10-29 11:24:39');
 
 -- --------------------------------------------------------
 
@@ -267,44 +269,44 @@ CREATE TABLE IF NOT EXISTS `information_i18n` (
   `information_i18n_id` int(15) NOT NULL AUTO_INCREMENT,
   `information_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `title` varchar(256) NOT NULL,
   `keywords` text,
   `description` text,
   PRIMARY KEY (`information_i18n_id`),
-  KEY `faq_id` (`information_id`),
-  KEY `lang` (`language_id`),
-  KEY `language_id` (`language_id`)
+  KEY `language_id` (`language_id`),
+  KEY `information_id` (`information_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
 
 --
 -- 转存表中的数据 `information_i18n`
 --
 
-INSERT INTO `information_i18n` (`information_i18n_id`, `information_id`, `language_id`, `title`, `keywords`, `description`) VALUES
-(1, 1, 1, 't', NULL, '<p>\r\n	tttty</p>\r\n'),
-(2, 1, 2, 'ens', NULL, '<p>\r\n	eeees</p>\r\n'),
-(3, 2, 1, 'a', NULL, NULL),
-(4, 2, 2, 'b', NULL, NULL),
-(5, 3, 1, 'a', NULL, NULL),
-(6, 3, 2, 'b', NULL, NULL),
-(7, 4, 1, 'a', NULL, NULL),
-(8, 4, 2, 'b', NULL, NULL),
-(9, 5, 1, 'a', NULL, NULL),
-(10, 5, 2, 'b', NULL, NULL),
-(11, 6, 1, 'a', NULL, NULL),
-(12, 6, 2, 'b', NULL, NULL),
-(13, 7, 1, 'a', NULL, NULL),
-(14, 7, 2, 'b', NULL, NULL),
-(15, 8, 1, 'a', NULL, NULL),
-(16, 8, 2, 'b', NULL, NULL),
-(17, 9, 1, 'a', NULL, NULL),
-(18, 9, 2, 'b', NULL, NULL),
-(19, 10, 1, 'a', NULL, NULL),
-(20, 10, 2, 'b', NULL, NULL),
-(21, 11, 1, 'a', NULL, NULL),
-(22, 11, 2, 'b', NULL, NULL),
-(23, 12, 1, 'a', NULL, NULL),
-(24, 12, 2, 'b', NULL, NULL);
+INSERT INTO `information_i18n` (`information_i18n_id`, `information_id`, `language_id`, `status`, `title`, `keywords`, `description`) VALUES
+(1, 1, 1, 1, 't', NULL, '<p>\r\n	tttty</p>\r\n'),
+(2, 1, 2, 1, 'ens', NULL, '<p>\r\n	eeees</p>\r\n'),
+(3, 2, 1, 1, 'a', NULL, NULL),
+(4, 2, 2, 1, 'b', NULL, NULL),
+(5, 3, 1, 1, 'a', NULL, NULL),
+(6, 3, 2, 1, 'b', NULL, NULL),
+(7, 4, 1, 1, 'a', NULL, NULL),
+(8, 4, 2, 1, 'b', NULL, NULL),
+(9, 5, 1, 1, 'a', NULL, NULL),
+(10, 5, 2, 1, 'b', NULL, NULL),
+(11, 6, 1, 1, 'a', NULL, NULL),
+(12, 6, 2, 1, 'b', NULL, NULL),
+(13, 7, 1, 1, 'a', NULL, NULL),
+(14, 7, 2, 1, 'b', NULL, NULL),
+(15, 8, 1, 1, 'a', NULL, NULL),
+(16, 8, 2, 1, 'b', NULL, NULL),
+(17, 9, 1, 1, 'a', NULL, NULL),
+(18, 9, 2, 1, 'b', NULL, NULL),
+(19, 10, 1, 1, 'a', NULL, NULL),
+(20, 10, 2, 1, 'b', NULL, NULL),
+(21, 11, 1, 1, 'a', NULL, NULL),
+(22, 11, 2, 1, 'b', NULL, NULL),
+(23, 12, 1, 1, 'a', NULL, NULL),
+(24, 12, 2, 1, 'b', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -316,8 +318,7 @@ CREATE TABLE IF NOT EXISTS `language` (
   `language_id` int(15) NOT NULL AUTO_INCREMENT,
   `code` varchar(8) NOT NULL,
   `title` varchar(64) NOT NULL,
-  `image` varchar(255) DEFAULT NULL,
-  `sort_id` int(11) NOT NULL DEFAULT '0',
+  `sort_order` int(11) NOT NULL DEFAULT '0',
   `status` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`language_id`),
   UNIQUE KEY `code` (`code`)
@@ -327,9 +328,9 @@ CREATE TABLE IF NOT EXISTS `language` (
 -- 转存表中的数据 `language`
 --
 
-INSERT INTO `language` (`language_id`, `code`, `title`, `image`, `sort_id`, `status`) VALUES
-(1, 'zh_tw', '繁體中文', '_ozman/image/flags\\hk.png', 0, 1),
-(2, 'en_us', 'English', '_ozman/image/flags\\us.png', 0, 1);
+INSERT INTO `language` (`language_id`, `code`, `title`, `sort_order`, `status`) VALUES
+(1, 'zh_tw', '繁體中文', 0, 1),
+(2, 'en_us', 'English', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -340,8 +341,7 @@ INSERT INTO `language` (`language_id`, `code`, `title`, `image`, `sort_id`, `sta
 CREATE TABLE IF NOT EXISTS `news` (
   `news_id` int(11) NOT NULL AUTO_INCREMENT,
   `top` tinyint(1) NOT NULL DEFAULT '0',
-  `sort_id` int(11) NOT NULL DEFAULT '0',
-  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `sort_order` int(11) NOT NULL DEFAULT '0',
   `date_added` datetime DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
@@ -352,8 +352,8 @@ CREATE TABLE IF NOT EXISTS `news` (
 -- 转存表中的数据 `news`
 --
 
-INSERT INTO `news` (`news_id`, `top`, `sort_id`, `status`, `date_added`, `create_time`, `update_time`) VALUES
-(1, 1, 0, 0, '2013-07-23 00:00:00', '2013-07-24 00:32:49', '2013-10-25 09:38:29');
+INSERT INTO `news` (`news_id`, `top`, `sort_order`, `date_added`, `create_time`, `update_time`) VALUES
+(1, 1, 0, '2013-07-23 00:00:00', '2013-07-24 00:32:49', '2013-10-25 09:38:29');
 
 -- --------------------------------------------------------
 
@@ -365,13 +365,13 @@ CREATE TABLE IF NOT EXISTS `news_i18n` (
   `news_i18n_id` int(15) NOT NULL AUTO_INCREMENT,
   `news_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `pic` varchar(256) DEFAULT NULL,
   `title` varchar(256) NOT NULL,
   `keywords` text,
   `description` text,
   PRIMARY KEY (`news_i18n_id`),
   KEY `news_id` (`news_id`),
-  KEY `lang` (`language_id`),
   KEY `language_id` (`language_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
@@ -379,82 +379,81 @@ CREATE TABLE IF NOT EXISTS `news_i18n` (
 -- 转存表中的数据 `news_i18n`
 --
 
-INSERT INTO `news_i18n` (`news_i18n_id`, `news_id`, `language_id`, `pic`, `title`, `keywords`, `description`) VALUES
-(1, 1, 1, 'upload/2013/07/23/51eeaff87c4b8.jpg', 'tw', 'ktw', '<p>\r\n	ddddddddddddtw</p>\r\n'),
-(2, 1, 2, 'upload/2013/07/23/51eeb009c6f69.jpg', 'enttt', 'ken', '<p>\r\n	ennnnnnnnnnnnnnnnnnnggggdddddddddddd</p>\r\n');
+INSERT INTO `news_i18n` (`news_i18n_id`, `news_id`, `language_id`, `status`, `pic`, `title`, `keywords`, `description`) VALUES
+(1, 1, 1, 1, 'upload/2013/07/23/51eeaff87c4b8.jpg', 'tw', 'ktw', '<p>\r\n	ddddddddddddtw</p>\r\n'),
+(2, 1, 2, 1, 'upload/2013/07/23/51eeb009c6f69.jpg', 'enttt', 'ken', '<p>\r\n	ennnnnnnnnnnnnnnnnnnggggdddddddddddd</p>\r\n');
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `pic`
+-- 表的结构 `picture`
 --
 
-CREATE TABLE IF NOT EXISTS `pic` (
-  `pic_id` int(11) NOT NULL AUTO_INCREMENT,
-  `sort_id` int(11) NOT NULL DEFAULT '0',
+CREATE TABLE IF NOT EXISTS `picture` (
+  `picture_id` int(11) NOT NULL AUTO_INCREMENT,
+  `sort_order` int(11) NOT NULL DEFAULT '0',
   `pic` varchar(256) NOT NULL,
-  `pic_type_id` int(11) NOT NULL,
+  `picture_type_id` int(11) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`pic_id`),
-  KEY `pic_type_id` (`pic_type_id`)
+  PRIMARY KEY (`picture_id`),
+  KEY `pic_type_id` (`picture_type_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
 
 --
--- 转存表中的数据 `pic`
+-- 转存表中的数据 `picture`
 --
 
-INSERT INTO `pic` (`pic_id`, `sort_id`, `pic`, `pic_type_id`, `status`, `create_time`, `update_time`) VALUES
+INSERT INTO `picture` (`picture_id`, `sort_order`, `pic`, `picture_type_id`, `status`, `create_time`, `update_time`) VALUES
 (13, 0, 'upload/2013/08/21/521421eedbc32.jpg', 1, 1, '2013-08-21 10:13:17', '2013-08-21 10:13:17');
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `pic_i18n`
+-- 表的结构 `picture_i18n`
 --
 
-CREATE TABLE IF NOT EXISTS `pic_i18n` (
-  `pic_i18n_id` int(15) NOT NULL AUTO_INCREMENT,
-  `pic_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `picture_i18n` (
+  `picture_i18n_id` int(15) NOT NULL AUTO_INCREMENT,
+  `picture_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `url` varchar(256) DEFAULT NULL,
   `title` varchar(256) DEFAULT NULL,
   `keywords` text,
   `description` text,
-  PRIMARY KEY (`pic_i18n_id`),
-  KEY `news_id` (`pic_id`),
-  KEY `lang` (`language_id`),
-  KEY `language_id` (`language_id`)
+  PRIMARY KEY (`picture_i18n_id`),
+  KEY `language_id` (`language_id`),
+  KEY `picture_id` (`picture_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
--- 转存表中的数据 `pic_i18n`
+-- 转存表中的数据 `picture_i18n`
 --
 
-INSERT INTO `pic_i18n` (`pic_i18n_id`, `pic_id`, `language_id`, `url`, `title`, `keywords`, `description`) VALUES
+INSERT INTO `picture_i18n` (`picture_i18n_id`, `picture_id`, `language_id`, `url`, `title`, `keywords`, `description`) VALUES
 (1, 13, 1, 'http://www.google.com.hk/', 'tw', 'ktw', '<p>\r\n	ddddtw</p>\r\n'),
 (2, 13, 2, 'http://www.google.com/', 'en', 'ken', '<p>\r\n	dddden</p>\r\n');
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `pic_type`
+-- 表的结构 `picture_type`
 --
 
-CREATE TABLE IF NOT EXISTS `pic_type` (
-  `pic_type_id` int(11) NOT NULL AUTO_INCREMENT,
-  `pic_type` varchar(256) NOT NULL,
+CREATE TABLE IF NOT EXISTS `picture_type` (
+  `picture_type_id` int(11) NOT NULL AUTO_INCREMENT,
+  `picture_type` varchar(256) NOT NULL,
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`pic_type_id`)
+  PRIMARY KEY (`picture_type_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
--- 转存表中的数据 `pic_type`
+-- 转存表中的数据 `picture_type`
 --
 
-INSERT INTO `pic_type` (`pic_type_id`, `pic_type`, `create_time`, `update_time`) VALUES
+INSERT INTO `picture_type` (`picture_type_id`, `picture_type`, `create_time`, `update_time`) VALUES
 (1, 'Banner', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
@@ -465,10 +464,7 @@ INSERT INTO `pic_type` (`pic_type_id`, `pic_type`, `create_time`, `update_time`)
 
 CREATE TABLE IF NOT EXISTS `product` (
   `product_id` int(11) NOT NULL AUTO_INCREMENT,
-  `top` tinyint(1) NOT NULL DEFAULT '0',
-  `sort_id` int(11) NOT NULL DEFAULT '0',
-  `status` tinyint(1) NOT NULL DEFAULT '1',
-  `date_added` date DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`product_id`)
@@ -478,9 +474,9 @@ CREATE TABLE IF NOT EXISTS `product` (
 -- 转存表中的数据 `product`
 --
 
-INSERT INTO `product` (`product_id`, `top`, `sort_id`, `status`, `date_added`, `create_time`, `update_time`) VALUES
-(4, 1, 0, 1, '2013-07-29', '2013-07-29 23:21:01', '2013-10-28 19:47:05'),
-(5, 0, 0, 1, '2013-10-29', '2013-10-29 11:30:17', '2013-10-29 11:30:17');
+INSERT INTO `product` (`product_id`, `sort_order`, `create_time`, `update_time`) VALUES
+(4, 0, '2013-07-29 23:21:01', '2013-11-06 18:00:29'),
+(5, 0, '2013-10-29 11:30:17', '2013-10-29 11:30:17');
 
 -- --------------------------------------------------------
 
@@ -495,40 +491,15 @@ CREATE TABLE IF NOT EXISTS `product2category` (
   PRIMARY KEY (`product2category_id`),
   KEY `product_id` (`product_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
 -- 转存表中的数据 `product2category`
 --
 
 INSERT INTO `product2category` (`product2category_id`, `product_id`, `category_id`) VALUES
-(4, 4, 4),
-(5, 5, 7);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `product2image`
---
-
-CREATE TABLE IF NOT EXISTS `product2image` (
-  `product2image_id` int(15) NOT NULL AUTO_INCREMENT,
-  `product_id` int(11) NOT NULL,
-  `pic` varchar(256) NOT NULL,
-  PRIMARY KEY (`product2image_id`),
-  KEY `product_id` (`product_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=153 ;
-
---
--- 转存表中的数据 `product2image`
---
-
-INSERT INTO `product2image` (`product2image_id`, `product_id`, `pic`) VALUES
-(148, 4, 'upload/2013/07/29/51f6b4009933c.jpg'),
-(149, 4, 'upload/2013/07/29/51f6b4014a31d.jpg'),
-(150, 4, 'upload/2013/07/29/51f6abb0d6e59.jpg'),
-(151, 4, 'upload/2013/07/29/51f6ab5237318.jpg'),
-(152, 4, 'upload/2013/07/29/51f6abb18308f.jpg');
+(5, 5, 7),
+(6, 4, 7);
 
 -- --------------------------------------------------------
 
@@ -540,6 +511,7 @@ CREATE TABLE IF NOT EXISTS `product_i18n` (
   `product_i18n_id` int(15) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `pic` varchar(256) NOT NULL,
   `title` varchar(256) NOT NULL,
   `keywords` text,
@@ -553,11 +525,36 @@ CREATE TABLE IF NOT EXISTS `product_i18n` (
 -- 转存表中的数据 `product_i18n`
 --
 
-INSERT INTO `product_i18n` (`product_i18n_id`, `product_id`, `language_id`, `pic`, `title`, `keywords`, `description`) VALUES
-(10, 4, 1, 'upload/2013/10/28/526dd05dbb6ea.jpg', 'tw', 'ktw', '<p>\r\n	dtw</p>\r\n'),
-(11, 4, 2, 'upload/2013/07/29/51f68844c85bf.jpg', 'en', 'ken', '<p>\r\n	den</p>\r\n'),
-(12, 5, 1, 'upload/2013/10/29/526f2bb450dd5.jpg', 'tw1', NULL, NULL),
-(13, 5, 2, 'upload/2013/10/29/526f2bc317c47.jpg', 'en1', NULL, NULL);
+INSERT INTO `product_i18n` (`product_i18n_id`, `product_id`, `language_id`, `status`, `pic`, `title`, `keywords`, `description`) VALUES
+(10, 4, 1, 1, 'upload/2013/10/28/526dd05dbb6ea.jpg', 'tw', 'ktw', '<p>\r\n	dtw</p>\r\n'),
+(11, 4, 2, 1, 'upload/2013/07/29/51f68844c85bf.jpg', 'en', 'ken', '<p>\r\n	den</p>\r\n'),
+(12, 5, 1, 1, 'upload/2013/10/29/526f2bb450dd5.jpg', 'tw1', NULL, NULL),
+(13, 5, 2, 1, 'upload/2013/10/29/526f2bc317c47.jpg', 'en1', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `product_image`
+--
+
+CREATE TABLE IF NOT EXISTS `product_image` (
+  `product_image_id` int(15) NOT NULL AUTO_INCREMENT,
+  `product_id` int(11) NOT NULL,
+  `pic` varchar(256) NOT NULL,
+  PRIMARY KEY (`product_image_id`),
+  KEY `product_id` (`product_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=158 ;
+
+--
+-- 转存表中的数据 `product_image`
+--
+
+INSERT INTO `product_image` (`product_image_id`, `product_id`, `pic`) VALUES
+(153, 4, 'upload/2013/07/29/51f6b4009933c.jpg'),
+(154, 4, 'upload/2013/07/29/51f6b4014a31d.jpg'),
+(155, 4, 'upload/2013/07/29/51f6abb0d6e59.jpg'),
+(156, 4, 'upload/2013/07/29/51f6ab5237318.jpg'),
+(157, 4, 'upload/2013/07/29/51f6abb18308f.jpg');
 
 -- --------------------------------------------------------
 
@@ -604,21 +601,18 @@ CREATE TABLE IF NOT EXISTS `setting` (
 --
 
 INSERT INTO `setting` (`key`, `value`) VALUES
-('analysis_google', 's:0:"";'),
-('mail_email_contact', 's:15:"Sam@ozchamp.net";'),
+('analysis_google', 's:1:"s";'),
+('mail_email_contact', 's:15:"sam@ozchamp.net";'),
 ('mail_smtp_host', 's:12:"smtp.163.com";'),
 ('mail_smtp_password', 's:9:"oz3661000";'),
 ('mail_smtp_port', 's:2:"25";'),
 ('mail_smtp_user', 's:14:"oz_sam@163.com";'),
-('meta_description_1', 's:48:"元伸，元伸科技，元伸科技網頁製作";'),
-('meta_description_2', 's:47:"Ozchamp, Ozchamp technology, Ozchamp web design";'),
-('meta_description_3', 's:0:"";'),
-('meta_keywords_1', 's:21:"元伸，元伸科技";'),
-('meta_keywords_2', 's:27:"Ozchamp, Ozchamp technology";'),
-('meta_keywords_3', 's:0:"";'),
+('meta_description_1', 's:26:"元伸科技 | description";'),
+('meta_description_2', 's:21:"Ozchamp | description";'),
+('meta_keywords_1', 's:23:"元伸科技 | keywords";'),
+('meta_keywords_2', 's:18:"Ozchamp | keywords";'),
 ('meta_title_1', 's:12:"元伸科技";'),
-('meta_title_2', 's:7:"Ozchamp";'),
-('meta_title_3', 's:0:"";');
+('meta_title_2', 's:7:"Ozchamp";');
 
 --
 -- 限制导出的表
@@ -638,11 +632,23 @@ ALTER TABLE `authitemchild`
   ADD CONSTRAINT `authitemchild_ibfk_2` FOREIGN KEY (`child`) REFERENCES `authitem` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- 限制表 `category`
+--
+ALTER TABLE `category`
+  ADD CONSTRAINT `category_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `category` (`category_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
 -- 限制表 `category_i18n`
 --
 ALTER TABLE `category_i18n`
   ADD CONSTRAINT `category_i18n_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `category_i18n_ibfk_2` FOREIGN KEY (`language_id`) REFERENCES `language` (`language_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- 限制表 `information`
+--
+ALTER TABLE `information`
+  ADD CONSTRAINT `information_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `information` (`information_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- 限制表 `information_i18n`
@@ -659,17 +665,17 @@ ALTER TABLE `news_i18n`
   ADD CONSTRAINT `news_i18n_ibfk_2` FOREIGN KEY (`language_id`) REFERENCES `language` (`language_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- 限制表 `pic`
+-- 限制表 `picture`
 --
-ALTER TABLE `pic`
-  ADD CONSTRAINT `pic_ibfk_1` FOREIGN KEY (`pic_type_id`) REFERENCES `pic_type` (`pic_type_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `picture`
+  ADD CONSTRAINT `picture_ibfk_1` FOREIGN KEY (`picture_type_id`) REFERENCES `picture_type` (`picture_type_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- 限制表 `pic_i18n`
+-- 限制表 `picture_i18n`
 --
-ALTER TABLE `pic_i18n`
-  ADD CONSTRAINT `pic_i18n_ibfk_1` FOREIGN KEY (`pic_id`) REFERENCES `pic` (`pic_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `pic_i18n_ibfk_2` FOREIGN KEY (`language_id`) REFERENCES `language` (`language_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `picture_i18n`
+  ADD CONSTRAINT `picture_i18n_ibfk_2` FOREIGN KEY (`language_id`) REFERENCES `language` (`language_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `picture_i18n_ibfk_1` FOREIGN KEY (`picture_id`) REFERENCES `picture` (`picture_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- 限制表 `product2category`
@@ -679,17 +685,17 @@ ALTER TABLE `product2category`
   ADD CONSTRAINT `product2category_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- 限制表 `product2image`
---
-ALTER TABLE `product2image`
-  ADD CONSTRAINT `product2image_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- 限制表 `product_i18n`
 --
 ALTER TABLE `product_i18n`
   ADD CONSTRAINT `product_i18n_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `product_i18n_ibfk_2` FOREIGN KEY (`language_id`) REFERENCES `language` (`language_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- 限制表 `product_image`
+--
+ALTER TABLE `product_image`
+  ADD CONSTRAINT `product_image_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- 限制表 `rights`

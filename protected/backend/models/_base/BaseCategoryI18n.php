@@ -31,7 +31,7 @@ abstract class BaseCategoryI18n extends GxActiveRecord {
 	}
 
 	public static function label($n = 1) {
-		return Yii::t('M/categoryi18n', 'CategoryI18n|CategoryI18ns', $n);
+		return Yii::t('m/categoryi18n', 'CategoryI18n|CategoryI18ns', $n);
 	}
 
 	public static function representingColumn() {
@@ -63,12 +63,12 @@ abstract class BaseCategoryI18n extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'category_i18n_id' => Yii::t('M/categoryi18n', 'Category I18n'),
+			'category_i18n_id' => Yii::t('m/categoryi18n', 'Category I18n'),
 			'category_id' => null,
 			'language_id' => null,
-			'title' => Yii::t('M/categoryi18n', 'Title'),
-			'keywords' => Yii::t('M/categoryi18n', 'Keywords'),
-			'description' => Yii::t('M/categoryi18n', 'Description'),
+			'title' => Yii::t('m/categoryi18n', 'Title'),
+			'keywords' => Yii::t('m/categoryi18n', 'Keywords'),
+			'description' => Yii::t('m/categoryi18n', 'Description'),
 			'category' => null,
 			'language' => null,
 		);
@@ -77,21 +77,24 @@ abstract class BaseCategoryI18n extends GxActiveRecord {
 	public function search() {
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('category_i18n_id', $this->category_i18n_id);
-		$criteria->compare('category_id', $this->category_id);
-		$criteria->compare('language_id', $this->language_id);
-		$criteria->compare('title', $this->title, true);
-		$criteria->compare('keywords', $this->keywords, true);
-		$criteria->compare('description', $this->description, true);
+		$criteria->compare('t.category_i18n_id', $this->category_i18n_id);
+		$criteria->compare('t.category_id', $this->category_id);
+		$criteria->compare('t.language_id', $this->language_id);
+		$criteria->compare('t.title', $this->title, true);
+		$criteria->compare('t.keywords', $this->keywords, true);
+		$criteria->compare('t.description', $this->description, true);
 
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
+				'defaultOrder' => 't.category_i18n_id ASC',
+				'multiSort'=>true,
 				'attributes'=>array(
 					'*',
 				),
 			),
+			'pagination' => false,
 		));
 	}
 

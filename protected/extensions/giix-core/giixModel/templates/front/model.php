@@ -33,7 +33,7 @@
 	$defaultScopeCondition = implode(', ', $defaultScopeCondition);
 	$defaultScopeParams = 'array(' . implode(', ', $defaultScopeParams) . ')';
 
-	$defaultScopes = array('sort_id' => 'DESC');
+	$defaultScopes = array('sort_order' => 'DESC');
 	$defaultScopeSort = array();
 	if($defaultScopes = array_intersect_key($defaultScopes, $columns)){
 		foreach($defaultScopes as $key => $val){

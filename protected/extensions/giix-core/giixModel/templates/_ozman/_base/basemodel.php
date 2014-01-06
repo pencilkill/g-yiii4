@@ -1,7 +1,10 @@
 <?php
 /**
  * This is the template for generating the model class of a specified table.
+ * In addition to the default model Code, this adds the CSaveRelationsBehavior
+ * to the model class definition.
  * - $this: the ModelCode object
+ * - $table: the table object
  * - $tableName: the table name for this class (prefix is already removed if necessary)
  * - $modelClass: the model class name
  * - $columns: list of table columns (name=>CDbColumnSchema)
@@ -10,6 +13,7 @@
  * - $relations: list of relations (name=>relation declaration)
  * - $representingColumn: the name of the representing column for the table (string) or
  *   the names of the representing columns (array)
+ * - $i18n: the i18n object
  */
 ?>
 <?php echo "<?php\n"; ?>
@@ -37,8 +41,8 @@
 	$relationType = $relationData[0];
 	$relationModel = $relationData[1];
 
-	if($relationModel == $i18nClassName){
-		echo $relationModel . ' $' . substr($name, 0, -1) . "\n * @property ";
+	if($i18n && $relationModel == $i18n->className){
+		echo $relationModel . ' $' . $i18n->relationName . "\n * @property ";
 	}
 
 	switch($relationType) {
@@ -72,7 +76,7 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 	}
 
 	public static function label($n = 1) {
-		return Yii::t('M/<?php echo strtolower($modelClass)?>', '<?php echo $modelClass; ?>|<?php echo $this->pluralize($modelClass); ?>', $n);
+		return Yii::t('m/<?php echo strtolower($modelClass)?>', '<?php echo $modelClass; ?>|<?php echo $this->pluralize($modelClass); ?>', $n);
 	}
 
 	public static function representingColumn() {
@@ -98,16 +102,14 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 
 	public function relations() {
 		return array(
-<?php $pattern = "/^\s*array\(\s*self::HAS_MANY\s*,\s*'{$i18nClassName}',\s*/i";?>
 <?php foreach($relations as $name=>$relation): ?>
 <?php
-	if(preg_match($pattern, $relation))
+	if($i18n && preg_match("/^\s*array\(\s*self::HAS_MANY\s*,\s*'{$i18n->className}'\s*,/i", $relation))
 	{
-		$i18nRelationName = $name;
 ?>
-			<?php echo "'" . substr($name, 0, -1) . "' => " . preg_replace('/\)\s*$/', ', \'condition\' => \'' . substr($name, 0, -1) . '.language_id=:language_id\', \'params\' => array(\':language_id\' => Yii::app()->getController()->language_id)),' . "\n", strtr($relation, array('self::HAS_MANY' => 'self::HAS_ONE')));?>
+			<?php echo "'" . $i18n->relationName . "' => " . preg_replace('/\)\s*$/', ', \'condition\' => \'' . $i18n->relationName . '.' . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . '=:' . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . '\', \'params\' => array(\':' . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . '\' => Yii::app()->controller->language_id)),' . "\n", strtr($relation, array('self::HAS_MANY' => 'self::HAS_ONE')));?>
 <?php
-		$relation = preg_replace('/\)\s*$/', ', \'index\' => \'language_id\')', $relation);
+		$relation = preg_replace('/\)\s*$/', ', \'index\' => \'' . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . '\')', $relation);
 	}
 ?>
 			<?php echo "'{$name}' => {$relation},\n"; ?>
@@ -139,39 +141,38 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 		$criteria = new CDbCriteria;
 
 <?php foreach($columns as $name=>$column): ?>
-<?php $partial = ($column->type==='string' and !$column->isForeignKey); ?>
-<?php if($column->isPrimaryKey) $compareGroupId = $name;?>
-		$criteria->compare('<?php echo $name; ?>', $this-><?php echo $name; ?><?php echo $partial ? ', true' : ''; ?>);
+		$criteria->compare('t.<?php echo $name; ?>', $this-><?php echo $name; ?><?php echo ($column->type==='string' and !$column->isForeignKey) ? ', true' : ''; ?>);
 <?php endforeach; ?>
 
-<?php if($i18n && !empty($i18nRelationName)):?>
-		$criteria->with = array('<?php echo $i18nRelationName?>');
-		$criteria->group = 't.<?php echo $compareGroupId?>';
+<?php if($i18n):?>
+		$criteria->with = array('<?php echo $i18n->relationNamePluralized?>');
+		$criteria->group = 't.<?php echo $table->primaryKey?>';
 		$criteria->together = true;
 
-<?php foreach($i18n->columns as $name=>$column):?>
+<?php foreach($i18n->table->columns as $name=>$column):?>
 <?php if($column->autoIncrement) continue;?>
 <?php if($column->isForeignKey && isset($columns[$name]) && $columns[$name]->isPrimaryKey) continue;?>
-<?php $partial = ($column->type==='string' and !$column->isForeignKey); ?>
-<?php if(strcasecmp($name, 'language_id')===0 && $column->isForeignKey) continue;?>
-		$criteria->compare('<?php echo $i18nRelationName.'.'.$name; ?>', $this->filterI18n-><?php echo $name; ?><?php echo $partial ? ', true' : ''; ?>);
+<?php if($name == GiixModelCode::I18N_LANGUAGE_COLUMN_NAME && $column->isForeignKey) continue;?>
+		$criteria->compare('<?php echo $i18n->relationNamePluralized . '.' . $name; ?>', $this->filterI18n-><?php echo $name; ?><?php echo ($column->type==='string' and !$column->isForeignKey) ? ', true' : ''; ?>);
 <?php endforeach;?>
 <?php endif;?>
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
+				'defaultOrder' => '<?php echo array_key_exists('sort_order', $columns) ? 't.sort_order DESC, ' : ''?>t.<?php echo $table->primaryKey?> ASC',
+				'multiSort'=>true,
 				'attributes'=>array(
-<?php if(in_array('sort_id', array_keys($columns))):?>
-					'sort_id'=>array(
-						'desc'=>'sort_id DESC',
-						'asc'=>'sort_id',
+<?php if(array_key_exists('sort_order', $columns)):?>
+					'sort_order'=>array(
+						'desc'=>'t.sort_order DESC',
+						'asc'=>'t.sort_order ASC',
 					),
 <?php endif;?>
 					'*',
 				),
 			),
-<?php if(substr($modelClass, -4) !== 'I18n' && strpos($modelClass, '2') == false):?>
+<?php if(substr($tableName, -5) !== GiixModelCode::I18N_TABLE_SUFFIX && strpos($tableName, '2') === false):?>
 			'pagination' => array(
 				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
 				'pageVar' => 'page',
