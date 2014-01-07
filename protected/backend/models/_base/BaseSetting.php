@@ -33,18 +33,17 @@ abstract class BaseSetting extends GxActiveRecord {
 	}
 
 	public function rules() {
-		/*
-		 * Just leave it alone with db checking
+		
 		return array(
+			/*
 			array('key', 'required'),
+			array('key', 'match', 'pattern' => '^\w+$'),
 			array('key', 'compare', 'compareAttribute'=>'key'),
 			array('key', 'length', 'max'=>100),
 			array('value', 'safe'),
 			array('value', 'default', 'setOnEmpty' => true, 'value' => null),
 			array('key, value', 'safe', 'on'=>'search'),
-		);
-		*/
-		return array(
+			*/
 			array('analysis_google', 'required'),
 		);
 	}
@@ -61,8 +60,8 @@ abstract class BaseSetting extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			//'key' => Yii::t('M/setting', 'Key'),
-			//'value' => Yii::t('M/setting', 'Value'),
+			//'key' => Yii::t('m/setting', 'Key'),
+			//'value' => Yii::t('m/setting', 'Value'),
 
 			'mail_email_contact' => Yii::t('setting', 'Mail Email Contact'),
 			'mail_smtp_host' => Yii::t('setting', 'Mail Smtp Host'),

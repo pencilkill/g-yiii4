@@ -64,17 +64,19 @@ abstract class BaseProductImage extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+	
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('t.product_image_id', $this->product_image_id);
-		$criteria->compare('t.product_id', $this->product_id);
-		$criteria->compare('t.pic', $this->pic, true);
+		$criteria->compare("{$alias}.product_image_id", $this->product_image_id);
+		$criteria->compare("{$alias}.product_id", $this->product_id);
+		$criteria->compare("{$alias}.pic", $this->pic, true);
 
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => 't.product_image_id ASC',
+				'defaultOrder' => "{$alias}.product_image_id ASC",
 				'multiSort'=>true,
 				'attributes'=>array(
 					'*',

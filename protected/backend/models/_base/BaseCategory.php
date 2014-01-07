@@ -54,7 +54,7 @@ abstract class BaseCategory extends GxActiveRecord {
 		return array(
 			'parent' => array(self::BELONGS_TO, 'Category', 'parent_id'),
 			'categories' => array(self::HAS_MANY, 'Category', 'parent_id'),
-			'categoryI18n' => array(self::HAS_ONE, 'CategoryI18n', 'category_id', 'condition' => 'categoryI18n.language_id=:language_id', 'params' => array(':language_id' => Yii::app()->controller->language_id)),
+			'categoryI18n' => array(self::HAS_ONE, 'CategoryI18n', 'category_id', 'scopes' => array('t' => array())),
 			'categoryI18ns' => array(self::HAS_MANY, 'CategoryI18n', 'category_id', 'index' => 'language_id'),
 			'product2categories' => array(self::HAS_MANY, 'Product2category', 'category_id'),
 		);
@@ -80,16 +80,18 @@ abstract class BaseCategory extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+	
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('t.category_id', $this->category_id);
-		$criteria->compare('t.parent_id', $this->parent_id);
-		$criteria->compare('t.sort_order', $this->sort_order);
-		$criteria->compare('t.create_time', $this->create_time, true);
-		$criteria->compare('t.update_time', $this->update_time, true);
+		$criteria->compare("{$alias}.category_id", $this->category_id);
+		$criteria->compare("{$alias}.parent_id", $this->parent_id);
+		$criteria->compare("{$alias}.sort_order", $this->sort_order);
+		$criteria->compare("{$alias}.create_time", $this->create_time, true);
+		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 
 		$criteria->with = array('categoryI18ns');
-		$criteria->group = 't.category_id';
+		$criteria->group = "{$alias}.category_id";
 		$criteria->together = true;
 
 		$criteria->compare('categoryI18ns.title', $this->filterI18n->title, true);
@@ -99,12 +101,12 @@ abstract class BaseCategory extends GxActiveRecord {
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => 't.sort_order DESC, t.category_id ASC',
+				'defaultOrder' => "{$alias}.sort_order DESC, {$alias}.category_id ASC",
 				'multiSort'=>true,
 				'attributes'=>array(
 					'sort_order'=>array(
-						'desc'=>'t.sort_order DESC',
-						'asc'=>'t.sort_order ASC',
+						'desc'=>"{$alias}.sort_order DESC",
+						'asc'=>"{$alias}.sort_order ASC",
 					),
 					'*',
 				),

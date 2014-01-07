@@ -75,20 +75,22 @@ abstract class BaseCategoryI18n extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+	
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('t.category_i18n_id', $this->category_i18n_id);
-		$criteria->compare('t.category_id', $this->category_id);
-		$criteria->compare('t.language_id', $this->language_id);
-		$criteria->compare('t.title', $this->title, true);
-		$criteria->compare('t.keywords', $this->keywords, true);
-		$criteria->compare('t.description', $this->description, true);
+		$criteria->compare("{$alias}.category_i18n_id", $this->category_i18n_id);
+		$criteria->compare("{$alias}.category_id", $this->category_id);
+		$criteria->compare("{$alias}.language_id", $this->language_id);
+		$criteria->compare("{$alias}.title", $this->title, true);
+		$criteria->compare("{$alias}.keywords", $this->keywords, true);
+		$criteria->compare("{$alias}.description", $this->description, true);
 
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => 't.category_i18n_id ASC',
+				'defaultOrder' => "{$alias}.category_i18n_id ASC",
 				'multiSort'=>true,
 				'attributes'=>array(
 					'*',

@@ -32,7 +32,7 @@ abstract class BaseAdmin extends GxActiveRecord {
 	}
 
 	public static function label($n = 1) {
-		return Yii::t('M/admin', 'Admin|Admins', $n);
+		return Yii::t('m/admin', 'Admin|Admins', $n);
 	}
 
 	public static function representingColumn() {
@@ -62,34 +62,39 @@ abstract class BaseAdmin extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'admin_id' => Yii::t('M/admin', 'Admin'),
-			'name' => Yii::t('M/admin', 'Name'),
-			'username' => Yii::t('M/admin', 'Username'),
-			'email' => Yii::t('M/admin', 'Email'),
-			'password' => Yii::t('M/admin', 'Password'),
-			'status' => Yii::t('M/admin', 'Status'),
-			'super' => Yii::t('M/admin', 'Super'),
-			'create_time' => Yii::t('M/admin', 'Create Time'),
-			'update_time' => Yii::t('M/admin', 'Update Time'),
+			'admin_id' => Yii::t('m/admin', 'Admin'),
+			'name' => Yii::t('m/admin', 'Name'),
+			'username' => Yii::t('m/admin', 'Username'),
+			'email' => Yii::t('m/admin', 'Email'),
+			'password' => Yii::t('m/admin', 'Password'),
+			'status' => Yii::t('m/admin', 'Status'),
+			'super' => Yii::t('m/admin', 'Super'),
+			'create_time' => Yii::t('m/admin', 'Create Time'),
+			'update_time' => Yii::t('m/admin', 'Update Time'),
 		);
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+	
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('admin_id', $this->admin_id);
-		$criteria->compare('name', $this->name, true);
-		$criteria->compare('username', $this->username, true);
-		$criteria->compare('email', $this->email, true);
-		$criteria->compare('password', $this->password, true);
-		$criteria->compare('status', $this->status);
-		$criteria->compare('super', $this->super);
-		$criteria->compare('create_time', $this->create_time, true);
-		$criteria->compare('update_time', $this->update_time, true);
+		$criteria->compare("{$alias}.admin_id", $this->admin_id);
+		$criteria->compare("{$alias}.name", $this->name, true);
+		$criteria->compare("{$alias}.username", $this->username, true);
+		$criteria->compare("{$alias}.email", $this->email, true);
+		$criteria->compare("{$alias}.password", $this->password, true);
+		$criteria->compare("{$alias}.status", $this->status);
+		$criteria->compare("{$alias}.super", $this->super);
+		$criteria->compare("{$alias}.create_time", $this->create_time, true);
+		$criteria->compare("{$alias}.update_time", $this->update_time, true);
+
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
+				'defaultOrder' => "{$alias}.admin_id ASC",
+				'multiSort'=>true,
 				'attributes'=>array(
 					'*',
 				),

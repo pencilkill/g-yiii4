@@ -38,12 +38,10 @@ class Information extends BaseInformation
 
 	public static function getCategories($modelName = __CLASS__, $parent = NULL, $textAttribute = 'informationI18n.title', $level=0) {
 		if(is_array($modelName)){	// models
-			$modelName = array_shift($modelName);	// model or modelName
+			$modelName = array_shift($modelName);	// model
 		}
 
-		if(is_object($modelName)){	// model
-			$modelName = CHtml::modelName($modelName);	// modelName
-		}
+		$modelName = CHtml::modelName($modelName);	// modelName
 
 		$primaryKey = $modelName::model()->tableSchema->primaryKey;
 
@@ -83,12 +81,10 @@ class Information extends BaseInformation
 	 */
 	public static function getDropListData($modelName = __CLASS__, $parent = NULL, $textAttribute = 'informationI18n.title', $level=0) {
 		if(is_array($modelName)){	// models
-			$modelName = array_shift($modelName);	// model or modelName
+			$modelName = array_shift($modelName);	// model
 		}
 
-		if(is_object($modelName)){	// model
-			$modelName = CHtml::modelName($modelName);	// modelName
-		}
+		$modelName = CHtml::modelName($modelName);	// modelName
 
 		$primaryKey = $modelName::model()->tableSchema->primaryKey;
 
@@ -120,12 +116,10 @@ class Information extends BaseInformation
 	 */
 	public static function getCategoryIds($modelName = __CLASS__, $parent = NULL, $self = false) {
 		if(is_array($modelName)){	// models
-			$modelName = array_shift($modelName);	// model or modelName
+			$modelName = array_shift($modelName);	// model
 		}
 
-		if(is_object($modelName)){	// model
-			$modelName = CHtml::modelName($modelName);	// modelName
-		}
+		$modelName = CHtml::modelName($modelName);	// modelName
 
 		$primaryKey = $modelName::model()->tableSchema->primaryKey;
 

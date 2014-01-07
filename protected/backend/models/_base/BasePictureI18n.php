@@ -77,21 +77,23 @@ abstract class BasePictureI18n extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+	
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('t.picture_i18n_id', $this->picture_i18n_id);
-		$criteria->compare('t.picture_id', $this->picture_id);
-		$criteria->compare('t.language_id', $this->language_id);
-		$criteria->compare('t.url', $this->url, true);
-		$criteria->compare('t.title', $this->title, true);
-		$criteria->compare('t.keywords', $this->keywords, true);
-		$criteria->compare('t.description', $this->description, true);
+		$criteria->compare("{$alias}.picture_i18n_id", $this->picture_i18n_id);
+		$criteria->compare("{$alias}.picture_id", $this->picture_id);
+		$criteria->compare("{$alias}.language_id", $this->language_id);
+		$criteria->compare("{$alias}.url", $this->url, true);
+		$criteria->compare("{$alias}.title", $this->title, true);
+		$criteria->compare("{$alias}.keywords", $this->keywords, true);
+		$criteria->compare("{$alias}.description", $this->description, true);
 
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => 't.picture_i18n_id ASC',
+				'defaultOrder' => "{$alias}.picture_i18n_id ASC",
 				'multiSort'=>true,
 				'attributes'=>array(
 					'*',

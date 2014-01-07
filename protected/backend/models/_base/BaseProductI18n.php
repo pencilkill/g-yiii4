@@ -79,22 +79,24 @@ abstract class BaseProductI18n extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+	
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('t.product_i18n_id', $this->product_i18n_id);
-		$criteria->compare('t.product_id', $this->product_id);
-		$criteria->compare('t.language_id', $this->language_id);
-		$criteria->compare('t.status', $this->status);
-		$criteria->compare('t.pic', $this->pic, true);
-		$criteria->compare('t.title', $this->title, true);
-		$criteria->compare('t.keywords', $this->keywords, true);
-		$criteria->compare('t.description', $this->description, true);
+		$criteria->compare("{$alias}.product_i18n_id", $this->product_i18n_id);
+		$criteria->compare("{$alias}.product_id", $this->product_id);
+		$criteria->compare("{$alias}.language_id", $this->language_id);
+		$criteria->compare("{$alias}.status", $this->status);
+		$criteria->compare("{$alias}.pic", $this->pic, true);
+		$criteria->compare("{$alias}.title", $this->title, true);
+		$criteria->compare("{$alias}.keywords", $this->keywords, true);
+		$criteria->compare("{$alias}.description", $this->description, true);
 
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => 't.product_i18n_id ASC',
+				'defaultOrder' => "{$alias}.product_i18n_id ASC",
 				'multiSort'=>true,
 				'attributes'=>array(
 					'*',

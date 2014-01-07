@@ -55,10 +55,6 @@
  */
 abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->baseClass; ?> {
 
-<?php if($i18n):?>
-	public $filterI18n;
-<?php endif;?>
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -68,7 +64,7 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 	}
 
 	public static function label($n = 1) {
-		return Yii::t('M/<?php echo strtolower($modelClass)?>', '<?php echo $modelClass; ?>|<?php echo $this->pluralize($modelClass); ?>', $n);
+		return Yii::t('app', '<?php echo $modelClass; ?>|<?php echo $this->pluralize($modelClass); ?>', $n);
 	}
 
 	public static function representingColumn() {
@@ -94,13 +90,7 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 
 	public function relations() {
 		return array(
-<?php $pattern = "/^\s*array\(\s*self::HAS_MANY\s*,\s*'{$i18nClassName}',\s*/i";?>
 <?php foreach($relations as $name=>$relation): ?>
-<?php
-	if(preg_match($pattern, $relation)) {
-		$i18nRelationName = $name;
-		$relation = preg_replace('/\)\s*$/', ', \'index\' => \'language_id\')', $relation);
-	}?>
 			<?php echo "'{$name}' => {$relation},\n"; ?>
 <?php endforeach; ?>
 		);
@@ -131,56 +121,11 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 
 <?php foreach($columns as $name=>$column): ?>
 <?php $partial = ($column->type==='string' and !$column->isForeignKey); ?>
-<?php if($column->isPrimaryKey) $compareGroupId = $name;?>
 		$criteria->compare('<?php echo $name; ?>', $this-><?php echo $name; ?><?php echo $partial ? ', true' : ''; ?>);
 <?php endforeach; ?>
 
-<?php if($i18n):?>
-		$criteria->with = array('<?php echo $i18nRelationName?>');
-		$criteria->group = 't.<?php echo $compareGroupId?>';
-		$criteria->together = true;
-
-<?php foreach($i18n->columns as $name=>$column):?>
-<?php if($column->autoIncrement) continue;?>
-<?php if($column->isForeignKey && isset($columns[$name]) && $columns[$name]->isPrimaryKey) continue;?>
-<?php $partial = ($column->type==='string' and !$column->isForeignKey); ?>
-<?php if(strcasecmp($name, 'language_id')===0 && $column->isForeignKey) continue;?>
-		$criteria->compare('<?php echo $i18nRelationName.'.'.$name; ?>', $this->filterI18n-><?php echo $name; ?><?php echo $partial ? ', true' : ''; ?>);
-<?php endforeach;?>
-<?php endif;?>
-
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
-			'sort'=>array(
-				'attributes'=>array(
-<?php if(in_array('sort_order', array_keys($columns))):?>
-					'sort_order'=>array(
-						'desc'=>'sort_order DESC',
-						'asc'=>'sort_order',
-					),
-<?php endif;?>
-					'*',
-				),
-			),
 		));
-	}
-
-	public function behaviors() {
-		return array(
-			'CTimestampBehavior'=>array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-<?php if(array_key_exists('create_time', $columns)){?>
-				'updateAttribute' => 'update_time',
-<?php }else{?>
-				'updateAttribute' => null,
-<?php }?>
-<?php if(array_key_exists('create_time', $columns)){?>
-				'createAttribute' => 'create_time',
-<?php }else{?>
-                'createAttribute' => null,
-<?php }?>
-				'setUpdateOnCreate' => true,
-			),
-        );
 	}
 }

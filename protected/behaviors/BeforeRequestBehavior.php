@@ -96,7 +96,7 @@ class BeforeRequestBehavior extends CBehavior
         $criteria->alias = 't';
 		$criteria->index = 'code';
 		$criteria->compare('t.status', '1');
-		$criteria->order = "FIELD(t.code, '". $languageCode ."') DESC, t.sort_id DESC";
+		$criteria->order = "FIELD(t.code, '". $languageCode ."') DESC, t.sort_order DESC";
 
 		$languages = Language::model()->findAll($criteria);
 

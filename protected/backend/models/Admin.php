@@ -37,8 +37,8 @@ class Admin extends BaseAdmin
 	public function attributeLabels()
 	{
 		$appendAttributeLabels = array(
-			'roles' => Yii::t('M/admin', 'Roles'),
-			'confirm_password' => Yii::t('M/admin', 'Confirm Password'),
+			'roles' => Yii::t('m/admin', 'Roles'),
+			'confirm_password' => Yii::t('m/admin', 'Confirm Password'),
 		);
 
 		return CMap::mergeArray(parent::attributeLabels(), $appendAttributeLabels);

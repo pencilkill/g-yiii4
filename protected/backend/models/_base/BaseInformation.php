@@ -53,7 +53,7 @@ abstract class BaseInformation extends GxActiveRecord {
 		return array(
 			'parent' => array(self::BELONGS_TO, 'Information', 'parent_id'),
 			'informations' => array(self::HAS_MANY, 'Information', 'parent_id'),
-			'informationI18n' => array(self::HAS_ONE, 'InformationI18n', 'information_id', 'condition' => 'informationI18n.language_id=:language_id', 'params' => array(':language_id' => Yii::app()->controller->language_id)),
+			'informationI18n' => array(self::HAS_ONE, 'InformationI18n', 'information_id', 'scopes' => array('t' => array())),
 			'informationI18ns' => array(self::HAS_MANY, 'InformationI18n', 'information_id', 'index' => 'language_id'),
 		);
 	}
@@ -77,16 +77,18 @@ abstract class BaseInformation extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+	
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('t.information_id', $this->information_id);
-		$criteria->compare('t.parent_id', $this->parent_id);
-		$criteria->compare('t.sort_order', $this->sort_order);
-		$criteria->compare('t.create_time', $this->create_time, true);
-		$criteria->compare('t.update_time', $this->update_time, true);
+		$criteria->compare("{$alias}.information_id", $this->information_id);
+		$criteria->compare("{$alias}.parent_id", $this->parent_id);
+		$criteria->compare("{$alias}.sort_order", $this->sort_order);
+		$criteria->compare("{$alias}.create_time", $this->create_time, true);
+		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 
 		$criteria->with = array('informationI18ns');
-		$criteria->group = 't.information_id';
+		$criteria->group = "{$alias}.information_id";
 		$criteria->together = true;
 
 		$criteria->compare('informationI18ns.status', $this->filterI18n->status);
@@ -97,12 +99,12 @@ abstract class BaseInformation extends GxActiveRecord {
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => 't.sort_order DESC, t.information_id ASC',
+				'defaultOrder' => "{$alias}.sort_order DESC, {$alias}.information_id ASC",
 				'multiSort'=>true,
 				'attributes'=>array(
 					'sort_order'=>array(
-						'desc'=>'t.sort_order DESC',
-						'asc'=>'t.sort_order ASC',
+						'desc'=>"{$alias}.sort_order DESC",
+						'asc'=>"{$alias}.sort_order ASC",
 					),
 					'*',
 				),
