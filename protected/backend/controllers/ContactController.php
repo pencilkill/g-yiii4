@@ -13,12 +13,12 @@ class ContactController extends GxController {
 			$model->setAttributes($_GET['Contact']);
 		}
 
+		Yii::app()->user->setState('contact-grid-url', Yii::app()->request->url);
+
 		$this->render('index', array(
 			'model' => $model,
 		));
 	}
-
-
 
 	public function actionUpdate($id) {
 		$model = $this->loadModel($id, 'Contact');
@@ -34,12 +34,25 @@ class ContactController extends GxController {
 		if (isset($_POST['Contact'])) {
 			$model->setAttributes($_POST['Contact']);
 
-			if ($model->validate()) {
-				$model->save(false);
-				if (Yii::app()->getRequest()->getIsAjaxRequest()){
-					Yii::app()->end();
-				}else{
-					$this->redirect(array('index'));
+			$valid = $model->validate();
+
+			if ($valid) {
+				$transaction = Yii::app()->db->beginTransaction();
+
+				try{
+					$model->save(false);
+
+					$transaction->commit();
+
+					if (Yii::app()->getRequest()->getIsAjaxRequest()){
+						Yii::app()->end();
+					}else{
+						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
+					}
+				}catch(CDbException $e){
+					$transaction->rollback();
+
+					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 				}
 			}else{
 				Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
@@ -53,10 +66,19 @@ class ContactController extends GxController {
 
 	public function actionDelete($id) {
 		if (Yii::app()->getRequest()->getIsPostRequest()) {
-			$this->loadModel($id, 'Contact')->delete();
+			$model = $this->loadModel($id, 'Contact');
 
-			if (! Yii::app()->getRequest()->getIsAjaxRequest()){
-				$this->redirect(array('index'));
+			if(! $model->beforeDelete()){
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
+			}else{
+				$model->delete();
+			}
+
+			if (Yii::app()->getRequest()->getIsAjaxRequest()){
+				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
+				Yii::app()->end();
+			}else{
+				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->createUrl('index'));
 			}
 		} else {
 			throw new CHttpException(400, Yii::t('app', 'Your request is invalid.'));
@@ -71,27 +93,27 @@ class ContactController extends GxController {
 			$criteria= new CDbCriteria;
 			$criteria->compare('contact_id', $selected);
 
+			$models = Contact::model()->findAll($criteria);
 
-			Contact::model()->findAll($criteria);
-
-			$valid = true;
+			$errorModel = null;
 
 			foreach ($models as $model){
-				$valid = $valid && $model->beforeDelete();
-				if(! $valid){
+				if(! $model->beforeDelete()){
+					$errorModel = $model;
 					break;
 				}
 			}
 
-			if($valid) {
+			if(! $errorModel) {
 				foreach ($models as $model){
 					$model->delete();
 				}
+			}else{
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
 			}
 
-
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
-				echo CJSON::encode(array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
@@ -129,14 +151,14 @@ class ContactController extends GxController {
 				foreach ($models as $model){
 					$model->save(false);
 				}
+			}else{
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
 			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
-				echo CJSON::encode(array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
 				Yii::app()->end();
 			} else{
-				$errorModel && Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
-
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));
 			}
 		}else{

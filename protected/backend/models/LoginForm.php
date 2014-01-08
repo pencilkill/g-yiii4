@@ -47,10 +47,10 @@ class LoginForm extends CFormModel
 	public function attributeLabels()
 	{
 		return array(
-			'username' => Yii::t('m/login', 'Username'),
-			'password' => Yii::t('m/login', 'Password'),
-			'rememberMe' => Yii::t('m/login', 'Remember me next time'),
-			'verifyCode' => Yii::t('m/login', 'Verify Code'),
+			'username' => Yii::t('m/loginform', 'Username'),
+			'password' => Yii::t('m/loginform', 'Password'),
+			'rememberMe' => Yii::t('m/loginform', 'Remember me next time'),
+			'verifyCode' => Yii::t('m/loginform', 'Verify Code'),
 		);
 	}
 
@@ -67,7 +67,7 @@ class LoginForm extends CFormModel
 		}else{
 			$this->_identity=new UserIdentity($this->username,$this->password);
 			if(!$this->_identity->authenticate()){
-				Yii::app()->user->setFlash('warning', Yii::t('M/login', 'Incorrect username or password.'));
+				Yii::app()->user->setFlash('warning', Yii::t('m/loginform', 'Incorrect username or password.'));
 				return true;
 			}
 			return false;

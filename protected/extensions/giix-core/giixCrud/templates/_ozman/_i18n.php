@@ -2,8 +2,6 @@
 /**
  * The following variables are available in this template:
  * - $this: the CrudCode object
- * - $form: the active form object
- * - $language_id: the language_id
  */
 ?>
 <?php
@@ -19,6 +17,7 @@
 		continue;
 	}
 ?>
+
 		<tr>
 			<td>
 				<?php echo "<?php echo " . $this->generateActiveLabel($this->modelClass, $column) . "; ?>\n"; ?>
@@ -28,17 +27,16 @@
 				<?php echo "<?php echo \$form->error(\$model, \"[\$" . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . "]{$column->name}\"); ?>\n"; ?>
 			</td>
 		</tr><!-- row -->
-		
 <?php endforeach; ?>
-		
+
 		<tr style="display:none; visibility: hidden; height: 0px;">
 			<td>
 				<?php echo "<?php echo \$form->labelEx(\$model, \"[\$" . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . "]" . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . "\"); ?>\n"; ?>
 			</td>
 			<td>
-				<?php echo "<?php echo \$form->hiddenField(\$model, \"[\$" . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . "]" . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . "\"); ?>\n"; ?>
+				<?php echo "<?php echo \$form->hiddenField(\$model, \"[\$" . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . "]" . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . "\", array('value' => \$" . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . ")); ?>\n"; ?>
 				<?php echo "<?php echo \$form->error(\$model, \"[\$" . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . "]" . GiixModelCode::I18N_LANGUAGE_COLUMN_NAME . "\"); ?>\n"; ?>
 			</td>
 		</tr><!-- row -->
-		
+
 		</table>

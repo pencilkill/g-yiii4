@@ -13,15 +13,21 @@
 	<?php echo '<?php'?> endif?>
   </div>
 
+  <div id="messageBox">
   <?php echo '<?php'?> foreach(Yii::app()->user->getFlashes() as $key => $message) :?>
 	<div class="<?php echo '<?php'?> echo $key?>"><?php echo '<?php'?> echo $message?></div>
   <?php echo '<?php'?> endforeach;?>
+  </div>
 
   <div class="box">
     <div class="heading">
       <div class="buttons">
       	<a onclick="$('#<?php echo $this->class2id($this->modelClass); ?>-form').submit();" class="button"><?php echo '<?php '; ?> echo Yii::t('app', 'Save'); ?></a>
-      	<a onclick="location = '<?php echo '<?php '; ?> echo $this->createUrl('index', array()); ?>';" class="button"><?php echo '<?php '; ?> echo Yii::t('app', 'Cancel'); ?></a>
+      	<?php echo '<?php '; ?>if($returnUrl = Yii::app()->user->getState('<?php echo $this->class2id($this->modelClass)?>-grid-url')):?>
+		<a onclick="location = '<?php echo '<?php '; ?> echo $returnUrl; ?>';" class="button"><?php echo '<?php '; ?> echo Yii::t('app', 'Cancel'); ?></a>
+		<?php echo '<?php '; ?>;else:?>
+		<a onclick="location = '<?php echo '<?php '; ?> echo $this->createUrl('index', array()); ?>';" class="button"><?php echo '<?php '; ?> echo Yii::t('app', 'Cancel'); ?></a>
+		<?php echo '<?php '; ?>endif;?>
       </div>
     </div>
     <div class="content">
@@ -36,12 +42,18 @@
 		));
 	<?php echo '?>'; ?>
 
-<?php $skipColumns = array('create_time', 'update_time', 'language_id');?>
+
+	<?php echo '<?php '; ?>
+
+		if($returnUrl = Yii::app()->user->getState('<?php echo $this->class2id($this->modelClass)?>-grid-url')){
+			echo CHtml::hiddenField('returnUrl', $returnUrl);
+		}
+	<?php echo '?>'; ?>
+
+<?php $skipColumns = array('create_time', 'update_time', GiixModelCode::I18N_LANGUAGE_COLUMN_NAME);?>
 
 		<table class="form">
-
 <?php foreach ($this->tableSchema->columns as $column): ?>
-
 <?php
 	if ($column->autoIncrement || in_array($column->name, $skipColumns)){
 		continue;
@@ -60,6 +72,7 @@
 <?php endforeach; ?>
 
 		</table>
+
 	<?php echo '<?php'?>
 
 		$this->endWidget();

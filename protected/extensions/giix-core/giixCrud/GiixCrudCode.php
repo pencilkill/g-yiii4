@@ -9,7 +9,8 @@
  * @license http://giix.org/license/ New BSD License
  */
 Yii::import('system.gii.generators.crud.CrudCode');
-Yii::import('ext.giix-core.helpers.*');
+Yii::import('frontend.extensions.giix-core.giixModel.GiixModelCode');
+Yii::import('frontend.extensions.giix-core.helpers.*');
 
 /**
  * GiixCrudCode is the model for giix crud generator.
@@ -17,7 +18,6 @@ Yii::import('ext.giix-core.helpers.*');
  * @author Rodrigo Coelho <rodrigo@giix.org>
  */
 class GiixCrudCode extends CrudCode {
-
 	/**
 	 * @var string The type of authentication.
 	 */
@@ -30,65 +30,19 @@ class GiixCrudCode extends CrudCode {
 	 * @var string The controller base class name.
 	 */
 	public $baseControllerClass = 'GxController';
-	/**
-	 * i18n
-	 */
+
+	//
 	public $i18n = null;
-	/**
-	 * @var ar
-	 * default language code is Yii::app()->language code which using to get language_id if the request does not set a language id
-	 */
-	public $language_id;
-
-	/**
-	 * @var object
-	 * all the languages for Db content i18n
-	 */
-
-	public $languages;
-
-
-	/**
-	 * @var string
-	 * editable name
-	 */
-
+	//
 	public $gridViewDeleteAction = 'Gridviewdelete';
-
-	/**
-	 * @var string
-	 * editable name
-	 */
-
+	//
 	public $gridViewEditName = 'edit';
-
-	/**
-	 * @var string
-	 * editable name
-	 */
-
+	//
 	public $gridViewEditAction = 'Gridviewupdate';
-
-	public function languages() {
-		$criteria = new CDbCriteria;
-		$criteria->alias = 't';
-		$criteria->compare('t.status', '1');
-		$criteria->order = "FIELD(t.code, '" . Yii::app()->language . "') DESC, t.sort_order DESC";
-
-		$languages = Language::model()->findAll($criteria);
-
-		$this->languages = $languages;
-
-		if($languages && ($key = key($languages))){
-			$this->language_id = $languages[$key]['language_id'];
-		}
-	}
 
 	public function init()
 	{
 		parent::init();
-
-		$this->languages();
 	}
 
 	/**
@@ -140,7 +94,9 @@ class GiixCrudCode extends CrudCode {
 			return "echo \$form->dropDownList(\$model, '{$column->name}', GxHtml::listDataEx({$relatedModelClass}::model()->findAllAttributes(null, true)))";
 		}
 
-		if (strtoupper($column->dbType) == 'TINYINT(1)'
+		if (preg_match('/^\s*pic\d*\s*/i', strtoupper($column->name))) {
+			return "echo HCSite::ajaxImageUpload(array('model' => \$model,'attribute' => '{$column->name}'))";
+		} else if (strtoupper($column->dbType) == 'TINYINT(1)'
 				|| strtoupper($column->dbType) == 'BIT'
 				|| strtoupper($column->dbType) == 'BOOL'
 				|| strtoupper($column->dbType) == 'BOOLEAN') {
@@ -163,7 +119,7 @@ class GiixCrudCode extends CrudCode {
 			),
 			));\n";
 		} else if (stripos($column->dbType, 'text') !== false) { // Start of CrudCode::generateActiveField code.
-			return "echo \$form->textArea(\$model, '{$column->name}', array(\"cols\" => 50, \"rows\" => 5, \"class\" => ''))";
+			return "echo \$form->textArea(\$model, '{$column->name}', array('rows' => 5, 'cols' => 50, 'class' => ''))";
 		} else {
 			$passwordI18n = Yii::t('app', 'password');
 			$passwordI18n = (isset($passwordI18n) && $passwordI18n !== '') ? '|' . $passwordI18n : '';
@@ -202,7 +158,9 @@ class GiixCrudCode extends CrudCode {
 			return "echo \$form->dropDownList(\$model, \"[{\${$languageColumnName}}]{$column->name}\", GxHtml::listDataEx({$relatedModelClass}::model()->findAllAttributes(null, true)))";
 		}
 
-		if (strtoupper($column->dbType) == 'TINYINT(1)'
+		if (preg_match('/^\s*pic\d*\s*/i', strtoupper($column->name))) {
+			return "echo HCSite::ajaxImageUpload(array('model' => \$model,'attribute' => \"[{\${$languageColumnName}}]{$column->name}\"))";
+		} if (strtoupper($column->dbType) == 'TINYINT(1)'
 				|| strtoupper($column->dbType) == 'BIT'
 				|| strtoupper($column->dbType) == 'BOOL'
 				|| strtoupper($column->dbType) == 'BOOLEAN') {
@@ -224,7 +182,7 @@ class GiixCrudCode extends CrudCode {
 			),
 			));\n";
 		} else if (stripos($column->dbType, 'text') !== false) { // Start of CrudCode::generateActiveField code.
-			return "echo \$form->textArea(\$model, \"[{\${$languageColumnName}}]{$column->name}\", array(\"cols\" => 50, \"rows\" => 5, \"class\" => ''))";
+			return "echo \$form->textArea(\$model, \"[{\${$languageColumnName}}]{$column->name}\", array('rows' => 5, 'cols' => 50, 'class' => ''))";
 		} else {
 			$passwordI18n = Yii::t('app', 'password');
 			$passwordI18n = (isset($passwordI18n) && $passwordI18n !== '') ? '|' . $passwordI18n : '';
@@ -316,32 +274,47 @@ class GiixCrudCode extends CrudCode {
 	 * @return string The source code line for the column definition.
 	 */
 	public function generateGridViewColumn($modelClass, $column, $editable=false) {
+		$space = str_repeat("\t", 7);
+
 		if (!$column->isForeignKey) {
 			// Boolean or bit.
 			if (strtoupper($column->dbType) == 'TINYINT(1)'
 					|| strtoupper($column->dbType) == 'BIT'
 					|| strtoupper($column->dbType) == 'BOOL'
 					|| strtoupper($column->dbType) == 'BOOLEAN') {
-				return $editable ? "array(
-			'type' => 'raw',
-			'name' => '{$column->name}',
-			'value' => 'CHtml::dropDownList(\"{$this->gridViewEditName}[\$data->{$this->tableSchema->primaryKey}][{$column->name}]\", \$data->{$column->name}, array(\"0\"=>Yii::t(\"app\", \"No\"), \"1\"=>Yii::t(\"app\", \"Yes\")), array(\"class\"=>\"editable\"))',
-			'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
-		)" : "array(
-			'name' => '{$column->name}',
-			'value' => '(\$data->{$column->name} == 0) ? Yii::t(\"app\", \"No\") : Yii::t(\"app\", \"Yes\")',
-			'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
-		)";
+				if($editable){
+$clip = <<<EOM
+array(
+{$space}	'type' => 'raw',
+{$space}	'name' => '{$column->name}',
+{$space}	'value' => 'CHtml::dropDownList("{$this->gridViewEditName}[\$data->{$this->tableSchema->primaryKey}][{$column->name}]", \$data->{$column->name}, array("0"=>Yii::t("app", "No"), "1"=>Yii::t("app", "Yes")), array("class"=>"editable"))',
+{$space}	'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
+{$space})
+EOM;
+
+				} else {
+$clip = <<<EOM
+array(
+{$space}	'name' => '{$column->name}',
+{$space}	'value' => '(\$data->{$column->name} == 0) ? Yii::t("app", "No") : Yii::t("app", "Yes")',
+{$space}	'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
+{$space})
+EOM;
+				}
 			} else {
 				// Common column.
 				if($editable){
-					return "array(
-			'type' => 'raw',
-			'name' => '{$column->name}',
-			'value' => 'CHtml::textField(\"{$this->gridViewEditName}[\$data->{$this->tableSchema->primaryKey}][{$column->name}]\", \$data->{$column->name}, array(\"class\"=>\"editable\"))',
-		)";
+$clip = <<<EOM
+array(
+{$space}	'type' => 'raw',
+{$space}	'name' => '{$column->name}',
+{$space}	'value' => 'CHtml::textField("{$this->gridViewEditName}[\$data->{$this->tableSchema->primaryKey}][{$column->name}]", \$data->{$column->name}, array("class"=>"editable"))',
+{$space})
+EOM;
 				}else{
-					return "'{$column->name}'";
+$clip = <<<EOM
+'{$column->name}'
+EOM;
 				}
 			}
 		} else { // FK.
@@ -349,12 +322,16 @@ class GiixCrudCode extends CrudCode {
 			$relation = $this->findRelation($modelClass, $column);
 			$relationName = $relation[0];
 			$relatedModelClass = $relation[3];
-			return "array(
-		'name'=>'{$column->name}',
-		'value'=>'GxHtml::valueEx(\$data->{$relationName})',
-		'filter'=>GxHtml::listDataEx({$relatedModelClass}::model()->findAllAttributes(null, true)),
-	)";
+$clip = <<<EOM
+array(
+{$space}	'name'=>'{$column->name}',
+{$space}	'value'=>'GxHtml::valueEx(\$data->{$relationName})',
+{$space}	'filter'=>GxHtml::listDataEx({$relatedModelClass}::model()->findAllAttributes(null, true)),
+{$space})
+EOM;
 		}
+
+		return $clip;
 	}
 
 	/**
@@ -460,17 +437,21 @@ class GiixCrudCode extends CrudCode {
 	 * Or an empty array if no relations were found.
 	 */
 	public function getRelations($modelClass) {
+		$GiixModelCode = new GiixModelCode;
+
+		$i18nTableName = $this->tableSchema->name . GiixModelCode::I18N_TABLE_SUFFIX;
+
 		$relations = GxActiveRecord::model($modelClass)->relations();
 		$result = array();
 		foreach ($relations as $relationName => $relation) {
 
-			if(strtolower($relationName)==strtolower($modelClass.'i18ns')){
-				$this->i18nRelation = array(
-					$relationName, // the relation name
-					$relation[0], // the relation type
-					$relation[2], // the foreign key
-					$relation[1] // the related active record class name
-				);
+			if ($relation[0] == GxActiveRecord::HAS_MANY && $relation[1] == $GiixModelCode->generateClassName($i18nTableName) && $relation[2] == $this->tableSchema->primaryKey) {
+				$this->i18n = new stdClass();
+
+				$this->i18n->table = $GiixModelCode->getTableSchema($i18nTableName);
+				$this->i18n->className = $GiixModelCode->generateClassName($i18nTableName);;
+				$this->i18n->relationName = $GiixModelCode->generateRelationName($i18nTableName, $i18nTableName, false);
+				$this->i18n->relationNamePluralized = $GiixModelCode->generateRelationName($i18nTableName, $i18nTableName, true);
 			}
 
 			$result[] = array(

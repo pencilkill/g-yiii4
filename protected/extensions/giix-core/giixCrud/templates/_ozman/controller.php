@@ -25,9 +25,9 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 	public function actionIndex() {
 		$model = new <?php echo $this->modelClass; ?>('search');
 		$model->unsetAttributes();
-<?php if($this->i18nRelation):?>
+<?php if($this->i18n):?>
 
-		$i18n = new <?php echo $this->i18nRelation[3]?>('search');
+		$i18n = new <?php echo $this->i18n->className?>('search');
 		$i18n->unsetAttributes();
 
 		$model->filterI18n = $i18n;
@@ -36,16 +36,18 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 		if (isset($_GET['<?php echo $this->modelClass; ?>'])){
 			$model->setAttributes($_GET['<?php echo $this->modelClass; ?>']);
 		}
-<?php if($this->i18nRelation):?>
+<?php if($this->i18n):?>
 
-		if (isset($_GET['<?php echo $this->i18nRelation[3]?>'])){
-			$i18n->setAttributes($_GET['<?php echo $this->i18nRelation[3]?>']);
+		if (isset($_GET['<?php echo $this->i18n->className?>'])){
+			$i18n->setAttributes($_GET['<?php echo $this->i18n->className?>']);
 		}
 <?php endif;?>
 
+		Yii::app()->user->setState('<?php echo $this->class2id($this->modelClass)?>-grid-url', Yii::app()->request->url);
+
 		$this->render('index', array(
 			'model' => $model,
-<?php if($this->i18nRelation):?>
+<?php if($this->i18n):?>
 			'i18n' => $i18n,
 <?php endif;?>
 		));
@@ -53,13 +55,13 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 	public function actionCreate() {
 		$model = new <?php echo $this->modelClass; ?>;
-<?php if($this->i18nRelation):?>
+<?php if($this->i18n):?>
 
 		$i18ns = array();
 
 		foreach($this->languages as $val){
-			$i18n = new <?php echo $this->i18nRelation[3]?>;
-			$i18ns[$val['language_id']] = $i18n;
+			$va = new <?php echo $this->i18n->className?>;
+			$i18ns[$val['<?php echo GiixModelCode::I18N_LANGUAGE_COLUMN_NAME?>']] = $va;
 		}
 <?php endif;?>
 
@@ -68,7 +70,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 				array(
 					'model' => $model,
 				),
-<?php if($this->i18nRelation):?>
+<?php if($this->i18n):?>
 				array(
 					'model' => $i18ns,
 					'many' => true,
@@ -81,37 +83,46 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 		if (isset($_POST['<?php echo $this->modelClass; ?>'])) {
 			$model->setAttributes($_POST['<?php echo $this->modelClass; ?>']);
-<?php if($this->i18nRelation):?>
 
-			$valid = true;
+			$valid = $model->validate();
+<?php if($this->i18n):?>
 
-			foreach($this->languages as $val){
-				$i18ns[$val['language_id']]->setAttributes($_POST['<?php echo $this->i18nRelation[3]?>'][$val['language_id']]);
-				$i18ns[$val['language_id']]->language_id = $val['language_id'];
-				$i18ns[$val['language_id']]-><?php echo $this->getTableSchema()->primaryKey?> = 0;
+			$i18ns = array();
+			foreach($_POST['<?php echo $this->i18n->className?>'] as $val){
+				$va = new <?php echo $this->i18n->className?>;
+				$va->setAttributes($val);
+				$va-><?php echo $this->tableSchema->primaryKey?> = 0;
 
-				$valid = $i18ns[$val['language_id']]->validate() && $valid;
+				$valid = $va->validate() && $valid;
+
+				$i18ns[$val['<?php echo GiixModelCode::I18N_LANGUAGE_COLUMN_NAME?>']] = $va;
 			}
 <?php endif;?>
 
+			if ($valid) {
+				$transaction = Yii::app()->db->beginTransaction();
 
-<?php if($this->i18nRelation):?>
-			if ($valid && $model->validate()) {
-<?php else: ?>
-			if ($model->validate()) {
-<?php endif; ?>
-				$model->save(false);
-<?php if($this->i18nRelation):?>
+				try{
+					$model->save(false);
+<?php if($this->i18n):?>
 
-				foreach($this->languages as $val){
-					$i18ns[$val['language_id']]-><?php echo $this->getTableSchema()->primaryKey?> = $model-><?php echo $this->getTableSchema()->primaryKey?>;
-					$i18ns[$val['language_id']]->save();
-				}
+					foreach($i18ns as $va){
+						$va-><?php echo $this->getTableSchema()->primaryKey?> = $model-><?php echo $this->getTableSchema()->primaryKey?>;
+						$va->save(false);
+					}
 <?php endif; ?>
-				if (Yii::app()->getRequest()->getIsAjaxRequest()){
-					Yii::app()->end();
-				}else{
-					$this->redirect(array('index'));
+
+					$transaction->commit();
+
+					if (Yii::app()->getRequest()->getIsAjaxRequest()){
+						Yii::app()->end();
+					}else{
+						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
+					}
+				}catch(CDbException $e){
+					$transaction->rollback();
+
+					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 				}
 			}else{
 				Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
@@ -120,7 +131,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 		$this->render('create', array(
 			'model' => $model,
-<?php if($this->i18nRelation):?>
+<?php if($this->i18n):?>
 			'i18ns' => $i18ns,
 <?php endif; ?>
 		));
@@ -128,9 +139,9 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 	public function actionUpdate($id) {
 		$model = $this->loadModel($id, '<?php echo $this->modelClass; ?>');
-<?php if($this->i18nRelation):?>
+<?php if($this->i18n):?>
 
-		$i18ns = $model-><?php echo $this->i18nRelation[0]?>;
+		$i18ns = $model-><?php echo $this->i18n->relationNamePluralized?>;
 <?php endif; ?>
 
 <?php if ($this->enable_ajax_validation): ?>
@@ -138,7 +149,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 				array(
 					'model' => $model,
 				),
-<?php if($this->i18nRelation):?>
+<?php if($this->i18n):?>
 				array(
 					'model' => $i18ns,
 					'many' => true,
@@ -151,34 +162,44 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 		if (isset($_POST['<?php echo $this->modelClass; ?>'])) {
 			$model->setAttributes($_POST['<?php echo $this->modelClass; ?>']);
-<?php if($this->i18nRelation):?>
-			$valid = true;
 
-			foreach($this->languages as $val){
-				$i18ns[$val['language_id']]->setAttributes($_POST['<?php echo $this->i18nRelation[3]?>'][$val['language_id']]);
-				$i18ns[$val['language_id']]->language_id = $val['language_id'];
-				$i18ns[$val['language_id']]-><?php echo $this->getTableSchema()->primaryKey?> = $model-><?php echo $this->getTableSchema()->primaryKey?>;
+			$valid = $model->validate();
+<?php if($this->i18n):?>
 
-				$valid = $i18ns[$val['language_id']]->validate() && $valid;
+			foreach($_POST['<?php echo $this->i18n->className?>'] as $val){
+				$va = new <?php echo $this->i18n->className?>;
+				$va->setAttributes($val);
+				$va-><?php echo $this->getTableSchema()->primaryKey?> = $model-><?php echo $this->getTableSchema()->primaryKey?>;
+
+				$valid = $va->validate() && $valid;
+
+				$i18ns[$val['<?php echo GiixModelCode::I18N_LANGUAGE_COLUMN_NAME?>']] = $va;
 			}
 <?php endif; ?>
 
-<?php if($this->i18nRelation):?>
-			if ($valid && $model->validate()) {
-<?php ;else: ?>
-			if ($model->validate()) {
-<?php endif; ?>
-				$model->save(false);
-<?php if($this->i18nRelation):?>
+			if ($valid) {
+				$transaction = Yii::app()->db->beginTransaction();
 
-				foreach($this->languages as $val){
-					$i18ns[$val['language_id']]->save();
-				}
+				try{
+					$model->save(false);
+<?php if($this->i18n):?>
+
+					foreach($i18ns as $val){
+						$va->save(false);
+					}
 <?php endif; ?>
-				if (Yii::app()->getRequest()->getIsAjaxRequest()){
-					Yii::app()->end();
-				}else{
-					$this->redirect(array('index'));
+
+					$transaction->commit();
+
+					if (Yii::app()->getRequest()->getIsAjaxRequest()){
+						Yii::app()->end();
+					}else{
+						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
+					}
+				}catch(CDbException $e){
+					$transaction->rollback();
+
+					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 				}
 			}else{
 				Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
@@ -187,7 +208,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 		$this->render('update', array(
 			'model' => $model,
-<?php if($this->i18nRelation):?>
+<?php if($this->i18n):?>
 			'i18ns' => $i18ns,
 <?php endif; ?>
 		));
@@ -195,10 +216,16 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 	public function actionDelete($id) {
 		if (Yii::app()->getRequest()->getIsPostRequest()) {
-			$this->loadModel($id, '<?php echo $this->modelClass; ?>')->delete();
+			$model = $this->loadModel($id, '<?php echo $this->modelClass; ?>');
+
+			if(! $model->beforeDelete()){
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
+			}else{
+				$model->delete();
+			}
 
 			if (Yii::app()->getRequest()->getIsAjaxRequest()){
-				echo CJSON::encode(($flashes=Yii::app()->user->getFlashes()) ? $flashes : array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
 				Yii::app()->end();
 			}else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->createUrl('index'));
@@ -218,23 +245,25 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 			$models = <?php echo $this->modelClass; ?>::model()->findAll($criteria);
 
-			$valid = true;
+			$errorModel = null;
 
 			foreach ($models as $model){
-				$valid = $valid && $model->beforeDelete();
-				if(! $valid){
+				if(! $model->beforeDelete()){
+					$errorModel = $model;
 					break;
 				}
 			}
 
-			if($valid) {
+			if(! $errorModel) {
 				foreach ($models as $model){
 					$model->delete();
 				}
+			}else{
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
 			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
-				echo CJSON::encode(array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
@@ -272,14 +301,14 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 				foreach ($models as $model){
 					$model->save(false);
 				}
+			}else{
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
 			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
-				echo CJSON::encode(array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
 				Yii::app()->end();
 			} else{
-				$errorModel && Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
-
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));
 			}
 		}else{

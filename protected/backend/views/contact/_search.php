@@ -17,22 +17,29 @@
 
 
 	<div class="row">
-		<?php echo $form->label($model, 'name'); ?>
-		<?php echo $form->textField($model, 'name', array('maxlength' => 32)); ?>
+		<?php echo $form->label($model, 'firstname'); ?>
+		<?php echo $form->textField($model, 'firstname', array('maxlength' => 32)); ?>
 	</div>
 
 
 
 	<div class="row">
-		<?php echo $form->label($model, 'gender'); ?>
-		<?php echo $form->dropDownList($model, 'gender', array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')), array('prompt' => Yii::t('app', 'All'))); ?>
+		<?php echo $form->label($model, 'lastname'); ?>
+		<?php echo $form->textField($model, 'lastname', array('maxlength' => 32)); ?>
 	</div>
 
 
 
 	<div class="row">
-		<?php echo $form->label($model, 'telphone'); ?>
-		<?php echo $form->textField($model, 'telphone', array('maxlength' => 16)); ?>
+		<?php echo $form->label($model, 'sex'); ?>
+		<?php echo $form->dropDownList($model, 'sex', array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')), array('prompt' => Yii::t('app', 'All'))); ?>
+	</div>
+
+
+
+	<div class="row">
+		<?php echo $form->label($model, 'telephone'); ?>
+		<?php echo $form->textField($model, 'telephone', array('maxlength' => 16)); ?>
 	</div>
 
 
@@ -59,8 +66,8 @@
 
 
 	<div class="row">
-		<?php echo $form->label($model, 'corporation'); ?>
-		<?php echo $form->textField($model, 'corporation', array('maxlength' => 256)); ?>
+		<?php echo $form->label($model, 'company'); ?>
+		<?php echo $form->textField($model, 'company', array('maxlength' => 256)); ?>
 	</div>
 
 
@@ -74,14 +81,14 @@
 
 	<div class="row">
 		<?php echo $form->label($model, 'message'); ?>
-		<?php echo $form->textArea($model, 'message'); ?>
+		<?php echo $form->textArea($model, 'message', array('rows' => 5, 'cols' => 50, 'class' => '')); ?>
 	</div>
 
 
 
 	<div class="row">
-		<?php echo $form->label($model, 'note'); ?>
-		<?php echo $form->textArea($model, 'note'); ?>
+		<?php echo $form->label($model, 'remark'); ?>
+		<?php echo $form->textArea($model, 'remark', array('rows' => 5, 'cols' => 50, 'class' => '')); ?>
 	</div>
 
 

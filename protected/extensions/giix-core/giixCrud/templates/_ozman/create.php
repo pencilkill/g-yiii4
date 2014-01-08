@@ -15,13 +15,17 @@ echo "<?php\n
 ?>
 
 <?php echo "<?php\n"; ?>
-<?php if($this->i18nRelation):?>
-$this->renderPartial('_formI18n', array(
+<?php if($this->i18n):?>
+$this->renderPartial(
+	'_formI18n',
+	array(
 <?php ;else:?>
-$this->renderPartial('_form', array(
+$this->renderPartial(
+	'_form',
+	array(
 <?php endif;?>
 		'model' => $model,
-<?php if($this->i18nRelation):?>
+<?php if($this->i18n):?>
 		'i18ns' => $i18ns,
 <?php endif;?>
 	)

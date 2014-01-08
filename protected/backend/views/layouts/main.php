@@ -170,5 +170,7 @@ jQuery(function($) {
 </div><!-- footer -->
 
 <?php $this->widget('ext.ckeditor.CKEditorWidget',array('htmlOptions'=>array('class'=>'fck'))); ?>
+<?php $this->widget('frontend.extensions.fancybox.EFancyBox',array('target'=>null, 'config'=>array())); ?>
+
 </body>
 </html>

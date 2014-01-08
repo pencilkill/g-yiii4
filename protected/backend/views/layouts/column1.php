@@ -18,7 +18,14 @@ jQuery.each(jQuery('.htabs, .vtabs'), function(i, v){
 if ($.fn.yiiactiveform) {
 	$.fn.yiiactiveform.defaults = $.extend($.fn.yiiactiveform.defaults, {
 		inputContainer : 'tr'
-	// ,successCssClass:'success'
+//	 	,successCssClass:'success'
+		,afterValidate	: function(form, data, hasError){
+			if(hasError){
+				GridViewFlash('warning', '<?php echo Yii::t('app', 'Validation Failure')?>');
+				return false;
+			}
+			return true;
+		}
 	} || {});
 }
 </script>

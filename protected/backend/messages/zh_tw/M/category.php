@@ -17,11 +17,10 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
+  'Sort Order' => '排序',
   'Category' => '目錄',
   'Category|Categories' => '目錄',
   'Create Time' => '創建時間',
-  'Parent' => '上級目錄',
   'Parent_id can not be self or children' => '上級目錄不能是自身或其子目錄',
-  'Sort' => '排序',
   'Update Time' => '更新時間',
 );

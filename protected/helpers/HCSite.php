@@ -87,7 +87,7 @@ class HCSite {
 		$directory = trim($directory, '\/');
 
 		$fullDirectory = Yii::getPathOfAlias('webroot').'/'.$directory;
-		is_dir($fullDirectory) || mkdir($fullDirectory, true, 0777);
+		is_dir($fullDirectory) || CFileHelper::mkdir($fullDirectory, true, 0777);
 
 		return $full ? $fullDirectory : $directory;
 	}
@@ -196,6 +196,7 @@ class HCSite {
             $file->saveAs($uploadFullFile,true);// upload
 
             $uploadFile = strtr($uploadFullFile, array(Yii::getPathOfAlias('webroot').'/' => ''));
+
             if($serialize){
             	$return = new stdClass;
             	$return->name = $fileName;

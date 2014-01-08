@@ -18,7 +18,7 @@ class Information extends BaseInformation
 	}
 
 	public function validParentId(){
-    	$categoryIds = self::getCategoryIds($this->information_id, true);
+    	$categoryIds = self::getCategoryIds(__CLASS__, $this->information_id, true);
 
     	if(in_array($this->parent_id, $categoryIds)){
     		$this->addError('parent_id', Yii::t('m/information', 'Parent_id can not be self or children'));

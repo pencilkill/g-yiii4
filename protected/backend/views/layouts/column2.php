@@ -1,5 +1,11 @@
+<?php
+	/**
+	 * This layout is designed for fancybox.
+	 * the differences between fancybox and main is that fancybox has no section 'header','footer'.
+	 */
+?>
 <?php /* @var $this Controller */ ?>
-<?php $this->beginContent('//layouts/main'); ?>
+<?php $this->beginContent('//layouts/box'); ?>
 
 	<?php echo $content; ?>
 
@@ -18,7 +24,14 @@ jQuery.each(jQuery('.htabs, .vtabs'), function(i, v){
 if ($.fn.yiiactiveform) {
 	$.fn.yiiactiveform.defaults = $.extend($.fn.yiiactiveform.defaults, {
 		inputContainer : 'tr'
-	// ,successCssClass:'success'
+//		,successCssClass:'success'
+		,afterValidate	: function(form, data, hasError){
+			if(hasError){
+				GridViewFlash('warning', '<?php echo Yii::t('app', 'Validation Failure')?>');
+				return false;
+			}
+			return true;
+		}
 	} || {});
 }
 </script>

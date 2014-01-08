@@ -1,21 +1,12 @@
 <?php
 /**
- * CLinkPager class file.
  *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @link http://www.yiiframework.com/
- * @copyright 2008-2013 Yii Software LLC
- * @license http://www.yiiframework.com/license/
- */
-
-/**
- * CLinkPager displays a list of hyperlinks that lead to different pages of target.
+ * @author Sam@ozchamp.net
+ * @access frontend
+ * @see frontend.config.front
  *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @package system.web.widgets.pagers
- * @since 1.0
  */
-class OzLinkPager extends CBasePager
+class ELinkPager extends CBasePager
 {
 	const CSS_FIRST_PAGE='first';
 	const CSS_LAST_PAGE='last';
@@ -73,11 +64,11 @@ class OzLinkPager extends CBasePager
 	 */
 	public $prevPageLabel;
 	/**
-	 * @var string the text label for the first page button. Defaults to '&lt;&lt; First'.
+	 * @var string the text label for the first page button. Set as false to disable it. Defaults to '&lt;&lt; First'.
 	 */
 	public $firstPageLabel;
 	/**
-	 * @var string the text label for the last page button. Defaults to 'Last &gt;&gt;'.
+	 * @var string the text label for the last page button. Set as false to disable it. Defaults to 'Last &gt;&gt;'.
 	 */
 	public $lastPageLabel;
 	/**
@@ -96,6 +87,10 @@ class OzLinkPager extends CBasePager
 	 */
 	public $cssFile = false;
 	/**
+	 * @var the pager container tag.
+	 */
+	public $container=false;
+	/**
 	 * @var array HTML attributes for the pager container tag.
 	 */
 	public $htmlOptions=array();
@@ -105,16 +100,23 @@ class OzLinkPager extends CBasePager
 	 */
 	public function init()
 	{
-		if($this->nextPageLabel===null)
+		if($this->nextPageLabel===null){
 			$this->nextPageLabel=Yii::t('yii','Next &gt;');
-		if($this->prevPageLabel===null)
+		}
+		if($this->prevPageLabel===null){
 			$this->prevPageLabel=Yii::t('yii','&lt; Previous');
-		if($this->firstPageLabel===null)
+		}
+
+		if($this->firstPageLabel===null){
 			$this->firstPageLabel=Yii::t('yii','&lt;&lt; First');
-		if($this->lastPageLabel===null)
+		}
+		if($this->lastPageLabel===null){
 			$this->lastPageLabel=Yii::t('yii','Last &gt;&gt;');
-		if($this->header===null)
+		}
+
+		if($this->header===null){
 			$this->header=Yii::t('yii','Go to page: ');
+		}
 
 		if(!isset($this->htmlOptions['id']))
 			$this->htmlOptions['id']=$this->getId();
@@ -130,10 +132,12 @@ class OzLinkPager extends CBasePager
 	{
 		$this->registerClientScript();
 		$buttons=$this->createPageButtons();
-		if(empty($buttons))
+		if(empty($buttons)){
 			return;
+		}
+		$content = implode("\n",$buttons);
 		echo $this->header;
-		echo CHtml::tag('ul',$this->htmlOptions, implode("\n",$buttons));
+		echo $this->container ? CHtml::tag($this->container,$this->htmlOptions, $content) : $content;
 		echo $this->footer;
 	}
 
@@ -143,19 +147,23 @@ class OzLinkPager extends CBasePager
 	 */
 	protected function createPageButtons()
 	{
-		if(($pageCount=$this->getPageCount())<=1)
+		if(($pageCount=$this->getPageCount())<=1){
 			return array();
+		}
 
 		list($beginPage,$endPage)=$this->getPageRange();
 		$currentPage=$this->getCurrentPage(false); // currentPage is calculated in getPageRange()
 		$buttons=array();
 
 		// first page
-		$buttons[]=$this->createPageButton($this->firstPageLabel,0,$this->firstPageCssClass,$currentPage<=0,false);
+		if($this->firstPageLabel !== false){
+			$buttons[]=$this->createPageButton($this->firstPageLabel,0,$this->firstPageCssClass,$currentPage<=0,false);
+		}
 
 		// prev page
-		if(($page=$currentPage-1)<0)
+		if(($page=$currentPage-1)<0){
 			$page=0;
+		}
 		$buttons[]=$this->createPageButton($this->prevPageLabel,$page,$this->previousPageCssClass,$currentPage<=0,false);
 
 		// internal pages
@@ -163,12 +171,15 @@ class OzLinkPager extends CBasePager
 			$buttons[]=$this->createPageButton($i+1,$i,$this->internalPageCssClass,false,$i==$currentPage);
 
 		// next page
-		if(($page=$currentPage+1)>=$pageCount-1)
+		if(($page=$currentPage+1)>=$pageCount-1){
 			$page=$pageCount-1;
+		}
 		$buttons[]=$this->createPageButton($this->nextPageLabel,$page,$this->nextPageCssClass,$currentPage>=$pageCount-1,false);
 
 		// last page
-		$buttons[]=$this->createPageButton($this->lastPageLabel,$pageCount-1,$this->lastPageCssClass,$currentPage>=$pageCount-1,false);
+		if($this->lastPageLabel !== false){
+			$buttons[]=$this->createPageButton($this->lastPageLabel,$pageCount-1,$this->lastPageCssClass,$currentPage>=$pageCount-1,false);
+		}
 
 		return $buttons;
 	}
@@ -185,9 +196,10 @@ class OzLinkPager extends CBasePager
 	 */
 	protected function createPageButton($label,$page,$class,$hidden,$selected)
 	{
-		if($hidden || $selected)
+		if($hidden || $selected){
 			$class.=' '.($hidden ? $this->hiddenPageCssClass : $this->selectedPageCssClass);
-		return '<li class="'.$class.'">'.CHtml::link($label,$this->createPageUrl($page)).'</li>';
+		}
+		return CHtml::link($label,$this->createPageUrl($page),array('class' => $class));
 	}
 
 	/**

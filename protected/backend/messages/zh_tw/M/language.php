@@ -17,11 +17,10 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
+  'Sort Order' => '排序',
   'Code' => '代碼',
-  'Image' => '圖片',
   'Language' => '語言',
   'Language|Languages' => '語言',
-  'Sort' => '排序',
   'Status' => '啟用',
   'Title' => '標題',
   '{attribute} can be allowed a-z or \'_\' only, and \'_\' can not be first char and last char.' => '{attribute} 只能是英文小寫字母與下劃線組合，且下劃線不在開頭與結尾。',

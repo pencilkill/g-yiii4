@@ -159,7 +159,7 @@ $backCfg = array(
 					  ),
 				),
 				'CGridView' => array(
-					'ajaxUpdate' => false,
+					//'ajaxUpdate' => true,
 				),
 			),
 		),

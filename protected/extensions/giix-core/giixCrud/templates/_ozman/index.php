@@ -5,7 +5,7 @@
  */
 	$updateColumns = array('top', 'sort_order', 'status');
 
-	$skipColumns = array('create_time', 'update_time', 'password', 'lang');
+	$skipColumns = array('create_time', 'update_time', 'password', GiixModelCode::I18N_LANGUAGE_COLUMN_NAME);
 ?>
 <?php
 echo "<?php\n
@@ -32,6 +32,7 @@ echo "<?php\n
 	</div>
 
 	<?php echo "<?php\n"?>
+		/*
 		Yii::app()->clientScript->registerScript('search', "
 			$('.search-button').click(function(){
 				$('.search-form').toggle();
@@ -44,14 +45,25 @@ echo "<?php\n
 				return false;
 			});
 		");
+		*/
 	?>
 
 	<div class="box">
 		<div class="search-form" style="display:none;">
-		<?php echo "<?php \$this->renderPartial('_search', array(
-			'model' => \$model,
-		)); ?>\n"; ?>
+
+		<?php echo "<?php\n"?>
+			/*
+			$this->renderPartial(
+				'_search',
+				array(
+					'model' => \$model,
+				)
+			);
+			*/
+		?>
+
 		</div><!-- search-form -->
+
 		<div class="heading">
 			<div class="buttons">
 				<?php echo '<?php'?> echo GxHtml::link(Yii::t('app', 'Advanced Search'), '#', array('class' => 'search-button button', 'style' => 'display: none;')); ?>
@@ -60,70 +72,77 @@ echo "<?php\n
 				<a onclick="GVDelete();" class="button"><?php echo '<?php'?> echo Yii::t('app', 'Delete')?></a>
 			</div>
 		</div>
+
 		<div class="content">
 
-		<form id="<?php echo $this->class2id($this->modelClass)?>-grid-form" action="<?php echo '<?php'?> echo $this->createUrl('<?php echo strtolower($this->gridViewEditAction)?>')?>" method="post">
-		<?php echo '<?php' ?> echo CHtml::hiddenField('returnUrl', Yii::app()->getRequest()->url)?>
-<?php echo '<?php'; ?> $this->widget('zii.widgets.grid.CGridView', array(
-	'id' => '<?php echo $this->class2id($this->modelClass)?>-grid',
-	'ajaxUpdate' => false,
-	'template' => "{items}\n<div class=\"pagination\">{summary}{pager}</div>",
-	'itemsCssClass' => 'list',
-	'filterCssClass' => 'filter',
-	'summaryCssClass' => 'results',
-	'pagerCssClass' => 'links',
-	'htmlOptions' => array(
-		'class' => ''
-	),
-	'cssFile' => false,
-	'dataProvider' => $model->search(),
-	'filter' => $model,
-	'columns' => array(
-		array(
-			'selectableRows' => 2,
-			'class' => 'CCheckBoxColumn',
-			'headerHtmlOptions' => array(
-				'width' => 1,
-			),
-			'checkBoxHtmlOptions' => array(
-				// The value is autofill
-				'name' => 'GridViewSelect[]',
-			),
-		),
+			<form id="<?php echo $this->class2id($this->modelClass)?>-grid-form" action="<?php echo '<?php'?> echo $this->createUrl('<?php echo strtolower($this->gridViewEditAction)?>')?>" method="post">
+				<?php echo '<?php ' ?> echo CHtml::hiddenField('returnUrl', Yii::app()->getRequest()->url)?>
 
-<?php if($this->i18nRelation){?>
-		array(
-        	'name' => '<?php echo $this->i18nRelation[0]?>.title',
-			'value' => array($this, 'columnValue'),
-			'filter' => CHtml::activeTextField($model->filterI18n, 'title'),
-		),
-<?php }?>
-<?php
-$count = 0;
-foreach ($this->tableSchema->columns as $column) {
-	if ($column->autoIncrement || in_array($column->name, $skipColumns)){
-		continue;
-	}
-	if (++$count == 7){
-		echo "\t\t/*\n";
-	}
-	echo "\t\t" . $this->generateGridViewColumn($this->modelClass, $column, in_array($column->name, $updateColumns)).",\n";
-}
-if ($count >= 7){
-	echo "\t\t*/\n";
-}
-?>
+				<?php echo '<?php '; ?>
 
-		array(
-			'header' => Yii::t('app', 'Grid Actions'),
-			'class' => 'CButtonColumn',
-			'afterDelete' => 'function(link,success,data){var r=jQuery.parseJSON(data); if(!r || !r.success){jQuery.each(r, function(t, m){GridViewFlash(t, m); return false;});}}',
-			'template' => '{update}&nbsp;{delete}',
-		),
-	),
-)); ?>
+					$this->widget('zii.widgets.grid.CGridView', array(
+						'id' => '<?php echo $this->class2id($this->modelClass)?>-grid',
+						'ajaxUpdate' => true,
+						'template' => "{items}\n<div class=\"pagination\">{summary}{pager}</div>",
+						'itemsCssClass' => 'list',
+						'filterCssClass' => 'filter',
+						'summaryCssClass' => 'results',
+						'pagerCssClass' => 'links',
+						'htmlOptions' => array(
+							'class' => ''
+						),
+						'cssFile' => false,
+						'dataProvider' => $model->search(),
+						'filter' => $model,
+						'columns' => array(
+							array(
+								'selectableRows' => 2,
+								'class' => 'CCheckBoxColumn',
+								'headerHtmlOptions' => array(
+									'width' => 1,
+								),
+								'checkBoxHtmlOptions' => array(
+									// The value is autofill
+									'name' => 'GridViewSelect[]',
+								),
+							),
+					<?php if($this->i18n){?>
 
-		</form>
+							array(
+					        	'name' => '<?php echo $this->i18n->relationName?>.title',
+								'filter' => CHtml::activeTextField($model->filterI18n, 'title'),
+							),
+					<?php }?>
+					<?php $count = 0;?>
+					<?php foreach ($this->tableSchema->columns as $column) {?>
+						<?php
+							if ($column->autoIncrement || in_array($column->name, $skipColumns)){
+								continue;
+							}
+						?>
+							<?php if (++$count == 7){ ?>
+
+							<?php echo "/**\n";?>
+							<?php }?>
+
+							<?php echo $this->generateGridViewColumn($this->modelClass, $column, in_array($column->name, $updateColumns)).",\n";?>
+					<?php }?>
+							<?php if ($count >= 7){ ?>
+
+							<?php echo "*/\n";?>
+							<?php }?>
+
+							array(
+								'header' => Yii::t('app', 'Grid Actions'),
+								'class' => 'CButtonColumn',
+								'afterDelete' => 'function(link,success,data){var r=jQuery.parseJSON(data); if(!r || !r.success){jQuery.each(r, function(t, m){GridViewFlash(t, m); return false;});}}',
+								'template' => '{update}&nbsp;{delete}',
+							),
+						),
+					));
+				?>
+
+			</form>
 
 		</div>
 	</div>
@@ -142,7 +161,7 @@ if ($count >= 7){
 			, postData : {returnUrl : '<?php echo '<?php'; ?> echo Yii::app()->getRequest()->url?>'}
 			, deleteConfirmation : '<?php echo '<?php'; ?> echo Yii::t('app', 'Confirm Grid View Delete?')?>'
 			, selectNoneMessage : '<?php echo '<?php'; ?> echo Yii::t('app', 'No results found.');?>'
-			, warningMessage : '<?php echo '<?php'; ?> echo Yii::t('app', 'Operation Failure Including Items.');?>'
+			, warningMessage : '<?php echo '<?php'; ?> echo Yii::t('app', 'Operation Failure.');?>'
 		};
 	 GridViewDelete(params);
  }

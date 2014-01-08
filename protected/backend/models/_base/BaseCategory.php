@@ -81,7 +81,7 @@ abstract class BaseCategory extends GxActiveRecord {
 
 	public function search() {
 		$alias = $this->tableAlias;
-	
+
 		$criteria = new CDbCriteria;
 
 		$criteria->compare("{$alias}.category_id", $this->category_id);

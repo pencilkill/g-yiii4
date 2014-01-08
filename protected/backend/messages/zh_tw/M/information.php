@@ -17,10 +17,10 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
+  'Parent_id can not be self or children' => '',
+  'Sort Order' => '排序',
   'Create Time' => '創建時間',
   'Information' => '單頁訊息',
   'Information|Informations' => '單頁訊息',
-  'Sort' => '排序',
-  'Status' => '啟用',
   'Update Time' => '更新時間',
 );

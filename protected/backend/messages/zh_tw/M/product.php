@@ -17,13 +17,9 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
+  'Sort Order' => '排序',
   'Create Time' => '創建時間',
-  'Date Added' => '上架日期',
   'Product' => '商品',
   'Product|Products' => '商品',
-  'Sort' => '排序',
-  'Status' => '啟用',
-  'Top' => '置頂',
   'Update Time' => '更新時間',
-  'Parent_id should be at least one which has no sub categories' => '商品分類至少一個，且對應分類下不能有子分類'
 );

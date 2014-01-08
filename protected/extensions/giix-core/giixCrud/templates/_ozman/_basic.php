@@ -6,7 +6,7 @@
 ?>
 
 
-<?php $skipColumns = array('create_time', 'update_time', 'language_id');?>
+<?php $skipColumns = array('create_time', 'update_time', GiixModelCode::I18N_LANGUAGE_COLUMN_NAME);?>
 
 		<table class="form">
 <?php foreach ($this->tableSchema->columns as $column): ?>

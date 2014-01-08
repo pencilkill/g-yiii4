@@ -19,7 +19,7 @@
 	$data = $model->search()->getData();
 	$pagination = $model->search()->getPagination();
 	// Widget actually output in view
-	$this->widget('OzLinkPager',array('pages' => $pagination));
+	$this->widget('ELinkPager',array('pages' => $pagination));
 	...
 	// Getting language i18n like this
 	var_dump($data[0]->categoryI18ns->title);
@@ -36,7 +36,7 @@
 	var_dump($data);
 	$pagination = $provider->getPagination();
 	// Widget actually output in view
-	$this->widget('OzLinkPager',array('pages' => $pagination));
+	$this->widget('ELinkPager',array('pages' => $pagination));
  *
  */
 class SiteController extends GxController

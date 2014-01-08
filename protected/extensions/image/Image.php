@@ -412,7 +412,7 @@ class Image
 		$cachedir = Yii::getPathOfAlias('webroot') . '/' . Yii::app()->getParams()->cacheDir . '/';
 
 		if( ! is_dir($cachedir)){
-			mkdir($cachedir, 0755, true);
+			CFileHelper::mkdir($cachedir, 0755, true);
 		}
 
 		if ( ! is_writable($cachedir)){

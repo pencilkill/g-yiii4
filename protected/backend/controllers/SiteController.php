@@ -125,7 +125,7 @@ class SiteController extends Controller
 			$path = Yii::app()->getRequest()->getParam('path', Yii::app()->getParams()->uploadDir.'/'.date('Y/m/d'));
 
 			$fullPath = Yii::getPathOfAlias('webroot').'/'.$path.'/';
-			is_dir($fullPath) || mkdir($fullPath, true, 0777);
+			is_dir($fullPath) || CFileHelper::mkdir($fullPath, true, 0777);
 
 			//wtf, cache outputs the same image sometimes when using function time() to rename file ...
 			$rename = Yii::app()->getRequest()->getParam('rename', uniqid().'.'.$file->extensionName);
@@ -194,7 +194,7 @@ class SiteController extends Controller
 			$path = Yii::app()->getRequest()->getParam('path', Yii::app()->getParams()->uploadDir.'/'.date('Y/m/d'));
 
 			$fullPath = Yii::getPathOfAlias('webroot').'/'.$path.'/';
-			is_dir($fullPath) || mkdir($fullPath, true, 0777);
+			is_dir($fullPath) || CFileHelper::mkdir($fullPath, true, 0777);
 
 			//wtf, cache outputs the same image sometimes when using function time() to rename file ...
 			$rename = Yii::app()->getRequest()->getParam('rename', uniqid().'.'.$file->extensionName);

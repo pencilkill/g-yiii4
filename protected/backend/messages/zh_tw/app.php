@@ -17,10 +17,21 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
+  'Commition Failure' => '',
+  'Operation Failure Including Items.' => '',
+  'Operation Failure Including SubItems' => '',
+  'Operation Failure.' => '',
+  'Select A Image' => '',
   'Advanced Search' => '高級搜索',
   'All' => '全部',
   'Cancel' => '取消',
-  'Confirm Delete Language?' => "警告：\n\n您正在嘗試刪除語言。\n\n這個操作將刪除關聯語言的所有資料。\n\n確定要刪除語言項目嗎？",
+  'Confirm Delete Language?' => '警告：
+
+您正在嘗試刪除語言。
+
+這個操作將刪除關聯語言的所有資料。
+
+確定要刪除語言項目嗎？',
   'Confirm Gallery Image Delete?' => '確認刪除項目？',
   'Confirm Grid View Delete?' => '確定要刪除選中項目嗎？',
   'Confirm Grid View Update?' => '確定要送出編輯項目嗎？',
@@ -30,28 +41,24 @@ return array (
   'Female' => '女生',
   'Gallery Image Delete' => '刪除',
   'Grid Actions' => '操作',
-  'Including Items' => '項目包含子項目',
-  'Level Down' => '向下',
-  'Level Up' => '向上',
   'List' => '列表',
   'Login' => '登錄',
   'Male' => '男生',
   'No' => '否',
-  'Noticed' =>  '已閱讀',
   'No results found.' => '沒有選中的項目',
   'None' => ' - 無 - ',
+  'Noticed' => '已閱讀',
   'Operation' => '操作',
   'Operation Failure' => '失敗：操作失敗',
   'Operation Success' => '成功：操作成功',
-  'Validation Failure' => '失敗：操作失敗，請檢查欄位設置',
   'Product Images' => '商品圖片',
   'Save' => '送出',
   'Search' => '搜索',
   'Tabs Basic' => '基本設置',
-  'Tabs Language' => '多語言',
-  'Update' => '編輯',
   'Unnoticed' => '未閱讀',
+  'Update' => '編輯',
   'Upload Successfully' => '文件上傳成功',
+  'Validation Failure' => '失敗：操作失敗，請檢查欄位設置',
   'Welcome to administration panel:' => '您已登錄為：',
   'Yes' => '是',
   'Your request is invalid.' => '您的請求無效。',

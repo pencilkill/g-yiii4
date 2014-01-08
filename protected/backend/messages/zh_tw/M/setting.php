@@ -19,5 +19,4 @@
 return array (
   'Key' => '',
   'Value' => '',
-  'Setting|Settings' => '設置',
 );

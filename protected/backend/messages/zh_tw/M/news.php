@@ -17,12 +17,11 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
+  'Sort Order' => '排序',
   'Create Time' => '創建時間',
   'Date Added' => '發佈日期',
   'News' => '新聞',
   'News|News' => '新聞',
-  'Sort' => '排序',
-  'Status' => '啟用',
   'Top' => '置頂',
   'Update Time' => '更新時間',
 );

@@ -9,7 +9,7 @@
  * @license http://giix.org/license/ New BSD License
  */
 Yii::import('system.gii.generators.model.ModelCode');
-Yii::import('ext.giix-core.helpers.*');
+Yii::import('frontend.extensions.giix-core.helpers.*');
 
 /**
  * GiixModelCode is the model for giix model generator.
@@ -387,5 +387,12 @@ class GiixModelCode extends ModelCode {
 <p style="margin: 2px 0; position: relative; text-align: right; top: -15px; color: #668866;">icons by <a href="http://www.famfamfam.com/lab/icons/silk/" style="color: #668866;">famfamfam.com</a></p>
 EOM;
 	}
-	// i18n
+
+	public function generateClassName($tableName){
+		return forward_static_call_array(array('parent', __FUNCTION__), func_get_args());
+	}
+
+	public function generateRelationName($tableName, $fkName, $multiple){
+		return forward_static_call_array(array('parent', __FUNCTION__), func_get_args());
+	}
 }

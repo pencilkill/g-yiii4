@@ -12,7 +12,7 @@ return array(
 	'import'=>array(
 		'frontend.models.*',
 		'frontend.components.*',
-		'ext.OzLinkPager',
+		'frontend.extensions.ELinkPager',
 	),
 	// application components
 	'components'=>array(
@@ -37,6 +37,26 @@ return array(
 					  'activeLinkTemplate' => '<a href="{url}">{label}</a>',
 					  'inactiveLinkTemplate' => '<span>{label}</span>',
 					  'separator' => ' &raquo; ',
+				),
+				// frontend.extensions.ELinkPager about configuration
+				'ELinkPager' => array(
+					'firstPageCssClass' => 'first',
+					'lastPageCssClass' => 'last',
+					'previousPageCssClass' => 'prev',
+					'nextPageCssClass' => 'next',
+					'internalPageCssClass' => 'page',
+					'hiddenPageCssClass' => 'hidden',
+					'selectedPageCssClass' => 'selected',
+					'maxButtonCount' => 10,
+					'nextPageLabel' => 'Next',
+					'prevPageLabel' => 'Prev',
+					'firstPageLabel' => false,
+					'lastPageLabel' => false,
+					'header' => '',
+					'footer' => '',
+					'cssFile' => '',
+					'container' => 'div',
+					'htmlOptions' => array('class' => 'pager'),
 				),
 			),
 		),

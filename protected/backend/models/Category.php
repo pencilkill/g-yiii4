@@ -18,7 +18,7 @@ class Category extends BaseCategory
 	}
 
 	public function validParentId(){
-    	$categoryIds = self::getCategoryIds($this->category_id, true);
+    	$categoryIds = self::getCategoryIds(__CLASS__, $this->category_id, true);
 
     	if(in_array($this->parent_id, $categoryIds)){
     		$this->addError('parent_id', Yii::t('m/category', 'Parent_id can not be self or children'));

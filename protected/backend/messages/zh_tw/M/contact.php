@@ -17,19 +17,20 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
+  'Company' => '',
+  'Firstname' => '',
+  'Lastname' => '',
+  'Remark' => '',
+  'Sex' => '',
+  'Telephone' => '',
   'Address' => '地址',
   'Cellphone' => '手機',
   'Contact' => '聯絡我們',
   'Contact|Contacts' => '聯絡我們',
-  'Corporation' => '公司',
   'Create Time' => '創建時間',
   'Email' => '電子郵箱',
   'Fax' => '傳真',
-  'Gender' => '性別',
   'Message' => '留言',
-  'Name' => '姓名',
-  'Note' => '備註',
   'Status' => '狀態',
-  'Telphone' => '電話',
   'Update Time' => '更新時間',
 );

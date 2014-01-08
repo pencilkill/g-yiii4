@@ -17,6 +17,7 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
+  'Status' => '',
   'Description' => '內容',
   'Information I18n' => '多語言',
   'InformationI18n|InformationI18ns' => '多語言',

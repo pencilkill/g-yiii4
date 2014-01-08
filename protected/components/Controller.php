@@ -112,4 +112,38 @@ class Controller extends CController
 
     	return $publishPath;
     }
+/**
+     * pdfable
+     */
+	public function enablePdfable($option = array(), $pageOptions = array(), $tmpAlias = null){
+		Yii::import('frontend.extensions.pdfable.Pdfable');
+
+		if(!isset($option['bin'])){
+			if(strpos(strtolower($_SERVER['HTTP_HOST']),'local')!==false){
+				$option['bin'] = 'D:\Program Files\wkhtmltopdf\wkhtmltopdf.exe';
+			}elseif(strpos(strtolower($_SERVER['HTTP_HOST']),'works.tw')!==false){
+				$option['bin'] = '/usr/local/bin/wkhtml2pdf';
+			}else{
+				$option['bin'] = '/usr/bin/wkhtml2pdf';
+			}
+		}
+
+		if(isset($option['bin']) && is_file($option['bin'])){
+			$this->attachBehavior('pdfable', 'Pdfable');
+
+			$this->pdfable->setPdfOptions($option);
+			$this->pdfable->setPdfPageOptions($pageOptions);
+			if(empty($tmpAlias)){
+				$tmpdir = Yii::getPathOfAlias('webroot.assets.pdfable');
+
+				is_dir($tmpdir) || CFileHelper::mkdir($tmpdir);
+
+				$this->pdfable->tmpAlias = 'webroot.assets.pdfable';
+			}
+
+			return true;
+		}else{
+			return false;
+		}
+	}
 }

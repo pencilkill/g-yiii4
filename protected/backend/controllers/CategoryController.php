@@ -5,10 +5,9 @@ class CategoryController extends GxController {
 
 
 
-	public function actionIndex($parent_id = 0) {
+	public function actionIndex() {
 		$model = new Category('search');
 		$model->unsetAttributes();
-		$model->parent_id = $parent_id;
 
 		$i18n = new CategoryI18n('search');
 		$i18n->unsetAttributes();
@@ -23,6 +22,8 @@ class CategoryController extends GxController {
 			$i18n->setAttributes($_GET['CategoryI18n']);
 		}
 
+		Yii::app()->user->setState('category-grid-url', Yii::app()->request->url);
+
 		$this->render('index', array(
 			'model' => $model,
 			'i18n' => $i18n,
@@ -35,8 +36,8 @@ class CategoryController extends GxController {
 		$i18ns = array();
 
 		foreach($this->languages as $val){
-			$i18n = new CategoryI18n;
-			$i18ns[$val['language_id']] = $i18n;
+			$va = new CategoryI18n;
+			$i18ns[$val['language_id']] = $va;
 		}
 
 		$this->performAjaxValidationEx(array(
@@ -51,33 +52,44 @@ class CategoryController extends GxController {
 			'category-form'
 		);
 
-		$categories = Category::getCategories();
-
 		if (isset($_POST['Category'])) {
 			$model->setAttributes($_POST['Category']);
 
-			$valid = true;
+			$valid = $model->validate();
 
-			foreach($this->languages as $val){
-				$i18ns[$val['language_id']]->setAttributes($_POST['CategoryI18n'][$val['language_id']]);
-				$i18ns[$val['language_id']]->language_id = $val['language_id'];
-				$i18ns[$val['language_id']]->category_id = 0;
+			$i18ns = array();
+			foreach($_POST['CategoryI18n'] as $val){
+				$va = new CategoryI18n;
+				$va->setAttributes($val);
+				$va->category_id = 0;
 
-				$valid = $i18ns[$val['language_id']]->validate() && $valid;
+				$valid = $va->validate() && $valid;
+
+				$i18ns[$val['language_id']] = $va;
 			}
 
+			if ($valid) {
+				$transaction = Yii::app()->db->beginTransaction();
 
-			if ($valid && $model->validate()) {
-				$model->save(false);
+				try{
+					$model->save(false);
 
-				foreach($this->languages as $val){
-					$i18ns[$val['language_id']]->category_id = $model->category_id;
-					$i18ns[$val['language_id']]->save();
-				}
-				if (Yii::app()->getRequest()->getIsAjaxRequest()){
-					Yii::app()->end();
-				}else{
-					$this->redirect(array('index'));
+					foreach($i18ns as $va){
+						$va->category_id = $model->category_id;
+						$va->save(false);
+					}
+
+					$transaction->commit();
+
+					if (Yii::app()->getRequest()->getIsAjaxRequest()){
+						Yii::app()->end();
+					}else{
+						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
+					}
+				}catch(CDbException $e){
+					$transaction->rollback();
+
+					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 				}
 			}else{
 				Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
@@ -87,7 +99,6 @@ class CategoryController extends GxController {
 		$this->render('create', array(
 			'model' => $model,
 			'i18ns' => $i18ns,
-			'categories' => $categories,
 		));
 	}
 
@@ -95,13 +106,6 @@ class CategoryController extends GxController {
 		$model = $this->loadModel($id, 'Category');
 
 		$i18ns = $model->categoryI18ns;
-
-		foreach($this->languages as $val){
-			if(!isset($i18ns[$val['language_id']])){
-				$i18n = new CategoryI18n;
-				$i18ns[$val['language_id']] = $i18n;
-			}
-		}
 
 		$this->performAjaxValidationEx(array(
 				array(
@@ -115,30 +119,42 @@ class CategoryController extends GxController {
 			'category-form'
 		);
 
-		$categories = Category::getCategories();
-
 		if (isset($_POST['Category'])) {
 			$model->setAttributes($_POST['Category']);
-			$valid = true;
 
-			foreach($this->languages as $val){
-				$i18ns[$val['language_id']]->setAttributes($_POST['CategoryI18n'][$val['language_id']]);
-				$i18ns[$val['language_id']]->language_id = $val['language_id'];
-				$i18ns[$val['language_id']]->category_id = $model->category_id;
+			$valid = $model->validate();
 
-				$valid = $i18ns[$val['language_id']]->validate() && $valid;
+			foreach($_POST['CategoryI18n'] as $val){
+				$va = new CategoryI18n;
+				$va->setAttributes($val);
+				$va->category_id = $model->category_id;
+
+				$valid = $va->validate() && $valid;
+
+				$i18ns[$val['language_id']] = $va;
 			}
 
-			if ($valid && $model->validate()) {
-				$model->save(false);
+			if ($valid) {
+				$transaction = Yii::app()->db->beginTransaction();
 
-				foreach($this->languages as $val){
-					$i18ns[$val['language_id']]->save();
-				}
-				if (Yii::app()->getRequest()->getIsAjaxRequest()){
-					Yii::app()->end();
-				}else{
-					$this->redirect(array('index'));
+				try{
+					$model->save(false);
+
+					foreach($i18ns as $val){
+						$va->save(false);
+					}
+
+					$transaction->commit();
+
+					if (Yii::app()->getRequest()->getIsAjaxRequest()){
+						Yii::app()->end();
+					}else{
+						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
+					}
+				}catch(CDbException $e){
+					$transaction->rollback();
+
+					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 				}
 			}else{
 				Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
@@ -148,16 +164,21 @@ class CategoryController extends GxController {
 		$this->render('update', array(
 			'model' => $model,
 			'i18ns' => $i18ns,
-			'categories' => $categories,
 		));
 	}
 
 	public function actionDelete($id) {
 		if (Yii::app()->getRequest()->getIsPostRequest()) {
-			$this->loadModel($id, 'Category')->delete();
+			$model = $this->loadModel($id, 'Category');
+
+			if(! $model->beforeDelete()){
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
+			}else{
+				$model->delete();
+			}
 
 			if (Yii::app()->getRequest()->getIsAjaxRequest()){
-				echo CJSON::encode(($flashes=Yii::app()->user->getFlashes()) ? $flashes : array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
 				Yii::app()->end();
 			}else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->createUrl('index'));
@@ -177,23 +198,25 @@ class CategoryController extends GxController {
 
 			$models = Category::model()->findAll($criteria);
 
-			$valid = true;
+			$errorModel = null;
 
 			foreach ($models as $model){
-				$valid = $valid && $model->beforeDelete();
-				if(! $valid){
+				if(! $model->beforeDelete()){
+					$errorModel = $model;
 					break;
 				}
 			}
 
-			if($valid) {
+			if(! $errorModel) {
 				foreach ($models as $model){
 					$model->delete();
 				}
+			}else{
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
 			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
-				echo CJSON::encode(array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
@@ -231,14 +254,14 @@ class CategoryController extends GxController {
 				foreach ($models as $model){
 					$model->save(false);
 				}
+			}else{
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
 			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
-				echo CJSON::encode(array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
 				Yii::app()->end();
 			} else{
-				$errorModel && Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
-
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));
 			}
 		}else{

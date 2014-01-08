@@ -100,7 +100,3 @@
 	</div><!-- form -->
   </div>
 </div>
-<?php $this->widget('ext.msDropdown.msDropDown', array())?>
-<script type="text/javascript">
-jQuery('#<?php echo CHtml::activeId($model, 'image')?>').msDropDown();
-</script>
