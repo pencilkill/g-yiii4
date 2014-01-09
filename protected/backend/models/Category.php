@@ -17,6 +17,11 @@ class Category extends BaseCategory
 		);
 	}
 
+
+	/**
+	 * Validate parent_id
+	 */
+
 	public function validParentId(){
     	$categoryIds = self::getCategoryIds(__CLASS__, $this->category_id, true);
 
@@ -30,6 +35,7 @@ class Category extends BaseCategory
 	 * category level will be added on for each node
 	 * please note that default level is custom variable, you can set it as zero while the root node is not zero
 	 *
+	 * @param $modelName, the model class name
 	 * @param $parent, root node
 	 * @param $textAttribute, attribute to show
 	 * @param $level
@@ -72,13 +78,17 @@ class Category extends BaseCategory
 
 		return $callback($parent, $level);
 	}
+
 	/**
 	 * @see self::getCategories()
 	 *
+	 * @param $modelName, the model class name
 	 * @param $parent
 	 * @param $textAttribute, attribute to show
 	 * @param $level
+	 * @return array
 	 */
+
 	public static function getDropListData($modelName = __CLASS__, $parent = NULL, $textAttribute = 'categoryI18n.title', $level=0) {
 		if(is_array($modelName)){	// models
 			$modelName = array_shift($modelName);	// model
@@ -109,11 +119,16 @@ class Category extends BaseCategory
 
 		return $callback($parent, $level);
 	}
+
 	/**
 	 *  Get all child node id base on $parent
-	 * @return array
+	 *
+	 * @param $modelName, the model class name
 	 * @param $parent, root node
+	 * @param $self, whether the return value includes the $parend or not
+	 * @return array
 	 */
+
 	public static function getCategoryIds($modelName = __CLASS__, $parent = NULL, $self = false) {
 		if(is_array($modelName)){	// models
 			$modelName = array_shift($modelName);	// model
@@ -148,18 +163,30 @@ class Category extends BaseCategory
 		return $categoryIds;
     }
 
+	/**
+     * The zii.behavior.CTimestampBehavior has been enabled in baseModel already
+     *
+     * @return boolean
+     */
+
     public function beforeSave(){
-    	if(! parent::beforeSave()) return false;
+    	if(!parent::beforeSave()) return false;
 
     	$this->parent_id = $this->parent_id ? $this->parent_id : new CDbExpression('NULL');
 
     	return true;
     }
 
-    public function beforeDelete(){
-    	if(! parent::beforeDelete()) return false;
+	/**
+     * Checking relations before the DB fk constraint
+     *
+     * @return boolean
+     */
 
-    	if(sizeOf($this->categories) || sizeOf($this->product2category)){
+    public function beforeDelete(){
+    	if(!parent::beforeDelete()) return false;
+
+    	if(sizeOf($this->categories) || sizeOf($this->product2categories)){
     		Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure Including SubItems'));
 
     		return false;

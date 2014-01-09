@@ -21,9 +21,20 @@
 	$selfRelation = false;
 	$selfRelationColumn = '';
 
-	if(array_key_exists($selfRelationName, $relations) && preg_match("/^\s*array\s*\(\s*self::HAS_MANY\s*,\s*'{$modelClass}'\s*,\s*'(\w+)'\s*,?/i", $relations[$selfRelationName], $relationColumn)){
-		$selfRelation = true;
-		$selfRelationColumn = $relationColumn[1];
+	$beforeDelete = array();
+
+	foreach($relations as $name => $relation){
+		if($name == $selfRelationName && preg_match("/^\s*array\s*\(\s*self::HAS_MANY\s*,\s*'{$modelClass}'\s*,\s*'(\w+)'\s*,?/i", $relation, $relationColumn)){
+			$selfRelation = true;
+			$selfRelationColumn = $relationColumn[1];
+		}
+		// beforeDelete
+		if(preg_match("/^\s*array\s*\(\s*self::(HAS|MANY)_MANY\s*,.*/i", $relation)){
+			if(empty($i18n) || ($name != $i18n->relationNamePluralized)){
+				$beforeDelete[] = 'sizeOf($this->' . $name . ')';
+			}
+		}
+
 	}
 ?>
 <?php echo "<?php\n"; ?>
@@ -36,7 +47,7 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 		return parent::model($className);
 	}
 <?php if(substr($tableName, -5) == GiixModelCode::I18N_TABLE_SUFFIX){?>
-	
+
 	public function t($<?php echo GiixModelCode::I18N_LANGUAGE_COLUMN_NAME?> = null){
 		$<?php echo GiixModelCode::I18N_LANGUAGE_COLUMN_NAME?> = empty($<?php echo GiixModelCode::I18N_LANGUAGE_COLUMN_NAME?>) ? Yii::app()->controller->language_id : $<?php echo GiixModelCode::I18N_LANGUAGE_COLUMN_NAME?>;
 
@@ -58,8 +69,13 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 		);
 	}
 
+
+	/**
+	 * Validate parent_id
+	 */
+
 	public function validParentId(){
-    	$categoryIds = self::getCategoryIds($this-><?php echo $table->primaryKey?>, true);
+    	$categoryIds = self::getCategoryIds(__CLASS__, $this-><?php echo $table->primaryKey?>, true);
 
     	if(in_array($this-><?php echo $selfRelationColumn?>, $categoryIds)){
     		$this->addError('<?php echo $selfRelationColumn?>', Yii::t('m/<?php echo strtolower($modelClass)?>', 'Parent_id can not be self or children'));
@@ -71,6 +87,7 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 	 * category level will be added on for each node
 	 * please note that default level is custom variable, you can set it as zero while the root node is not zero
 	 *
+	 * @param $modelName, the model class name
 	 * @param $parent, root node
 	 * @param $textAttribute, attribute to show
 	 * @param $level
@@ -113,13 +130,17 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 
 		return $callback($parent, $level);
 	}
+
 	/**
 	 * @see self::getCategories()
 	 *
+	 * @param $modelName, the model class name
 	 * @param $parent
 	 * @param $textAttribute, attribute to show
 	 * @param $level
+	 * @return array
 	 */
+
 	public static function getDropListData($modelName = __CLASS__, $parent = NULL, $textAttribute = '<?php echo $i18n ? "{$i18n->relationName}.title" : ''?>', $level=0) {
 		if(is_array($modelName)){	// models
 			$modelName = array_shift($modelName);	// model
@@ -150,11 +171,16 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 
 		return $callback($parent, $level);
 	}
+
 	/**
 	 *  Get all child node id base on $parent
-	 * @return array
+	 *
+	 * @param $modelName, the model class name
 	 * @param $parent, root node
+	 * @param $self, whether the return value includes the $parend or not
+	 * @return array
 	 */
+
 	public static function getCategoryIds($modelName = __CLASS__, $parent = NULL, $self = false) {
 		if(is_array($modelName)){	// models
 			$modelName = array_shift($modelName);	// model
@@ -189,18 +215,32 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 		return $categoryIds;
     }
 
+	/**
+     * The zii.behavior.CTimestampBehavior has been enabled in baseModel already
+     *
+     * @return boolean
+     */
+
     public function beforeSave(){
-    	if(! parent::beforeSave()) return false;
+    	if(!parent::beforeSave()) return false;
 
     	$this-><?php echo $selfRelationColumn?> = $this-><?php echo $selfRelationColumn?> ? $this-><?php echo $selfRelationColumn?> : new CDbExpression('NULL');
 
     	return true;
     }
+<?php endif;?>
+<?php if($beforeDelete){?>
+
+	/**
+     * Checking relations before the DB fk constraint
+     *
+     * @return boolean
+     */
 
     public function beforeDelete(){
-    	if(! parent::beforeDelete()) return false;
+    	if(!parent::beforeDelete()) return false;
 
-    	if(sizeOf($this-><?php echo $selfRelationName?>)){
+    	if(<?php echo implode(' || ', $beforeDelete)?>){
     		Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure Including SubItems'));
 
     		return false;
@@ -208,5 +248,5 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 
     	return true;
     }
-<?php endif;?>
+<?php }?>
 }

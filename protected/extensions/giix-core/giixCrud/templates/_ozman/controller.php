@@ -184,6 +184,11 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 					$model->save(false);
 <?php if($this->i18n):?>
 
+					$criteria = new CDbCriteria;
+					$criteria->compare = ('t.<?php echo $this->getTableSchema()->primaryKey?>=:<?php echo $this->getTableSchema()->primaryKey?>');
+					$criteria->params = array(':<?php echo $this->getTableSchema()->primaryKey?>' => $model-><?php echo $this->getTableSchema()->primaryKey?>);
+
+					<?php echo $this->i18n->className?>::model()->deleteAll($criteria);
 					foreach($i18ns as $val){
 						$va->save(false);
 					}

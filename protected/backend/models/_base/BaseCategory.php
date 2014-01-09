@@ -68,7 +68,7 @@ abstract class BaseCategory extends GxActiveRecord {
 	public function attributeLabels() {
 		return array(
 			'category_id' => Yii::t('m/category', 'Category'),
-			'parent_id' => null,
+			'parent_id' => Yii::t('m/category', 'Parent'),
 			'sort_order' => Yii::t('m/category', 'Sort Order'),
 			'create_time' => Yii::t('m/category', 'Create Time'),
 			'update_time' => Yii::t('m/category', 'Update Time'),

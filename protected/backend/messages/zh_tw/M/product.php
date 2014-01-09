@@ -19,7 +19,7 @@
 return array (
   'Sort Order' => '排序',
   'Create Time' => '創建時間',
-  'Product' => '商品',
-  'Product|Products' => '商品',
+  'Product' => '產品',
+  'Product|Products' => '產品',
   'Update Time' => '更新時間',
 );

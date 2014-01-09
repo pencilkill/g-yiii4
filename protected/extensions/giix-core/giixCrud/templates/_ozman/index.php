@@ -136,7 +136,17 @@ echo "<?php\n
 								'header' => Yii::t('app', 'Grid Actions'),
 								'class' => 'CButtonColumn',
 								'afterDelete' => 'function(link,success,data){var r=jQuery.parseJSON(data); if(!r || !r.success){jQuery.each(r, function(t, m){GridViewFlash(t, m); return false;});}}',
-								'template' => '{update}&nbsp;{delete}',
+								'template' => '&#91;&nbsp;{update}&nbsp;&#93;&nbsp;&#91;&nbsp;{delete}&nbsp;&#93;',
+								'updateButtonLabel' => Yii::t('app', 'Update'),
+								'updateButtonImageUrl' => false,
+								'deleteButtonLabel' => Yii::t('app', 'Delete'),
+								'deleteButtonImageUrl' => false,
+								'headerHtmlOptions' => array(
+									'class' => 'right',
+								),
+								'htmlOptions' => array(
+									'class' => 'right',
+								),
 							),
 						),
 					));

@@ -17,8 +17,8 @@
  * @property string $keywords
  * @property string $description
  *
- * @property Language $language
  * @property Picture $picture
+ * @property Language $language
  */
 abstract class BasePictureI18n extends GxActiveRecord {
 
@@ -52,8 +52,8 @@ abstract class BasePictureI18n extends GxActiveRecord {
 
 	public function relations() {
 		return array(
-			'language' => array(self::BELONGS_TO, 'Language', 'language_id'),
 			'picture' => array(self::BELONGS_TO, 'Picture', 'picture_id'),
+			'language' => array(self::BELONGS_TO, 'Language', 'language_id'),
 		);
 	}
 
@@ -71,8 +71,8 @@ abstract class BasePictureI18n extends GxActiveRecord {
 			'title' => Yii::t('m/picturei18n', 'Title'),
 			'keywords' => Yii::t('m/picturei18n', 'Keywords'),
 			'description' => Yii::t('m/picturei18n', 'Description'),
-			'language' => null,
 			'picture' => null,
+			'language' => null,
 		);
 	}
 

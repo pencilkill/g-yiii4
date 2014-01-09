@@ -23,5 +23,5 @@ return array (
   'Pic' => '圖片',
   'Product I18n' => '多語言',
   'ProductI18n|ProductI18ns' => '多語言',
-  'Title' => '商品名稱',
+  'Title' => '產品名稱',
 );

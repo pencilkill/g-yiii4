@@ -18,6 +18,6 @@
  */
 return array (
   'Pic' => '圖片',
-  'Product2image' => '商品圖片',
-  'Product2image|Product2images' => '商品圖片',
+  'Product2image' => '產品圖片',
+  'Product2image|Product2images' => '產品圖片',
 );

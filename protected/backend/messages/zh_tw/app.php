@@ -51,7 +51,7 @@ return array (
   'Operation' => '操作',
   'Operation Failure' => '失敗：操作失敗',
   'Operation Success' => '成功：操作成功',
-  'Product Images' => '商品圖片',
+  'Product Images' => '產品圖片',
   'Save' => '送出',
   'Search' => '搜索',
   'Tabs Basic' => '基本設置',

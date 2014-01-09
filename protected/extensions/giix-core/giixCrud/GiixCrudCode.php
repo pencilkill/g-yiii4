@@ -324,9 +324,9 @@ EOM;
 			$relatedModelClass = $relation[3];
 $clip = <<<EOM
 array(
-{$space}	'name'=>'{$column->name}',
-{$space}	'value'=>'GxHtml::valueEx(\$data->{$relationName})',
-{$space}	'filter'=>GxHtml::listDataEx({$relatedModelClass}::model()->findAllAttributes(null, true)),
+{$space}	'name' => '{$column->name}',
+{$space}	'value' => 'CHtml::value(\$data, "{$relationName}", Yii::t("app", "None"))',
+{$space}	'filter' => CHtml::activeDropDownList(\$model, '{$column->name}', {$relatedModelClass}::model()->getDropListData(), array('prompt' => '')),
 {$space})
 EOM;
 		}

@@ -140,6 +140,11 @@ class CategoryController extends GxController {
 				try{
 					$model->save(false);
 
+					$criteria = new CDbCriteria;
+					$criteria->compare = ('t.category_id=:category_id');
+					$criteria->params = array(':category_id' => $model->category_id);
+
+					CategoryI18n::model()->deleteAll($criteria);
 					foreach($i18ns as $val){
 						$va->save(false);
 					}

@@ -18,5 +18,5 @@
  */
 return array (
   'Product2category' => '',
-  'Product2category|Product2categories' => '商品分類',
+  'Product2category|Product2categories' => '產品分類',
 );

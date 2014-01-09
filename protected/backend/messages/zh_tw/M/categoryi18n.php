@@ -21,5 +21,5 @@ return array (
   'CategoryI18n|CategoryI18ns' => '多語言',
   'Description' => '內容',
   'Keywords' => '關鍵詞',
-  'Title' => '目录名称',
+  'Title' => '名称',
 );
