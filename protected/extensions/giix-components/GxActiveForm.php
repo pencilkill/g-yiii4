@@ -49,7 +49,7 @@ class GxActiveForm extends CActiveForm {
 	 * @see validateTabular()
 	 * @return string the JSON representation of the validation error messages.
 	 */
-public static function validateEx($models, $loadInput=true)
+	public static function validateEx($models, $loadInput=true)
 	{
 		$result=array();
 

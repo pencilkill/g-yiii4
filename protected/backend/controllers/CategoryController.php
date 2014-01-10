@@ -9,24 +9,26 @@ class CategoryController extends GxController {
 		$model = new Category('search');
 		$model->unsetAttributes();
 
-		$i18n = new CategoryI18n('search');
-		$i18n->unsetAttributes();
-
-		$model->filterI18n = $i18n;
+		$model->filterInstance();
 
 		if (isset($_GET['Category'])){
 			$model->setAttributes($_GET['Category']);
 		}
 
+		if (empty($_GET['Category']['parent_id'])) {
+			$model->setAttribute('parent_id', array(NULL));
+		}
+
 		if (isset($_GET['CategoryI18n'])){
-			$i18n->setAttributes($_GET['CategoryI18n']);
+			$model->filter->categoryI18ns->setAttributes($_GET['CategoryI18n']);
 		}
 
 		Yii::app()->user->setState('category-grid-url', Yii::app()->request->url);
 
+		var_dump(Category::model()->dropListData());
+
 		$this->render('index', array(
 			'model' => $model,
-			'i18n' => $i18n,
 		));
 	}
 

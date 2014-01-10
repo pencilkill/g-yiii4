@@ -45,11 +45,11 @@ $backCfg = array(
 	'defaultController'=>'site',
 
 	// preloading 'log' component
-	/*
+
 	'preload'=>array(
 		'log',
 	),
-	*/
+
 
 	// autoloading model and component classes
 	'import'=>array(

@@ -98,13 +98,13 @@ $this->breadcrumbs = array(
 
 							array(
 					        	'name' => 'categoryI18n.title',
-								'filter' => CHtml::activeTextField($model->filterI18n, 'title'),
+								'filter' => CHtml::activeTextField($model->filter->categoryI18ns, 'title'),
 							),
 
 							array(
 								'name' => 'parent_id',
 								'value' => 'CHtml::value($data, "parent.categoryI18n.title", Yii::t("app", "None"))',
-								'filter' => CHtml::activeDropDownList($model, 'parent_id', Category::model()->getDropListData(), array('prompt' => '')),
+								'filter' => CHtml::activeDropDownList($model, 'parent_id', Category::model()->dropListData(), array('prompt' => '')),
 							),
 
 							array(

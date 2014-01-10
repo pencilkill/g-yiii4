@@ -4,19 +4,64 @@ Yii::import('backend.models._base.BaseCategory');
 
 class Category extends BaseCategory
 {
+	/**
+	 * @var object
+	 * an helper object to filter data
+	 * checking search(), CActiveRecordFilterBehavior
+	 */
+	public $filter;
+
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
 
-	public function rules() {
-		return CMap::mergeArray(
-			parent::rules(),
-			array(
-				array('parent_id', 'validParentId', 'on' => 'update'),
-			)
-		);
+	public function behaviors() {
+        return CMap::mergeArray(parent::behaviors(), array(
+			'CActiveRecordFilterBehavior' => array(
+				'class' => 'backend.behaviors.CActiveRecordFilterBehavior',
+			),
+			'CTimestampBehavior' => array(
+				'class' => 'zii.behaviors.CTimestampBehavior',
+				'updateAttribute' => 'update_time',
+				'createAttribute' => 'create_time',
+				'setUpdateOnCreate' => true,
+			),
+			'CActiveRecordNullBehavior' => array(
+				'class' => 'backend.behaviors.CActiveRecordNullBehavior',
+				'attributes' => array(
+					'parent_id',
+				),
+			),
+			'CTreeBehavior' => array(
+				'class' => 'backend.behaviors.CTreeBehavior',
+				'textAttribute' => 'categoryI18n.title',
+			),
+        ));
 	}
 
+	/**
+	 * customer null label
+	 * notice that if label value is null, yii will get the value from the relation model label
+	 */
+
+	public function attributeLabels() {
+		return CMap::mergeArray(parent::attributeLabels(), array(
+			'parent' => null,
+			'categories' => null,
+			'categoryI18ns' => null,
+			'product2categories' => null,
+		));
+	}
+
+	/**
+	 * Customer rules
+	 */
+
+	public function rules() {
+		return CMap::mergeArray(parent::rules(), array(
+			array('parent_id', 'validParentId', 'on' => 'update'),
+		));
+	}
 
 	/**
 	 * Validate parent_id
@@ -30,154 +75,7 @@ class Category extends BaseCategory
     	}
     }
 
-	/**
-	 * Get all child node base on $parent
-	 * category level will be added on for each node
-	 * please note that default level is custom variable, you can set it as zero while the root node is not zero
-	 *
-	 * @param $modelName, the model class name
-	 * @param $parent, root node
-	 * @param $textAttribute, attribute to show
-	 * @param $level
-	 * @return array
-	 */
-
-	public static function getCategories($modelName = __CLASS__, $parent = NULL, $textAttribute = 'categoryI18n.title', $level=0) {
-		if(is_array($modelName)){	// models
-			$modelName = array_shift($modelName);	// model
-		}
-
-		$modelName = CHtml::modelName($modelName);	// modelName
-
-		$primaryKey = $modelName::model()->tableSchema->primaryKey;
-
-		$storage = array();
-		$callback = null;
-
-		$callback = function($parent, $level) use ($storage, &$callback, $modelName, $primaryKey, $textAttribute){
-			$criteria = new CDbCriteria;
-			$criteria->compare('t.parent_id', is_array($parent) ? $parent : array($parent));
-			$criteria->order = 't.sort_order DESC, t.category_id ASC';
-
-			$categories = $modelName::model()->findAll($criteria);
-
-			foreach ($categories as $category) {
-				$subCategories = call_user_func($callback, $category->$primaryKey, $level+1);
-				$storage[] = array(
-					$primaryKey => $category->$primaryKey,
-					'parent_id' => $category->parent_id,
-					'level' => $level,
-					'title' => CHtml::value($category, $textAttribute),
-					'totalSubCategories' => sizeOf($subCategories),
-				);
-				$storage = CMap::mergeArray($storage, $subCategories);
-			}
-
-			return $storage;
-		};
-
-		return $callback($parent, $level);
-	}
-
-	/**
-	 * @see self::getCategories()
-	 *
-	 * @param $modelName, the model class name
-	 * @param $parent
-	 * @param $textAttribute, attribute to show
-	 * @param $level
-	 * @return array
-	 */
-
-	public static function getDropListData($modelName = __CLASS__, $parent = NULL, $textAttribute = 'categoryI18n.title', $level=0) {
-		if(is_array($modelName)){	// models
-			$modelName = array_shift($modelName);	// model
-		}
-
-		$modelName = CHtml::modelName($modelName);	// modelName
-
-		$primaryKey = $modelName::model()->tableSchema->primaryKey;
-
-		$storage = array();
-		$callback = null;
-
-		$callback = function($parent, $level) use ($storage, &$callback, $modelName, $primaryKey, $textAttribute){
-			$criteria = new CDbCriteria;
-			$criteria->compare('t.parent_id', is_array($parent) ? $parent : array($parent));
-			$criteria->order = 't.sort_order DESC, t.category_id ASC';
-
-			$categories = $modelName::model()->findAll($criteria);
-
-			foreach ($categories as $category) {
-				$storage[$category->$primaryKey] = str_repeat('　', $level) . (CHtml::value($category, $textAttribute));
-
-				$storage = CMap::mergeArray($storage, call_user_func($callback, $category->$primaryKey, $level+1));
-			}
-
-			return $storage;
-		};
-
-		return $callback($parent, $level);
-	}
-
-	/**
-	 *  Get all child node id base on $parent
-	 *
-	 * @param $modelName, the model class name
-	 * @param $parent, root node
-	 * @param $self, whether the return value includes the $parend or not
-	 * @return array
-	 */
-
-	public static function getCategoryIds($modelName = __CLASS__, $parent = NULL, $self = false) {
-		if(is_array($modelName)){	// models
-			$modelName = array_shift($modelName);	// model
-		}
-
-		$modelName = CHtml::modelName($modelName);	// modelName
-
-		$primaryKey = $modelName::model()->tableSchema->primaryKey;
-
-		$storage = array();
-		$callback = null;
-
-		$callback = function($parent, $self) use ($storage, &$callback, $modelName, $primaryKey){
-	        $criteria = new CDbCriteria;
-			$criteria->compare('t.parent_id', is_array($parent) ? $parent : array($parent));
-			$criteria->order = 't.sort_order DESC, t.category_id ASC';
-
-	        $categories = $modelName::model()->findAll($criteria);
-
-	        foreach ($categories as $category) {
-	        	$storage[] = $category->$primaryKey;
-	        	$storage = CMap::mergeArray($storage, call_user_func($callback, $category->$primaryKey, $self));
-	        }
-
-	        return $storage;
-		};
-
-		$categoryIds = $callback($parent, $self);
-
-		$self && array_unshift($categoryIds, $parent);
-
-		return $categoryIds;
-    }
-
-	/**
-     * The zii.behavior.CTimestampBehavior has been enabled in baseModel already
-     *
-     * @return boolean
-     */
-
-    public function beforeSave(){
-    	if(!parent::beforeSave()) return false;
-
-    	$this->parent_id = $this->parent_id ? $this->parent_id : new CDbExpression('NULL');
-
-    	return true;
-    }
-
-	/**
+    /**
      * Checking relations before the DB fk constraint
      *
      * @return boolean

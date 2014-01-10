@@ -23,8 +23,6 @@
  */
 abstract class BaseCategory extends GxActiveRecord {
 
-	public $filterI18n;
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -90,13 +88,13 @@ abstract class BaseCategory extends GxActiveRecord {
 		$criteria->compare("{$alias}.create_time", $this->create_time, true);
 		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 
-		$criteria->with = array('categoryI18ns');
 		$criteria->group = "{$alias}.category_id";
 		$criteria->together = true;
 
-		$criteria->compare('categoryI18ns.title', $this->filterI18n->title, true);
-		$criteria->compare('categoryI18ns.keywords', $this->filterI18n->keywords, true);
-		$criteria->compare('categoryI18ns.description', $this->filterI18n->description, true);
+		$criteria->with = array('categoryI18ns');
+		$criteria->compare('categoryI18ns.title', $this->filter->categoryI18ns->title, true);
+		$criteria->compare('categoryI18ns.keywords', $this->filter->categoryI18ns->keywords, true);
+		$criteria->compare('categoryI18ns.description', $this->filter->categoryI18ns->description, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
@@ -116,16 +114,5 @@ abstract class BaseCategory extends GxActiveRecord {
 				'pageVar' => 'page',
 			),
 		));
-	}
-
-	public function behaviors() {
-		return array(
-			'CTimestampBehavior'=>array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-				'updateAttribute' => 'update_time',
-				'createAttribute' => 'create_time',
-				'setUpdateOnCreate' => true,
-			),
-        );
 	}
 }
