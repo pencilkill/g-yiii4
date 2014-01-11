@@ -3,6 +3,8 @@
  * CCategoryBehavior class file.
  * Self relation category helper
  *
+ * TODO Maybe cache solution is required, cache or class private property $_data
+ *
  * @author sam@ozchamp.net <sam@ozchamp.net>
  */
 
@@ -31,7 +33,6 @@ class CTreeBehavior extends CActiveRecordBehavior {
 		}
 
 		$modelName = $this->modelName;
-
 		if(($modelName::model() instanceOf CActiveRecord) !== true){
 			return $this->modelName = null;
 		}else{
@@ -59,7 +60,7 @@ class CTreeBehavior extends CActiveRecordBehavior {
 	 * @return array
 	 */
 
-	public function Trees($textAttribute = NULL, $parent = NULL, $level = 0) {
+	public function TreeList($textAttribute = NULL, $parent = NULL, $level = 0) {
 		$storage = array();
 
 		if(empty($this->modelName)){
@@ -112,7 +113,7 @@ class CTreeBehavior extends CActiveRecordBehavior {
 	 * @return array
 	 */
 
-	public function dropListData($textAttribute = NULL, $parent = NULL, $level = 0) {
+	public function dropList($textAttribute = NULL, $parent = NULL, $level = 0) {
 		$storage = array();
 
 		if(empty($this->modelName)){
@@ -159,7 +160,7 @@ class CTreeBehavior extends CActiveRecordBehavior {
 	 * @return array
 	 */
 
-	public function nodeIds($parent = NULL, $self = false) {
+	public function subNodes($parent = NULL, $self = false) {
 		$storage = array();
 
 		if(empty($this->modelName)){

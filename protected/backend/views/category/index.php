@@ -104,7 +104,7 @@ $this->breadcrumbs = array(
 							array(
 								'name' => 'parent_id',
 								'value' => 'CHtml::value($data, "parent.categoryI18n.title", Yii::t("app", "None"))',
-								'filter' => CHtml::activeDropDownList($model, 'parent_id', Category::model()->dropListData(), array('prompt' => '')),
+								'filter' => CHtml::activeDropDownList($model, 'parent_id', $model->dropList(), array('prompt' => '')),
 							),
 
 							array(
@@ -117,7 +117,7 @@ $this->breadcrumbs = array(
 								'header' => Yii::t('app', 'Grid Actions'),
 								'class' => 'CButtonColumn',
 								'afterDelete' => 'function(link,success,data){var r=jQuery.parseJSON(data); if(!r || !r.success){jQuery.each(r, function(t, m){GridViewFlash(t, m); return false;});}}',
-								'template' => '&#91;&nbsp;{update}&nbsp;&#93;&nbsp;&#91;&nbsp;{delete}&nbsp;&#93;',
+								'template' => '[ {update} ] [ {delete} ]',
 								'updateButtonLabel' => Yii::t('app', 'Update'),
 								'updateButtonImageUrl' => false,
 								'deleteButtonLabel' => Yii::t('app', 'Delete'),

@@ -25,8 +25,6 @@ class CategoryController extends GxController {
 
 		Yii::app()->user->setState('category-grid-url', Yii::app()->request->url);
 
-		var_dump(Category::model()->dropListData());
-
 		$this->render('index', array(
 			'model' => $model,
 		));
