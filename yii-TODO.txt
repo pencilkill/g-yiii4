@@ -1,15 +1,3 @@
-category 分類添加表內關聯，自動生成has_many，留意DB默認null值時條件寫法" IS NULL" 或者 array(NULL)
-pic,pic_type,pic_i18n表名更新為 picture, 更新MVC 以防出現pic0這樣的屬性, 或與 image插件衝突
-prouduct2image表名更新為 product_image, 以區分中間表類型的表名 “2”
-contact 模型中，genderList取消，改為直接用數組，確保完整的多語言
-後臺view layout main中的 geturi JS方法轉小寫功能要取消，以避免在大小寫敏感的系統下主menu的定位異常
-後臺controller中語言的status條件解除，語言狀態只針對前臺
-需添加giix selfRelation代碼模板，包括 getCategories, getDropListData, getCategoryIds
-需修改giix CRUD代碼模板，textfield默認size=50，包括 getCategories, getDropListData, getCategoryIds
-更新mkdir調用，採用Yii自帶的CFileHelper::mkdir，原生的mkdir可以級聯創建目錄，但是不能級聯修改目錄權限(需要修改CFileHeler::mkdir訪問權限)
-後臺I18n關係添加HAS_ONE，默認當前後臺語言，列表值不用columnValue，刪除 controller->columnValue，controller->columnEdit
-後臺I18n關係統一用 i18n，i18ns 作為關係名稱
-後臺部分的關聯表需添加 'pagination' => false 而非不寫 'pagination'
 後臺layout中，column2改寫為無header,footer的佈局，添加fancybox插件，用於後臺做彈出框式的編輯，請留意動態改變相應的系統提示佈局 Yii::app()->errorHandler->errorAction
 後臺giix CRUD模板部分需要檢查 <div id="messageBox"></div> 標籤
 多個Model單個表單的情形下，統一用Model作為POST主鍵名，不用關係名，嘗試用RecursiveIteratorIterator來做 setAttributes
@@ -34,3 +22,4 @@ Mail功能在項目配置中只作導入，不作組件，郵件發送場景不�
 添加 CURL 擴展
 列表批量刪除提示
 後臺列表，model->search() 加 defaultOrder
+CActiveRecord與CActiveRecordBehavior的一些同名方法參數不一致，代碼待閱
