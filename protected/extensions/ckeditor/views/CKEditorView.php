@@ -51,4 +51,6 @@ if(isset($htmlOptions['id'])){
 }else if(isset($htmlOptions['class'])){
 	$oCKeditor->replaceAll($htmlOptions['class']);
 }
+// setting for dynamic
+Yii::app()->clientScript->registerScript('CKEditor_' . time() . '_config', 'window.CKEditorBaseSetting = ' . CJavaScript::encode($oCKeditor->config), CClientScript::POS_END);
 ?>

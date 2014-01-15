@@ -23,7 +23,6 @@
  */
 abstract class BaseLanguage extends GxActiveRecord {
 
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -79,48 +78,5 @@ abstract class BaseLanguage extends GxActiveRecord {
 			'pictureI18ns' => null,
 			'productI18ns' => null,
 		);
-	}
-
-	public function search() {
-		$alias = $this->tableAlias;
-	
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("{$alias}.language_id", $this->language_id);
-		$criteria->compare("{$alias}.code", $this->code, true);
-		$criteria->compare("{$alias}.title", $this->title, true);
-		$criteria->compare("{$alias}.sort_order", $this->sort_order);
-		$criteria->compare("{$alias}.status", $this->status);
-
-
-		return new CActiveDataProvider($this, array(
-			'criteria' => $criteria,
-			'sort'=>array(
-				'defaultOrder' => "{$alias}.sort_order DESC, {$alias}.language_id ASC",
-				'multiSort'=>true,
-				'attributes'=>array(
-					'sort_order'=>array(
-						'desc'=>"{$alias}.sort_order DESC",
-						'asc'=>"{$alias}.sort_order ASC",
-					),
-					'*',
-				),
-			),
-			'pagination' => array(
-				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
-				'pageVar' => 'page',
-			),
-		));
-	}
-
-	public function behaviors() {
-		return array(
-			'CTimestampBehavior'=>array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-				'updateAttribute' => null,
-                'createAttribute' => null,
-				'setUpdateOnCreate' => true,
-			),
-        );
 	}
 }

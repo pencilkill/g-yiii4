@@ -25,21 +25,25 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 	public function actionIndex() {
 		$model = new <?php echo $this->modelClass; ?>('search');
 		$model->unsetAttributes();
-<?php if($this->i18n):?>
+<?php if($this->manyRelation){?>
 
-		$i18n = new <?php echo $this->i18n->className?>('search');
-		$i18n->unsetAttributes();
-
-		$model->filterI18n = $i18n;
-<?php endif;?>
+		$model->filterInstance();
+<?php }?>
 
 		if (isset($_GET['<?php echo $this->modelClass; ?>'])){
 			$model->setAttributes($_GET['<?php echo $this->modelClass; ?>']);
 		}
+<?php ?>
+<?php if($this->selfRelation){?>
+
+		if(empty($_GET['<?php echo $this->modelClass; ?>']['<?php echo $this->selfRelation->columnName?>'])){
+			$model->setAttribute('<?php echo $this->selfRelation->columnName?>', array(NULL));
+		}
+<?php }?>
 <?php if($this->i18n):?>
 
 		if (isset($_GET['<?php echo $this->i18n->className?>'])){
-			$i18n->setAttributes($_GET['<?php echo $this->i18n->className?>']);
+			$model->filter-><?php echo $this->i18n->relationNamePluralized?>->setAttributes($_GET['<?php echo $this->i18n->className?>']);
 		}
 <?php endif;?>
 
@@ -47,9 +51,6 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 		$this->render('index', array(
 			'model' => $model,
-<?php if($this->i18n):?>
-			'i18n' => $i18n,
-<?php endif;?>
 		));
 	}
 
@@ -115,6 +116,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 					$transaction->commit();
 
 					if (Yii::app()->getRequest()->getIsAjaxRequest()){
+						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 						Yii::app()->end();
 					}else{
 						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
@@ -166,6 +168,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 			$valid = $model->validate();
 <?php if($this->i18n):?>
 
+			$i18ns = array();
 			foreach($_POST['<?php echo $this->i18n->className?>'] as $val){
 				$va = new <?php echo $this->i18n->className?>;
 				$va->setAttributes($val);
@@ -185,11 +188,10 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 <?php if($this->i18n):?>
 
 					$criteria = new CDbCriteria;
-					$criteria->compare = ('t.<?php echo $this->getTableSchema()->primaryKey?>=:<?php echo $this->getTableSchema()->primaryKey?>');
-					$criteria->params = array(':<?php echo $this->getTableSchema()->primaryKey?>' => $model-><?php echo $this->getTableSchema()->primaryKey?>);
+					$criteria->compare('<?php echo $this->getTableSchema()->primaryKey?>', $model-><?php echo $this->getTableSchema()->primaryKey?>);
 
 					<?php echo $this->i18n->className?>::model()->deleteAll($criteria);
-					foreach($i18ns as $val){
+					foreach($i18ns as $va){
 						$va->save(false);
 					}
 <?php endif; ?>
@@ -197,6 +199,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 					$transaction->commit();
 
 					if (Yii::app()->getRequest()->getIsAjaxRequest()){
+						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 						Yii::app()->end();
 					}else{
 						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
@@ -223,14 +226,12 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 		if (Yii::app()->getRequest()->getIsPostRequest()) {
 			$model = $this->loadModel($id, '<?php echo $this->modelClass; ?>');
 
-			if(! $model->beforeDelete()){
+			if(!$model->delete()){
 				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
-			}else{
-				$model->delete();
 			}
 
 			if (Yii::app()->getRequest()->getIsAjaxRequest()){
-				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 				Yii::app()->end();
 			}else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->createUrl('index'));
@@ -248,27 +249,33 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 			$criteria= new CDbCriteria;
 			$criteria->compare('<?php echo $this->tableSchema->primaryKey; ?>', $selected);
 
-			$models = <?php echo $this->modelClass; ?>::model()->findAll($criteria);
+			$models = Category::model()->findAll($criteria);
 
 			$errorModel = null;
 
-			foreach ($models as $model){
-				if(! $model->beforeDelete()){
-					$errorModel = $model;
-					break;
-				}
-			}
+			$transaction = Yii::app()->db->beginTransaction();
 
-			if(! $errorModel) {
+			try{
 				foreach ($models as $model){
-					$model->delete();
+					if(!$model->delete()) {
+						$errorModel = $model;
+
+						Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
+
+						break;
+					}
 				}
-			}else{
-				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
+
+				$transaction->commit();
+
+			}catch(CDbException $e){
+				$transaction->rollback();
+
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
-				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
@@ -296,22 +303,33 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 			foreach ($models as $model){
 				$model->setAttributes($<?php echo $this->gridViewEditName?>Posts[$model-><?php echo $this->tableSchema->primaryKey; ?>]);
-				if(! $model->validate()) {
+				if(!$model->validate()) {
 					$errorModel = $model;
 					break;
 				}
 			}
 
-			if(! $errorModel){
-				foreach ($models as $model){
-					$model->save(false);
+			if(!$errorModel){
+				$transaction = Yii::app()->db->beginTransaction();
+
+				try{
+					foreach ($models as $model){
+						$model->save(false);
+					}
+
+					$transaction->commit();
+
+				}catch(CDbException $e){
+					$transaction->rollback();
+
+					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 				}
 			}else{
 				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
 			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
-				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));

@@ -46,7 +46,7 @@ $this->breadcrumbs = array(
 			$this->renderPartial(
 				'_search',
 				array(
-					'model' => \$model,
+					'model' => $model,
 				)
 			);
 			*/
@@ -57,7 +57,6 @@ $this->breadcrumbs = array(
 		<div class="heading">
 			<div class="buttons">
 				<?php echo GxHtml::link(Yii::t('app', 'Advanced Search'), '#', array('class' => 'search-button button', 'style' => 'display: none;')); ?>
-				<a onclick="location='<?php echo $this->createUrl('create')?>';" class="button"><?php echo Yii::t('app', 'Create')?></a>
 				<a onclick="GVUpdate();" class="button"><?php echo Yii::t('app', 'Save')?></a>
 				<a onclick="GVDelete();" class="button"><?php echo Yii::t('app', 'Delete')?></a>
 			</div>
@@ -68,7 +67,7 @@ $this->breadcrumbs = array(
 			<form id="contact-grid-form" action="<?php echo $this->createUrl('gridviewupdate')?>" method="post">
 				<?php  echo CHtml::hiddenField('returnUrl', Yii::app()->getRequest()->url)?>
 
-				<?php 
+				<?php
 					$this->widget('zii.widgets.grid.CGridView', array(
 						'id' => 'contact-grid',
 						'ajaxUpdate' => true,
@@ -95,49 +94,60 @@ $this->breadcrumbs = array(
 									'name' => 'GridViewSelect[]',
 								),
 							),
-																																		
+
+
+							'firstname',
+
+							'lastname',
+
+							array(
+								'name' => 'sex',
+								'value' => '($data->sex == 0) ? Yii::t("app", "No") : Yii::t("app", "Yes")',
+								'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
+							),
+
+							'email',
+
+							'telephone',
+
+
 							array(
 								'type' => 'raw',
 								'name' => 'status',
 								'value' => 'CHtml::dropDownList("edit[$data->contact_id][status]", $data->status, array("0"=>Yii::t("app", "No"), "1"=>Yii::t("app", "Yes")), array("class"=>"editable"))',
 								'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
 							),
-																		
-							'firstname',
-																		
-							'lastname',
-																		
-							array(
-								'name' => 'sex',
-								'value' => '($data->sex == 0) ? Yii::t("app", "No") : Yii::t("app", "Yes")',
-								'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
-							),
-																		
-							'telephone',
-																		
-							'cellphone',
-																		
 							/**
-							
+
+							'cellphone',
+
 							'fax',
-																		
-							'email',
-																		
+
 							'company',
-																		
+
 							'address',
-																		
+
 							'message',
-																		
+
 							'remark',
-																								
+
 							*/
-							
+
 							array(
 								'header' => Yii::t('app', 'Grid Actions'),
 								'class' => 'CButtonColumn',
 								'afterDelete' => 'function(link,success,data){var r=jQuery.parseJSON(data); if(!r || !r.success){jQuery.each(r, function(t, m){GridViewFlash(t, m); return false;});}}',
-								'template' => '{update}&nbsp;{delete}',
+								'template' => '[ {update} ] [ {delete} ]',
+								'updateButtonLabel' => Yii::t('app', 'Update'),
+								'updateButtonImageUrl' => false,
+								'deleteButtonLabel' => Yii::t('app', 'Delete'),
+								'deleteButtonImageUrl' => false,
+								'headerHtmlOptions' => array(
+									'class' => 'right',
+								),
+								'htmlOptions' => array(
+									'class' => 'right',
+								),
 							),
 						),
 					));
@@ -162,7 +172,7 @@ $this->breadcrumbs = array(
 			, postData : {returnUrl : '<?php echo Yii::app()->getRequest()->url?>'}
 			, deleteConfirmation : '<?php echo Yii::t('app', 'Confirm Grid View Delete?')?>'
 			, selectNoneMessage : '<?php echo Yii::t('app', 'No results found.');?>'
-			, warningMessage : '<?php echo Yii::t('app', 'Operation Failure.');?>'
+			, warningMessage : '<?php echo Yii::t('app', 'Operation Failure');?>'
 		};
 	 GridViewDelete(params);
  }

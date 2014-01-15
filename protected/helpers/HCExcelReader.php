@@ -7,7 +7,7 @@
  * @author Sam,sam@ozchamp.net
  *
  */
-class HCExcelI
+class HCExcelReader
 {
 	public $currentSheet;
 

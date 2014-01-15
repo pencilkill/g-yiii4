@@ -48,7 +48,7 @@ $this->breadcrumbs = array(
 				<li><a href="<?php echo Yii::app()->createUrl('product/index', array())?>"><img src="_ozman/icon/screen.png"/><span><?php echo Yii::t('nav', 'Product')?></span></a></li>
 				<li><a href="<?php echo Yii::app()->createUrl('news/index', array())?>"><img src="_ozman/icon/activity.png"/><span><?php echo Yii::t('nav', 'News')?></span></a></li>
 				<li><a href="<?php echo Yii::app()->createUrl('information/index', array())?>"><img src="_ozman/icon/info.png"/><span><?php echo Yii::t('nav', 'Information')?></span></a></li>
-				<li><a href="<?php echo Yii::app()->createUrl('pic/index', array())?>"><img src="_ozman/icon/photo.png"/><span><?php echo Yii::t('nav', 'Pic')?></span></a></li>
+				<li><a href="<?php echo Yii::app()->createUrl('picture/index', array())?>"><img src="_ozman/icon/photo.png"/><span><?php echo Yii::t('nav', 'Picture')?></span></a></li>
 				<li><a href="<?php echo Yii::app()->createUrl('contact/index', array())?>"><img src="_ozman/icon/mail.png"/><span><?php echo Yii::t('nav', 'Contact')?></span></a></li>
 				<li><a href="<?php echo Yii::app()->createUrl('admin/index', array())?>"><img src="_ozman/icon/person.png"/><span><?php echo Yii::t('nav', 'Admin')?></span></a></li>
 				<li><a href="<?php echo Yii::app()->createUrl('setting/index', array())?>"><img src="_ozman/icon/config.png"/><span><?php echo Yii::t('nav', 'Setting')?></span></a></li>

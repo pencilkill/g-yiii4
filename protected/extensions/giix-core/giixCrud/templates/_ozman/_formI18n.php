@@ -38,7 +38,7 @@
 			<a href="#tab-language-<?php echo '<?php '; ?> echo $val['<?php echo GiixModelCode::I18N_LANGUAGE_COLUMN_NAME?>']?>"><?php echo '<?php '; ?> echo $val['title']?></a>
   			<?php echo '<?php '; ?> endforeach;?>
 <?php }?>
-			<!--<a href="#tab-swfupload"><?php echo '<?php '; ?> echo Yii::t('app', 'Product Images')?></a>-->
+			<!--<a href="#tab-swfupload"><?php echo '<?php '; ?> echo Yii::t('app', 'Tabs Image')?></a>-->
 		</div>
 <?php $ajax = ($this->enable_ajax_validation) ? 'true' : 'false'; ?>
 
@@ -100,7 +100,6 @@
 				echo $this->renderPartial(
 					'_swfupload',
 					array(
-						'gallery' => $gallery,
 						'galleries' => $galleries,
 					),
 					true

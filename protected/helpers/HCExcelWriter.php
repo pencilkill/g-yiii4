@@ -5,7 +5,7 @@
  * @author Sam,sam@ozchamp.net
  *
  */
-class HCExcelO
+class HCExcelWriter
 {
 
 	public $version;

@@ -56,7 +56,7 @@ echo "<?php\n
 			$this->renderPartial(
 				'_search',
 				array(
-					'model' => \$model,
+					'model' => $model,
 				)
 			);
 			*/
@@ -110,7 +110,7 @@ echo "<?php\n
 
 							array(
 					        	'name' => '<?php echo $this->i18n->relationName?>.title',
-								'filter' => CHtml::activeTextField($model->filterI18n, 'title'),
+								'filter' => CHtml::activeTextField($model->filter-><?php echo $this->i18n->relationName?>, 'title'),
 							),
 					<?php }?>
 					<?php $count = 0;?>

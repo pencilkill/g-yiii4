@@ -9,6 +9,7 @@
  */
 
 class CTreeBehavior extends CActiveRecordBehavior {
+	private $_instance = false;
 
 	public $modelName;
 
@@ -16,30 +17,29 @@ class CTreeBehavior extends CActiveRecordBehavior {
 
 	public $ancestorName = 'parent_id';
 
-	public $parent = NULL;
-
 	public $textAttribute;
 	// CDbCriteria construct data
 	public $criteriaData;
 
-	public $level = 0;
+	// To avoid the fucking scenario
+	public function attach($owner){
+		parent::attach($owner);
 
-	public function afterConstruct($event) {
-		parent::afterConstruct($event);
-		if(empty($this->modelName)){
-			if($this->getOwner() instanceOf CActiveRecord){
+		$this->instance();
+	}
+
+	public function instance() {
+		if($this->_instance) return true;
+
+		if($this->modelName === null){
 				$this->modelName = CHtml::modelName($this->getOwner());
-			}
 		}
 
 		$modelName = $this->modelName;
-		if(($modelName::model() instanceOf CActiveRecord) !== true){
-			return $this->modelName = null;
-		}else{
-			if(empty($this->ancestorName) && $modelName::model()->tableSchema->getColumn($this->ancestorName) == null){
-				return $this->modelName = null;
-			}
 
+		if(empty($this->ancestorName) || $modelName::model()->tableSchema->getColumn($this->ancestorName) == null){
+			$this->modelName = null;
+		}else{
 			if(empty($this->primaryKey)){
 				$this->primaryKey = $modelName::model()->tableSchema->primaryKey;
 			}
@@ -48,6 +48,8 @@ class CTreeBehavior extends CActiveRecordBehavior {
 				$this->criteriaData['order'] = "t.{$this->primaryKey} ASC";
 			}
 		}
+
+		return $this->_instance = true;
 	}
 
 	/**
@@ -60,12 +62,8 @@ class CTreeBehavior extends CActiveRecordBehavior {
 	 * @return array
 	 */
 
-	public function TreeList($textAttribute = NULL, $parent = NULL, $level = 0) {
+	public function treeList($textAttribute = NULL, $parent = NULL, $level = 0) {
 		$storage = array();
-
-		if(empty($this->modelName)){
-			return $storage;
-		}
 
 		$modelName = $this->modelName;
 
@@ -116,10 +114,6 @@ class CTreeBehavior extends CActiveRecordBehavior {
 	public function dropList($textAttribute = NULL, $parent = NULL, $level = 0) {
 		$storage = array();
 
-		if(empty($this->modelName)){
-			return $storage;
-		}
-
 		$modelName = $this->modelName;
 
 		$primaryKey = $this->primaryKey;
@@ -162,10 +156,6 @@ class CTreeBehavior extends CActiveRecordBehavior {
 
 	public function subNodes($parent = NULL, $self = false) {
 		$storage = array();
-
-		if(empty($this->modelName)){
-			return $storage;
-		}
 
 		$modelName = $this->modelName;
 

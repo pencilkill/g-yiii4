@@ -22,7 +22,6 @@
  */
 abstract class BaseAdmin extends GxActiveRecord {
 
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -72,48 +71,5 @@ abstract class BaseAdmin extends GxActiveRecord {
 			'create_time' => Yii::t('m/admin', 'Create Time'),
 			'update_time' => Yii::t('m/admin', 'Update Time'),
 		);
-	}
-
-	public function search() {
-		$alias = $this->tableAlias;
-	
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("{$alias}.admin_id", $this->admin_id);
-		$criteria->compare("{$alias}.name", $this->name, true);
-		$criteria->compare("{$alias}.username", $this->username, true);
-		$criteria->compare("{$alias}.email", $this->email, true);
-		$criteria->compare("{$alias}.password", $this->password, true);
-		$criteria->compare("{$alias}.status", $this->status);
-		$criteria->compare("{$alias}.super", $this->super);
-		$criteria->compare("{$alias}.create_time", $this->create_time, true);
-		$criteria->compare("{$alias}.update_time", $this->update_time, true);
-
-
-		return new CActiveDataProvider($this, array(
-			'criteria' => $criteria,
-			'sort'=>array(
-				'defaultOrder' => "{$alias}.admin_id ASC",
-				'multiSort'=>true,
-				'attributes'=>array(
-					'*',
-				),
-			),
-			'pagination' => array(
-				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
-				'pageVar' => 'page',
-			),
-		));
-	}
-
-	public function behaviors() {
-		return array(
-			'CTimestampBehavior'=>array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-				'updateAttribute' => 'update_time',
-				'createAttribute' => 'create_time',
-				'setUpdateOnCreate' => true,
-			),
-        );
 	}
 }

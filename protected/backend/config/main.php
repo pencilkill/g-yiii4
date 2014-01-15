@@ -45,11 +45,11 @@ $backCfg = array(
 	'defaultController'=>'site',
 
 	// preloading 'log' component
-
+	/*
 	'preload'=>array(
 		'log',
 	),
-
+	*/
 
 	// autoloading model and component classes
 	'import'=>array(
@@ -112,7 +112,7 @@ $backCfg = array(
         	'allowAutoLogin'=>true,
 			'autoRenewCookie'=>true,
 			// Notice that the second parameter of Yii::app()->user->login($identity, $duration) can not be setted as 0 if you want to enable the authTimeout
-			'authTimeout'=>60 * 20,
+			'authTimeout'=>60 * 0.5,
 
 			'stateKeyPrefix'=>'back',
 			'loginUrl'=>array('site/login'),

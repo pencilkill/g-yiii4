@@ -15,16 +15,28 @@
 	$.fn.ajaxUploadHandler=function(options) {	
 		function onChange(file, extension) {
     		// check extension
+			
     		return true;
     	}
     	
     	function onSubmit(file, extension) {
     		var btn = $(this._button);
     		
-    		btn.after('<img src="' + _options.baseUrl + '/images/loading.gif" class="ajaxUploadLoading" style="padding-left: 5px;" />');
+    		btn.after('<img src="' + this._settings.data.baseUrl + '/images/loading.gif" class="ajaxUploadLoading" style="padding-left: 5px;" />');
     		btn.attr('disabled', true);
     		
-    		return true;
+    		canSubmit = true;	// default submit
+    		
+    		// trigger loginRequiredAjaxResponse, YII_LOGIN_REQUIRED
+    		if (this._settings.data.hasOwnProperty('loginRequiredAjaxResponse')){
+    			var url = window.location.href;	// Yii returnUrl enabled   			
+    			
+    			yii_login_required = this._settings.data.loginRequiredAjaxResponse; 
+    			
+    			$.ajax({url:url, async: false}).done(function(data, status, xhr){canSubmit = (xhr.responseText != yii_login_required); });
+    		}
+
+    		return canSubmit;
     	}
     	
     	function onComplete(file, json) {

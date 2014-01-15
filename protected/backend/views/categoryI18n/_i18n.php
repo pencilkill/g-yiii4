@@ -5,7 +5,7 @@
 				<?php echo $form->labelEx($model,'title'); ?>
 			</td>
 			<td>
-				<?php echo $form->textField($model, "[{$language_id}]title", array('maxlength' => 256)); ?>
+				<?php echo $form->textField($model, "[{$language_id}]title", array('maxlength' => 256, 'size' => 50)); ?>
 				<?php echo $form->error($model, "[$language_id]title"); ?>
 			</td>
 		</tr><!-- row -->
@@ -25,7 +25,7 @@
 				<?php echo $form->labelEx($model,'description'); ?>
 			</td>
 			<td>
-				<?php echo $form->textArea($model, "[{$language_id}]description", array('rows' => 5, 'cols' => 50, 'class' => '')); ?>
+				<?php echo $form->textArea($model, "[{$language_id}]description", array('rows' => 5, 'cols' => 50, 'class' => 'fck')); ?>
 				<?php echo $form->error($model, "[$language_id]description"); ?>
 			</td>
 		</tr><!-- row -->

@@ -35,12 +35,26 @@ function fileQueueError(file, errorCode, message) {
 }
 
 function fileDialogComplete(numFilesSelected, numFilesQueued) {
-	try {
-		if (numFilesQueued > 0) {
-			this.startUpload();
+	canStart = true;	// default true
+	// trigger loginRequiredAjaxResponse, YII_LOGIN_REQUIRED
+	if (this.customSettings.hasOwnProperty('loginRequiredAjaxResponse')){
+		var url = window.location.href;	// Yii returnUrl enabled   			
+		
+		yii_login_required = this.customSettings.loginRequiredAjaxResponse; 
+		
+		$.ajax({url:url, async: false}).done(function(data, status, xhr){canStart = (xhr.responseText != yii_login_required); });
+	}
+	
+	if(canStart){
+		try {
+			if (numFilesQueued > 0) {
+				this.startUpload();
+			}
+		} catch (ex) {
+			this.debug(ex);
 		}
-	} catch (ex) {
-		this.debug(ex);
+	}else{
+		this.stopUpload();
 	}
 }
 
@@ -153,53 +167,10 @@ function uploadError(file, errorCode, message) {
 
 }
 
-
 function addImage(data) {
-	document.getElementById("thumbnails").innerHTML += data.imageView;
-	/*
-	var newDiv = document.createElement("div");
-	newDiv.style.width = "120px";
-	newDiv.style.height = "120px";
-	newDiv.style.margin = "5px";
-	newDiv.style.border = "solid 1px lightgray";
-	newDiv.style.background = "url(" + data.thumbSrc + ") no-repeat center";
-	newDiv.style.display = "inline-block";
-	
-	//var newImg = document.createElement("img");
-	//newDiv.appendChild(newImg);
-	var modelClass = data.modelClass;
-	var attributes = data.attributes;
-	var languages = data.languages;
-
-	
-	for (var key in attributes) {
-		var newInput = document.createElement("input");
-		newInput.setAttribute("type", "hidden");
-		newInput.setAttribute("name", modelClass + "[]" + key);
-		newInput.setAttribute("value", attributes[key]);
-		newDiv.appendChild(newInput);
+	if(data.hasOwnProperty('imageView')){
+		document.getElementById("thumbnails").innerHTML += data.imageView;
 	}
-
-	document.getElementById("thumbnails").appendChild(newDiv);
-   */
-	
-	/*
-	if (newImg.filters) {
-		try {
-			newImg.filters.item("DXImageTransform.Microsoft.Alpha").opacity = 0;
-		} catch (e) {
-			// If it is not set initially, the browser will throw an error.  This will set it if it is not set yet.
-			newImg.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(opacity=' + 0 + ')';
-		}
-	} else {
-		newImg.style.opacity = 0;
-	}
-
-	newImg.onload = function () {
-		fadeIn(newImg, 0);
-	};
-	newImg.src = src;
-	*/
 }
 
 function fadeIn(element, opacity) {

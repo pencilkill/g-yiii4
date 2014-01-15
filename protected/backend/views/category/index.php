@@ -46,7 +46,7 @@ $this->breadcrumbs = array(
 			$this->renderPartial(
 				'_search',
 				array(
-					'model' => \$model,
+					'model' => $model,
 				)
 			);
 			*/
@@ -98,12 +98,12 @@ $this->breadcrumbs = array(
 
 							array(
 					        	'name' => 'categoryI18n.title',
-								'filter' => CHtml::activeTextField($model->filter->categoryI18ns, 'title'),
+								'filter' => CHtml::activeTextField($model->filter->categoryI18n, 'title'),
 							),
 
 							array(
 								'name' => 'parent_id',
-								'value' => 'CHtml::value($data, "parent.categoryI18n.title", Yii::t("app", "None"))',
+								'value' => 'CHtml::value($data, "parent", Yii::t("app", "None"))',
 								'filter' => CHtml::activeDropDownList($model, 'parent_id', $model->dropList(), array('prompt' => '')),
 							),
 
@@ -152,7 +152,7 @@ $this->breadcrumbs = array(
 			, postData : {returnUrl : '<?php echo Yii::app()->getRequest()->url?>'}
 			, deleteConfirmation : '<?php echo Yii::t('app', 'Confirm Grid View Delete?')?>'
 			, selectNoneMessage : '<?php echo Yii::t('app', 'No results found.');?>'
-			, warningMessage : '<?php echo Yii::t('app', 'Operation Failure.');?>'
+			, warningMessage : '<?php echo Yii::t('app', 'Operation Failure');?>'
 		};
 	 GridViewDelete(params);
  }

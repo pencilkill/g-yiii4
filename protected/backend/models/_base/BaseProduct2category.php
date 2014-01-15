@@ -18,7 +18,6 @@
  */
 abstract class BaseProduct2category extends GxActiveRecord {
 
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -63,39 +62,5 @@ abstract class BaseProduct2category extends GxActiveRecord {
 			'product' => null,
 			'category' => null,
 		);
-	}
-
-	public function search() {
-		$alias = $this->tableAlias;
-	
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("{$alias}.product2category_id", $this->product2category_id);
-		$criteria->compare("{$alias}.product_id", $this->product_id);
-		$criteria->compare("{$alias}.category_id", $this->category_id);
-
-
-		return new CActiveDataProvider($this, array(
-			'criteria' => $criteria,
-			'sort'=>array(
-				'defaultOrder' => "{$alias}.product2category_id ASC",
-				'multiSort'=>true,
-				'attributes'=>array(
-					'*',
-				),
-			),
-			'pagination' => false,
-		));
-	}
-
-	public function behaviors() {
-		return array(
-			'CTimestampBehavior'=>array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-				'updateAttribute' => null,
-                'createAttribute' => null,
-				'setUpdateOnCreate' => true,
-			),
-        );
 	}
 }

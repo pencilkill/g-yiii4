@@ -17,6 +17,6 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Product2category' => '',
-  'Product2category|Product2categories' => '產品分類',
+  'Product2category' => '分類',
+  'Product2category|Product2categories' => '分類',
 );

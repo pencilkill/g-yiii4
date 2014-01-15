@@ -8,23 +8,20 @@
 				<?php echo $form->labelEx($model,'product2categories'); ?>
 			</td>
 			<td>
-				<?php $name = 'Product[product2categories][][category_id]'?>
+				<?php $name = CHtml::activeName($p2c, '[]category_id')?>
+				<?php $ids = CHtml::listData($p2cs, 'category_id', 'category_id')?>
 				<div class="scrollbox">
-					<div style="margin-left:0px;">
-						<?php echo CHtml::radioButton($name, sizeOf($categoryIds)==0 , array('value'=>0, 'disabled'=>'disalbed'))?>
+					<div class="even" style="margin-left:0px;">
+						<?php echo CHtml::checkBox($name, false, array('value' => false, 'disabled' => 'disabled'))?>
 						<?php echo Yii::t('app', 'None')?>
 					</div>
-					<?php foreach ($categories as $val):?>
-						<?php
-							$htmlOptions = array('value'=>$val['category_id']);
-							if($val['totalSubCategories']){
-								$htmlOptions['disabled'] = 'disabled';
-							}
-						?>
-						<div style="margin-left:<?php echo $val['level']*20?>px;">
-						<?php echo CHtml::radioButton($name, array_key_exists($val['category_id'], $categoryIds), $htmlOptions)?>
+					<?php $class='odd'?>
+					<?php foreach (Category::model()->treeList() as $val):?>
+						<div class="<?php //echo $class?>" style="margin-left:<?php echo $val['level']*20?>px;">
+						<?php echo CHtml::checkBox($name, in_array($val['category_id'], $ids), array('value'=>$val['category_id']))?>
 						<?php echo $val['title']?>
 						</div>
+						<?php $class = $class=='even' ? 'odd' : 'even'?>
 					<?php endforeach;?>
 				</div>
 				<?php echo $form->error($model,'product2categories'); ?>
@@ -34,61 +31,11 @@
 
 		<tr>
 			<td>
-				<?php echo $form->labelEx($model,'status'); ?>
+				<?php echo $form->labelEx($model,'sort_order'); ?>
 			</td>
 			<td>
-				<?php echo $form->checkBox($model, 'status'); ?>
-				<?php echo $form->error($model,'status'); ?>
-			</td>
-		</tr><!-- row -->
-
-
-		<tr>
-			<td>
-				<?php echo $form->labelEx($model,'top'); ?>
-			</td>
-			<td>
-				<?php echo $form->checkBox($model, 'top'); ?>
-				<?php echo $form->error($model,'top'); ?>
-			</td>
-		</tr><!-- row -->
-
-
-		<tr>
-			<td>
-				<?php echo $form->labelEx($model,'date_added'); ?>
-			</td>
-			<td>
-				<?php $form->widget('zii.widgets.jui.CJuiDatePicker', array(
-					'model' => $model,
-					'attribute' => 'date_added',
-					'value' => $model->date_added,
-					'language' => Yii::app()->language,
-					'options' => array(
-						'showButtonPanel' => false,
-						'changeYear' => true,
-						'changeMonth' => true,
-						'dateFormat' => 'yy-mm-dd',
-						'yearRange' => '-5:+5',
-					),
-					'htmlOptions' => array(
-						'readonly' => 'readonly',
-						'value' => $model->date_added ? date('Y-m-d', strtotime($model->date_added)) : date('Y-m-d'),
-					),
-					));
-				?>
-				<?php echo $form->error($model,'date_added'); ?>
-			</td>
-		</tr><!-- row -->
-
-
-		<tr>
-			<td>
-				<?php echo $form->labelEx($model,'sort_id'); ?>
-			</td>
-			<td>
-				<?php echo $form->textField($model, 'sort_id'); ?>
-				<?php echo $form->error($model,'sort_id'); ?>
+				<?php echo $form->textField($model, 'sort_order'); ?>
+				<?php echo $form->error($model,'sort_order'); ?>
 			</td>
 		</tr><!-- row -->
 

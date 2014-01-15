@@ -62,25 +62,4 @@ class Controller extends RController
 			$this->language_id = $languages[key($languages)]['language_id'];
 		}
 	}
-
-	/**
-	 * This is for HAS_MANY or MANY_MANY to get value when using gridview
-	 * cause using index when we defined relations, the related data type is associate sometimes
-	 * e.g. $data->related[0]->name is not aways correct
-	 * @param Object $data
-	 * @param Integer $row
-	 * @param CDataColumn $column
-	 * return mixed
-	 */
-	public function columnValue($data, $row, $column){
-		$r = explode('.', $column->name);
-		$i = $data->$r[0];
-		return (sizeOf($r)===1) ? $i : $i[key($i)][$r[1]];
-	}
-
-	public function columnEdit($data, $row, $column){
-		$r = explode('.', $column->name);
-		$i = $data->$r[0];
-		return (sizeOf($r)===1) ? $i : $i[key($i)][$r[1]];
-	}
 }

@@ -63,10 +63,6 @@
  */
 abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->baseClass; ?> {
 
-<?php if($i18n):?>
-	public $filterI18n;
-<?php endif;?>
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -135,72 +131,5 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 <?php endif; ?>
 <?php endforeach; ?>
 		);
-	}
-
-	public function search() {
-		$alias = $this->tableAlias;
-	
-		$criteria = new CDbCriteria;
-
-<?php foreach($columns as $name=>$column): ?>
-		$criteria->compare("{$alias}.<?php echo $name; ?>", $this-><?php echo $name; ?><?php echo ($column->type==='string' and !$column->isForeignKey) ? ', true' : ''; ?>);
-<?php endforeach; ?>
-
-<?php if($i18n):?>
-		$criteria->with = array('<?php echo $i18n->relationNamePluralized?>');
-		$criteria->group = "{$alias}.<?php echo $table->primaryKey?>";
-		$criteria->together = true;
-
-<?php foreach($i18n->table->columns as $name=>$column):?>
-<?php if($column->autoIncrement) continue;?>
-<?php if($column->isForeignKey && isset($columns[$name]) && $columns[$name]->isPrimaryKey) continue;?>
-<?php if($name == GiixModelCode::I18N_LANGUAGE_COLUMN_NAME && $column->isForeignKey) continue;?>
-		$criteria->compare('<?php echo $i18n->relationNamePluralized . '.' . $name; ?>', $this->filterI18n-><?php echo $name; ?><?php echo ($column->type==='string' and !$column->isForeignKey) ? ', true' : ''; ?>);
-<?php endforeach;?>
-<?php endif;?>
-
-		return new CActiveDataProvider($this, array(
-			'criteria' => $criteria,
-			'sort'=>array(
-				'defaultOrder' => "<?php echo array_key_exists('sort_order', $columns) ? '{$alias}.sort_order DESC, ' : ''?>{$alias}.<?php echo $table->primaryKey?> ASC",
-				'multiSort'=>true,
-				'attributes'=>array(
-<?php if(array_key_exists('sort_order', $columns)):?>
-					'sort_order'=>array(
-						'desc'=>"{$alias}.sort_order DESC",
-						'asc'=>"{$alias}.sort_order ASC",
-					),
-<?php endif;?>
-					'*',
-				),
-			),
-<?php if(substr($tableName, -5) !== GiixModelCode::I18N_TABLE_SUFFIX && strpos($tableName, '2') === false):?>
-			'pagination' => array(
-				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
-				'pageVar' => 'page',
-			),
-<?php ;else:?>
-			'pagination' => false,
-<?php endif;?>
-		));
-	}
-
-	public function behaviors() {
-		return array(
-			'CTimestampBehavior'=>array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-<?php if(array_key_exists('create_time', $columns)){?>
-				'updateAttribute' => 'update_time',
-<?php }else{?>
-				'updateAttribute' => null,
-<?php }?>
-<?php if(array_key_exists('create_time', $columns)){?>
-				'createAttribute' => 'create_time',
-<?php }else{?>
-                'createAttribute' => null,
-<?php }?>
-				'setUpdateOnCreate' => true,
-			),
-        );
 	}
 }

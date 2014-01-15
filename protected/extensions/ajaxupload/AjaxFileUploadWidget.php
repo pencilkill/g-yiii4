@@ -1,6 +1,5 @@
 <?php
 /**
- * @todo the js callback function will thrown undefined error
  * @author Sam@ozchamp.net
  * @copyright www.ozchamp.net
  * @version 1.0
@@ -86,17 +85,20 @@ class AjaxFileUploadWidget extends CInputWidget
 		$prefix = $this->htmlOptions['id'];
 
 		$settings = array(
-            'action'=>CHtml::normalizeUrl(Yii::app()->createUrl('site/ajaxUpload')),
-            //'name'=>'userfile',
-            'data'=>array(),
-			//'autoSubmit'=>true,
-			//'responseType'=>'json',
-		   	//'hoverClass'=>'hover',
-		   	//'disabledClass'=>'disabled',
-		   	//'onChange'=>'js:function(file, extension){imageChange(file, extension);}',	// thrown undefined
-		   	//'onSubmit'=>'js:function(file, extension){imageSubmit(file, extension);}',	// thrown undefined
-		   	//'onComplete'=>'js:function(file, extension){imageComplete(file, json);}',		// thrown undefined
-		   	'baseUrl'=>$baseUrl
+            'action' => CHtml::normalizeUrl(Yii::app()->createUrl('site/ajaxUpload')),
+            'name' => 'userfile',
+            'data' => array(
+				//'instanceName' => 'userfile',	// specified parameter name of getInstanceByName()
+			   	'baseUrl' => $baseUrl,
+				'loginRequiredAjaxResponse' => Yii::app()->user->loginRequiredAjaxResponse,
+			),
+			//'autoSubmit' => true,
+			//'responseType' => 'json',
+		   	//'hoverClass' => 'hover',
+		   	//'disabledClass' => 'disabled',
+		   	//'onChange' => 'js:function(file, extension){}',
+		   	//'onSubmit' => 'js:function(file, extension){}',
+		   	//'onComplete' => 'js:function(file, extension){}',
 		);
 
 

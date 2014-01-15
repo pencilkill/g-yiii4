@@ -17,15 +17,15 @@
 <script type="text/javascript" src="_ozman/javascript/jquery/main.js"></script>
 <?php
     if (Yii::app()->user->loginRequiredAjaxResponse){
-        Yii::app()->clientScript->registerScript('ajaxLoginRequired', '
-            jQuery("body").ajaxComplete(
+        Yii::app()->clientScript->registerScript('ajaxLoginRequired',
+        	'jQuery("body").ajaxComplete(
                 function(event, request, options) {
                     if (request.responseText == "'.Yii::app()->user->loginRequiredAjaxResponse.'") {
                         window.location.href = "'.CHtml::normalizeUrl(Yii::app()->user->loginUrl) .'";
                     }
                 }
-            );
-        ');
+            );'
+        );
     }
 ?>
 </head>
@@ -73,7 +73,7 @@
       </li>
 	  <li id="news"><a href="<?php echo Yii::app()->createUrl('news/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'News'); ?></a></li>
       <li id="information"><a href="<?php echo Yii::app()->createUrl('information/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Information'); ?></a></li>
-      <li id="pic"><a href="<?php echo Yii::app()->createUrl('pic/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Pic'); ?></a></li>
+      <li id="pic"><a href="<?php echo Yii::app()->createUrl('picture/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Picture'); ?></a></li>
       <li id="contact"><a href="<?php echo Yii::app()->createUrl('contact/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Contact'); ?></a></li>
       <li id="admin"><a href="<?php echo Yii::app()->createUrl('admin/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Admin'); ?></a></li>
       <li id="system"><a class="top"><?php echo Yii::t('nav', 'System'); ?></a>
@@ -169,8 +169,8 @@ jQuery(function($) {
 	Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.ozchamp.com/" rel="external" target="_blank"><?php echo Yii::t('app', 'Design Team')?></a>. All Rights Reserved.
 </div><!-- footer -->
 
-<?php $this->widget('ext.ckeditor.CKEditorWidget',array('htmlOptions'=>array('class'=>'fck'))); ?>
-<?php $this->widget('frontend.extensions.fancybox.EFancyBox',array('target'=>null, 'config'=>array())); ?>
+<?php $this->widget('frontend.extensions.ckeditor.CKEditorWidget', array('htmlOptions' => array('class'=>'fck'))); ?>
+<?php $this->widget('frontend.extensions.fancybox.EFancyBox', array('target' => null, 'config' => array())); ?>
 
 </body>
 </html>

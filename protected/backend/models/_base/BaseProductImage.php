@@ -17,7 +17,6 @@
  */
 abstract class BaseProductImage extends GxActiveRecord {
 
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -61,42 +60,5 @@ abstract class BaseProductImage extends GxActiveRecord {
 			'pic' => Yii::t('m/productimage', 'Pic'),
 			'product' => null,
 		);
-	}
-
-	public function search() {
-		$alias = $this->tableAlias;
-	
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("{$alias}.product_image_id", $this->product_image_id);
-		$criteria->compare("{$alias}.product_id", $this->product_id);
-		$criteria->compare("{$alias}.pic", $this->pic, true);
-
-
-		return new CActiveDataProvider($this, array(
-			'criteria' => $criteria,
-			'sort'=>array(
-				'defaultOrder' => "{$alias}.product_image_id ASC",
-				'multiSort'=>true,
-				'attributes'=>array(
-					'*',
-				),
-			),
-			'pagination' => array(
-				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
-				'pageVar' => 'page',
-			),
-		));
-	}
-
-	public function behaviors() {
-		return array(
-			'CTimestampBehavior'=>array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-				'updateAttribute' => null,
-                'createAttribute' => null,
-				'setUpdateOnCreate' => true,
-			),
-        );
 	}
 }

@@ -184,4 +184,9 @@ class GxHtml extends CHtml {
 			throw new InvalidArgumentException(Yii::t('giix', 'The argument "data" must be of type string or array.'));
 	}
 
+	public static function modelName($model){
+		$model = is_array($model) ? reset($model) : $model;
+
+		return CHtml::modelName($model);
+	}
 }

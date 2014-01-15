@@ -4,186 +4,104 @@ Yii::import('backend.models._base.BaseInformation');
 
 class Information extends BaseInformation
 {
+
+	public $filter;
+
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
 
+	public function behaviors() {
+		return CMap::mergeArray(parent::behaviors(), array(
+			'CActiveRecordFilterBehavior' => array(
+				'class' => 'backend.behaviors.CActiveRecordFilterBehavior',
+			),
+			'CTimestampBehavior'=> array(
+				'class' => 'zii.behaviors.CTimestampBehavior',
+				'updateAttribute' => 'update_time',
+				'createAttribute' => 'create_time',
+				'setUpdateOnCreate' => true,
+			),
+			'CActiveRecordNullBehavior' => array(
+				'class' => 'backend.behaviors.CActiveRecordNullBehavior',
+				'attributes' => array(
+					'parent_id',
+				),
+			),
+			'CTreeBehavior' => array(
+				'class' => 'backend.behaviors.CTreeBehavior',
+				'textAttribute' => 'informationI18n.title',
+			),
+        ));
+	}
+
 	public function rules() {
-		return CMap::mergeArray(
-			parent::rules(),
-			array(
-				array('parent_id', 'validParentId', 'on' => 'update'),
-			)
-		);
+		return CMap::mergeArray(parent::rules(), array(
+			array('parent_id', 'validParentId', 'on' => 'update'),
+		));
+	}
+
+	public function attributeLabels() {
+		return CMap::mergeArray(parent::attributeLabels(), array(
+			'parent_id' => null,
+			'parent' => null,
+			'informations' => null,
+			'informationI18ns' => null,
+		));
+	}
+
+	public function search() {
+		$alias = $this->tableAlias;
+
+		$criteria = new CDbCriteria;
+
+		$criteria->compare("{$alias}.information_id", $this->information_id);
+		$criteria->compare("{$alias}.parent_id", $this->parent_id);
+		$criteria->compare("{$alias}.sort_order", $this->sort_order);
+		$criteria->compare("{$alias}.create_time", $this->create_time, true);
+		$criteria->compare("{$alias}.update_time", $this->update_time, true);
+		$criteria->group = "{$alias}.information_id";
+		$criteria->together = true;
+
+		$criteria->with = array('informationI18ns');
+
+		$criteria->compare('informationI18ns.status', $this->filter->informationI18ns->status);
+		$criteria->compare('informationI18ns.title', $this->filter->informationI18ns->title, true);
+		$criteria->compare('informationI18ns.keywords', $this->filter->informationI18ns->keywords, true);
+		$criteria->compare('informationI18ns.description', $this->filter->informationI18ns->description, true);
+
+		return new CActiveDataProvider($this, array(
+			'criteria' => $criteria,
+			'sort'=>array(
+				'defaultOrder' => "{$alias}.sort_order DESC, {$alias}.information_id ASC",
+				'multiSort'=>true,
+				'attributes'=>array(
+					'sort_order'=>array(
+						'desc'=>"{$alias}.sort_order DESC",
+						'asc'=>"{$alias}.sort_order ASC",
+					),
+					'*',
+				),
+			),
+			'pagination' => array(
+				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
+				'pageVar' => 'page',
+			),
+		));
 	}
 
 
-	/**
-	 * Validate parent_id
-	 */
-
 	public function validParentId(){
-    	$categoryIds = self::getCategoryIds(__CLASS__, $this->information_id, true);
+    	$categoryIds = $this->subNodes($this->information_id, true);
 
     	if(in_array($this->parent_id, $categoryIds)){
-    		$this->addError('parent_id', Yii::t('m/information', 'Parent_id can not be self or children'));
+    		$this->addError('parent_id', Yii::t('app', 'Parent_id can not be self or children'));
     	}
     }
 
-	/**
-	 * Get all child node base on $parent
-	 * category level will be added on for each node
-	 * please note that default level is custom variable, you can set it as zero while the root node is not zero
-	 *
-	 * @param $modelName, the model class name
-	 * @param $parent, root node
-	 * @param $textAttribute, attribute to show
-	 * @param $level
-	 * @return array
-	 */
-
-	public static function getCategories($modelName = __CLASS__, $parent = NULL, $textAttribute = 'informationI18n.title', $level=0) {
-		if(is_array($modelName)){	// models
-			$modelName = array_shift($modelName);	// model
-		}
-
-		$modelName = CHtml::modelName($modelName);	// modelName
-
-		$primaryKey = $modelName::model()->tableSchema->primaryKey;
-
-		$storage = array();
-		$callback = null;
-
-		$callback = function($parent, $level) use ($storage, &$callback, $modelName, $primaryKey, $textAttribute){
-			$criteria = new CDbCriteria;
-			$criteria->compare('t.parent_id', is_array($parent) ? $parent : array($parent));
-			$criteria->order = 't.sort_order DESC, t.information_id ASC';
-
-			$categories = $modelName::model()->findAll($criteria);
-
-			foreach ($categories as $category) {
-				$subCategories = call_user_func($callback, $category->$primaryKey, $level+1);
-				$storage[] = array(
-					$primaryKey => $category->$primaryKey,
-					'parent_id' => $category->parent_id,
-					'level' => $level,
-					'title' => CHtml::value($category, $textAttribute),
-					'totalSubCategories' => sizeOf($subCategories),
-				);
-				$storage = CMap::mergeArray($storage, $subCategories);
-			}
-
-			return $storage;
-		};
-
-		return $callback($parent, $level);
-	}
-
-	/**
-	 * @see self::getCategories()
-	 *
-	 * @param $modelName, the model class name
-	 * @param $parent
-	 * @param $textAttribute, attribute to show
-	 * @param $level
-	 * @return array
-	 */
-
-	public static function getDropListData($modelName = __CLASS__, $parent = NULL, $textAttribute = 'informationI18n.title', $level=0) {
-		if(is_array($modelName)){	// models
-			$modelName = array_shift($modelName);	// model
-		}
-
-		$modelName = CHtml::modelName($modelName);	// modelName
-
-		$primaryKey = $modelName::model()->tableSchema->primaryKey;
-
-		$storage = array();
-		$callback = null;
-
-		$callback = function($parent, $level) use ($storage, &$callback, $modelName, $primaryKey, $textAttribute){
-			$criteria = new CDbCriteria;
-			$criteria->compare('t.parent_id', is_array($parent) ? $parent : array($parent));
-			$criteria->order = 't.sort_order DESC, t.information_id ASC';
-
-			$categories = $modelName::model()->findAll($criteria);
-
-			foreach ($categories as $category) {
-				$storage[$category->$primaryKey] = str_repeat('　', $level) . (CHtml::value($category, $textAttribute));
-
-				$storage = CMap::mergeArray($storage, call_user_func($callback, $category->$primaryKey, $level+1));
-			}
-
-			return $storage;
-		};
-
-		return $callback($parent, $level);
-	}
-
-	/**
-	 *  Get all child node id base on $parent
-	 *
-	 * @param $modelName, the model class name
-	 * @param $parent, root node
-	 * @param $self, whether the return value includes the $parend or not
-	 * @return array
-	 */
-
-	public static function getCategoryIds($modelName = __CLASS__, $parent = NULL, $self = false) {
-		if(is_array($modelName)){	// models
-			$modelName = array_shift($modelName);	// model
-		}
-
-		$modelName = CHtml::modelName($modelName);	// modelName
-
-		$primaryKey = $modelName::model()->tableSchema->primaryKey;
-
-		$storage = array();
-		$callback = null;
-
-		$callback = function($parent, $self) use ($storage, &$callback, $modelName, $primaryKey){
-	        $criteria = new CDbCriteria;
-			$criteria->compare('t.parent_id', is_array($parent) ? $parent : array($parent));
-			$criteria->order = 't.sort_order DESC, t.information_id ASC';
-
-	        $categories = $modelName::model()->findAll($criteria);
-
-	        foreach ($categories as $category) {
-	        	$storage[] = $category->$primaryKey;
-	        	$storage = CMap::mergeArray($storage, call_user_func($callback, $category->$primaryKey, $self));
-	        }
-
-	        return $storage;
-		};
-
-		$categoryIds = $callback($parent, $self);
-
-		$self && array_unshift($categoryIds, $parent);
-
-		return $categoryIds;
-    }
-
-	/**
-     * The zii.behavior.CTimestampBehavior has been enabled in baseModel already
-     *
-     * @return boolean
-     */
-
-    public function beforeSave(){
-    	if(!parent::beforeSave()) return false;
-
-    	$this->parent_id = $this->parent_id ? $this->parent_id : new CDbExpression('NULL');
-
-    	return true;
-    }
-
-	/**
-     * Checking relations before the DB fk constraint
-     *
-     * @return boolean
-     */
 
     public function beforeDelete(){
+    	// Raise event
     	if(!parent::beforeDelete()) return false;
 
     	if(sizeOf($this->informations)){

@@ -30,10 +30,10 @@
   			<?php  foreach($this->languages as $val):?>
 			<a href="#tab-language-<?php  echo $val['language_id']?>"><?php  echo $val['title']?></a>
   			<?php  endforeach;?>
-			<!--<a href="#tab-swfupload"><?php  echo Yii::t('app', 'Product Images')?></a>-->
+			<!--<a href="#tab-swfupload"><?php  echo Yii::t('app', 'Tabs Image')?></a>-->
 		</div>
 
-		<?php 
+		<?php
 			$form = $this->beginWidget('GxActiveForm', array(
 				'id' => 'category-form',
 				'enableAjaxValidation' => true,
@@ -41,14 +41,14 @@
 			));
 		?>
 
-		<?php 
+		<?php
 			if($returnUrl = Yii::app()->user->getState('category-grid-url')){
 				echo CHtml::hiddenField('returnUrl', $returnUrl);
 			}
 		?>
 
 		<div id="tab-basic">
-			<?php 
+			<?php
 				echo $this->renderPartial(
 					'_basic',
 					array(
@@ -62,7 +62,7 @@
 
 		<?php  foreach($this->languages as $val):?>
 		<div id="tab-language-<?php  echo $val['language_id']?>">
-			<?php 
+			<?php
 				echo $this->renderPartial(
 					'//categoryI18n/_i18n',
 					array(
@@ -77,7 +77,7 @@
 		<?php  endforeach;?>
 
 		<!--<div id="tab-swfupload">
-			<?php 
+			<?php
 				/*
 				echo $this->renderPartial(
 					'_swfupload',

@@ -5,7 +5,7 @@
  */
 return array(
 	// preloading 'log' component
-	'preload'=>array(
+	'preload'=>YII_DEBUG == false ? array() : array(
 		'log',
 	),
 

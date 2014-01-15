@@ -30,7 +30,8 @@ class CActiveRecordNullBehavior extends CActiveRecordBehavior {
 
 			 foreach($attributes as $attribute){
 			 	if(empty($this->getOwner()->{$attribute})){
-			 		$this->getOwner()->{$attribute} = new CDbException('NULL');
+			 		// using NULL instead of new CDbExpression('NULL')
+			 		$this->getOwner()->{$attribute} = NULL;
 			 	}
 			 }
 		}

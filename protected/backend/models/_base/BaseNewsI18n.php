@@ -23,7 +23,6 @@
  */
 abstract class BaseNewsI18n extends GxActiveRecord {
 
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -76,44 +75,5 @@ abstract class BaseNewsI18n extends GxActiveRecord {
 			'news' => null,
 			'language' => null,
 		);
-	}
-
-	public function search() {
-		$alias = $this->tableAlias;
-	
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("{$alias}.news_i18n_id", $this->news_i18n_id);
-		$criteria->compare("{$alias}.news_id", $this->news_id);
-		$criteria->compare("{$alias}.language_id", $this->language_id);
-		$criteria->compare("{$alias}.status", $this->status);
-		$criteria->compare("{$alias}.pic", $this->pic, true);
-		$criteria->compare("{$alias}.title", $this->title, true);
-		$criteria->compare("{$alias}.keywords", $this->keywords, true);
-		$criteria->compare("{$alias}.description", $this->description, true);
-
-
-		return new CActiveDataProvider($this, array(
-			'criteria' => $criteria,
-			'sort'=>array(
-				'defaultOrder' => "{$alias}.news_i18n_id ASC",
-				'multiSort'=>true,
-				'attributes'=>array(
-					'*',
-				),
-			),
-			'pagination' => false,
-		));
-	}
-
-	public function behaviors() {
-		return array(
-			'CTimestampBehavior'=>array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-				'updateAttribute' => null,
-                'createAttribute' => null,
-				'setUpdateOnCreate' => true,
-			),
-        );
 	}
 }

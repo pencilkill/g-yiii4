@@ -9,22 +9,24 @@ class InformationController extends GxController {
 		$model = new Information('search');
 		$model->unsetAttributes();
 
-		$i18n = new InformationI18n('search');
-		$i18n->unsetAttributes();
-
-		$model->filterI18n = $i18n;
+		$model->filterInstance();
 
 		if (isset($_GET['Information'])){
 			$model->setAttributes($_GET['Information']);
 		}
 
-		if (isset($_GET['InformationI18n'])){
-			$i18n->setAttributes($_GET['InformationI18n']);
+		if(empty($_GET['Information']['parent_id'])){
+			$model->setAttribute('parent_id', array(NULL));
 		}
+
+		if (isset($_GET['InformationI18n'])){
+			$model->filter->informationI18ns->setAttributes($_GET['InformationI18n']);
+		}
+
+		Yii::app()->user->setState('information-grid-url', Yii::app()->request->url);
 
 		$this->render('index', array(
 			'model' => $model,
-			'i18n' => $i18n,
 		));
 	}
 
@@ -34,8 +36,8 @@ class InformationController extends GxController {
 		$i18ns = array();
 
 		foreach($this->languages as $val){
-			$i18n = new InformationI18n;
-			$i18ns[$val['language_id']] = $i18n;
+			$va = new InformationI18n;
+			$i18ns[$val['language_id']] = $va;
 		}
 
 		$this->performAjaxValidationEx(array(
@@ -53,28 +55,42 @@ class InformationController extends GxController {
 		if (isset($_POST['Information'])) {
 			$model->setAttributes($_POST['Information']);
 
-			$valid = true;
+			$valid = $model->validate();
 
-			foreach($this->languages as $val){
-				$i18ns[$val['language_id']]->setAttributes($_POST['InformationI18n'][$val['language_id']]);
-				$i18ns[$val['language_id']]->language_id = $val['language_id'];
-				$i18ns[$val['language_id']]->information_id = 0;
+			$i18ns = array();
+			foreach($_POST['InformationI18n'] as $val){
+				$va = new InformationI18n;
+				$va->setAttributes($val);
+				$va->information_id = 0;
 
-				$valid = $i18ns[$val['language_id']]->validate() && $valid;
+				$valid = $va->validate() && $valid;
+
+				$i18ns[$val['language_id']] = $va;
 			}
 
+			if ($valid) {
+				$transaction = Yii::app()->db->beginTransaction();
 
-			if ($valid && $model->validate()) {
-				$model->save(false);
+				try{
+					$model->save(false);
 
-				foreach($this->languages as $val){
-					$i18ns[$val['language_id']]->information_id = $model->information_id;
-					$i18ns[$val['language_id']]->save();
-				}
-				if (Yii::app()->getRequest()->getIsAjaxRequest()){
-					Yii::app()->end();
-				}else{
-					$this->redirect(array('index'));
+					foreach($i18ns as $va){
+						$va->information_id = $model->information_id;
+						$va->save(false);
+					}
+
+					$transaction->commit();
+
+					if (Yii::app()->getRequest()->getIsAjaxRequest()){
+						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+						Yii::app()->end();
+					}else{
+						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
+					}
+				}catch(CDbException $e){
+					$transaction->rollback();
+
+					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 				}
 			}else{
 				Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
@@ -92,13 +108,6 @@ class InformationController extends GxController {
 
 		$i18ns = $model->informationI18ns;
 
-		foreach($this->languages as $val){
-			if(!isset($i18ns[$val['language_id']])){
-				$i18n = new InformationI18n;
-				$i18ns[$val['language_id']] = $i18n;
-			}
-		}
-
 		$this->performAjaxValidationEx(array(
 				array(
 					'model' => $model,
@@ -113,26 +122,46 @@ class InformationController extends GxController {
 
 		if (isset($_POST['Information'])) {
 			$model->setAttributes($_POST['Information']);
-			$valid = true;
 
-			foreach($this->languages as $val){
-				$i18ns[$val['language_id']]->setAttributes($_POST['InformationI18n'][$val['language_id']]);
-				$i18ns[$val['language_id']]->language_id = $val['language_id'];
-				$i18ns[$val['language_id']]->information_id = $model->information_id;
+			$valid = $model->validate();
 
-				$valid = $i18ns[$val['language_id']]->validate() && $valid;
+			$i18ns = array();
+			foreach($_POST['InformationI18n'] as $val){
+				$va = new InformationI18n;
+				$va->setAttributes($val);
+				$va->information_id = $model->information_id;
+
+				$valid = $va->validate() && $valid;
+
+				$i18ns[$val['language_id']] = $va;
 			}
 
-			if ($valid && $model->validate()) {
-				$model->save(false);
+			if ($valid) {
+				$transaction = Yii::app()->db->beginTransaction();
 
-				foreach($this->languages as $val){
-					$i18ns[$val['language_id']]->save();
-				}
-				if (Yii::app()->getRequest()->getIsAjaxRequest()){
-					Yii::app()->end();
-				}else{
-					$this->redirect(array('index'));
+				try{
+					$model->save(false);
+
+					$criteria = new CDbCriteria;
+					$criteria->compare('information_id', $model->information_id);
+
+					InformationI18n::model()->deleteAll($criteria);
+					foreach($i18ns as $va){
+						$va->save(false);
+					}
+
+					$transaction->commit();
+
+					if (Yii::app()->getRequest()->getIsAjaxRequest()){
+						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+						Yii::app()->end();
+					}else{
+						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
+					}
+				}catch(CDbException $e){
+					$transaction->rollback();
+
+					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 				}
 			}else{
 				Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
@@ -147,10 +176,17 @@ class InformationController extends GxController {
 
 	public function actionDelete($id) {
 		if (Yii::app()->getRequest()->getIsPostRequest()) {
-			$this->loadModel($id, 'Information')->delete();
+			$model = $this->loadModel($id, 'Information');
 
-			if (! Yii::app()->getRequest()->getIsAjaxRequest()){
-				$this->redirect(array('index'));
+			if(!$model->delete()){
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
+			}
+
+			if (Yii::app()->getRequest()->getIsAjaxRequest()){
+				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+				Yii::app()->end();
+			}else{
+				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->createUrl('index'));
 			}
 		} else {
 			throw new CHttpException(400, Yii::t('app', 'Your request is invalid.'));
@@ -165,25 +201,33 @@ class InformationController extends GxController {
 			$criteria= new CDbCriteria;
 			$criteria->compare('information_id', $selected);
 
-			$models = Information::model()->findAll($criteria);
+			$models = Category::model()->findAll($criteria);
 
-			$valid = true;
+			$errorModel = null;
 
-			foreach ($models as $model){
-				$valid = $valid && $model->beforeDelete();
-				if(! $valid){
-					break;
-				}
-			}
+			$transaction = Yii::app()->db->beginTransaction();
 
-			if($valid) {
+			try{
 				foreach ($models as $model){
-					$model->delete();
+					if(!$model->delete()) {
+						$errorModel = $model;
+
+						Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
+
+						break;
+					}
 				}
+
+				$transaction->commit();
+
+			}catch(CDbException $e){
+				$transaction->rollback();
+
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
-				echo CJSON::encode(array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
@@ -211,24 +255,35 @@ class InformationController extends GxController {
 
 			foreach ($models as $model){
 				$model->setAttributes($editPosts[$model->information_id]);
-				if(! $model->validate()) {
+				if(!$model->validate()) {
 					$errorModel = $model;
 					break;
 				}
 			}
 
-			if(! $errorModel){
-				foreach ($models as $model){
-					$model->save(false);
+			if(!$errorModel){
+				$transaction = Yii::app()->db->beginTransaction();
+
+				try{
+					foreach ($models as $model){
+						$model->save(false);
+					}
+
+					$transaction->commit();
+
+				}catch(CDbException $e){
+					$transaction->rollback();
+
+					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 				}
+			}else{
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
 			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
-				echo CJSON::encode(array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 				Yii::app()->end();
 			} else{
-				$errorModel && Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
-
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));
 			}
 		}else{

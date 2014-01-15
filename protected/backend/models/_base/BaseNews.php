@@ -21,8 +21,6 @@
  */
 abstract class BaseNews extends GxActiveRecord {
 
-	public $filterI18n;
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -70,58 +68,5 @@ abstract class BaseNews extends GxActiveRecord {
 			'update_time' => Yii::t('m/news', 'Update Time'),
 			'newsI18ns' => null,
 		);
-	}
-
-	public function search() {
-		$alias = $this->tableAlias;
-	
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("{$alias}.news_id", $this->news_id);
-		$criteria->compare("{$alias}.top", $this->top);
-		$criteria->compare("{$alias}.sort_order", $this->sort_order);
-		$criteria->compare("{$alias}.date_added", $this->date_added, true);
-		$criteria->compare("{$alias}.create_time", $this->create_time, true);
-		$criteria->compare("{$alias}.update_time", $this->update_time, true);
-
-		$criteria->with = array('newsI18ns');
-		$criteria->group = "{$alias}.news_id";
-		$criteria->together = true;
-
-		$criteria->compare('newsI18ns.status', $this->filterI18n->status);
-		$criteria->compare('newsI18ns.pic', $this->filterI18n->pic, true);
-		$criteria->compare('newsI18ns.title', $this->filterI18n->title, true);
-		$criteria->compare('newsI18ns.keywords', $this->filterI18n->keywords, true);
-		$criteria->compare('newsI18ns.description', $this->filterI18n->description, true);
-
-		return new CActiveDataProvider($this, array(
-			'criteria' => $criteria,
-			'sort'=>array(
-				'defaultOrder' => "{$alias}.sort_order DESC, {$alias}.news_id ASC",
-				'multiSort'=>true,
-				'attributes'=>array(
-					'sort_order'=>array(
-						'desc'=>"{$alias}.sort_order DESC",
-						'asc'=>"{$alias}.sort_order ASC",
-					),
-					'*',
-				),
-			),
-			'pagination' => array(
-				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
-				'pageVar' => 'page',
-			),
-		));
-	}
-
-	public function behaviors() {
-		return array(
-			'CTimestampBehavior'=>array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-				'updateAttribute' => 'update_time',
-				'createAttribute' => 'create_time',
-				'setUpdateOnCreate' => true,
-			),
-        );
 	}
 }

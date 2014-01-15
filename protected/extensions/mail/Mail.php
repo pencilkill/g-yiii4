@@ -35,26 +35,35 @@
 class Mail{
 	private $_PHPMailer;
 
-	public function __construct(){
+	public function __construct($config = array()){
 		require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'PHPMailer.php';
+
+		$_config = array(
+			'UseSendmailOptions' => false,
+			'CharSet' => 'UTF-8',
+			'SMTPAuth' => true,
+			'SMTPKeepAlive' => true,
+			'Host' => Yii::app()->config->get('mail_smtp_host'),
+			'Username' => Yii::app()->config->get('mail_smtp_user'),
+			'Password' => Yii::app()->config->get('mail_smtp_password'),
+			'Port' => Yii::app()->config->get('mail_smtp_port'),
+			'Sender' => Yii::app()->config->get('mail_smtp_user'),
+		);
+
+		$config = array_merge_recursive($_config, $config);
 
 		$_PHPMailer = new PHPMailer;
 
-		//
-		$_PHPMailer->UseSendmailOptions = false;
-		//
-		$_PHPMailer->CharSet = 'UTF-8';
+		$ref = new ReflectionClass($_PHPMailer);
+
+		foreach($config as $name => $value){
+			if($ref->hasProperty($name) && $ref->getProperty($name)->isPublic()){
+				$_PHPMailer->{$name} = $value;
+			}
+		}
+
 		$_PHPMailer->IsSMTP();
-		$_PHPMailer->SMTPAuth = true;
-		$_PHPMailer->SMTPKeepAlive = true;
-		//
-		$_PHPMailer->Host = Yii::app()->config->get('mail_smtp_host');
-		$_PHPMailer->Username = Yii::app()->config->get('mail_smtp_user');
-		$_PHPMailer->Password = Yii::app()->config->get('mail_smtp_password');
-		$_PHPMailer->Port = Yii::app()->config->get('mail_smtp_port');
-		//
-		$_PHPMailer->Sender = Yii::app()->config->get('mail_smtp_user');	// Specified Sender before using SetFrom()
-		//...
+
 		$_PHPMailer->IsHTML(true);
 
 		$this->_PHPMailer = $_PHPMailer;
@@ -67,14 +76,21 @@ class Mail{
 	public function __set($name, $value){
 		$this->_PHPMailer->{$name} = $value;
 	}
-
+	/**
+	 * Without filter
+	 *
+	 * @param $method
+	 * @param $args
+	 */
 	public function __call($method, $args){
 		$class = $this->_PHPMailer;
+
 		if(method_exists($this, $method)){
 			$class = $this;
 		}
 
-		call_user_func_array(array($class, $method), $args);
+		$ref = new ReflectionMethod($class, $method);
+		$ref->invokeArgs($class, $args);
 	}
 
 	/**

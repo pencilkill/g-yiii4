@@ -7,15 +7,21 @@
 	<?php endif?>
   </div>
 
+  <div id="messageBox">
   <?php foreach(Yii::app()->user->getFlashes() as $key => $message) :?>
 	<div class="<?php echo $key?>"><?php echo $message?></div>
   <?php endforeach;?>
+  </div>
 
   <div class="box">
     <div class="heading">
       <div class="buttons">
-      	<a onclick="$('#admin-form').submit();" class="button"><?php echo Yii::t('app', 'Save')?></a>
-      	<a onclick="location = '<?php  echo $this->createUrl('index', array()); ?>';" class="button"><?php echo Yii::t('app', 'Cancel')?></a>
+      	<a onclick="$('#admin-form').submit();" class="button"><?php echo Yii::t('app', 'Save'); ?></a>
+      	<?php if($returnUrl = Yii::app()->user->getState('admin-grid-url')):?>
+		<a onclick="location = '<?php  echo $returnUrl; ?>';" class="button"><?php  echo Yii::t('app', 'Cancel'); ?></a>
+		<?php ;else:?>
+		<a onclick="location = '<?php  echo $this->createUrl('index', array()); ?>';" class="button"><?php echo Yii::t('app', 'Cancel'); ?></a>
+		<?php endif;?>
       </div>
     </div>
     <div class="content">
@@ -24,8 +30,17 @@
 		$form = $this->beginWidget('GxActiveForm', array(
 			'id' => 'admin-form',
 			'enableAjaxValidation' => true,
-			'htmlOptions' => array('enctype' => 'multipart/form-data', 'autocomplete'=>'off'),
+			'htmlOptions' => array(
+				'enctype' => 'multipart/form-data',
+				'autocomplete'=>'off'
+			)
 		));
+	?>
+
+	<?php
+		if($returnUrl = Yii::app()->user->getState('admin-grid-url')){
+			echo CHtml::hiddenField('returnUrl', $returnUrl);
+		}
 	?>
 
 		<table class="form">

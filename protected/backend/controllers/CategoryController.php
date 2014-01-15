@@ -15,7 +15,7 @@ class CategoryController extends GxController {
 			$model->setAttributes($_GET['Category']);
 		}
 
-		if (empty($_GET['Category']['parent_id'])) {
+		if(empty($_GET['Category']['parent_id'])){
 			$model->setAttribute('parent_id', array(NULL));
 		}
 
@@ -82,6 +82,7 @@ class CategoryController extends GxController {
 					$transaction->commit();
 
 					if (Yii::app()->getRequest()->getIsAjaxRequest()){
+						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 						Yii::app()->end();
 					}else{
 						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
@@ -124,6 +125,7 @@ class CategoryController extends GxController {
 
 			$valid = $model->validate();
 
+			$i18ns = array();
 			foreach($_POST['CategoryI18n'] as $val){
 				$va = new CategoryI18n;
 				$va->setAttributes($val);
@@ -141,17 +143,17 @@ class CategoryController extends GxController {
 					$model->save(false);
 
 					$criteria = new CDbCriteria;
-					$criteria->compare = ('t.category_id=:category_id');
-					$criteria->params = array(':category_id' => $model->category_id);
+					$criteria->compare('category_id', $model->category_id);
 
 					CategoryI18n::model()->deleteAll($criteria);
-					foreach($i18ns as $val){
+					foreach($i18ns as $va){
 						$va->save(false);
 					}
 
 					$transaction->commit();
 
 					if (Yii::app()->getRequest()->getIsAjaxRequest()){
+						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 						Yii::app()->end();
 					}else{
 						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
@@ -176,14 +178,12 @@ class CategoryController extends GxController {
 		if (Yii::app()->getRequest()->getIsPostRequest()) {
 			$model = $this->loadModel($id, 'Category');
 
-			if(! $model->beforeDelete()){
-				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
-			}else{
-				$model->delete();
+			if(!$model->delete()){
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
 			}
 
 			if (Yii::app()->getRequest()->getIsAjaxRequest()){
-				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 				Yii::app()->end();
 			}else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->createUrl('index'));
@@ -205,23 +205,29 @@ class CategoryController extends GxController {
 
 			$errorModel = null;
 
-			foreach ($models as $model){
-				if(! $model->beforeDelete()){
-					$errorModel = $model;
-					break;
-				}
-			}
+			$transaction = Yii::app()->db->beginTransaction();
 
-			if(! $errorModel) {
+			try{
 				foreach ($models as $model){
-					$model->delete();
+					if(!$model->delete()) {
+						$errorModel = $model;
+
+						Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
+
+						break;
+					}
 				}
-			}else{
-				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
+
+				$transaction->commit();
+
+			}catch(CDbException $e){
+				$transaction->rollback();
+
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
-				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
@@ -249,22 +255,33 @@ class CategoryController extends GxController {
 
 			foreach ($models as $model){
 				$model->setAttributes($editPosts[$model->category_id]);
-				if(! $model->validate()) {
+				if(!$model->validate()) {
 					$errorModel = $model;
 					break;
 				}
 			}
 
-			if(! $errorModel){
-				foreach ($models as $model){
-					$model->save(false);
+			if(!$errorModel){
+				$transaction = Yii::app()->db->beginTransaction();
+
+				try{
+					foreach ($models as $model){
+						$model->save(false);
+					}
+
+					$transaction->commit();
+
+				}catch(CDbException $e){
+					$transaction->rollback();
+
+					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 				}
 			}else{
-				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
 			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
-				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));

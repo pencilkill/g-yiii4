@@ -17,11 +17,11 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Create Time' => '',
-  'Pic' => '',
-  'Picture' => '',
-  'Picture|Pictures' => '',
+  'Create Time' => '創建時間',
+  'Pic' => '圖片',
+  'Picture' => '圖片管理',
+  'Picture|Pictures' => '圖片管理',
   'Sort Order' => '排序',
-  'Status' => '',
-  'Update Time' => '',
+  'Status' => '啟用',
+  'Update Time' => '更新時間',
 );

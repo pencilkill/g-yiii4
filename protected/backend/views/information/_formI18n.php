@@ -7,15 +7,21 @@
 	<?php endif?>
   </div>
 
+  <div id="messageBox">
   <?php foreach(Yii::app()->user->getFlashes() as $key => $message) :?>
 	<div class="<?php echo $key?>"><?php echo $message?></div>
   <?php endforeach;?>
+  </div>
 
   <div class="box">
     <div class="heading">
       <div class="buttons">
       	<a onclick="$('#information-form').submit();" class="button"><?php  echo Yii::t('app', 'Save'); ?></a>
-      	<a onclick="location = '<?php  echo $this->createUrl('index', array()); ?>';" class="button"><?php  echo Yii::t('app', 'Cancel'); ?></a>
+      	<?php if($returnUrl = Yii::app()->user->getState('information-grid-url')):?>
+		<a onclick="location = '<?php  echo $returnUrl; ?>';" class="button"><?php  echo Yii::t('app', 'Cancel'); ?></a>
+		<?php ;else:?>
+		<a onclick="location = '<?php  echo $this->createUrl('index', array()); ?>';" class="button"><?php  echo Yii::t('app', 'Cancel'); ?></a>
+		<?php endif;?>
       </div>
     </div>
     <div class="content">
@@ -24,7 +30,7 @@
   			<?php  foreach($this->languages as $val):?>
 			<a href="#tab-language-<?php  echo $val['language_id']?>"><?php  echo $val['title']?></a>
   			<?php  endforeach;?>
-			<!--<a href="#tab-swfupload"><?php  echo Yii::t('app', 'Product Images')?></a>-->
+			<!--<a href="#tab-swfupload"><?php  echo Yii::t('app', 'Tabs Image')?></a>-->
 		</div>
 
 		<?php
@@ -34,18 +40,55 @@
 				'htmlOptions' => array('enctype' => 'multipart/form-data'),
 			));
 		?>
+
+		<?php
+			if($returnUrl = Yii::app()->user->getState('information-grid-url')){
+				echo CHtml::hiddenField('returnUrl', $returnUrl);
+			}
+		?>
+
 		<div id="tab-basic">
-			<?php  echo $this->renderPartial('_basic', array('form' => $form, 'model' => $model), true)?>
+			<?php
+				echo $this->renderPartial(
+					'_basic',
+					array(
+						'form' => $form,
+						'model' => $model,
+					),
+					true
+				);
+			?>
 		</div>
 
 		<?php  foreach($this->languages as $val):?>
 		<div id="tab-language-<?php  echo $val['language_id']?>">
-			<?php  echo $this->renderPartial('//informationI18n/_i18n', array('form' => $form, 'model' => $i18ns[$val['language_id']], 'language_id' => $val['language_id']), true)?>
+			<?php
+				echo $this->renderPartial(
+					'//informationI18n/_i18n',
+					array(
+						'form' => $form,
+						'model' => $i18ns[$val['language_id']],
+						'language_id' => $val['language_id'],
+					),
+					true
+				);
+			?>
 		</div>
 		<?php  endforeach;?>
 
 		<!--<div id="tab-swfupload">
-			<?php  //echo $this->renderPartial('_swfupload', array('gallery' => $gallery, 'galleries' => $galleries,), true)?>
+			<?php
+				/*
+				echo $this->renderPartial(
+					'_swfupload',
+					array(
+						'gallery' => $gallery,
+						'galleries' => $galleries,
+					),
+					true
+				);
+				*/
+			?>
 		</div>-->
 
 		<?php

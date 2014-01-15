@@ -11,6 +11,7 @@ jQuery.expr[':'].regex = function(elem, index, match) {
         regex = new RegExp(matchParams.join('').replace(/^\s+|\s+$/g,''), regexFlags);
     return regex.test(jQuery(elem)[attr.method](attr.property));
 }
+
 // Customer functions
 jQuery(function($) {
 	/**
@@ -27,42 +28,49 @@ jQuery(function($) {
 			return false;
 
 		var box = $('#messageBox');
-		var em = box.find('.' + type);
-		var html = '<div class="' + type + '">' + message + '</div>';
-		(em.length == 0 ? box.append(html) : box.children('.' + type).replaceWith(html));
+		box.find('.' + type).remove();
+		
+		var html = $('<div/>').addClass(type).css({'display':'none'}).html(message);
+		
+		html.appendTo(box).show('fast');
+		
+		//setTimeout(function(){html.hide('slow');}, 5000);
+		
 		return true;
 	}
 	/**
 	 * Grid View Multiple Delete, with ajax  
 	 */
 	GridViewDelete = function(params) {
-		var params = $.extend({},
-						{
-							id : null,	// grid form id
-							url : null,	// action url
-							checkBoxColumn : ':checkbox:not(:disabled)[name^="GridViewSelect"]:checked',	// checkbox selector 
-							postData : {
-								returnUrl : window.location.href	// extra data to post
-							},
-							deleteConfirmation : 'Confirm Grid View Delete?',	// alert message after multiple delete em clicked
-							selectNoneMessage : 'No results found',		// flash message to show if no selected em after multiple delete em clicked
-							warningMessage : 'Operation Failure',
-						}, params || {});
+		var params = $.extend(
+			{
+				id : null,	// grid form id
+				url : null,	// action url
+				checkBoxColumn : ':checkbox:not(:disabled)[name^="GridViewSelect"]:checked',	// checkbox selector 
+				postData : {
+					returnUrl : window.location.href	// extra data to post
+				},
+				deleteConfirmation : 'Confirm Grid View Delete?',	// alert message after multiple delete em clicked
+				selectNoneMessage : 'No results found',		// flash message to show if no selected em after multiple delete em clicked
+				warningMessage : 'Operation Failure',
+			},
+			params || {}
+		);
 
 		if (!(params.id && params.url && params.checkBoxColumn))
 			return false;
 
-		var models = new Array();
+		var selected = new Array();
 		$.each($(params.checkBoxColumn), function() {
-			models.push($(this).val());
+			selected.push($(this).val());
 		});
 		
-		if (models.length > 0) {
+		if (selected.length > 0) {
 			confirm(params.deleteConfirmation) && $.post(
 				params.url, 
 				$.extend(
 						params.postData || {}, 
-						{'selected[]' : models}
+						{'selected[]' : selected}
 				), 
 				function(data) {
 					var ret = $.parseJSON(data);
@@ -104,7 +112,7 @@ jQuery(function($) {
 	/**
 	 * CKEditor Dynamic Update Value
 	 */
-	function CKFormUpdateValue(){
+	CKFormUpdateValue = function (){
 		for (instance in CKEDITOR.instances){
 	        CKEDITOR.instances[instance].updateElement();
 		}
@@ -112,7 +120,7 @@ jQuery(function($) {
 	/**
 	 * Preview, dependencies fancybox2
 	 */
-	function preview(formData){
+	Preview = function (formData){
 		var that = $(this);
 		$.ajax({
 			type: 'POST',

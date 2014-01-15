@@ -17,7 +17,7 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Status' => '',
+  'Status' => '啟用',
   'Description' => '內容',
   'Keywords' => '關鍵詞',
   'Pic' => '圖片',

@@ -20,6 +20,51 @@ class ContactController extends GxController {
 		));
 	}
 
+	public function actionCreate() {
+		$model = new Contact;
+
+		$this->performAjaxValidationEx(array(
+				array(
+					'model' => $model,
+				),
+			),
+			'contact-form'
+		);
+
+		if (isset($_POST['Contact'])) {
+			$model->setAttributes($_POST['Contact']);
+
+			$valid = $model->validate();
+
+			if ($valid) {
+				$transaction = Yii::app()->db->beginTransaction();
+
+				try{
+					$model->save(false);
+
+					$transaction->commit();
+
+					if (Yii::app()->getRequest()->getIsAjaxRequest()){
+						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+						Yii::app()->end();
+					}else{
+						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
+					}
+				}catch(CDbException $e){
+					$transaction->rollback();
+
+					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
+				}
+			}else{
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
+			}
+		}
+
+		$this->render('create', array(
+			'model' => $model,
+		));
+	}
+
 	public function actionUpdate($id) {
 		$model = $this->loadModel($id, 'Contact');
 
@@ -45,6 +90,7 @@ class ContactController extends GxController {
 					$transaction->commit();
 
 					if (Yii::app()->getRequest()->getIsAjaxRequest()){
+						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 						Yii::app()->end();
 					}else{
 						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
@@ -68,14 +114,12 @@ class ContactController extends GxController {
 		if (Yii::app()->getRequest()->getIsPostRequest()) {
 			$model = $this->loadModel($id, 'Contact');
 
-			if(! $model->beforeDelete()){
-				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
-			}else{
-				$model->delete();
+			if(!$model->delete()){
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
 			}
 
 			if (Yii::app()->getRequest()->getIsAjaxRequest()){
-				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 				Yii::app()->end();
 			}else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->createUrl('index'));
@@ -93,27 +137,33 @@ class ContactController extends GxController {
 			$criteria= new CDbCriteria;
 			$criteria->compare('contact_id', $selected);
 
-			$models = Contact::model()->findAll($criteria);
+			$models = Category::model()->findAll($criteria);
 
 			$errorModel = null;
 
-			foreach ($models as $model){
-				if(! $model->beforeDelete()){
-					$errorModel = $model;
-					break;
-				}
-			}
+			$transaction = Yii::app()->db->beginTransaction();
 
-			if(! $errorModel) {
+			try{
 				foreach ($models as $model){
-					$model->delete();
+					if(!$model->delete()) {
+						$errorModel = $model;
+
+						Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
+
+						break;
+					}
 				}
-			}else{
-				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
+
+				$transaction->commit();
+
+			}catch(CDbException $e){
+				$transaction->rollback();
+
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
-				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
@@ -141,22 +191,33 @@ class ContactController extends GxController {
 
 			foreach ($models as $model){
 				$model->setAttributes($editPosts[$model->contact_id]);
-				if(! $model->validate()) {
+				if(!$model->validate()) {
 					$errorModel = $model;
 					break;
 				}
 			}
 
-			if(! $errorModel){
-				foreach ($models as $model){
-					$model->save(false);
+			if(!$errorModel){
+				$transaction = Yii::app()->db->beginTransaction();
+
+				try{
+					foreach ($models as $model){
+						$model->save(false);
+					}
+
+					$transaction->commit();
+
+				}catch(CDbException $e){
+					$transaction->rollback();
+
+					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 				}
 			}else{
-				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
 			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
-				echo CJSON::encode(Yii::app()->user->getFlashes() ? Yii::app()->user->getFlashes() : array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));

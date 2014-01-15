@@ -6,8 +6,9 @@ Yii::t('app', 'Confirm Gallery Image Delete?');
 Yii::t('app', 'Gallery Image Delete');
  * ************** end of swfupload extension translations *********
 */
-$modelClass = is_object($gallery) ? CHtml::modelName($gallery) : $gallery;
-$languages = 0;
+$modelClass = CHtml::modelName($gallery);
+
+$languages = CHtml::listData($this->languages, 'language_id', 'code');
 
 $this->widget('frontend.extensions.swfupload.CSwfUpload', array(
 		// defined in init()
@@ -30,7 +31,9 @@ $this->widget('frontend.extensions.swfupload.CSwfUpload', array(
 		),
 		*/
 		//This will be merge to config, see init()
-		//'config' => array(),
+		'config' => array(
+			'button_text'=>'<span class="button">'.Yii::t('app', 'Select A Image').' [400 * 300]</span>',
+		),
     )
 );
 ?>

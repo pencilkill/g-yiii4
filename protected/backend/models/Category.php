@@ -4,11 +4,7 @@ Yii::import('backend.models._base.BaseCategory');
 
 class Category extends BaseCategory
 {
-	/**
-	 * @var object
-	 * an helper object to filter data
-	 * checking search(), CActiveRecordFilterBehavior
-	 */
+
 	public $filter;
 
 	public static function model($className=__CLASS__) {
@@ -16,11 +12,11 @@ class Category extends BaseCategory
 	}
 
 	public function behaviors() {
-        return CMap::mergeArray(parent::behaviors(), array(
+		return CMap::mergeArray(parent::behaviors(), array(
 			'CActiveRecordFilterBehavior' => array(
 				'class' => 'backend.behaviors.CActiveRecordFilterBehavior',
 			),
-			'CTimestampBehavior' => array(
+			'CTimestampBehavior'=> array(
 				'class' => 'zii.behaviors.CTimestampBehavior',
 				'updateAttribute' => 'update_time',
 				'createAttribute' => 'create_time',
@@ -39,13 +35,15 @@ class Category extends BaseCategory
         ));
 	}
 
-	/**
-	 * customer null label
-	 * notice that if label value is null, yii will get the value from the relation model label
-	 */
+	public function rules() {
+		return CMap::mergeArray(parent::rules(), array(
+			array('parent_id', 'validParentId', 'on' => 'update'),
+		));
+	}
 
 	public function attributeLabels() {
 		return CMap::mergeArray(parent::attributeLabels(), array(
+			'parent_id' => null,
 			'parent' => null,
 			'categories' => null,
 			'categoryI18ns' => null,
@@ -53,35 +51,57 @@ class Category extends BaseCategory
 		));
 	}
 
-	/**
-	 * Customer rules
-	 */
+	public function search() {
+		$alias = $this->tableAlias;
 
-	public function rules() {
-		return CMap::mergeArray(parent::rules(), array(
-			array('parent_id', 'validParentId', 'on' => 'update'),
+		$criteria = new CDbCriteria;
+
+		$criteria->compare("{$alias}.category_id", $this->category_id);
+		$criteria->compare("{$alias}.parent_id", $this->parent_id);
+		$criteria->compare("{$alias}.sort_order", $this->sort_order);
+		$criteria->compare("{$alias}.create_time", $this->create_time, true);
+		$criteria->compare("{$alias}.update_time", $this->update_time, true);
+		$criteria->group = "{$alias}.category_id";
+		$criteria->together = true;
+
+		$criteria->with = array('categoryI18ns');
+
+		$criteria->compare('categoryI18ns.title', $this->filter->categoryI18ns->title, true);
+		$criteria->compare('categoryI18ns.keywords', $this->filter->categoryI18ns->keywords, true);
+		$criteria->compare('categoryI18ns.description', $this->filter->categoryI18ns->description, true);
+
+		return new CActiveDataProvider($this, array(
+			'criteria' => $criteria,
+			'sort'=>array(
+				'defaultOrder' => "{$alias}.sort_order DESC, {$alias}.category_id ASC",
+				'multiSort'=>true,
+				'attributes'=>array(
+					'sort_order'=>array(
+						'desc'=>"{$alias}.sort_order DESC",
+						'asc'=>"{$alias}.sort_order ASC",
+					),
+					'*',
+				),
+			),
+			'pagination' => array(
+				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
+				'pageVar' => 'page',
+			),
 		));
 	}
 
-	/**
-	 * Validate parent_id
-	 */
 
 	public function validParentId(){
-    	$categoryIds = self::getCategoryIds(__CLASS__, $this->category_id, true);
+    	$categoryIds = $this->subNodes($this->category_id, true);
 
     	if(in_array($this->parent_id, $categoryIds)){
-    		$this->addError('parent_id', Yii::t('m/category', 'Parent_id can not be self or children'));
+    		$this->addError('parent_id', Yii::t('app', 'Parent_id can not be self or children'));
     	}
     }
 
-    /**
-     * Checking relations before the DB fk constraint
-     *
-     * @return boolean
-     */
 
     public function beforeDelete(){
+    	// Raise event
     	if(!parent::beforeDelete()) return false;
 
     	if(sizeOf($this->categories) || sizeOf($this->product2categories)){

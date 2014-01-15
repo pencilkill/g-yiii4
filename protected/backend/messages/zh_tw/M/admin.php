@@ -17,7 +17,7 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Super' => '',
+  'Super' => '超級',
   'Admin' => '管理員',
   'Admin|Admins' => '管理員',
   'Confirm Password' => '確認密碼',

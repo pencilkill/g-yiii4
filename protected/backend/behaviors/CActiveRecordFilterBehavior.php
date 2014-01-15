@@ -12,8 +12,9 @@ class CActiveRecordFilterBehavior extends CActiveRecordBehavior {
 	 * @var mixed
 	 *
 	 * The relations used to search, which is/are blong to model relations
-	 * only support the relation key
-	 * do not support to merge the relationData
+	 * only support the relation key, do not support to merge the relationData
+	 *
+	 * set it as false if you don't need to filter relations
 	 */
 	public $relations;
 
@@ -28,8 +29,10 @@ class CActiveRecordFilterBehavior extends CActiveRecordBehavior {
 	public function afterConstruct($event) {
 		parent::afterConstruct($event);
 
-		if(empty($this->relations)){
+		if($this->relations === null){
 			$this->relations = array_keys($this->getOwner()->relations());
+		}else if($this->relations === false){
+			$this->relations = array();
 		}else{
 			if(is_string($this->relations)){
 				$this->relations = array($this->relations);

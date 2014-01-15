@@ -7,7 +7,9 @@ $this->breadcrumbs = array(
 ?>
 
 <?php
-$this->renderPartial('_formI18n', array(
+$this->renderPartial(
+	'_formI18n',
+	array(
 		'model' => $model,
 		'i18ns' => $i18ns,
 	)

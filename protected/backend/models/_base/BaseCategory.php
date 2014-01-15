@@ -66,7 +66,7 @@ abstract class BaseCategory extends GxActiveRecord {
 	public function attributeLabels() {
 		return array(
 			'category_id' => Yii::t('m/category', 'Category'),
-			'parent_id' => Yii::t('m/category', 'Parent'),
+			'parent_id' => null,
 			'sort_order' => Yii::t('m/category', 'Sort Order'),
 			'create_time' => Yii::t('m/category', 'Create Time'),
 			'update_time' => Yii::t('m/category', 'Update Time'),
@@ -75,44 +75,5 @@ abstract class BaseCategory extends GxActiveRecord {
 			'categoryI18ns' => null,
 			'product2categories' => null,
 		);
-	}
-
-	public function search() {
-		$alias = $this->tableAlias;
-
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("{$alias}.category_id", $this->category_id);
-		$criteria->compare("{$alias}.parent_id", $this->parent_id);
-		$criteria->compare("{$alias}.sort_order", $this->sort_order);
-		$criteria->compare("{$alias}.create_time", $this->create_time, true);
-		$criteria->compare("{$alias}.update_time", $this->update_time, true);
-
-		$criteria->group = "{$alias}.category_id";
-		$criteria->together = true;
-
-		$criteria->with = array('categoryI18ns');
-		$criteria->compare('categoryI18ns.title', $this->filter->categoryI18ns->title, true);
-		$criteria->compare('categoryI18ns.keywords', $this->filter->categoryI18ns->keywords, true);
-		$criteria->compare('categoryI18ns.description', $this->filter->categoryI18ns->description, true);
-
-		return new CActiveDataProvider($this, array(
-			'criteria' => $criteria,
-			'sort'=>array(
-				'defaultOrder' => "{$alias}.sort_order DESC, {$alias}.category_id ASC",
-				'multiSort'=>true,
-				'attributes'=>array(
-					'sort_order'=>array(
-						'desc'=>"{$alias}.sort_order DESC",
-						'asc'=>"{$alias}.sort_order ASC",
-					),
-					'*',
-				),
-			),
-			'pagination' => array(
-				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
-				'pageVar' => 'page',
-			),
-		));
 	}
 }

@@ -17,21 +17,11 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Commition Failure' => '',
-  'Operation Failure Including Items.' => '',
-  'Operation Failure Including SubItems' => '',
-  'Operation Failure.' => '',
-  'Select A Image' => '',
+  'Tabs Image' => '產品多圖',
   'Advanced Search' => '高級搜索',
   'All' => '全部',
   'Cancel' => '取消',
-  'Confirm Delete Language?' => '警告：
-
-您正在嘗試刪除語言。
-
-這個操作將刪除關聯語言的所有資料。
-
-確定要刪除語言項目嗎？',
+  'Commition Failure' => '失敗：提交資料失敗',
   'Confirm Gallery Image Delete?' => '確認刪除項目？',
   'Confirm Grid View Delete?' => '確定要刪除選中項目嗎？',
   'Confirm Grid View Update?' => '確定要送出編輯項目嗎？',
@@ -41,6 +31,7 @@ return array (
   'Female' => '女生',
   'Gallery Image Delete' => '刪除',
   'Grid Actions' => '操作',
+  'Items Should Be At Least One' => '項目需保留至少一個',
   'List' => '列表',
   'Login' => '登錄',
   'Male' => '男生',
@@ -50,10 +41,12 @@ return array (
   'Noticed' => '已閱讀',
   'Operation' => '操作',
   'Operation Failure' => '失敗：操作失敗',
+  'Operation Failure Including SubItems' => '失敗：項目包含子項目',
   'Operation Success' => '成功：操作成功',
-  'Product Images' => '產品圖片',
+  'Parent_id can not be self or children' => '上級分類不能是自身或其子分類',
   'Save' => '送出',
   'Search' => '搜索',
+  'Select A Image' => '選擇圖片',
   'Tabs Basic' => '基本設置',
   'Unnoticed' => '未閱讀',
   'Update' => '編輯',

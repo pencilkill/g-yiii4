@@ -125,7 +125,7 @@ class SiteController extends Controller
 			$path = Yii::app()->getRequest()->getParam('path', Yii::app()->getParams()->uploadDir.'/'.date('Y/m/d'));
 
 			$fullPath = Yii::getPathOfAlias('webroot').'/'.$path.'/';
-			is_dir($fullPath) || CFileHelper::mkdir($fullPath, true, 0777);
+			is_dir($fullPath) || CFileHelper::mkdir($fullPath);
 
 			//wtf, cache outputs the same image sometimes when using function time() to rename file ...
 			$rename = Yii::app()->getRequest()->getParam('rename', uniqid().'.'.$file->extensionName);
@@ -183,7 +183,13 @@ class SiteController extends Controller
 	{
 		$severData = array();
 		try{
-			$file = CUploadedFile::getInstanceByName('userfile');
+			$instanceName = 'userfile';	// default value
+
+			if(!empty($_POST['instanceName'])){
+				$instanceName = $_POST['instanceName'];
+			}
+
+			$file = CUploadedFile::getInstanceByName($instanceName);
 			if(!$file || $file->getHasError()){
 				$severData['error'] = 'Documento Invalido';
 				echo json_encode($severData);
@@ -194,7 +200,7 @@ class SiteController extends Controller
 			$path = Yii::app()->getRequest()->getParam('path', Yii::app()->getParams()->uploadDir.'/'.date('Y/m/d'));
 
 			$fullPath = Yii::getPathOfAlias('webroot').'/'.$path.'/';
-			is_dir($fullPath) || CFileHelper::mkdir($fullPath, true, 0777);
+			is_dir($fullPath) || CFileHelper::mkdir($fullPath);
 
 			//wtf, cache outputs the same image sometimes when using function time() to rename file ...
 			$rename = Yii::app()->getRequest()->getParam('rename', uniqid().'.'.$file->extensionName);
@@ -230,11 +236,11 @@ class SiteController extends Controller
 	}
 
 	/**
-	 * Notice: the parameters url and name should be type of HCSite::encodeUrl separator from each other
+	 * Notice: the parameters url and name should be type of HCUrl::encode separator from each other
 	 * @param $url, fileurl
 	 * @param $name, download name
 	 */
 	public function actionDownload($url, $name){
-		return HCSite::download($url, $name);
+		return HCOuput::download($url, $name);
 	}
 }

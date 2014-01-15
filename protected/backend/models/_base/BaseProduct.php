@@ -21,8 +21,6 @@
  */
 abstract class BaseProduct extends GxActiveRecord {
 
-	public $filterI18n;
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -72,56 +70,5 @@ abstract class BaseProduct extends GxActiveRecord {
 			'productI18ns' => null,
 			'productImages' => null,
 		);
-	}
-
-	public function search() {
-		$alias = $this->tableAlias;
-	
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("{$alias}.product_id", $this->product_id);
-		$criteria->compare("{$alias}.sort_order", $this->sort_order);
-		$criteria->compare("{$alias}.create_time", $this->create_time, true);
-		$criteria->compare("{$alias}.update_time", $this->update_time, true);
-
-		$criteria->with = array('productI18ns');
-		$criteria->group = "{$alias}.product_id";
-		$criteria->together = true;
-
-		$criteria->compare('productI18ns.status', $this->filterI18n->status);
-		$criteria->compare('productI18ns.pic', $this->filterI18n->pic, true);
-		$criteria->compare('productI18ns.title', $this->filterI18n->title, true);
-		$criteria->compare('productI18ns.keywords', $this->filterI18n->keywords, true);
-		$criteria->compare('productI18ns.description', $this->filterI18n->description, true);
-
-		return new CActiveDataProvider($this, array(
-			'criteria' => $criteria,
-			'sort'=>array(
-				'defaultOrder' => "{$alias}.sort_order DESC, {$alias}.product_id ASC",
-				'multiSort'=>true,
-				'attributes'=>array(
-					'sort_order'=>array(
-						'desc'=>"{$alias}.sort_order DESC",
-						'asc'=>"{$alias}.sort_order ASC",
-					),
-					'*',
-				),
-			),
-			'pagination' => array(
-				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
-				'pageVar' => 'page',
-			),
-		));
-	}
-
-	public function behaviors() {
-		return array(
-			'CTimestampBehavior'=>array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-				'updateAttribute' => 'update_time',
-				'createAttribute' => 'create_time',
-				'setUpdateOnCreate' => true,
-			),
-        );
 	}
 }

@@ -6,7 +6,7 @@ Yii::t('app', 'Confirm Gallery Image Delete?');
 Yii::t('app', 'Gallery Image Delete');
  * ************** end of swfupload extension translations *********
 */
-$modelClass = CHtml::modelName($gallery);
+$modelClass = GxHtml::modelName($galleries);
 $languages = CHtml::listData($this->languages, '<?php echo GiixModelCode::I18N_LANGUAGE_COLUMN_NAME?>', 'code');
 
 $this->widget('frontend.extensions.swfupload.CSwfUpload', array(

@@ -17,12 +17,12 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Company' => '',
-  'Firstname' => '',
-  'Lastname' => '',
-  'Remark' => '',
-  'Sex' => '',
-  'Telephone' => '',
+  'Company' => '公司',
+  'Firstname' => '姓氏',
+  'Lastname' => '名字',
+  'Remark' => '備註',
+  'Sex' => '性別',
+  'Telephone' => '電話',
   'Address' => '地址',
   'Cellphone' => '手機',
   'Contact' => '聯絡我們',

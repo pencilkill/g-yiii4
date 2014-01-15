@@ -17,7 +17,7 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Pic' => '',
   'Product Image' => '',
   'ProductImage|ProductImages' => '',
+  'Pic' => '圖片',
 );

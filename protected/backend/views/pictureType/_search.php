@@ -10,8 +10,8 @@
 
 
 	<div class="row">
-		<?php echo $form->label($model, 'pic_type'); ?>
-		<?php echo $form->textField($model, 'pic_type', array('maxlength' => 256)); ?>
+		<?php echo $form->label($model, 'picture_type'); ?>
+		<?php echo HCUploader::ajaxImageUpload(array('model' => $model,'attribute' => 'picture_type')); ?>
 	</div>
 
 

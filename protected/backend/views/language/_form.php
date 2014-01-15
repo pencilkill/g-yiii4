@@ -7,15 +7,21 @@
 	<?php endif?>
   </div>
 
+  <div id="messageBox">
   <?php foreach(Yii::app()->user->getFlashes() as $key => $message) :?>
 	<div class="<?php echo $key?>"><?php echo $message?></div>
   <?php endforeach;?>
+  </div>
 
   <div class="box">
     <div class="heading">
       <div class="buttons">
       	<a onclick="$('#language-form').submit();" class="button"><?php  echo Yii::t('app', 'Save'); ?></a>
-      	<a onclick="location = '<?php  echo $this->createUrl('index', array()); ?>';" class="button"><?php  echo Yii::t('app', 'Cancel'); ?></a>
+      	<?php if($returnUrl = Yii::app()->user->getState('language-grid-url')):?>
+		<a onclick="location = '<?php  echo $returnUrl; ?>';" class="button"><?php  echo Yii::t('app', 'Cancel'); ?></a>
+		<?php ;else:?>
+		<a onclick="location = '<?php  echo $this->createUrl('index', array()); ?>';" class="button"><?php  echo Yii::t('app', 'Cancel'); ?></a>
+		<?php endif;?>
       </div>
     </div>
     <div class="content">
@@ -28,27 +34,13 @@
 		));
 	?>
 
+	<?php 
+		if($returnUrl = Yii::app()->user->getState('language-grid-url')){
+			echo CHtml::hiddenField('returnUrl', $returnUrl);
+		}
+	?>
+
 		<table class="form">
-
-
-		<tr>
-			<td>
-				<?php echo $form->labelEx($model,'image'); ?>
-			</td>
-			<td>
-				<select id="<?php echo CHtml::activeId($model, 'image')?>" name="<?php echo CHtml::activeName($model, 'image')?>" length="5">
-					<?php foreach($images as $val):?>
-						<?php if($val['value'] == CHtml::value($model, 'image')):?>
-						<option value="<?php echo $val['value']?>" data-image="<?php echo $val['data-image']?>" selected="selected"><?php echo $val['text']?></option>
-						<?php ;else:?>
-						<option value="<?php echo $val['value']?>" data-image="<?php echo $val['data-image']?>"><?php echo $val['text']?></option>
-						<?php endif;?>
-					<?php endforeach;?>
-				</select>
-				<?php echo $form->error($model,'image'); ?>
-			</td>
-		</tr><!-- row -->
-
 
 		<tr>
 			<td>
@@ -60,7 +52,6 @@
 			</td>
 		</tr><!-- row -->
 
-
 		<tr>
 			<td>
 				<?php echo $form->labelEx($model,'title'); ?>
@@ -71,17 +62,15 @@
 			</td>
 		</tr><!-- row -->
 
-
 		<tr>
 			<td>
-				<?php echo $form->labelEx($model,'sort_id'); ?>
+				<?php echo $form->labelEx($model,'sort_order'); ?>
 			</td>
 			<td>
-				<?php echo $form->textField($model, 'sort_id'); ?>
-				<?php echo $form->error($model,'sort_id'); ?>
+				<?php echo $form->textField($model, 'sort_order'); ?>
+				<?php echo $form->error($model,'sort_order'); ?>
 			</td>
 		</tr><!-- row -->
-
 
 		<tr>
 			<td>
@@ -94,6 +83,7 @@
 		</tr><!-- row -->
 
 		</table>
+
 	<?php
 		$this->endWidget();
 	?>

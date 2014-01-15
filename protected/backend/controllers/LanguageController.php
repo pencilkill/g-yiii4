@@ -9,9 +9,13 @@ class LanguageController extends GxController {
 		$model = new Language('search');
 		$model->unsetAttributes();
 
+		$model->filterInstance();
+
 		if (isset($_GET['Language'])){
 			$model->setAttributes($_GET['Language']);
 		}
+
+		Yii::app()->user->setState('language-grid-url', Yii::app()->request->url);
 
 		$this->render('index', array(
 			'model' => $model,
@@ -21,8 +25,6 @@ class LanguageController extends GxController {
 	public function actionCreate() {
 		$model = new Language;
 
-		$images = self::getLanguageFlags();
-
 		$this->performAjaxValidationEx(array(
 				array(
 					'model' => $model,
@@ -34,13 +36,26 @@ class LanguageController extends GxController {
 		if (isset($_POST['Language'])) {
 			$model->setAttributes($_POST['Language']);
 
+			$valid = $model->validate();
 
-			if ($model->validate()) {
-				$model->save(false);
-				if (Yii::app()->getRequest()->getIsAjaxRequest()){
-					Yii::app()->end();
-				}else{
-					$this->redirect(array('index'));
+			if ($valid) {
+				$transaction = Yii::app()->db->beginTransaction();
+
+				try{
+					$model->save(false);
+
+					$transaction->commit();
+
+					if (Yii::app()->getRequest()->getIsAjaxRequest()){
+						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+						Yii::app()->end();
+					}else{
+						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
+					}
+				}catch(CDbException $e){
+					$transaction->rollback();
+
+					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 				}
 			}else{
 				Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
@@ -49,14 +64,11 @@ class LanguageController extends GxController {
 
 		$this->render('create', array(
 			'model' => $model,
-			'images' => $images,
 		));
 	}
 
 	public function actionUpdate($id) {
 		$model = $this->loadModel($id, 'Language');
-
-		$images = self::getLanguageFlags();
 
 		$this->performAjaxValidationEx(array(
 				array(
@@ -69,12 +81,26 @@ class LanguageController extends GxController {
 		if (isset($_POST['Language'])) {
 			$model->setAttributes($_POST['Language']);
 
-			if ($model->validate()) {
-				$model->save(false);
-				if (Yii::app()->getRequest()->getIsAjaxRequest()){
-					Yii::app()->end();
-				}else{
-					$this->redirect(array('index'));
+			$valid = $model->validate();
+
+			if ($valid) {
+				$transaction = Yii::app()->db->beginTransaction();
+
+				try{
+					$model->save(false);
+
+					$transaction->commit();
+
+					if (Yii::app()->getRequest()->getIsAjaxRequest()){
+						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+						Yii::app()->end();
+					}else{
+						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
+					}
+				}catch(CDbException $e){
+					$transaction->rollback();
+
+					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 				}
 			}else{
 				Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
@@ -83,16 +109,22 @@ class LanguageController extends GxController {
 
 		$this->render('update', array(
 			'model' => $model,
-			'images' => $images,
 		));
 	}
 
 	public function actionDelete($id) {
 		if (Yii::app()->getRequest()->getIsPostRequest()) {
-			$this->loadModel($id, 'Language')->delete();
+			$model = $this->loadModel($id, 'Language');
 
-			if (! Yii::app()->getRequest()->getIsAjaxRequest()){
-				$this->redirect(array('index'));
+			if(!$model->delete()){
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
+			}
+
+			if (Yii::app()->getRequest()->getIsAjaxRequest()){
+				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+				Yii::app()->end();
+			}else{
+				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->createUrl('index'));
 			}
 		} else {
 			throw new CHttpException(400, Yii::t('app', 'Your request is invalid.'));
@@ -107,26 +139,33 @@ class LanguageController extends GxController {
 			$criteria= new CDbCriteria;
 			$criteria->compare('language_id', $selected);
 
-			$models = Language::model()->findAll($criteria);
+			$models = Category::model()->findAll($criteria);
 
-			$valid = true;
+			$errorModel = null;
 
-			foreach ($models as $model){
-				$valid = $valid && $model->beforeDelete();
-				if(! $valid){
-					break;
-				}
-			}
+			$transaction = Yii::app()->db->beginTransaction();
 
-			if($valid) {
+			try{
 				foreach ($models as $model){
-					$model->delete();
-				}
-			}
+					if(!$model->delete()) {
+						$errorModel = $model;
 
+						Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
+
+						break;
+					}
+				}
+
+				$transaction->commit();
+
+			}catch(CDbException $e){
+				$transaction->rollback();
+
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
+			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
-				echo CJSON::encode(array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
@@ -154,44 +193,39 @@ class LanguageController extends GxController {
 
 			foreach ($models as $model){
 				$model->setAttributes($editPosts[$model->language_id]);
-				if(! $model->validate()) {
+				if(!$model->validate()) {
 					$errorModel = $model;
 					break;
 				}
 			}
 
-			if(! $errorModel){
-				foreach ($models as $model){
-					$model->save(false);
+			if(!$errorModel){
+				$transaction = Yii::app()->db->beginTransaction();
+
+				try{
+					foreach ($models as $model){
+						$model->save(false);
+					}
+
+					$transaction->commit();
+
+				}catch(CDbException $e){
+					$transaction->rollback();
+
+					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 				}
+			}else{
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
 			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
-				echo CJSON::encode(array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 				Yii::app()->end();
 			} else{
-				$errorModel && Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
-
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));
 			}
 		}else{
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
 		}
-	}
-
-	public static function getLanguageFlags(){
-		$images = array();
-
-		$imagesRaw = CFileHelper::findFiles(Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR . '_ozman/image/flags', array('fileTypes' => array('png')));
-
-		array_walk($imagesRaw, function($v) use(&$images){
-			$images[] = array(
-				'value' => strtr($v, array(Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR => '')),
-				'data-image' => strtr($v, array(Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR => '')),
-				'text' => strtoupper(pathinfo($v, PATHINFO_FILENAME)),
-			);
-		});
-
-		return $images;
 	}
 }

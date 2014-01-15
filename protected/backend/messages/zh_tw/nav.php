@@ -17,8 +17,9 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Admin' => '管理員',
+  'Picture' => '圖片管理',
   'Account' => '帳號設定',
+  'Admin' => '管理員',
   'Catalog' => '產品管理',
   'Category' => '分類',
   'Contact' => '聯絡我們',
@@ -26,7 +27,6 @@ return array (
   'Exit System' => '退出系統',
   'Information' => '單頁訊息',
   'News' => '最新消息',
-  'Pic' => '圖片管理',
   'Product' => '產品',
   'Setting' => '網站設定',
   'Site Frontend' => '網站首頁',

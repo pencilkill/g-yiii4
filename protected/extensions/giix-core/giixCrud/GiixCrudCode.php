@@ -34,6 +34,10 @@ class GiixCrudCode extends CrudCode {
 	//
 	public $i18n = null;
 	//
+	public $selfRelation = false;
+	//
+	public $manyRelation = false;
+	//
 	public $gridViewDeleteAction = 'Gridviewdelete';
 	//
 	public $gridViewEditName = 'edit';
@@ -95,7 +99,7 @@ class GiixCrudCode extends CrudCode {
 		}
 
 		if (preg_match('/^\s*pic\d*\s*/i', strtoupper($column->name))) {
-			return "echo HCSite::ajaxImageUpload(array('model' => \$model,'attribute' => '{$column->name}'))";
+			return "echo HCUploader::ajaxImageUpload(array('model' => \$model,'attribute' => '{$column->name}'))";
 		} else if (strtoupper($column->dbType) == 'TINYINT(1)'
 				|| strtoupper($column->dbType) == 'BIT'
 				|| strtoupper($column->dbType) == 'BOOL'
@@ -159,7 +163,7 @@ class GiixCrudCode extends CrudCode {
 		}
 
 		if (preg_match('/^\s*pic\d*\s*/i', strtoupper($column->name))) {
-			return "echo HCSite::ajaxImageUpload(array('model' => \$model,'attribute' => \"[{\${$languageColumnName}}]{$column->name}\"))";
+			return "echo HCUploader::ajaxImageUpload(array('model' => \$model,'attribute' => \"[{\${$languageColumnName}}]{$column->name}\"))";
 		} if (strtoupper($column->dbType) == 'TINYINT(1)'
 				|| strtoupper($column->dbType) == 'BIT'
 				|| strtoupper($column->dbType) == 'BOOL'
@@ -326,7 +330,7 @@ $clip = <<<EOM
 array(
 {$space}	'name' => '{$column->name}',
 {$space}	'value' => 'CHtml::value(\$data, "{$relationName}", Yii::t("app", "None"))',
-{$space}	'filter' => CHtml::activeDropDownList(\$model, '{$column->name}', {$relatedModelClass}::model()->getDropListData(), array('prompt' => '')),
+{$space}	'filter' => CHtml::activeDropDownList(\$model, '{$column->name}', {$relatedModelClass}::model()->dropList(), array('prompt' => '')),
 {$space})
 EOM;
 		}
@@ -453,6 +457,17 @@ EOM;
 				$this->i18n->relationName = $GiixModelCode->generateRelationName($i18nTableName, $i18nTableName, false);
 				$this->i18n->relationNamePluralized = $GiixModelCode->generateRelationName($i18nTableName, $i18nTableName, true);
 			}
+
+			if($modelClass == $relation[1] && ($relation[0] == GxActiveRecord::HAS_MANY || $relation[0] == GxActiveRecord::MANY_MANY)){
+				$this->selfRelation = new stdClass();
+
+				$this->selfRelation->columnName = $relation[2];
+			}
+
+			if($relation[0] == GxActiveRecord::HAS_MANY || $relation[0] == GxActiveRecord::MANY_MANY){
+				$this->manyRelation = true;
+			}
+
 
 			$result[] = array(
 				$relationName, // the relation name

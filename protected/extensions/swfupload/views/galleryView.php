@@ -2,8 +2,8 @@
     <tr>
     	<td></td>
     	<td>
-		    <div class="swfupload"  style="display: inline; border: solid 1px #7FAAFF; background-color: #C5D9FF; padding: 2px;">
-		       <span id="swfupload"></span>
+		    <div>
+		       <span id="swfupload" class="swfupload"></span>
 		    </div>
     	</td>
     </tr>
@@ -11,7 +11,6 @@
     	<td></td>
     	<td>
 		    <div id="divFileProgressContainer" style="height: 75px;"></div>
-		<!--    <div id="thumbnails"></div>-->
 			<?php
 				$this->widget('zii.widgets.jui.CJuiSortable', array(
 					'items' => $items,

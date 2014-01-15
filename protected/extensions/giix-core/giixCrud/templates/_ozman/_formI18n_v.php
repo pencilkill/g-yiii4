@@ -36,7 +36,7 @@
 <?php if($this->i18n){?>
 			<a href="#tab-lanugage"><?php echo '<?php '; ?> echo Yii::t('app', 'Tabs Language')?></a>
 <?php }?>
-			<!--<a href="#tab-swfupload"><?php echo '<?php '; ?> echo Yii::t('app', 'Product Images')?></a>-->
+			<!--<a href="#tab-swfupload"><?php echo '<?php '; ?> echo Yii::t('app', 'Tabs Image')?></a>-->
 		</div>
 <?php $ajax = ($this->enable_ajax_validation) ? 'true' : 'false'; ?>
 
@@ -105,7 +105,6 @@
 				echo $this->renderPartial(
 					'_swfupload',
 					array(
-						'gallery' => $gallery,
 						'galleries' => $galleries,
 					),
 					true

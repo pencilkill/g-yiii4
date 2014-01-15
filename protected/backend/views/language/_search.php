@@ -24,15 +24,8 @@
 
 
 	<div class="row">
-		<?php echo $form->label($model, 'image'); ?>
-		<?php echo $form->textField($model, 'image', array('maxlength' => 255)); ?>
-	</div>
-
-
-
-	<div class="row">
-		<?php echo $form->label($model, 'sort_id'); ?>
-		<?php echo $form->textField($model, 'sort_id'); ?>
+		<?php echo $form->label($model, 'sort_order'); ?>
+		<?php echo $form->textField($model, 'sort_order'); ?>
 	</div>
 
 

@@ -2,13 +2,14 @@
 
 $this->breadcrumbs = array(
 	$model->label(2) => array('index'),
-	Yii::t('app', 'Create'),
+	Yii::t('app', 'Update'),
 );
-
 ?>
 
 <?php
-$this->renderPartial('_form', array(
+$this->renderPartial(
+	'_form',
+	array(
 		'model' => $model,
 	)
 );
