@@ -1,7 +1,7 @@
 <?php
 /**
  * CActiveRecordNullBehavior class file.
- * Save attribute value as a CDbException('NULL')
+ * Save a DB NULL value,
  * @example
  * e.g
  * parent_id,

@@ -33,12 +33,7 @@ class CategoryController extends GxController {
 	public function actionCreate() {
 		$model = new Category;
 
-		$i18ns = array();
-
-		foreach($this->languages as $val){
-			$va = new CategoryI18n;
-			$i18ns[$val['language_id']] = $va;
-		}
+		$i18ns = $model->categoryI18ns;
 
 		$this->performAjaxValidationEx(array(
 				array(

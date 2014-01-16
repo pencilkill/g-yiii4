@@ -51,7 +51,7 @@ class Controller extends RController
 	public function languages() {
 		$criteria = new CDbCriteria;
 		$criteria->alias = 't';
-		$criteria->compare('t.status', '1');
+		//$criteria->compare('t.status', '1');
 		$criteria->order = "FIELD(t.code, '".Yii::app()->language."') DESC, t.sort_order DESC";
 
 		$languages = Language::model()->findAll($criteria);

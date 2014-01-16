@@ -112,7 +112,7 @@ $backCfg = array(
         	'allowAutoLogin'=>true,
 			'autoRenewCookie'=>true,
 			// Notice that the second parameter of Yii::app()->user->login($identity, $duration) can not be setted as 0 if you want to enable the authTimeout
-			'authTimeout'=>60 * 0.5,
+			'authTimeout'=>60 * 24 * 365,
 
 			'stateKeyPrefix'=>'back',
 			'loginUrl'=>array('site/login'),

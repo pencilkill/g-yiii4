@@ -1,9 +1,9 @@
 <?php
 /**
- * CCategoryBehavior class file.
- * Self relation category helper
+ * CTreeBehavior class file.
+ * Class for self-relation category helper
  *
- * TODO Maybe cache solution is required, cache or class private property $_data
+ * TODO Maybe cache solution is required(cache or class private property $_data)
  *
  * @author sam@ozchamp.net <sam@ozchamp.net>
  */

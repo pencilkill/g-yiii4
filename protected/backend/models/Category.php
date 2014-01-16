@@ -32,6 +32,14 @@ class Category extends BaseCategory
 				'class' => 'backend.behaviors.CTreeBehavior',
 				'textAttribute' => 'categoryI18n.title',
 			),
+			'CActiveRecordI18nBehavior' => array(
+				'class' => 'backend.behaviors.CActiveRecordI18nBehavior',
+				'relations' => array(
+					'categoryI18ns' => array(
+						'indexs' => CHtml::listData(Language::model()->findAll(), 'language_id', 'language_id'),
+					),
+				)
+			),
         ));
 	}
 
