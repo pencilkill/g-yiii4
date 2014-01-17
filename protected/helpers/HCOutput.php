@@ -6,30 +6,68 @@
  */
 class HCOutput {
 	/**
-	 * download
+	 * file
 	 * @param $url
 	 * @param $name
 	 */
-	public static function download($url, $name=null){
-		$url = HCUrl::decode($url);
-       	$name = $name ? HCUrl::decode($name) : HCSting::random(10);
-        $ext = strtolower(strrchr($name,'.'))==strtolower(strrchr($url,'.')) ? '' : strtolower(strrchr($url,'.'));
+	public static function file($url, $name=null){
+		$file = HCUrl::decode($url);
+       	$name = $name ? HCUrl::decode($name) : HCString::random(10);
+        $ext = strtolower(strrchr($name, '.'))==strtolower(strrchr($file, '.')) ? '' : strtolower(strrchr($file, '.'));
         $name = $name.$ext;
 
 
        	$ua = $_SERVER['HTTP_USER_AGENT'];
-       	$filename = strtr(urlencode($name), array('+'=>'%20'));
+       	$uname = strtr(urlencode($name), array('+'=>'%20'));
 
-    	header('Content-type:application');
+       	header('Content-Description: File Transfer');
+    	header('Content-type: application/octet-stream');
     	if (preg_match('/MSIE/', $ua)) {
-    		header('Content-Disposition: attachment; filename="' . $filename . '"');
+    		header('Content-Disposition: attachment; filename="' . $uname . '"');
 		} else if (preg_match("/Firefox/", $ua)) {
 			header('Content-Disposition: attachment; filename*="utf8\'\'' . $name . '"');
 		} else {
 			header('Content-Disposition: attachment; filename="' . $name . '"');
 		}
+		header('Content-Transfer-Encoding: binary');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        ob_start();
+    	@readfile($file);
+        header('Content-Length: ' . ob_get_length());
+        ob_end_flush();
 
-    	readfile($url);
+    	exit();
+	}
+	/**
+	 * content
+	 * @param $content
+	 * @param $name
+	 */
+	public static function content($content, $name){
+       	$ua = $_SERVER['HTTP_USER_AGENT'];
+       	$uname = strtr(urlencode($name), array('+'=>'%20'));
+
+       	header('Content-Description: File Transfer');
+    	header('Content-type: application/octet-stream');
+    	if (preg_match('/MSIE/', $ua)) {
+    		header('Content-Disposition: attachment; filename="' . $uname . '"');
+		} else if (preg_match("/Firefox/", $ua)) {
+			header('Content-Disposition: attachment; filename*="utf8\'\'' . $name . '"');
+		} else {
+			header('Content-Disposition: attachment; filename="' . $name . '"');
+		}
+		header('Content-Transfer-Encoding: binary');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        ob_start();
+    	$fp = fopen('php://output', 'w');
+    	fwrite($fp, $content);
+    	fclose($fp);
+        header('Content-Length: ' . ob_get_length());
+        ob_end_flush();
 
     	exit();
 	}

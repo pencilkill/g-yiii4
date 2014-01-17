@@ -9,6 +9,7 @@
  */
 
 class CActiveRecordI18nBehavior extends CActiveRecordBehavior {
+	private $_relations;
 	/**
 	 * @var, mixed, String or Array
 	 *
@@ -19,7 +20,7 @@ class CActiveRecordI18nBehavior extends CActiveRecordBehavior {
 	 *
 	 * @param CModelEvent $event event parameter
 	 */
-	public function afterConstruct($event) {
+	public function afterConstruct() {
 		// format relations
 		$_relations = is_string($this->relations) ? array($this->relations => array()) : (is_array($this->relations) ? $this->relations : array());
 		$_definations = $this->getOwner()->relations();
@@ -32,7 +33,7 @@ class CActiveRecordI18nBehavior extends CActiveRecordBehavior {
 				$val = array();
 			}else if(is_string($key) && is_array($val)){
 				// with rewrite, allow to rewrite string key only, cause relation type, model, foreignkey index is integer
-				$val = array_filter($val, function($k, $v){return is_numeric($k);});
+				$val = array_diff_key($val, array_flip(array_filter(array_keys($val), 'is_numeric')));
 			}else{
 				// relation can not be found correctly
 				continue;
@@ -44,15 +45,19 @@ class CActiveRecordI18nBehavior extends CActiveRecordBehavior {
 			}
 		}
 
-		foreach($relations as $name => $relation){
-			$_owner = $this->getOwner();
+		return $this->_relations = $relations;
+	}
+
+	public function getNewRelatedData($name){
+		if(array_key_exists($name, $this->_relations)){
+			$relation = $this->_relations[$name];
 
 			$relationClass = $relation[1];
 
 			switch ($relation[0]) {
 				case CActiveRecord::BELONGS_TO:
 				case CActiveRecord::HAS_ONE:
-					$_owner->$name = new $relationClass;	// as default scenario
+					$_data = new $relationClass;	// as default scenario
 				break;
 
 				case CActiveRecord::HAS_MANY:
@@ -61,19 +66,27 @@ class CActiveRecordI18nBehavior extends CActiveRecordBehavior {
 					 *  check indexs to get how much instances should be created for this many relation
 					 *  otherwise, nothing intresting happen
 					 */
-					if(isset($relation['indexs']) && ($indexs = $relation['indexs']) && is_array($indexs)){
-						foreach($indexs as $index){
+					if(isset($relation['indexes']) && ($indexes = $relation['indexes']) && is_array($indexes)){
+						foreach($indexes as $index){
 							if(is_scalar($index)){
-								$_owner->$name[$index] = new $relationClass;
+								$va = new $relationClass;
+								if(isset($relation['index']) && $va->hasAttribute($relation['index'])){
+									$va->{$relation['index']} = $index;
+								}
+								$_data[$index] = $va;
 							}
 						}
 					}
 				break;
 
 				default:
-					;
+					$_data = null;
 				break;
 			}
+
+			return isset($_data) ? $_data : null;
+		}else{
+			throw new Exception('Relation: ' . $name . ' has no defination!');
 		}
 	}
 }

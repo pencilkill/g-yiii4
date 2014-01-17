@@ -36,7 +36,7 @@ class Category extends BaseCategory
 				'class' => 'backend.behaviors.CActiveRecordI18nBehavior',
 				'relations' => array(
 					'categoryI18ns' => array(
-						'indexs' => CHtml::listData(Language::model()->findAll(), 'language_id', 'language_id'),
+						'indexes' => CHtml::listData(Language::model()->findAll(), 'language_id', 'language_id'),
 					),
 				)
 			),

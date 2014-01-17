@@ -33,7 +33,7 @@ class CategoryController extends GxController {
 	public function actionCreate() {
 		$model = new Category;
 
-		$i18ns = $model->categoryI18ns;
+		$i18ns = $model->getNewRelatedData('categoryI18ns');
 
 		$this->performAjaxValidationEx(array(
 				array(

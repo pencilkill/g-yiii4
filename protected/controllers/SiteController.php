@@ -119,6 +119,6 @@ class SiteController extends GxController
 	 * @param $name, download name
 	 */
 	public function actionDownload($url, $name){
-		return HCOutput::download($url, $name);
+		return HCOutput::file($url, $name);
 	}
 }
