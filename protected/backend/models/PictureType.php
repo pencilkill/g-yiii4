@@ -37,22 +37,19 @@ class PictureType extends BasePictureType
 	}
 
 	public function search() {
+		$_provider = parent::search();
 		$alias = $this->tableAlias;
+		$criteria = $_provider->getCriteria();
 
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("{$alias}.picture_type_id", $this->picture_type_id);
-		$criteria->compare("{$alias}.picture_type", $this->picture_type, true);
-		$criteria->compare("{$alias}.create_time", $this->create_time, true);
-		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 		$criteria->group = "{$alias}.picture_type_id";
 		$criteria->together = true;
-
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => "{$alias}.picture_type_id ASC",
+				'defaultOrder' => array(
+					"{$alias}.picture_type_id" => CSort::SORT_ASC,
+				),
 				'multiSort'=>true,
 				'attributes'=>array(
 					'*',

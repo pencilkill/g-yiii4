@@ -5,8 +5,6 @@ Yii::import('backend.models._base.BaseContact');
 class Contact extends BaseContact
 {
 
-	public $filter;
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -34,33 +32,19 @@ class Contact extends BaseContact
 	}
 
 	public function search() {
+		$_provider = parent::search();
 		$alias = $this->tableAlias;
+		$criteria = $_provider->getCriteria();
 
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("{$alias}.contact_id", $this->contact_id);
-		$criteria->compare("{$alias}.status", $this->status);
-		$criteria->compare("{$alias}.firstname", $this->firstname, true);
-		$criteria->compare("{$alias}.lastname", $this->lastname, true);
-		$criteria->compare("{$alias}.sex", $this->sex);
-		$criteria->compare("{$alias}.telephone", $this->telephone, true);
-		$criteria->compare("{$alias}.cellphone", $this->cellphone, true);
-		$criteria->compare("{$alias}.fax", $this->fax, true);
-		$criteria->compare("{$alias}.email", $this->email, true);
-		$criteria->compare("{$alias}.company", $this->company, true);
-		$criteria->compare("{$alias}.address", $this->address, true);
-		$criteria->compare("{$alias}.message", $this->message, true);
-		$criteria->compare("{$alias}.remark", $this->remark, true);
-		$criteria->compare("{$alias}.create_time", $this->create_time, true);
-		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 		$criteria->group = "{$alias}.contact_id";
 		$criteria->together = true;
-
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => "{$alias}.contact_id ASC",
+				'defaultOrder' => array(
+					"{$alias}.contact_id" => CSort::SORT_ASC,
+				),
 				'multiSort'=>true,
 				'attributes'=>array(
 					'*',

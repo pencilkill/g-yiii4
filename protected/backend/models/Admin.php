@@ -111,19 +111,10 @@ class Admin extends BaseAdmin
 	}
 
 	public function search() {
+		$_provider = parent::search();
 		$alias = $this->tableAlias;
+		$criteria = $_provider->getCriteria();
 
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("{$alias}.admin_id", $this->admin_id);
-		$criteria->compare("{$alias}.name", $this->name, true);
-		$criteria->compare("{$alias}.username", $this->username, true);
-		$criteria->compare("{$alias}.email", $this->email, true);
-		$criteria->compare("{$alias}.password", $this->password, true);
-		$criteria->compare("{$alias}.status", $this->status);
-		$criteria->compare("{$alias}.super", $this->super);
-		$criteria->compare("{$alias}.create_time", $this->create_time, true);
-		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 		$criteria->group = "{$alias}.admin_id";
 		$criteria->together = true;
 
@@ -131,7 +122,9 @@ class Admin extends BaseAdmin
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => "{$alias}.admin_id ASC",
+				'defaultOrder' => array(
+					"{$alias}.admin_id" => CSort::SORT_ASC,
+				),
 				'multiSort'=>true,
 				'attributes'=>array(
 					'*',

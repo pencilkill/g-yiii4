@@ -62,6 +62,10 @@
 
 		if ( tmp = get( 'langCode' ) )
 			config.language = tmp;
+		
+		// add by sam@ozchamp.net
+		if ( tmp = get( 'stripPath' ) )
+			config.stripPath = tmp;
 
 		// Try to get desired "File Select" action from the URL.
 		var action;
@@ -90,6 +94,8 @@
 
 			case 'ckeditor':
 				var funcNum = get( 'CKEditorFuncNum' );
+				var prependStripPathFuncNums = [4];
+				
 				if ( parentWindow['CKEDITOR'] )
 				{
 					config.selectActionFunction = function( fileUrl, data )
@@ -120,6 +126,16 @@
 		config.width = config.height = '100%';
 
 		var ckfinder = new CKFinder( config );
+
+		ckfinder.callback = function( api ) {
+			api.disableFolderContextMenuOption( 'CreateSubFolder', false );
+			api.disableFolderContextMenuOption( 'RenameFolder', false );
+			api.disableFolderContextMenuOption( 'DeleteFolder', false );
+			// Disable download function
+			api.disableFileContextMenuOption( 'Thumbnail', false );
+			api.disableFileContextMenuOption( 'viewFile', false );
+		};
+		
 		ckfinder.replace( 'ckfinder', config );
 })();
 	</script>

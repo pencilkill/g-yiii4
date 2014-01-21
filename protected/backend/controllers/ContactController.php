@@ -20,51 +20,6 @@ class ContactController extends GxController {
 		));
 	}
 
-	public function actionCreate() {
-		$model = new Contact;
-
-		$this->performAjaxValidationEx(array(
-				array(
-					'model' => $model,
-				),
-			),
-			'contact-form'
-		);
-
-		if (isset($_POST['Contact'])) {
-			$model->setAttributes($_POST['Contact']);
-
-			$valid = $model->validate();
-
-			if ($valid) {
-				$transaction = Yii::app()->db->beginTransaction();
-
-				try{
-					$model->save(false);
-
-					$transaction->commit();
-
-					if (Yii::app()->getRequest()->getIsAjaxRequest()){
-						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
-						Yii::app()->end();
-					}else{
-						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
-					}
-				}catch(CDbException $e){
-					$transaction->rollback();
-
-					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
-				}
-			}else{
-				Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
-			}
-		}
-
-		$this->render('create', array(
-			'model' => $model,
-		));
-	}
-
 	public function actionUpdate($id) {
 		$model = $this->loadModel($id, 'Contact');
 

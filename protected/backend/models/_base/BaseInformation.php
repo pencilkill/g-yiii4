@@ -73,4 +73,18 @@ abstract class BaseInformation extends GxActiveRecord {
 			'informationI18ns' => null,
 		);
 	}
+
+	public function search() {
+		$criteria = new CDbCriteria;
+
+		$criteria->compare('information_id', $this->information_id);
+		$criteria->compare('parent_id', $this->parent_id);
+		$criteria->compare('sort_order', $this->sort_order);
+		$criteria->compare('create_time', $this->create_time, true);
+		$criteria->compare('update_time', $this->update_time, true);
+
+		return new CActiveDataProvider($this, array(
+			'criteria' => $criteria,
+		));
+	}
 }

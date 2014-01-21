@@ -5,8 +5,6 @@ Yii::import('backend.models._base.BaseCategoryI18n');
 class CategoryI18n extends BaseCategoryI18n
 {
 
-	public $filter;
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -31,24 +29,19 @@ class CategoryI18n extends BaseCategoryI18n
 	}
 
 	public function search() {
+		$_provider = parent::search();
 		$alias = $this->tableAlias;
+		$criteria = $_provider->getCriteria();
 
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("{$alias}.category_i18n_id", $this->category_i18n_id);
-		$criteria->compare("{$alias}.category_id", $this->category_id);
-		$criteria->compare("{$alias}.language_id", $this->language_id);
-		$criteria->compare("{$alias}.title", $this->title, true);
-		$criteria->compare("{$alias}.keywords", $this->keywords, true);
-		$criteria->compare("{$alias}.description", $this->description, true);
 		$criteria->group = "{$alias}.category_i18n_id";
 		$criteria->together = true;
-
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => "{$alias}.category_i18n_id ASC",
+				'defaultOrder' => array(
+					"{$alias}.category_i18n_id" => CSort::SORT_ASC,
+				),
 				'multiSort'=>true,
 				'attributes'=>array(
 					'*',

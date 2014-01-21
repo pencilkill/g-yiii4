@@ -16,6 +16,7 @@ define( 'CKFINDER_DEFAULT_BASEPATH', '/ckfinder/' ) ;
 class CKFinder
 {
 	public $BasePath ;
+	public $StripPath;	// added by sam@ozchamp.net, check _buildUrl(), ckfinder.html
 	public $Width ;
 	public $Height ;
 	public $SelectFunction ;
@@ -123,6 +124,13 @@ class CKFinder
 		{
 			$qs .= ( $qs ? "&amp;" : "?" ) ;
 			$qs .= "id=" . urlencode( $this->Id ) ;
+		}
+		/**
+		 * added by sam@ozchamp.net, checking ckfinder.html
+		 */
+		if(!empty($this->StripPath)){
+			$qs .= ( $qs ? "&amp;" : "?" ) ;
+			$qs .= "stripPath=" . urlencode( $this->StripPath ) ;
 		}
 
 		return $url . $qs ;

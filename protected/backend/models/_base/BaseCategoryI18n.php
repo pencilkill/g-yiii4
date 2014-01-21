@@ -72,4 +72,19 @@ abstract class BaseCategoryI18n extends GxActiveRecord {
 			'language' => null,
 		);
 	}
+
+	public function search() {
+		$criteria = new CDbCriteria;
+
+		$criteria->compare('category_i18n_id', $this->category_i18n_id);
+		$criteria->compare('category_id', $this->category_id);
+		$criteria->compare('language_id', $this->language_id);
+		$criteria->compare('title', $this->title, true);
+		$criteria->compare('keywords', $this->keywords, true);
+		$criteria->compare('description', $this->description, true);
+
+		return new CActiveDataProvider($this, array(
+			'criteria' => $criteria,
+		));
+	}
 }

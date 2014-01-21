@@ -68,7 +68,7 @@ $this->breadcrumbs = array(
 			<form id="category-grid-form" action="<?php echo $this->createUrl('gridviewupdate')?>" method="post">
 				<?php  echo CHtml::hiddenField('returnUrl', Yii::app()->getRequest()->url)?>
 
-				<?php
+				<?php 
 					$this->widget('zii.widgets.grid.CGridView', array(
 						'id' => 'category-grid',
 						'ajaxUpdate' => true,
@@ -95,24 +95,24 @@ $this->breadcrumbs = array(
 									'name' => 'GridViewSelect[]',
 								),
 							),
-
+					
 							array(
 					        	'name' => 'categoryI18n.title',
-								'filter' => CHtml::activeTextField($model->filter->categoryI18n, 'title'),
+								'filter' => CHtml::activeTextField($model->filter->categoryI18ns, 'title'),
 							),
-
+																																		
 							array(
 								'name' => 'parent_id',
 								'value' => 'CHtml::value($data, "parent", Yii::t("app", "None"))',
-								'filter' => CHtml::activeDropDownList($model, 'parent_id', $model->dropList(), array('prompt' => '')),
+								'filter' => CHtml::activeDropDownList($model, 'parent_id', Category::model()->dropList(), array('prompt' => '')),
 							),
-
+																		
 							array(
 								'type' => 'raw',
 								'name' => 'sort_order',
 								'value' => 'CHtml::textField("edit[$data->category_id][sort_order]", $data->sort_order, array("class"=>"editable"))',
 							),
-
+																								
 							array(
 								'header' => Yii::t('app', 'Grid Actions'),
 								'class' => 'CButtonColumn',
@@ -151,7 +151,7 @@ $this->breadcrumbs = array(
 			, checkBoxColumn : ':checkbox:not(:disabled)[name^="GridViewSelect"]:checked'
 			, postData : {returnUrl : '<?php echo Yii::app()->getRequest()->url?>'}
 			, deleteConfirmation : '<?php echo Yii::t('app', 'Confirm Grid View Delete?')?>'
-			, selectNoneMessage : '<?php echo Yii::t('app', 'No results found.');?>'
+			, selectNoneMessage : '<?php echo Yii::t('app', 'No Results Found');?>'
 			, warningMessage : '<?php echo Yii::t('app', 'Operation Failure');?>'
 		};
 	 GridViewDelete(params);

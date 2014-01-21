@@ -32,6 +32,14 @@ class Information extends BaseInformation
 				'class' => 'backend.behaviors.CTreeBehavior',
 				'textAttribute' => 'informationI18n.title',
 			),
+			'CActiveRecordI18nBehavior' => array(
+				'class' => 'backend.behaviors.CActiveRecordI18nBehavior',
+				'relations' => array(
+					'categoryI18ns' => array(
+						'indexes' => CHtml::listData(Language::model()->findAll(), 'language_id', 'language_id'),
+					),
+				)
+			),
         ));
 	}
 
@@ -51,20 +59,14 @@ class Information extends BaseInformation
 	}
 
 	public function search() {
+		$_provider = parent::search();
 		$alias = $this->tableAlias;
+		$criteria = $_provider->getCriteria();
 
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("{$alias}.information_id", $this->information_id);
-		$criteria->compare("{$alias}.parent_id", $this->parent_id);
-		$criteria->compare("{$alias}.sort_order", $this->sort_order);
-		$criteria->compare("{$alias}.create_time", $this->create_time, true);
-		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 		$criteria->group = "{$alias}.information_id";
 		$criteria->together = true;
 
 		$criteria->with = array('informationI18ns');
-
 		$criteria->compare('informationI18ns.status', $this->filter->informationI18ns->status);
 		$criteria->compare('informationI18ns.title', $this->filter->informationI18ns->title, true);
 		$criteria->compare('informationI18ns.keywords', $this->filter->informationI18ns->keywords, true);
@@ -73,7 +75,10 @@ class Information extends BaseInformation
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => "{$alias}.sort_order DESC, {$alias}.information_id ASC",
+				'defaultOrder' => array(
+					"{$alias}.sort_order" => CSort::SORT_DESC,
+					"{$alias}.information_id" => CSort::SORT_ASC,
+				),
 				'multiSort'=>true,
 				'attributes'=>array(
 					'sort_order'=>array(

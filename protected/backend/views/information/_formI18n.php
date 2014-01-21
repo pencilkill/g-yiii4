@@ -33,7 +33,7 @@
 			<!--<a href="#tab-swfupload"><?php  echo Yii::t('app', 'Tabs Image')?></a>-->
 		</div>
 
-		<?php
+		<?php 
 			$form = $this->beginWidget('GxActiveForm', array(
 				'id' => 'information-form',
 				'enableAjaxValidation' => true,
@@ -41,14 +41,14 @@
 			));
 		?>
 
-		<?php
+		<?php 
 			if($returnUrl = Yii::app()->user->getState('information-grid-url')){
 				echo CHtml::hiddenField('returnUrl', $returnUrl);
 			}
 		?>
 
 		<div id="tab-basic">
-			<?php
+			<?php 
 				echo $this->renderPartial(
 					'_basic',
 					array(
@@ -62,7 +62,7 @@
 
 		<?php  foreach($this->languages as $val):?>
 		<div id="tab-language-<?php  echo $val['language_id']?>">
-			<?php
+			<?php 
 				echo $this->renderPartial(
 					'//informationI18n/_i18n',
 					array(
@@ -77,7 +77,7 @@
 		<?php  endforeach;?>
 
 		<!--<div id="tab-swfupload">
-			<?php
+			<?php 
 				/*
 				echo $this->renderPartial(
 					'_swfupload',

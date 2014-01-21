@@ -87,4 +87,28 @@ abstract class BaseContact extends GxActiveRecord {
 			'update_time' => Yii::t('m/contact', 'Update Time'),
 		);
 	}
+
+	public function search() {
+		$criteria = new CDbCriteria;
+
+		$criteria->compare('contact_id', $this->contact_id);
+		$criteria->compare('status', $this->status);
+		$criteria->compare('firstname', $this->firstname, true);
+		$criteria->compare('lastname', $this->lastname, true);
+		$criteria->compare('sex', $this->sex);
+		$criteria->compare('telephone', $this->telephone, true);
+		$criteria->compare('cellphone', $this->cellphone, true);
+		$criteria->compare('fax', $this->fax, true);
+		$criteria->compare('email', $this->email, true);
+		$criteria->compare('company', $this->company, true);
+		$criteria->compare('address', $this->address, true);
+		$criteria->compare('message', $this->message, true);
+		$criteria->compare('remark', $this->remark, true);
+		$criteria->compare('create_time', $this->create_time, true);
+		$criteria->compare('update_time', $this->update_time, true);
+
+		return new CActiveDataProvider($this, array(
+			'criteria' => $criteria,
+		));
+	}
 }

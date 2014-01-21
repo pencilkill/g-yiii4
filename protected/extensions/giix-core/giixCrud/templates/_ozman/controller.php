@@ -58,12 +58,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 		$model = new <?php echo $this->modelClass; ?>;
 <?php if($this->i18n):?>
 
-		$i18ns = array();
-
-		foreach($this->languages as $val){
-			$va = new <?php echo $this->i18n->className?>;
-			$i18ns[$val['<?php echo GiixModelCode::I18N_LANGUAGE_COLUMN_NAME?>']] = $va;
-		}
+		$i18ns = $model->getNewRelatedData('<?php echo $this->i18n->relationNamePluralized?>');
 <?php endif;?>
 
 <?php if ($this->enable_ajax_validation): ?>
@@ -227,7 +222,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 			$model = $this->loadModel($id, '<?php echo $this->modelClass; ?>');
 
 			if(!$model->delete()){
-				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
 			}
 
 			if (Yii::app()->getRequest()->getIsAjaxRequest()){
@@ -260,7 +255,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 					if(!$model->delete()) {
 						$errorModel = $model;
 
-						Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
+						Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
 
 						break;
 					}
@@ -325,7 +320,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 				}
 			}else{
-				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure.'));
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
 			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {

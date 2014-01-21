@@ -22,6 +22,14 @@ class News extends BaseNews
 				'createAttribute' => 'create_time',
 				'setUpdateOnCreate' => true,
 			),
+			'CActiveRecordI18nBehavior' => array(
+				'class' => 'backend.behaviors.CActiveRecordI18nBehavior',
+				'relations' => array(
+					'categoryI18ns' => array(
+						'indexes' => CHtml::listData(Language::model()->findAll(), 'language_id', 'language_id'),
+					),
+				)
+			),
         ));
 	}
 
@@ -37,21 +45,14 @@ class News extends BaseNews
 	}
 
 	public function search() {
+		$_provider = parent::search();
 		$alias = $this->tableAlias;
+		$criteria = $_provider->getCriteria();
 
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("{$alias}.news_id", $this->news_id);
-		$criteria->compare("{$alias}.top", $this->top);
-		$criteria->compare("{$alias}.sort_order", $this->sort_order);
-		$criteria->compare("{$alias}.date_added", $this->date_added, true);
-		$criteria->compare("{$alias}.create_time", $this->create_time, true);
-		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 		$criteria->group = "{$alias}.news_id";
 		$criteria->together = true;
 
 		$criteria->with = array('newsI18ns');
-
 		$criteria->compare('newsI18ns.status', $this->filter->newsI18ns->status);
 		$criteria->compare('newsI18ns.pic', $this->filter->newsI18ns->pic, true);
 		$criteria->compare('newsI18ns.title', $this->filter->newsI18ns->title, true);
@@ -61,7 +62,10 @@ class News extends BaseNews
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => "{$alias}.sort_order DESC, {$alias}.news_id ASC",
+				'defaultOrder' => array(
+					"{$alias}.sort_order" => CSort::SORT_DESC,
+					"{$alias}.news_id" => CSort::SORT_ASC,
+				),
 				'multiSort'=>true,
 				'attributes'=>array(
 					'sort_order'=>array(

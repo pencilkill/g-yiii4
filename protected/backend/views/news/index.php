@@ -98,7 +98,7 @@ $this->breadcrumbs = array(
 					
 							array(
 					        	'name' => 'newsI18n.title',
-								'filter' => CHtml::activeTextField($model->filter->newsI18n, 'title'),
+								'filter' => CHtml::activeTextField($model->filter->newsI18ns, 'title'),
 							),
 																																		
 							array(
@@ -154,7 +154,7 @@ $this->breadcrumbs = array(
 			, checkBoxColumn : ':checkbox:not(:disabled)[name^="GridViewSelect"]:checked'
 			, postData : {returnUrl : '<?php echo Yii::app()->getRequest()->url?>'}
 			, deleteConfirmation : '<?php echo Yii::t('app', 'Confirm Grid View Delete?')?>'
-			, selectNoneMessage : '<?php echo Yii::t('app', 'No results found.');?>'
+			, selectNoneMessage : '<?php echo Yii::t('app', 'No Results Found');?>'
 			, warningMessage : '<?php echo Yii::t('app', 'Operation Failure');?>'
 		};
 	 GridViewDelete(params);

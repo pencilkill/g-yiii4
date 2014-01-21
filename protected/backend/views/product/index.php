@@ -68,7 +68,7 @@ $this->breadcrumbs = array(
 			<form id="product-grid-form" action="<?php echo $this->createUrl('gridviewupdate')?>" method="post">
 				<?php  echo CHtml::hiddenField('returnUrl', Yii::app()->getRequest()->url)?>
 
-				<?php 
+				<?php
 					$this->widget('zii.widgets.grid.CGridView', array(
 						'id' => 'product-grid',
 						'ajaxUpdate' => true,
@@ -95,18 +95,18 @@ $this->breadcrumbs = array(
 									'name' => 'GridViewSelect[]',
 								),
 							),
-					
+
 							array(
 					        	'name' => 'productI18n.title',
-								'filter' => CHtml::activeTextField($model->filter->productI18n, 'title'),
+								'filter' => CHtml::activeTextField($model->filter->productI18ns, 'title'),
 							),
-																																		
+
 							array(
 								'type' => 'raw',
 								'name' => 'sort_order',
 								'value' => 'CHtml::textField("edit[$data->product_id][sort_order]", $data->sort_order, array("class"=>"editable"))',
 							),
-																								
+
 							array(
 								'header' => Yii::t('app', 'Grid Actions'),
 								'class' => 'CButtonColumn',
@@ -145,7 +145,7 @@ $this->breadcrumbs = array(
 			, checkBoxColumn : ':checkbox:not(:disabled)[name^="GridViewSelect"]:checked'
 			, postData : {returnUrl : '<?php echo Yii::app()->getRequest()->url?>'}
 			, deleteConfirmation : '<?php echo Yii::t('app', 'Confirm Grid View Delete?')?>'
-			, selectNoneMessage : '<?php echo Yii::t('app', 'No results found.');?>'
+			, selectNoneMessage : '<?php echo Yii::t('app', 'No Results Found');?>'
 			, warningMessage : '<?php echo Yii::t('app', 'Operation Failure');?>'
 		};
 	 GridViewDelete(params);

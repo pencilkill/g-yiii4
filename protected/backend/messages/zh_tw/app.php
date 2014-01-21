@@ -36,7 +36,7 @@ return array (
   'Login' => '登錄',
   'Male' => '男生',
   'No' => '否',
-  'No results found.' => '沒有選中的項目',
+  'No Results Found' => '沒有選中的項目',
   'None' => ' - 無 - ',
   'Noticed' => '已閱讀',
   'Operation' => '操作',

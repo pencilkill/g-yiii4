@@ -29,12 +29,7 @@ class PictureController extends GxController {
 	public function actionCreate() {
 		$model = new Picture;
 
-		$i18ns = array();
-
-		foreach($this->languages as $val){
-			$va = new PictureI18n;
-			$i18ns[$val['language_id']] = $va;
-		}
+		$i18ns = $model->getNewRelatedData('pictureI18ns');
 
 		$this->performAjaxValidationEx(array(
 				array(

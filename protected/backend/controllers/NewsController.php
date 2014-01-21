@@ -29,12 +29,7 @@ class NewsController extends GxController {
 	public function actionCreate() {
 		$model = new News;
 
-		$i18ns = array();
-
-		foreach($this->languages as $val){
-			$va = new NewsI18n;
-			$i18ns[$val['language_id']] = $va;
-		}
+		$i18ns = $model->getNewRelatedData('newsI18ns');
 
 		$this->performAjaxValidationEx(array(
 				array(

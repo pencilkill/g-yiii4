@@ -74,5 +74,16 @@ class HCUploader {
 	public static function ajaxFileUpload($params = array()){
 		return Yii::app()->getController()->widget('frontend.extensions.ajaxupload.AjaxFileUploadWidget', $params, true);
 	}
+
+	/**
+	 * Get server upload limit based on upload_max_filesize, post_max_size
+	 */
+
+	public static function uploadLimit(){
+		$umf = ini_get('upload_max_filesize');
+		$pms = ini_get('post_max_size');
+
+		return HCFile::toBytes($umf) < HCFile::toBytes($pms) ? $umf : $pms ;
+	}
 }
 ?>

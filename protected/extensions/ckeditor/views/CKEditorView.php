@@ -42,7 +42,17 @@ if(isset($config) && is_array($config)){
 		$oCKeditor->config[$key] = $value;
 	}
 }
-CKFinder::SetupCKEditor($oCKeditor, Yii::app()->getBaseUrl().'/ckfinder/');
+
+// dynamic ckfinder path, check /ckfinder/config.php
+$baseUrl = Yii::app()->getBaseUrl() . '/';
+
+$ckfinder = new CKFinder($baseUrl . 'ckfinder/');
+
+$ckfinder->StripPath = $baseUrl;	// customer's property
+
+$ckfinder->DisableThumbnailSelection = true;
+
+$ckfinder->SetupCKEditorObject($oCKeditor);
 
 if(isset($htmlOptions['id'])){
 	$oCKeditor->replace($htmlOptions['id']);
@@ -51,6 +61,8 @@ if(isset($htmlOptions['id'])){
 }else if(isset($htmlOptions['class'])){
 	$oCKeditor->replaceAll($htmlOptions['class']);
 }
+
 // setting for dynamic
-Yii::app()->clientScript->registerScript('CKEditor_' . time() . '_config', 'window.CKEditorBaseSetting = ' . CJavaScript::encode($oCKeditor->config), CClientScript::POS_END);
+$window = 'GLOBAL_CONFIG_CKEDITOR';
+Yii::app()->clientScript->registerScript($window, "window.{$window} = " . CJavaScript::encode($oCKeditor->config), CClientScript::POS_END);
 ?>

@@ -110,7 +110,7 @@ echo "<?php\n
 
 							array(
 					        	'name' => '<?php echo $this->i18n->relationName?>.title',
-								'filter' => CHtml::activeTextField($model->filter-><?php echo $this->i18n->relationName?>, 'title'),
+								'filter' => CHtml::activeTextField($model->filter-><?php echo $this->i18n->relationNamePluralized?>, 'title'),
 							),
 					<?php }?>
 					<?php $count = 0;?>
@@ -170,8 +170,8 @@ echo "<?php\n
 			, checkBoxColumn : ':checkbox:not(:disabled)[name^="GridViewSelect"]:checked'
 			, postData : {returnUrl : '<?php echo '<?php'; ?> echo Yii::app()->getRequest()->url?>'}
 			, deleteConfirmation : '<?php echo '<?php'; ?> echo Yii::t('app', 'Confirm Grid View Delete?')?>'
-			, selectNoneMessage : '<?php echo '<?php'; ?> echo Yii::t('app', 'No results found.');?>'
-			, warningMessage : '<?php echo '<?php'; ?> echo Yii::t('app', 'Operation Failure.');?>'
+			, selectNoneMessage : '<?php echo '<?php'; ?> echo Yii::t('app', 'No Results Found');?>'
+			, warningMessage : '<?php echo '<?php'; ?> echo Yii::t('app', 'Operation Failure');?>'
 		};
 	 GridViewDelete(params);
  }

@@ -22,6 +22,14 @@ class Product extends BaseProduct
 				'createAttribute' => 'create_time',
 				'setUpdateOnCreate' => true,
 			),
+			'CActiveRecordI18nBehavior' => array(
+				'class' => 'backend.behaviors.CActiveRecordI18nBehavior',
+				'relations' => array(
+					'categoryI18ns' => array(
+						'indexes' => CHtml::listData(Language::model()->findAll(), 'language_id', 'language_id'),
+					),
+				)
+			),
         ));
 	}
 
@@ -39,19 +47,14 @@ class Product extends BaseProduct
 	}
 
 	public function search() {
+		$_provider = parent::search();
 		$alias = $this->tableAlias;
+		$criteria = $_provider->getCriteria();
 
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("{$alias}.product_id", $this->product_id);
-		$criteria->compare("{$alias}.sort_order", $this->sort_order);
-		$criteria->compare("{$alias}.create_time", $this->create_time, true);
-		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 		$criteria->group = "{$alias}.product_id";
 		$criteria->together = true;
 
 		$criteria->with = array('productI18ns');
-
 		$criteria->compare('productI18ns.status', $this->filter->productI18ns->status);
 		$criteria->compare('productI18ns.pic', $this->filter->productI18ns->pic, true);
 		$criteria->compare('productI18ns.title', $this->filter->productI18ns->title, true);
@@ -61,7 +64,10 @@ class Product extends BaseProduct
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => "{$alias}.sort_order DESC, {$alias}.product_id ASC",
+				'defaultOrder' => array(
+					"{$alias}.sort_order" => CSort::SORT_DESC,
+					"{$alias}.product_id" => CSort::SORT_ASC,
+				),
 				'multiSort'=>true,
 				'attributes'=>array(
 					'sort_order'=>array(

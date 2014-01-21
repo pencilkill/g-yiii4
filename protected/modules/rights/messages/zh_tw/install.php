@@ -8,15 +8,22 @@
  *
  * Each array element represents the translation (value) of a message (key).
  * If the value is empty, the message is considered as not translated.
+ * Messages that no longer need translation will have their translations
+ * enclosed between a pair of '@@' marks.
+ *
+ * Message string can be used with plural forms format. Check i18n section
+ * of the guide for details.
  *
  * NOTE, this file must be saved in UTF-8 encoding.
- *
- * @version $Id: $
  */
-return array(
+return array (
+  'An error occurred while installing Rights.' => '安裝時發生錯誤。',
+  'Application authorization manager must extend the RDbAuthManager class.' => '應用授權管理器必須擴展RDbAuthManager類。',
+  'Application web user must extend the RWebUser class.' => '應用程序的Web用戶必須擴展RWebUser類。',
+  'Error' => '錯誤',
+  'Please try again or consult the documentation.' => '請重試或查閱文檔。',
   'Congratulations!' => '祝賀！',
   'Install Rights' => '安裝 Rights',
-  'Installation failed.' => '安裝失敗。',
   'No' => '否',
   'Notice: All your existing data will be lost.' => '注意：所有存在的數據將會丟失。',
   'Please confirm if you wish to reinstall.' => '如果您希望重新安裝，請確認。',
@@ -26,5 +33,4 @@ return array(
   'You can start by generating your authorization items' => '作爲開始，您現在就可以生成授權項了！',
   'You must be logged in to install Rights.' => '您必須登錄後才能安裝 Rights。',
   'here' => '這裏',
-
 );

@@ -74,4 +74,20 @@ abstract class BasePictureI18n extends GxActiveRecord {
 			'language' => null,
 		);
 	}
+
+	public function search() {
+		$criteria = new CDbCriteria;
+
+		$criteria->compare('picture_i18n_id', $this->picture_i18n_id);
+		$criteria->compare('picture_id', $this->picture_id);
+		$criteria->compare('language_id', $this->language_id);
+		$criteria->compare('url', $this->url, true);
+		$criteria->compare('title', $this->title, true);
+		$criteria->compare('keywords', $this->keywords, true);
+		$criteria->compare('description', $this->description, true);
+
+		return new CActiveDataProvider($this, array(
+			'criteria' => $criteria,
+		));
+	}
 }

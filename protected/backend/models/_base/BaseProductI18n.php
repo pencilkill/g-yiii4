@@ -76,4 +76,21 @@ abstract class BaseProductI18n extends GxActiveRecord {
 			'language' => null,
 		);
 	}
+
+	public function search() {
+		$criteria = new CDbCriteria;
+
+		$criteria->compare('product_i18n_id', $this->product_i18n_id);
+		$criteria->compare('product_id', $this->product_id);
+		$criteria->compare('language_id', $this->language_id);
+		$criteria->compare('status', $this->status);
+		$criteria->compare('pic', $this->pic, true);
+		$criteria->compare('title', $this->title, true);
+		$criteria->compare('keywords', $this->keywords, true);
+		$criteria->compare('description', $this->description, true);
+
+		return new CActiveDataProvider($this, array(
+			'criteria' => $criteria,
+		));
+	}
 }

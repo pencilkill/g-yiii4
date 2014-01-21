@@ -31,6 +31,18 @@ class AjaxFileUploadWidget extends CInputWidget
 				throw new CHttpException(500,'"attribute" have to be set!');
 			}
 			$this->htmlOptions['id']=CHtml::activeId($this->model, $this->attribute);
+
+			if(!isset($this->htmlOptions['placeholder'])){
+				$this->htmlOptions['placeholder'] = 'http://';
+			}
+
+			if(!isset($this->htmlOptions['title'])){
+				$this->htmlOptions['title'] = 'Place your completed link here to override upload file ...';
+			}
+
+			if(!isset($this->htmlOptions['size'])){
+				$this->htmlOptions['size'] = 50;
+			}
     	}
 	}
 
@@ -72,7 +84,10 @@ class AjaxFileUploadWidget extends CInputWidget
 
 		$preview = $value;
 
-		if(isset($this->previewUrl) && is_array($this->previewUrl)){
+		if(preg_match('/\s*((http|https|ftp)\s*:\s*)?\/\//i', $value)){
+			// should be a remote link
+			$preview = $value;
+		}else if(isset($this->previewUrl) && is_array($this->previewUrl)){
 			$previewUrlParam = array('file' => $value);
 			if(isset($this->previewUrl[1])){
 				$previewUrlParam = CMap::mergeArray($previewUrlParam, $this->previewUrl[1]);

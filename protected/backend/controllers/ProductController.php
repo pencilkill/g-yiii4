@@ -29,12 +29,7 @@ class ProductController extends GxController {
 	public function actionCreate() {
 		$model = new Product;
 
-		$i18ns = array();
-
-		foreach($this->languages as $val){
-			$va = new ProductI18n;
-			$i18ns[$val['language_id']] = $va;
-		}
+		$i18ns = $model->getNewRelatedData('productI18ns');
 
 		$gallery = new ProductImage;
 		$galleries = $model->productImages;

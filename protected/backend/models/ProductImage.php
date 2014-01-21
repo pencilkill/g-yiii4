@@ -5,8 +5,6 @@ Yii::import('backend.models._base.BaseProductImage');
 class ProductImage extends BaseProductImage
 {
 
-	public $filter;
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -29,21 +27,19 @@ class ProductImage extends BaseProductImage
 	}
 
 	public function search() {
+		$_provider = parent::search();
 		$alias = $this->tableAlias;
+		$criteria = $_provider->getCriteria();
 
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("{$alias}.product_image_id", $this->product_image_id);
-		$criteria->compare("{$alias}.product_id", $this->product_id);
-		$criteria->compare("{$alias}.pic", $this->pic, true);
 		$criteria->group = "{$alias}.product_image_id";
 		$criteria->together = true;
-
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => "{$alias}.product_image_id ASC",
+				'defaultOrder' => array(
+					"{$alias}.product_image_id" => CSort::SORT_ASC,
+				),
 				'multiSort'=>true,
 				'attributes'=>array(
 					'*',

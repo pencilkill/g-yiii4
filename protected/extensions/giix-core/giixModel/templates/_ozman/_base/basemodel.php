@@ -132,4 +132,17 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 <?php endforeach; ?>
 		);
 	}
+
+	public function search() {
+		$criteria = new CDbCriteria;
+
+<?php foreach($columns as $name=>$column): ?>
+<?php $partial = ($column->type==='string' and !$column->isForeignKey); ?>
+		$criteria->compare('<?php echo $name; ?>', $this-><?php echo $name; ?><?php echo $partial ? ', true' : ''; ?>);
+<?php endforeach; ?>
+
+		return new CActiveDataProvider($this, array(
+			'criteria' => $criteria,
+		));
+	}
 }

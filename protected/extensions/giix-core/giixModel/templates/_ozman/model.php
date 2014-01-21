@@ -28,7 +28,7 @@
 	foreach($relations as $name => $relation){
 		if($name == $selfRelationName && preg_match("/^\s*array\s*\(\s*self::(HAS|MANY)_MANY\s*,\s*'{$modelClass}'\s*,\s*'(\w+)'\s*,?/i", $relation, $relationColumn)){
 			$selfRelation = true;
-			$selfRelationColumn = $relationColumn[1];
+			$selfRelationColumn = $relationColumn[2];
 		}
 
 		if(preg_match("/^\s*array\s*\(\s*self::(HAS|MANY)_MANY\s*,/i", $relation)){
@@ -50,8 +50,10 @@ Yii::import('<?php echo "{$this->baseModelPath}.{$this->baseModelClass}"; ?>');
 
 class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; ?>
 {
+<?php if($relationMany){?>
 
 	public $filter;
+<?php }?>
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
@@ -96,6 +98,16 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 <?php }?>
 			),
 <?php }?>
+<?php if($i18n){?>
+			'CActiveRecordI18nBehavior' => array(
+				'class' => 'backend.behaviors.CActiveRecordI18nBehavior',
+				'relations' => array(
+					'categoryI18ns' => array(
+						'indexes' => CHtml::listData(Language::model()->findAll(), 'language_id', 'language_id'),
+					),
+				)
+			),
+<?php }?>
         ));
 	}
 
@@ -118,19 +130,15 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 	}
 
 	public function search() {
+		$_provider = parent::search();
 		$alias = $this->tableAlias;
+		$criteria = $_provider->getCriteria();
 
-		$criteria = new CDbCriteria;
-
-<?php foreach($columns as $name=>$column): ?>
-		$criteria->compare("{$alias}.<?php echo $name; ?>", $this-><?php echo $name; ?><?php echo ($column->type==='string' and !$column->isForeignKey) ? ', true' : ''; ?>);
-<?php endforeach; ?>
 		$criteria->group = "{$alias}.<?php echo $table->primaryKey?>";
 		$criteria->together = true;
-
 <?php if($i18n):?>
-		$criteria->with = array('<?php echo $i18n->relationNamePluralized?>');
 
+		$criteria->with = array('<?php echo $i18n->relationNamePluralized?>');
 <?php foreach($i18n->table->columns as $name=>$column):?>
 <?php if($column->autoIncrement) continue;?>
 <?php if($column->isForeignKey && isset($columns[$name]) && $columns[$name]->isPrimaryKey) continue;?>
@@ -142,7 +150,12 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-				'defaultOrder' => "<?php echo array_key_exists('sort_order', $columns) ? '{$alias}.sort_order DESC, ' : ''?>{$alias}.<?php echo $table->primaryKey?> ASC",
+				'defaultOrder' => array(
+<?php if(array_key_exists('sort_order', $columns)):?>
+					"{$alias}.sort_order" => CSort::SORT_DESC,
+<?php endif;?>
+					"{$alias}.<?php echo $table->primaryKey?>" => CSort::SORT_ASC,
+				),
 				'multiSort'=>true,
 				'attributes'=>array(
 <?php if(array_key_exists('sort_order', $columns)):?>
@@ -183,7 +196,7 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
     	$categoryIds = $this->subNodes($this-><?php echo $table->primaryKey?>, true);
 
     	if(in_array($this-><?php echo $selfRelationColumn?>, $categoryIds)){
-    		$this->addError('<?php echo $selfRelationColumn?>', Yii::t('m/<?php echo strtolower($modelClass)?>', 'Parent_id can not be self or children'));
+    		$this->addError('<?php echo $selfRelationColumn?>', Yii::t('app', 'Parent_id can not be self or children'));
     	}
     }
 

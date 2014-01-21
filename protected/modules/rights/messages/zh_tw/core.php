@@ -8,38 +8,49 @@
  *
  * Each array element represents the translation (value) of a message (key).
  * If the value is empty, the message is considered as not translated.
+ * Messages that no longer need translation will have their translations
+ * enclosed between a pair of '@@' marks.
+ *
+ * Message string can be used with plural forms format. Check i18n section
+ * of the guide for details.
  *
  * NOTE, this file must be saved in UTF-8 encoding.
- *
- * @version $Id: $
  */
 return array (
-  ':name assigned.' => ':name 已指派',
+  'An operation is a permission to perform a single operation, for example accessing a certain controller action.' => '一個操作來執行單個操作中，例如訪問一個特定的控制器的動作的權限。',
+  'Cancel' => '取消',
+  'Generate items' => '生成項目',
+  'Operations exist below tasks in the authorization hierarchy and can therefore only inherit from other operations.' => '下面的任務操作中存在的授權等級，因此只能從其他業務中繼承。',
+  'Permission :name assigned.' => '權限 :name 已指派。',
+  'Permission :name revoked.' => '權限 :name 已撤銷。',
+  'Source' => '源',
+  'Tasks exist below roles in the authorization hierarchy and can therefore only inherit from other tasks and/or operations.' => '在下面的授權等級角色的任務存在，因此只能從其他的任務和/或業務繼承。',
+  'There must be at least one superuser!' => '必須有至少一個超級用戶！',
+  'Update :name' => '更新 :name',
   ':name created.' => ':name 已創建',
   ':name deleted.' => ':name 已刪除',
-  ':name module' => ':name 模塊',
-  ':name revoked.' => ':name 已撤銷',
   ':name updated.' => ':name 已更新',
   'A descriptive name for this item.' => '對這個授權項的描述',
-  'Add' => '添加',
-  'Add Child' => '添加子項',
+  'A role is group of permissions to perform a variety of tasks and operations, for example the authenticated user.' => '角色是組的權限來執行各種任務和操作，例如身份驗證的用戶。',
+  'A task is a permission to perform multiple operations, for example accessing a group of controller action.' => '任務是執行多個操作，例如訪問一組控制器操作的權限。',
+  'Add' => '新增',
+  'Add Child' => '新增子項',
   'Additional data available when executing the business rule.' => '執行這個業務邏輯所需的數據',
   'An item with this name already exists.' => '已存在一個同名的授權項',
   'Application' => '應用程序',
-  'Are you sure you want to delete this item?' => '您確定要刪除該授權項嗎？',
   'Are you sure you want to delete this operation?' => '您確定要刪除該操作嗎？',
   'Are you sure you want to delete this role?' => '您確定要刪除該角色嗎？',
   'Are you sure you want to delete this task?' => '您確定要刪除該任務嗎？',
   'Assign' => '指派',
   'Assign item' => '指派授權項',
-  'Assigned items' => '已指派的授權項',
   'Assignments' => '授權',
   'Assignments for :username' => '對 :username 的授權',
-  'Authorization item' => '',
-  'Authorization items created.' => '',
+  'Authorization item' => '授權項目',
+  'Authorization items can be managed under {roleLink}, {taskLink} and {operationLink}.' => '授權項目可根據{roleLink}，{taskLink}進行管理和{operationLink}',
+  'Authorization items created.' => '授權項目已創建。',
   'Business rule' => '業務規則',
   'Business rule cannot be empty.' => '業務規則不能爲空',
-  'Child :name added.' => '子項 :name 已添加',
+  'Child :name added.' => '子項 :name 已新增',
   'Child :name removed.' => '子項 :name 已刪除',
   'Children' => '子項',
   'Code that will be executed when performing access checking.' => '訪問檢查時這些代碼將被執行',
@@ -52,7 +63,9 @@ return array (
   'Description' => '描述',
   'Do not change the name unless you know what you are doing.' => '不要修改這個名字，除非你知道你在做什麽。',
   'Generate' => '生成',
-  'Generator' => '生成器',
+  'Generate items for controller actions' => '生成控制器操作項目',
+  'Here you can view and manage the permissions assigned to each role.' => '在這裏，您可以查看和管理分配給每個角色的權限。',
+  'Here you can view which permissions has been assigned to each user.' => '在這裏，您可以查看哪些權限已被分配給每個用戶。',
   'Hover to see from where the permission is inherited.' => '懸停以查看從何處繼承該權限。',
   'Inherited' => '繼承的',
   'Invalid authorization item type.' => '無效的授權項類型。',
@@ -64,7 +77,7 @@ return array (
   'No actions found.' => '沒有找到任何動作。',
   'No assignments available to be assigned to this user.' => '沒有可用的指派可以授權給這個用戶。',
   'No authorization items found.' => '沒有找到授權項。',
-  'No children available to be added to this item.' => '對這個項目沒有可添加的子項。',
+  'No children available to be added to this item.' => '對這個項目沒有可新增的子項。',
   'No operations found.' => '沒有找到任何操作。',
   'No relations need to be set for the superuser role.' => '無需爲超級用戶設置關系。',
   'No roles found.' => '沒有找到任何角色。',
@@ -80,6 +93,7 @@ return array (
   'Revoke' => '撤銷',
   'Role' => '角色',
   'Roles' => '角色',
+  'Roles exist at the top of the authorization hierarchy and can therefore inherit from other roles, tasks and/or operations.' => '角色在授權層次結構的頂部存在，因此可以從其他角色，任務和/或操作中繼承。',
   'Save' => '保存',
   'Select all' => '全選',
   'Select none' => '不選',
@@ -91,7 +105,6 @@ return array (
   'This item has no parents.' => '這個項目沒有父項。',
   'This user has not been assigned any items.' => '這個用戶沒有被指派任何授權項。',
   'Type' => '類型',
-  'Update :name (:type)' => '更新 :name (:type)',
   'Values within square brackets tell how many children each item has.' => '括號裏的數字表示這個項目有多少個子項。',
   'You are not authorized to perform this action.' => '您沒有被授權執行該操作。',
 );

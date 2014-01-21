@@ -61,4 +61,16 @@ abstract class BaseProductImage extends GxActiveRecord {
 			'product' => null,
 		);
 	}
+
+	public function search() {
+		$criteria = new CDbCriteria;
+
+		$criteria->compare('product_image_id', $this->product_image_id);
+		$criteria->compare('product_id', $this->product_id);
+		$criteria->compare('pic', $this->pic, true);
+
+		return new CActiveDataProvider($this, array(
+			'criteria' => $criteria,
+		));
+	}
 }

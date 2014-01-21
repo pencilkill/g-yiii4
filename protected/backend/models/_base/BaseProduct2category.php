@@ -63,4 +63,16 @@ abstract class BaseProduct2category extends GxActiveRecord {
 			'category' => null,
 		);
 	}
+
+	public function search() {
+		$criteria = new CDbCriteria;
+
+		$criteria->compare('product2category_id', $this->product2category_id);
+		$criteria->compare('product_id', $this->product_id);
+		$criteria->compare('category_id', $this->category_id);
+
+		return new CActiveDataProvider($this, array(
+			'criteria' => $criteria,
+		));
+	}
 }
