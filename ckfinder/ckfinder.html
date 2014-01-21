@@ -62,10 +62,6 @@
 
 		if ( tmp = get( 'langCode' ) )
 			config.language = tmp;
-		
-		// add by sam@ozchamp.net
-		if ( tmp = get( 'stripPath' ) )
-			config.stripPath = tmp;
 
 		// Try to get desired "File Select" action from the URL.
 		var action;
@@ -94,7 +90,6 @@
 
 			case 'ckeditor':
 				var funcNum = get( 'CKEditorFuncNum' );
-				var prependStripPathFuncNums = [4];
 				
 				if ( parentWindow['CKEDITOR'] )
 				{
@@ -124,6 +119,7 @@
 
 		// Always use 100% width and height when nested using this middle page.
 		config.width = config.height = '100%';
+		config.disableThumbnailSelection = true;
 
 		var ckfinder = new CKFinder( config );
 
@@ -131,7 +127,7 @@
 			api.disableFolderContextMenuOption( 'CreateSubFolder', false );
 			api.disableFolderContextMenuOption( 'RenameFolder', false );
 			api.disableFolderContextMenuOption( 'DeleteFolder', false );
-			// Disable download function
+			// Disable contextmenu
 			api.disableFileContextMenuOption( 'Thumbnail', false );
 			api.disableFileContextMenuOption( 'viewFile', false );
 		};

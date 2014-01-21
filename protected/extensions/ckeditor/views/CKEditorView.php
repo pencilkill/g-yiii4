@@ -43,16 +43,9 @@ if(isset($config) && is_array($config)){
 	}
 }
 
-// dynamic ckfinder path, check /ckfinder/config.php
 $baseUrl = Yii::app()->getBaseUrl() . '/';
 
-$ckfinder = new CKFinder($baseUrl . 'ckfinder/');
-
-$ckfinder->StripPath = $baseUrl;	// customer's property
-
-$ckfinder->DisableThumbnailSelection = true;
-
-$ckfinder->SetupCKEditorObject($oCKeditor);
+CKFinder::SetupCKEditor($oCKeditor, $baseUrl . 'ckfinder/');
 
 if(isset($htmlOptions['id'])){
 	$oCKeditor->replace($htmlOptions['id']);
