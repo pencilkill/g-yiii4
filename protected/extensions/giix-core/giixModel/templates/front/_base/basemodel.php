@@ -37,6 +37,10 @@
 	$relationType = $relationData[0];
 	$relationModel = $relationData[1];
 
+	if($i18n && $relationModel == $i18n->className){
+		echo $relationModel . ' $' . $i18n->relationName . "\n * @property ";
+	}
+
 	switch($relationType) {
 		case GxActiveRecord::BELONGS_TO:
 		case GxActiveRecord::HAS_ONE:
@@ -55,10 +59,6 @@
  */
 abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->baseClass; ?> {
 
-<?php if($i18n && $i18nClassName):?>
-	public $filterI18n = null;
-<?php endif;?>
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -68,7 +68,7 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 	}
 
 	public static function label($n = 1) {
-		return Yii::t('M/<?php echo strtolower($modelClass)?>', '<?php echo $modelClass; ?>|<?php echo $this->pluralize($modelClass); ?>', $n);
+		return Yii::t('m/<?php echo strtolower($modelClass)?>', '<?php echo $modelClass; ?>|<?php echo $this->pluralize($modelClass); ?>', $n);
 	}
 
 	public static function representingColumn() {
@@ -94,13 +94,12 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 
 	public function relations() {
 		return array(
-<?php $pattern = "/^\s*array\(\s*self::HAS_MANY\s*,\s*'{$i18nClassName}',\s*/i";?>
 <?php foreach($relations as $name=>$relation): ?>
 <?php
-	if(preg_match($pattern, $relation)) {
-		$i18nRelationName = $name;
+	if($i18n && preg_match("/^\s*array\(\s*self::HAS_MANY\s*,\s*'{$i18n->className}',\s*/i", $relation)) {
+		$name = $i18n->relationName;
 		$relation = preg_replace('/(^\s*)array\(\s*self::HAS_MANY\s*/', '\\1array(self::HAS_ONE', $relation);
-		$relation = preg_replace('/^([^\)]*?)(\)\s*)/', '\\1, \'joinType\' => \'RIGHT OUTER JOIN\',  \'scopes\' => array(\'i8\' => array(Yii::app()->params->languageId)))', $relation);
+		$relation = preg_replace('/^([^\)]*?)(\)\s*)/', '\\1, \'scopes\' => array(\'t\' => array(Yii::app()->params->languageId)))', $relation);
 	}?>
 			<?php echo "'{$name}' => {$relation},\n"; ?>
 <?php endforeach; ?>
@@ -134,54 +133,11 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 
 <?php foreach($columns as $name=>$column): ?>
 <?php $partial = ($column->type==='string' and !$column->isForeignKey); ?>
-<?php if($column->isPrimaryKey) $compareGroupId = $name;?>
 		$criteria->compare("{$alias}.<?php echo $name; ?>", $this-><?php echo $name; ?><?php echo $partial ? ', true' : ''; ?>);
 <?php endforeach; ?>
 
-<?php if($i18n && !empty($i18nRelationName)):?>
-		if($this->filterI18n !== null){
-			$criteria->with = array(
-				'<?php echo $i18nRelationName?>' => array(
-					'scopes' => array(
-						'i8' => array(Yii::app()->params->languageId),
-					),
-				),
-			);
-			$criteria->group = "{$alias}.<?php echo $compareGroupId?>";
-			$criteria->together = true;
-
-<?php foreach($i18n->columns as $name=>$column):?>
-<?php if($column->autoIncrement) continue;?>
-<?php if($column->isForeignKey && isset($columns[$name]) && $columns[$name]->isPrimaryKey) continue;?>
-<?php if(strcasecmp($name, 'language_id')===0 && $column->isForeignKey) continue; ?>
-<?php if(strcasecmp($name, 'status')===0) continue; ?>
-<?php $partial = ($column->type==='string' and !$column->isForeignKey); ?>
-			$criteria->compare('<?php echo $i18nRelationName.'.'.$name; ?>', $this->filterI18n-><?php echo $name; ?><?php echo $partial ? ', true' : ''; ?>);
-<?php endforeach;?>
-		}
-<?php endif;?>
-
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
-			'sort' => array(
-				'attributes'=>array(
-<?php if(array_key_exists('sort_order', $columns)):?>
-					'sort_order'=>array(
-						'desc'=>"{$alias}.sort_order DESC",
-						'asc'=>"{$alias}.sort_order",
-					),
-<?php endif;?>
-					'*',
-				),
-			),
-<?php if(substr($modelClass, -4) !== 'I18n' && strpos($modelClass, '2') == false):?>
-			'pagination' => array(
-				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
-				'pageVar' => 'page',
-			),
-<?php ;else:?>
-			'pagination' => false,
-<?php endif;?>
 		));
 	}
 

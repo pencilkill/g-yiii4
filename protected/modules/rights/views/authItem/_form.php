@@ -10,7 +10,25 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model, 'name'); ?>
-		<?php echo $form->textField($model, 'name', array('maxlength'=>255, 'class'=>'text-field')); ?>
+		<?php //echo $form->textField($model, 'name', array('maxlength'=>255, 'class'=>'text-field')); ?>
+		<?php $form->widget('zii.widgets.jui.CJuiAutoComplete', array(
+            'model'=>$model,
+            'attribute'=>'name',
+            'source'=>$this->getControllers(),
+            'options'=>array(
+                'delay'=>100,
+                'focus'=>'js:function(event,ui){
+                    $(this).val($(ui.item).val());
+                    $(this).trigger(\'change\');
+                }',
+            ),
+            'htmlOptions'=>array(
+                'size'=>'65',
+            	'maxlength'=>255,
+            	'class'=>'text-field',
+            ),
+        ));
+        ?>
 		<?php echo $form->error($model, 'name'); ?>
 		<p class="hint"><?php echo Rights::t('core', 'Do not change the name unless you know what you are doing.'); ?></p>
 	</div>

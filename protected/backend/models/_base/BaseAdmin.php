@@ -18,6 +18,8 @@
  * @property integer $super
  * @property string $create_time
  * @property string $update_time
+
+ * @property Authassignment $authassignment
  *
  */
 abstract class BaseAdmin extends GxActiveRecord {
@@ -51,6 +53,7 @@ abstract class BaseAdmin extends GxActiveRecord {
 
 	public function relations() {
 		return array(
+			'authassignment' => array(self::HAS_ONE, 'Authassignment', 'userid'),
 		);
 	}
 

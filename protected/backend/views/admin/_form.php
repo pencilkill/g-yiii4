@@ -118,8 +118,8 @@
 				<?php echo $form->labelEx($model,'roles'); ?>
 			</td>
 			<td>
-				<?php echo CHtml::dropDownList(CHtml::activeName($model, 'roles[]'), $model->roles, $rolesList, array())?>
-				<?php //echo CHtml::checkBoxList(CHtml::activeName($model, 'roles'), $model->roles, $rolesList, array()); ?>
+				<?php echo CHtml::dropDownList(CHtml::activeName($model, 'roles[]'), $model->roles, $model->rolesList(), array())?>
+				<?php //echo CHtml::checkBoxList(CHtml::activeName($model, 'roles'), $model->roles, $model->rolesList(), array()); ?>
 				<?php echo $form->error($model,'roles'); ?>
 			</td>
 		</tr><!-- row -->

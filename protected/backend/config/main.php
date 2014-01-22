@@ -27,7 +27,7 @@ $backCfg = array(
 
 	'theme'=>'_ozman',
 
-	'name'=>$frontCfg['name'].' - 網站管理',
+	'name'=>$frontCfg['name'].' - Administrator',
 
 	'language'=>'zh_tw',
 

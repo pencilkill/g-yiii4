@@ -33,7 +33,7 @@ abstract class BaseSetting extends GxActiveRecord {
 	}
 
 	public function rules() {
-		
+
 		return array(
 			/*
 			array('key', 'required'),
@@ -44,7 +44,6 @@ abstract class BaseSetting extends GxActiveRecord {
 			array('value', 'default', 'setOnEmpty' => true, 'value' => null),
 			array('key, value', 'safe', 'on'=>'search'),
 			*/
-			array('analysis_google', 'required'),
 		);
 	}
 

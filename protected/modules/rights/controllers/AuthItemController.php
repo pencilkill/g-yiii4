@@ -125,7 +125,7 @@ class AuthItemController extends RController
 	public function actionOperations()
 	{
 		Yii::app()->user->rightsReturnUrl = array('authItem/operations');
-		
+
 		$dataProvider = new RAuthItemDataProvider('operations', array(
 			'type'=>CAuthItem::TYPE_OPERATION,
 			'sortable'=>array(
@@ -149,7 +149,7 @@ class AuthItemController extends RController
 	public function actionTasks()
 	{
 		Yii::app()->user->rightsReturnUrl = array('authItem/tasks');
-		
+
 		$dataProvider = new RAuthItemDataProvider('tasks', array(
 			'type'=>CAuthItem::TYPE_TASK,
 			'sortable'=>array(
@@ -173,7 +173,7 @@ class AuthItemController extends RController
 	public function actionRoles()
 	{
 		Yii::app()->user->rightsReturnUrl = array('authItem/roles');
-		
+
 		$dataProvider = new RAuthItemDataProvider('roles', array(
 			'type'=>CAuthItem::TYPE_ROLE,
 			'sortable'=>array(
@@ -270,7 +270,7 @@ class AuthItemController extends RController
 	public function actionCreate()
 	{
 		$type = $this->getType();
-		
+
 		// Create the authorization item form
 		$formModel = new AuthItemForm('create');
 
@@ -307,7 +307,7 @@ class AuthItemController extends RController
 		// Get the authorization item
 		$model = $this->loadModel();
 		$itemName = $model->getName();
-		
+
 		// Create the authorization item form
 		$formModel = new AuthItemForm('update');
 
@@ -330,15 +330,15 @@ class AuthItemController extends RController
 				$this->redirect(Yii::app()->user->getRightsReturnUrl(array('authItem/permissions')));
 			}
 		}
-		
+
 		$type = Rights::getValidChildTypes($model->type);
 		$exclude = array($this->module->superuserName);
 		$childSelectOptions = Rights::getParentAuthItemSelectOptions($model, $type, $exclude);
-		
+
 		if( $childSelectOptions!==array() )
 		{
 			$childFormModel = new AuthChildForm();
-		
+
 			// Child form is submitted and data is valid
 			if( isset($_POST['AuthChildForm'])===true )
 			{
@@ -395,7 +395,7 @@ class AuthItemController extends RController
 		if( Yii::app()->request->isPostRequest===true )
 		{
 			$itemName = $this->getItemName();
-			
+
 			// Load the item and save the name for later use
 			$item = $this->_authorizer->authManager->getAuthItem($itemName);
 			$item = $this->_authorizer->attachAuthItemBehavior($item);
@@ -428,7 +428,7 @@ class AuthItemController extends RController
 		{
 			$itemName = $this->getItemName();
 			$childName = $this->getChildName();
-			
+
 			// Remove the child and load it
 			$this->_authorizer->authManager->removeItemChild($itemName, $childName);
 			$child = $this->_authorizer->authManager->getAuthItem($childName);
@@ -459,7 +459,7 @@ class AuthItemController extends RController
 		{
 			$model = $this->loadModel();
 			$childName = $this->getChildName();
-			
+
 			if( $childName!==null && $model->hasChild($childName)===false )
 				$model->addChild($childName);
 
@@ -512,7 +512,7 @@ class AuthItemController extends RController
 			throw new CHttpException(400, Rights::t('core', 'Invalid request. Please do not repeat this request again.'));
 		}
 	}
-	
+
 	/**
 	* @return string the item name or null if not set.
 	*/
@@ -520,7 +520,7 @@ class AuthItemController extends RController
 	{
 		return isset($_GET['name'])===true ? urldecode($_GET['name']) : null;
 	}
-	
+
 	/**
 	* @return string the child name or null if not set.
 	*/
@@ -528,7 +528,7 @@ class AuthItemController extends RController
 	{
 		return isset($_GET['child'])===true ? urldecode($_GET['child']) : null;
 	}
-	
+
 	/**
 	 * Returns the authorization item type after validation.
 	 * @return int the type.
@@ -552,7 +552,7 @@ class AuthItemController extends RController
 		if( $this->_model===null )
 		{
 			$itemName = $this->getItemName();
-			
+
 			if( $itemName!==null )
 			{
 				$this->_model = $this->_authorizer->authManager->getAuthItem($itemName);
@@ -564,5 +564,22 @@ class AuthItemController extends RController
 		}
 
 		return $this->_model;
+	}
+
+	/**
+	 * Returns the controller names in an array.
+	 * The array is used to build the autocomplete field.
+	 * @return array The names of the controllers
+	 */
+	protected function getControllers() {
+		$controllers = array();
+		$controllerPath = Yii::getPathOfAlias('backend') ? Yii::getPathOfAlias('backend.controllers') : Yii::getPathOfAlias('frontend.controllers');
+		$files = scandir($controllerPath);
+		foreach ($files as $file) {
+			if ($file[0] !== '.' && preg_match('/.*(Controller\.php)$/i', $file, $matches)) {
+				$controllers[] = preg_replace('/' . $matches[1] . '$/i', '.*', $file);
+			}
+		}
+		return $controllers;
 	}
 }

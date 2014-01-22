@@ -6,12 +6,13 @@ class AdminController extends GxController {
 	public function actionIndex() {
 		$model = new Admin('search');
 		$model->unsetAttributes();
-		// except super ar
-		$model->super = 0;
 
 		if (isset($_GET['Admin'])){
 			$model->setAttributes($_GET['Admin']);
 		}
+
+		// except super ar
+		$model->super = 0;
 
 		$this->render('index', array(
 			'model' => $model,
@@ -20,16 +21,6 @@ class AdminController extends GxController {
 
 	public function actionCreate() {
 		$model = new Admin;
-
-
-		// RBAC, see modules rights components/rights to get more
-		$authorizer = Yii::app()->getModule("rights")->getAuthorizer();
-		$roles = $authorizer->getRoles(false);
-
-		$rolesList = array();
-		foreach ($roles as $name => $role){
-			$rolesList[$name] = $name;
-		}
 
 		$this->performAjaxValidationEx(array(
 				array(
@@ -68,27 +59,20 @@ class AdminController extends GxController {
 				}
 			}
 		}
+		// authenticatedName as default
+		if(empty($model->roles) && $role = Yii::app()->getModule('rights')->authenticatedName){
+			$model->roles[$role] = $role;
+		}
 
 		$this->render('create', array(
 			'model' => $model,
-			'rolesList' => $rolesList,
 		));
 	}
 
 	public function actionUpdate($id) {
 		$model = $this->loadModel($id, 'Admin');
 
-
-		// RBAC
-		$authorizer = Yii::app()->getModule("rights")->getAuthorizer();
-		$roles = $authorizer->getRoles(false);
-
-		$rolesList = array();
-		foreach ($roles as $name => $role){
-			$rolesList[$name] = $name;
-		}
-
-		$model->roles = array_keys(Rights::getAssignedRoles($model->admin_id, false));
+		$model->roles = CHtml::listData(Rights::getAssignedRoles($model->admin_id, false), 'name', 'name');
 
 		$this->performAjaxValidationEx(array(
 				array(
@@ -129,7 +113,6 @@ class AdminController extends GxController {
 
 		$this->render('update', array(
 			'model' => $model,
-			'rolesList' => $rolesList,
 		));
 	}
 
@@ -186,31 +169,97 @@ class AdminController extends GxController {
 
 			$criteria= new CDbCriteria;
 			$criteria->compare('admin_id', $selected);
-			// except super ar, event beforeDelete() has no effect on model()->deleteAll()
+			// except super ar
 			$criteria->compare('super', 0);
 
 			$models = Admin::model()->findAll($criteria);
 
-			$valid = true;
+			$errorModel = null;
+
+			$transaction = Yii::app()->db->beginTransaction();
+
+			try{
+				foreach ($models as $model){
+					if(!$model->delete()) {
+						$errorModel = $model;
+
+						Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
+
+						break;
+					}
+				}
+
+				$transaction->commit();
+
+			}catch(CDbException $e){
+				$transaction->rollback();
+
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
+			}
+
+			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
+				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+				Yii::app()->end();
+			} else{
+				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
+			}
+		}else{
+			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+		}
+	}
+
+	public function actionGridviewupdate() {
+		if (Yii::app()->getRequest()->getIsPostRequest()){
+
+			$editPosts = Yii::app()->getRequest()->getPost('edit');
+			$editIds = array_keys($editPosts);
+
+			$errorModel = null;
+
+			$model = new Admin;
+
+			$criteria= new CDbCriteria;
+			$criteria->compare('admin_id', $editIds);
+			$criteria->compare('super', 0);
+
+			$models = Admin::model()->findAll($criteria);
 
 			foreach ($models as $model){
-				$valid = $valid && $model->beforeDelete();
-				if(! $valid){
+				// unset password
+				$model->unsetAttributes(array('password'));
+
+				$model->setAttributes($editPosts[$model->admin_id]);
+
+				if(!$model->validate()) {
+					$errorModel = $model;
 					break;
 				}
 			}
 
-			if($valid) {
-				foreach ($models as $model){
-					$model->delete();
+			if(!$errorModel){
+				$transaction = Yii::app()->db->beginTransaction();
+
+				try{
+					foreach ($models as $model){
+						$model->save(false);
+					}
+
+					$transaction->commit();
+
+				}catch(CDbException $e){
+					$transaction->rollback();
+
+					Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
 				}
+			}else{
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
 			}
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
-				echo CJSON::encode(array('success' => true));
+				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
 				Yii::app()->end();
 			} else{
-				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
+				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));
 			}
 		}else{
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');

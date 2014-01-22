@@ -70,7 +70,7 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 <?php endif;?>
 <?php if(substr(strtolower($modelClass), -4) == 'i18n'):?>
 
-	public function i8($languageId=null){
+	public function t($languageId=null){
 		if(empty($languageId)){
 			$languageId = Yii::app()->params->languageId;
 		}

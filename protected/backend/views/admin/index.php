@@ -96,6 +96,14 @@ $this->breadcrumbs = array(
 								),
 							),
 
+							/*
+							array(
+								'name' => 'roles',
+								'value' => 'empty($data->authassignment) ? "" : $data->authassignment->itemname',
+								'filter' => CHtml::dropDownList(CHtml::activeName($model, 'roles[]'), $model->roles, $model->rolesList(), array('prompt' => '')),
+							),
+							*/
+
 							'name',
 
 							'username',

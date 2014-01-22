@@ -4,12 +4,7 @@ Yii::import('backend.models._base.BaseAdmin');
 
 class Admin extends BaseAdmin
 {
-	/**
-	 * cause authManager->defaultRoles is relative to user login
-	 * this can not get authManager->defaultRoles simply
-	 *@var roles, type like authManager->defaultRoles;
-	 */
-	public $roles = array('Authenticated');
+	public $roles = array();
 
 	public $confirm_password = '';
 
@@ -34,7 +29,7 @@ class Admin extends BaseAdmin
 			array('confirm_password, password', 'required', 'on' => 'insert'),
 			array('confirm_password, password', 'length', 'min' => 6),
 			array('confirm_password', 'compare', 'compareAttribute' => 'password'),
-			array('username', 'unique', 'className' => 'Admin', 'attributeName' => 'username'),
+			array('username', 'unique', 'className' => 'Admin', 'attributeName' => 'username', 'on' => 'insert, update'),
 			array('roles', 'validRoles', 'on' => 'insert, update'),
 			array('roles', 'safe', 'on'=>'search'),
 		));
@@ -73,7 +68,7 @@ class Admin extends BaseAdmin
 
     public function validRoles()
     {
-        $authorizer = Yii::app()->getModule("rights")->getAuthorizer();
+        $authorizer = Yii::app()->getModule('rights')->getAuthorizer();
 		$roles = $authorizer->getRoles(false);
 
 		$valid = (bool)sizeOf($this->roles);
@@ -118,6 +113,9 @@ class Admin extends BaseAdmin
 		$criteria->group = "{$alias}.admin_id";
 		$criteria->together = true;
 
+		$criteria->with = array('authassignment');
+		$criteria->compare('authassignment.itemname', $this->roles);
+
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
@@ -137,4 +135,11 @@ class Admin extends BaseAdmin
 		));
 	}
 
+	public function rolesList($includeSuperuser=false, $sort=true){
+		// RBAC
+		$authorizer = Yii::app()->getModule('rights')->getAuthorizer();
+		$roles = $authorizer->getRoles($includeSuperuser, $sort);
+
+		return CHtml::listData($roles, 'name', 'name');
+	}
 }

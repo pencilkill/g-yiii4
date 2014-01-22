@@ -10,7 +10,7 @@ class HCValidator {
 	 * @param $email
 	 * @param $separator
 	 */
-	public static function validEmail($email, $separator = ','){
+	public static function emails($email, $separator = ','){
 		$email = trim($email);
 
 		$valid = true;

@@ -6,26 +6,30 @@ $this->breadcrumbs = array(
 );
 ?>
 <style type="text/css">
-.content ul {
+.content ul { margin:0; padding:0;
 	list-style: none;
 	text-align: center;
 }
 .content ul li {
 	display: inline-block;
-	margin: 10px 0px 0px 20px;
-	width: 80px;
+	margin: 10px 10px 0;
+	width: 90px;
+	float: inherit;
 }
 .content ul li a {
 	text-align: center;
 	text-decoration: none;
+	border: 1px solid #F1F1F1;
+    display: block;
+    padding: 8px 0px 5px;
+	border-radius: 5px;
+    box-shadow: 0 0 15px #F4F4F4 inset;
 }
-.content ul li img {
-	margin: 10px;
-	width: 50px;
+.content ul li a:hover{
+	border: 1px solid #AAA;
 }
-.content ul li span{
+.content ul li span{ padding:6px 0 0 0;
 	display: block;
-	width: 80px;
 	color: #333;
 }
 </style>
