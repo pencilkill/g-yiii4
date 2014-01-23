@@ -106,22 +106,7 @@ class GiixCrudCode extends CrudCode {
 				|| strtoupper($column->dbType) == 'BOOLEAN') {
 			return "echo \$form->checkBox(\$model, '{$column->name}')";
 		} else if (strtoupper($column->dbType) == 'DATE' || strtoupper($column->dbType) == 'DATETIME') {
-			return "\$form->widget('zii.widgets.jui.CJuiDatePicker', array(
-			'model' => \$model,
-			'attribute' => '{$column->name}',
-			'language' => Yii::app()->language,
-			'options' => array(
-				'showButtonPanel' => false,
-				'changeYear' => true,
-				'changeMonth' => true,
-				'dateFormat' => 'yy-mm-dd',
-				'yearRange' => '-5:+5',
-			),
-			'htmlOptions' => array(
-				'readonly' => 'readonly',
-				'value' => \$model->{$column->name} ? date('Y-m-d', strtotime(\$model->{$column->name})) : date('Y-m-d'),
-			),
-			));\n";
+			return "echo \$form->textField(\$model, '{$column->name}', array('class' => 'CJuiDatePicker', 'value' => (\$a = CHtml::resolveValue(\$model, '{$column->name}')) ? date('Y-m-d', strtotime(\$a)) : date('Y-m-d')))";
 		} else if (stripos($column->dbType, 'text') !== false) { // Start of CrudCode::generateActiveField code.
 			return "echo \$form->textArea(\$model, '{$column->name}', array('rows' => 5, 'cols' => 50, 'class' => ''))";
 		} else {
@@ -170,21 +155,7 @@ class GiixCrudCode extends CrudCode {
 				|| strtoupper($column->dbType) == 'BOOLEAN') {
 			return "echo \$form->checkBox(\$model, \"[{\${$languageColumnName}}]{$column->name}\")";
 		} else if (strtoupper($column->dbType) == 'DATE' || strtoupper($column->dbType) == 'DATETIME') {
-			return "\$form->widget('zii.widgets.jui.CJuiDatePicker', array(
-			'name' => \"{$modelClass}[{\${$languageColumnName}}][{$column->name}]\",
-			'attribute' => '[{\${$languageColumnName}}]{$column->name}',
-			'options' => array(
-				'showButtonPanel' => false,
-				'changeYear' => true,
-				'changeMonth' => true,
-				'dateFormat' => 'yy-mm-dd',
-				'yearRange' => '-5:+5',
-			),
-			'htmlOptions' => array(
-				'readonly' => 'readonly',
-				'value' => CHtml::value(\$model, \"[{\${$languageColumnName}}]{$column->name}\") ? date('Y-m-d', strtotime(CHtml::value(\$model, \"[{\${$languageColumnName}}]{$column->name}\"))) : date('Y-m-d'),
-			),
-			));\n";
+			return "echo \$form->textField(\$model, \"[{\${$languageColumnName}}][{$column->name}]\", array('class' => 'CJuiDatePicker', 'value' => (\$a = CHtml::resolveValue(\$model, \"[{\${$languageColumnName}}][{$column->name}]\")) ? date('Y-m-d', strtotime(\$a)) : date('Y-m-d')))";
 		} else if (stripos($column->dbType, 'text') !== false) { // Start of CrudCode::generateActiveField code.
 			return "echo \$form->textArea(\$model, \"[{\${$languageColumnName}}]{$column->name}\", array('rows' => 5, 'cols' => 50, 'class' => ''))";
 		} else {
@@ -449,7 +420,7 @@ EOM;
 		$result = array();
 		foreach ($relations as $relationName => $relation) {
 
-			if ($relation[0] == GxActiveRecord::HAS_MANY && $relation[1] == $GiixModelCode->generateClassName($i18nTableName) && $relation[2] == $this->tableSchema->primaryKey) {
+			if (($relation[0] == GxActiveRecord::HAS_ONE || $relation[0] == GxActiveRecord::HAS_MANY) && $relation[1] == $GiixModelCode->generateClassName($i18nTableName) && $relation[2] == $this->tableSchema->primaryKey) {
 				$this->i18n = new stdClass();
 
 				$this->i18n->table = $GiixModelCode->getTableSchema($i18nTableName);

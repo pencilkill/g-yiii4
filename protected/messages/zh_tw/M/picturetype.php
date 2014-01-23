@@ -18,10 +18,7 @@
  */
 return array (
   'Create Time' => '',
-  'Date Added' => '',
-  'News' => '',
-  'News|News' => '',
-  'Sort Order' => '',
-  'Top' => '',
+  'Picture Type' => '',
+  'PictureType|PictureTypes' => '',
   'Update Time' => '',
 );

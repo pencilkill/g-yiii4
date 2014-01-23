@@ -22,6 +22,5 @@ return array (
   'Picture' => '圖片管理',
   'Picture|Pictures' => '圖片管理',
   'Sort Order' => '排序',
-  'Status' => '啟用',
   'Update Time' => '更新時間',
 );

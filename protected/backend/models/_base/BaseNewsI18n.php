@@ -78,16 +78,18 @@ abstract class BaseNewsI18n extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('news_i18n_id', $this->news_i18n_id);
-		$criteria->compare('news_id', $this->news_id);
-		$criteria->compare('language_id', $this->language_id);
-		$criteria->compare('status', $this->status);
-		$criteria->compare('pic', $this->pic, true);
-		$criteria->compare('title', $this->title, true);
-		$criteria->compare('keywords', $this->keywords, true);
-		$criteria->compare('description', $this->description, true);
+		$criteria->compare("{$alias}.news_i18n_id", $this->news_i18n_id);
+		$criteria->compare("{$alias}.news_id", $this->news_id);
+		$criteria->compare("{$alias}.language_id", $this->language_id);
+		$criteria->compare("{$alias}.status", $this->status);
+		$criteria->compare("{$alias}.pic", $this->pic, true);
+		$criteria->compare("{$alias}.title", $this->title, true);
+		$criteria->compare("{$alias}.keywords", $this->keywords, true);
+		$criteria->compare("{$alias}.description", $this->description, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

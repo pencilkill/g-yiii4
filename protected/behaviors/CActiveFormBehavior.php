@@ -1,4 +1,10 @@
 <?php
+/**
+ * class CActiveFormBehavior file
+ *
+ * @author Sam@ozchamp.net
+ *
+ */
 class CActiveFormBehavior extends CBehavior{
 	public function getActiveFormAttribute($inputID){
 		return isset($this->getOwner()->attributes[$inputID]) ? $this->getOwner()->attributes[$inputID] : null;

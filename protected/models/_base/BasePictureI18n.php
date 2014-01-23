@@ -95,4 +95,5 @@ abstract class BasePictureI18n extends GxActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
+
 }

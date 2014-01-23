@@ -23,7 +23,6 @@
  */
 abstract class BaseNewsI18n extends GxActiveRecord {
 
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -33,7 +32,7 @@ abstract class BaseNewsI18n extends GxActiveRecord {
 	}
 
 	public static function label($n = 1) {
-		return Yii::t('M/newsi18n', 'NewsI18n|NewsI18ns', $n);
+		return Yii::t('m/newsi18n', 'NewsI18n|NewsI18ns', $n);
 	}
 
 	public static function representingColumn() {
@@ -65,42 +64,35 @@ abstract class BaseNewsI18n extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'news_i18n_id' => Yii::t('M/newsi18n', 'News I18n'),
+			'news_i18n_id' => Yii::t('m/newsi18n', 'News I18n'),
 			'news_id' => null,
 			'language_id' => null,
-			'status' => Yii::t('M/newsi18n', 'Status'),
-			'pic' => Yii::t('M/newsi18n', 'Pic'),
-			'title' => Yii::t('M/newsi18n', 'Title'),
-			'keywords' => Yii::t('M/newsi18n', 'Keywords'),
-			'description' => Yii::t('M/newsi18n', 'Description'),
+			'status' => Yii::t('m/newsi18n', 'Status'),
+			'pic' => Yii::t('m/newsi18n', 'Pic'),
+			'title' => Yii::t('m/newsi18n', 'Title'),
+			'keywords' => Yii::t('m/newsi18n', 'Keywords'),
+			'description' => Yii::t('m/newsi18n', 'Description'),
 			'news' => null,
 			'language' => null,
 		);
 	}
 
 	public function search() {
-		$alias = $this->getTableAlias(false, false);
+		$alias = $this->tableAlias;
 
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('{$alias}.news_i18n_id', $this->news_i18n_id);
-		$criteria->compare('{$alias}.news_id', $this->news_id);
-		$criteria->compare('{$alias}.language_id', $this->language_id);
-		$criteria->compare('{$alias}.status', $this->status);
-		$criteria->compare('{$alias}.pic', $this->pic, true);
-		$criteria->compare('{$alias}.title', $this->title, true);
-		$criteria->compare('{$alias}.keywords', $this->keywords, true);
-		$criteria->compare('{$alias}.description', $this->description, true);
-
+		$criteria->compare("{$alias}.news_i18n_id", $this->news_i18n_id);
+		$criteria->compare("{$alias}.news_id", $this->news_id);
+		$criteria->compare("{$alias}.language_id", $this->language_id);
+		$criteria->compare("{$alias}.status", $this->status);
+		$criteria->compare("{$alias}.pic", $this->pic, true);
+		$criteria->compare("{$alias}.title", $this->title, true);
+		$criteria->compare("{$alias}.keywords", $this->keywords, true);
+		$criteria->compare("{$alias}.description", $this->description, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
-			'sort' => array(
-				'attributes'=>array(
-					'*',
-				),
-			),
-			'pagination' => false,
 		));
 	}
 

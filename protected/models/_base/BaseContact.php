@@ -11,22 +11,22 @@
  *
  * @property integer $contact_id
  * @property integer $status
- * @property string $name
- * @property integer $gender
- * @property string $telphone
+ * @property string $firstname
+ * @property string $lastname
+ * @property integer $sex
+ * @property string $telephone
  * @property string $cellphone
  * @property string $fax
  * @property string $email
- * @property string $corporation
+ * @property string $company
  * @property string $address
  * @property string $message
- * @property string $note
+ * @property string $remark
  * @property string $create_time
  * @property string $update_time
  *
  */
 abstract class BaseContact extends GxActiveRecord {
-
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
@@ -37,24 +37,24 @@ abstract class BaseContact extends GxActiveRecord {
 	}
 
 	public static function label($n = 1) {
-		return Yii::t('M/contact', 'Contact|Contacts', $n);
+		return Yii::t('m/contact', 'Contact|Contacts', $n);
 	}
 
 	public static function representingColumn() {
-		return 'name';
+		return 'firstname';
 	}
 
 	public function rules() {
 		return array(
-			array('name, telphone, email', 'required'),
-			array('status, gender', 'numerical', 'integerOnly'=>true),
-			array('name', 'length', 'max'=>32),
-			array('telphone, cellphone, fax', 'length', 'max'=>16),
+			array('firstname, lastname, telephone, email', 'required'),
+			array('status, sex', 'numerical', 'integerOnly'=>true),
+			array('firstname, lastname', 'length', 'max'=>32),
+			array('telephone, cellphone, fax', 'length', 'max'=>16),
 			array('email', 'length', 'max'=>64),
-			array('corporation, address', 'length', 'max'=>256),
-			array('message, note, create_time, update_time', 'safe'),
-			array('status, gender, cellphone, fax, corporation, address, message, note, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('contact_id, status, name, gender, telphone, cellphone, fax, email, corporation, address, message, note, create_time, update_time', 'safe', 'on'=>'search'),
+			array('company, address', 'length', 'max'=>256),
+			array('message, remark, create_time, update_time', 'safe'),
+			array('status, sex, cellphone, fax, company, address, message, remark, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('contact_id, status, firstname, lastname, sex, telephone, cellphone, fax, email, company, address, message, remark, create_time, update_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -70,60 +70,48 @@ abstract class BaseContact extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'contact_id' => Yii::t('M/contact', 'Contact'),
-			'status' => Yii::t('M/contact', 'Status'),
-			'name' => Yii::t('M/contact', 'Name'),
-			'gender' => Yii::t('M/contact', 'Gender'),
-			'telphone' => Yii::t('M/contact', 'Telphone'),
-			'cellphone' => Yii::t('M/contact', 'Cellphone'),
-			'fax' => Yii::t('M/contact', 'Fax'),
-			'email' => Yii::t('M/contact', 'Email'),
-			'corporation' => Yii::t('M/contact', 'Corporation'),
-			'address' => Yii::t('M/contact', 'Address'),
-			'message' => Yii::t('M/contact', 'Message'),
-			'note' => Yii::t('M/contact', 'Note'),
-			'create_time' => Yii::t('M/contact', 'Create Time'),
-			'update_time' => Yii::t('M/contact', 'Update Time'),
+			'contact_id' => Yii::t('m/contact', 'Contact'),
+			'status' => Yii::t('m/contact', 'Status'),
+			'firstname' => Yii::t('m/contact', 'Firstname'),
+			'lastname' => Yii::t('m/contact', 'Lastname'),
+			'sex' => Yii::t('m/contact', 'Sex'),
+			'telephone' => Yii::t('m/contact', 'Telephone'),
+			'cellphone' => Yii::t('m/contact', 'Cellphone'),
+			'fax' => Yii::t('m/contact', 'Fax'),
+			'email' => Yii::t('m/contact', 'Email'),
+			'company' => Yii::t('m/contact', 'Company'),
+			'address' => Yii::t('m/contact', 'Address'),
+			'message' => Yii::t('m/contact', 'Message'),
+			'remark' => Yii::t('m/contact', 'Remark'),
+			'create_time' => Yii::t('m/contact', 'Create Time'),
+			'update_time' => Yii::t('m/contact', 'Update Time'),
 		);
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('contact_id', $this->contact_id);
-		$criteria->compare('status', $this->status);
-		$criteria->compare('name', $this->name, true);
-		$criteria->compare('gender', $this->gender);
-		$criteria->compare('telphone', $this->telphone, true);
-		$criteria->compare('cellphone', $this->cellphone, true);
-		$criteria->compare('fax', $this->fax, true);
-		$criteria->compare('email', $this->email, true);
-		$criteria->compare('corporation', $this->corporation, true);
-		$criteria->compare('address', $this->address, true);
-		$criteria->compare('message', $this->message, true);
-		$criteria->compare('note', $this->note, true);
-		$criteria->compare('create_time', $this->create_time, true);
-		$criteria->compare('update_time', $this->update_time, true);
-
+		$criteria->compare("{$alias}.contact_id", $this->contact_id);
+		$criteria->compare("{$alias}.status", $this->status);
+		$criteria->compare("{$alias}.firstname", $this->firstname, true);
+		$criteria->compare("{$alias}.lastname", $this->lastname, true);
+		$criteria->compare("{$alias}.sex", $this->sex);
+		$criteria->compare("{$alias}.telephone", $this->telephone, true);
+		$criteria->compare("{$alias}.cellphone", $this->cellphone, true);
+		$criteria->compare("{$alias}.fax", $this->fax, true);
+		$criteria->compare("{$alias}.email", $this->email, true);
+		$criteria->compare("{$alias}.company", $this->company, true);
+		$criteria->compare("{$alias}.address", $this->address, true);
+		$criteria->compare("{$alias}.message", $this->message, true);
+		$criteria->compare("{$alias}.remark", $this->remark, true);
+		$criteria->compare("{$alias}.create_time", $this->create_time, true);
+		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
-			'sort'=>array(
-				'attributes'=>array(
-					'*',
-				),
-			),
 		));
 	}
 
-	public function behaviors() {
-		return array(
-			'CTimestampBehavior'=>array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-				'updateAttribute' => 'update_time',
-				'createAttribute' => 'create_time',
-				'setUpdateOnCreate' => true,
-			),
-        );
-	}
 }

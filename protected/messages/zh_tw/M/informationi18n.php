@@ -21,5 +21,6 @@ return array (
   'Information I18n' => '',
   'InformationI18n|InformationI18ns' => '',
   'Keywords' => '',
+  'Status' => '',
   'Title' => '',
 );

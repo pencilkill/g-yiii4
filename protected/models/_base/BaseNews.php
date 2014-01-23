@@ -11,17 +11,14 @@
  *
  * @property integer $news_id
  * @property integer $top
- * @property integer $sort_id
- * @property integer $status
+ * @property integer $sort_order
  * @property string $date_added
  * @property string $create_time
  * @property string $update_time
  *
- * @property NewsI18n[] $newsI18ns
+ * @property NewsI18n $newsI18n
  */
 abstract class BaseNews extends GxActiveRecord {
-
-	public $filterI18n = null;
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
@@ -32,7 +29,7 @@ abstract class BaseNews extends GxActiveRecord {
 	}
 
 	public static function label($n = 1) {
-		return Yii::t('M/news', 'News|News', $n);
+		return Yii::t('m/news', 'News|News', $n);
 	}
 
 	public static function representingColumn() {
@@ -41,16 +38,16 @@ abstract class BaseNews extends GxActiveRecord {
 
 	public function rules() {
 		return array(
-			array('top, sort_id, status', 'numerical', 'integerOnly'=>true),
+			array('top, sort_order', 'numerical', 'integerOnly'=>true),
 			array('date_added, create_time, update_time', 'safe'),
-			array('top, sort_id, status, date_added, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('news_id, top, sort_id, status, date_added, create_time, update_time', 'safe', 'on'=>'search'),
+			array('top, sort_order, date_added, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('news_id, top, sort_order, date_added, create_time, update_time', 'safe', 'on'=>'search'),
 		);
 	}
 
 	public function relations() {
 		return array(
-			'newsI18ns' => array(self::HAS_ONE, 'NewsI18n', 'news_id', 'joinType' => 'RIGHT OUTER JOIN',  'scopes' => array('i8' => array(Yii::app()->params->languageId))),
+			'newsI18n' => array(self::HAS_ONE, 'NewsI18n', 'news_id', 'joinType' => 'RIGHT OUTER JOIN', 'scopes' => array('t')),
 		);
 	}
 
@@ -61,62 +58,30 @@ abstract class BaseNews extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'news_id' => Yii::t('M/news', 'News'),
-			'top' => Yii::t('M/news', 'Top'),
-			'sort_id' => Yii::t('M/news', 'Sort'),
-			'status' => Yii::t('M/news', 'Status'),
-			'date_added' => Yii::t('M/news', 'Date Added'),
-			'create_time' => Yii::t('M/news', 'Create Time'),
-			'update_time' => Yii::t('M/news', 'Update Time'),
+			'news_id' => Yii::t('m/news', 'News'),
+			'top' => Yii::t('m/news', 'Top'),
+			'sort_order' => Yii::t('m/news', 'Sort Order'),
+			'date_added' => Yii::t('m/news', 'Date Added'),
+			'create_time' => Yii::t('m/news', 'Create Time'),
+			'update_time' => Yii::t('m/news', 'Update Time'),
 			'newsI18ns' => null,
 		);
 	}
 
 	public function search() {
-		$alias = $this->getTableAlias(false, false);
+		$alias = $this->tableAlias;
 
 		$criteria = new CDbCriteria;
 
 		$criteria->compare("{$alias}.news_id", $this->news_id);
 		$criteria->compare("{$alias}.top", $this->top);
-		$criteria->compare("{$alias}.sort_id", $this->sort_id);
-		$criteria->compare("{$alias}.status", $this->status);
+		$criteria->compare("{$alias}.sort_order", $this->sort_order);
 		$criteria->compare("{$alias}.date_added", $this->date_added, true);
 		$criteria->compare("{$alias}.create_time", $this->create_time, true);
 		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 
-		if($this->filterI18n !== null){
-			$criteria->with = array(
-				'newsI18ns' => array(
-					'scopes' => array(
-						'i8' => array(Yii::app()->params->languageId),
-					),
-				),
-			);
-			$criteria->group = "{$alias}.news_id";
-			$criteria->together = true;
-
-			$criteria->compare('newsI18ns.pic', $this->filterI18n->pic, true);
-			$criteria->compare('newsI18ns.title', $this->filterI18n->title, true);
-			$criteria->compare('newsI18ns.keywords', $this->filterI18n->keywords, true);
-			$criteria->compare('newsI18ns.description', $this->filterI18n->description, true);
-		}
-
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
-			'sort' => array(
-				'attributes'=>array(
-					'sort_id'=>array(
-						'desc'=>"{$alias}.sort_id DESC",
-						'asc'=>"{$alias}.sort_id",
-					),
-					'*',
-				),
-			),
-			'pagination' => array(
-				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
-				'pageVar' => 'page',
-			),
 		));
 	}
 

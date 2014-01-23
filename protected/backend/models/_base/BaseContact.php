@@ -89,23 +89,25 @@ abstract class BaseContact extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('contact_id', $this->contact_id);
-		$criteria->compare('status', $this->status);
-		$criteria->compare('firstname', $this->firstname, true);
-		$criteria->compare('lastname', $this->lastname, true);
-		$criteria->compare('sex', $this->sex);
-		$criteria->compare('telephone', $this->telephone, true);
-		$criteria->compare('cellphone', $this->cellphone, true);
-		$criteria->compare('fax', $this->fax, true);
-		$criteria->compare('email', $this->email, true);
-		$criteria->compare('company', $this->company, true);
-		$criteria->compare('address', $this->address, true);
-		$criteria->compare('message', $this->message, true);
-		$criteria->compare('remark', $this->remark, true);
-		$criteria->compare('create_time', $this->create_time, true);
-		$criteria->compare('update_time', $this->update_time, true);
+		$criteria->compare("{$alias}.contact_id", $this->contact_id);
+		$criteria->compare("{$alias}.status", $this->status);
+		$criteria->compare("{$alias}.firstname", $this->firstname, true);
+		$criteria->compare("{$alias}.lastname", $this->lastname, true);
+		$criteria->compare("{$alias}.sex", $this->sex);
+		$criteria->compare("{$alias}.telephone", $this->telephone, true);
+		$criteria->compare("{$alias}.cellphone", $this->cellphone, true);
+		$criteria->compare("{$alias}.fax", $this->fax, true);
+		$criteria->compare("{$alias}.email", $this->email, true);
+		$criteria->compare("{$alias}.company", $this->company, true);
+		$criteria->compare("{$alias}.address", $this->address, true);
+		$criteria->compare("{$alias}.message", $this->message, true);
+		$criteria->compare("{$alias}.remark", $this->remark, true);
+		$criteria->compare("{$alias}.create_time", $this->create_time, true);
+		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

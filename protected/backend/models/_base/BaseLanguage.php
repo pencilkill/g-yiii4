@@ -79,4 +79,20 @@ abstract class BaseLanguage extends GxActiveRecord {
 			'productI18ns' => null,
 		);
 	}
+
+	public function search() {
+		$alias = $this->tableAlias;
+
+		$criteria = new CDbCriteria;
+
+		$criteria->compare("{$alias}.language_id", $this->language_id);
+		$criteria->compare("{$alias}.code", $this->code, true);
+		$criteria->compare("{$alias}.title", $this->title, true);
+		$criteria->compare("{$alias}.sort_order", $this->sort_order);
+		$criteria->compare("{$alias}.status", $this->status);
+
+		return new CActiveDataProvider($this, array(
+			'criteria' => $criteria,
+		));
+	}
 }

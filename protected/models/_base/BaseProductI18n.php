@@ -12,6 +12,7 @@
  * @property integer $product_i18n_id
  * @property integer $product_id
  * @property integer $language_id
+ * @property integer $status
  * @property string $pic
  * @property string $title
  * @property string $keywords
@@ -22,7 +23,6 @@
  */
 abstract class BaseProductI18n extends GxActiveRecord {
 
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -32,7 +32,7 @@ abstract class BaseProductI18n extends GxActiveRecord {
 	}
 
 	public static function label($n = 1) {
-		return Yii::t('M/producti18n', 'ProductI18n|ProductI18ns', $n);
+		return Yii::t('m/producti18n', 'ProductI18n|ProductI18ns', $n);
 	}
 
 	public static function representingColumn() {
@@ -42,11 +42,11 @@ abstract class BaseProductI18n extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('product_id, language_id, pic, title', 'required'),
-			array('product_id, language_id', 'numerical', 'integerOnly'=>true),
+			array('product_id, language_id, status', 'numerical', 'integerOnly'=>true),
 			array('pic, title', 'length', 'max'=>256),
 			array('keywords, description', 'safe'),
-			array('keywords, description', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('product_i18n_id, product_id, language_id, pic, title, keywords, description', 'safe', 'on'=>'search'),
+			array('status, keywords, description', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('product_i18n_id, product_id, language_id, status, pic, title, keywords, description', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,37 +64,35 @@ abstract class BaseProductI18n extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'product_i18n_id' => Yii::t('M/producti18n', 'Product I18n'),
+			'product_i18n_id' => Yii::t('m/producti18n', 'Product I18n'),
 			'product_id' => null,
 			'language_id' => null,
-			'pic' => Yii::t('M/producti18n', 'Pic'),
-			'title' => Yii::t('M/producti18n', 'Title'),
-			'keywords' => Yii::t('M/producti18n', 'Keywords'),
-			'description' => Yii::t('M/producti18n', 'Description'),
+			'status' => Yii::t('m/producti18n', 'Status'),
+			'pic' => Yii::t('m/producti18n', 'Pic'),
+			'title' => Yii::t('m/producti18n', 'Title'),
+			'keywords' => Yii::t('m/producti18n', 'Keywords'),
+			'description' => Yii::t('m/producti18n', 'Description'),
 			'product' => null,
 			'language' => null,
 		);
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('product_i18n_id', $this->product_i18n_id);
-		$criteria->compare('product_id', $this->product_id);
-		$criteria->compare('language_id', $this->language_id);
-		$criteria->compare('pic', $this->pic, true);
-		$criteria->compare('title', $this->title, true);
-		$criteria->compare('keywords', $this->keywords, true);
-		$criteria->compare('description', $this->description, true);
-
+		$criteria->compare("{$alias}.product_i18n_id", $this->product_i18n_id);
+		$criteria->compare("{$alias}.product_id", $this->product_id);
+		$criteria->compare("{$alias}.language_id", $this->language_id);
+		$criteria->compare("{$alias}.status", $this->status);
+		$criteria->compare("{$alias}.pic", $this->pic, true);
+		$criteria->compare("{$alias}.title", $this->title, true);
+		$criteria->compare("{$alias}.keywords", $this->keywords, true);
+		$criteria->compare("{$alias}.description", $this->description, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
-			'sort'=>array(
-				'attributes'=>array(
-					'*',
-				),
-			),
 		));
 	}
 

@@ -20,7 +20,6 @@ return array (
   'Category' => '',
   'Category|Categories' => '',
   'Create Time' => '',
-  'Parent' => '',
-  'Sort' => '',
+  'Sort Order' => '',
   'Update Time' => '',
 );

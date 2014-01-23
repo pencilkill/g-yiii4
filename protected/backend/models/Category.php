@@ -67,7 +67,7 @@ class Category extends BaseCategory
 		$criteria->group = "{$alias}.category_id";
 		$criteria->together = true;
 
-		$criteria->with = array('categoryI18ns');
+		$criteria->with[] = 'categoryI18ns';
 		$criteria->compare('categoryI18ns.title', $this->filter->categoryI18ns->title, true);
 		$criteria->compare('categoryI18ns.keywords', $this->filter->categoryI18ns->keywords, true);
 		$criteria->compare('categoryI18ns.description', $this->filter->categoryI18ns->description, true);

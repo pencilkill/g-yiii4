@@ -66,12 +66,14 @@ abstract class BaseAuthassignment extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('itemname', $this->itemname);
-		$criteria->compare('userid', $this->userid, true);
-		$criteria->compare('bizrule', $this->bizrule, true);
-		$criteria->compare('data', $this->data, true);
+		$criteria->compare("{$alias}.itemname", $this->itemname);
+		$criteria->compare("{$alias}.userid", $this->userid, true);
+		$criteria->compare("{$alias}.bizrule", $this->bizrule, true);
+		$criteria->compare("{$alias}.data", $this->data, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

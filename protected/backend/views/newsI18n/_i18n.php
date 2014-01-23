@@ -39,4 +39,24 @@
 			</td>
 		</tr><!-- row -->
 
+        <tr>
+            <td>
+                <?php echo $form->labelEx($model,'status'); ?>
+            </td>
+            <td>
+                <?php echo $form->checkBox($model, "[{$language_id}]status"); ?>
+                <?php echo $form->error($model, "[$language_id]status"); ?>
+            </td>
+        </tr><!-- row -->
+
+        <tr style="display:none; visibility: hidden; height: 0px;">
+            <td>
+                <?php echo $form->labelEx($model, "[$language_id]language_id"); ?>
+            </td>
+            <td>
+                <?php echo $form->hiddenField($model, "[$language_id]language_id", array('value' => $language_id)); ?>
+                <?php echo $form->error($model, "[$language_id]language_id"); ?>
+            </td>
+        </tr><!-- row -->
+
 		</table>

@@ -22,17 +22,13 @@ class CategoryController extends GxController {
 		$model = new Category('search');
 		$model->unsetAttributes();
 
-		$i18n = new CategoryI18n('search');
-		$i18n->unsetAttributes();
+		$model->filterInstance();
 
-		$model->filterI18n = $i18n;
+		$model->filter->categoryI18n = new CategoryI18n('search');
+		$model->filter->categoryI18n->unsetAttributes();
 
 		if (isset($_GET['Category'])){
 			$model->setAttributes($_GET['Category']);
-		}
-
-		if (isset($_GET['CategoryI18n'])){
-			$i18n->setAttributes($_GET['CategoryI18n']);
 		}
 
 		$this->render('index', array(
@@ -43,8 +39,8 @@ class CategoryController extends GxController {
 	public function actionView($id) {
 		$model = $this->loadModel($id, 'Category');
 
-		//Yii::app()->clientScript->registerMetaTag($model->categoryI18ns->keywords, 'keywords', null, null, 'keywords');
-    	//Yii::app()->clientScript->registerMetaTag($model->categoryI18ns->description, 'description', null, null, 'description');
+		//Yii::app()->clientScript->registerMetaTag($model->categoryI18n->keywords, 'keywords', null, null, 'keywords');
+    	//Yii::app()->clientScript->registerMetaTag($model->categoryI18n->description, 'description', null, null, 'description');
 
 		$this->render('view', array(
 			'model' => $model,

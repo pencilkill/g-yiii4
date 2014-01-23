@@ -21,7 +21,6 @@
  */
 abstract class BaseCategoryI18n extends GxActiveRecord {
 
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -31,7 +30,7 @@ abstract class BaseCategoryI18n extends GxActiveRecord {
 	}
 
 	public static function label($n = 1) {
-		return Yii::t('M/categoryi18n', 'CategoryI18n|CategoryI18ns', $n);
+		return Yii::t('m/categoryi18n', 'CategoryI18n|CategoryI18ns', $n);
 	}
 
 	public static function representingColumn() {
@@ -63,35 +62,31 @@ abstract class BaseCategoryI18n extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'category_i18n_id' => Yii::t('M/categoryi18n', 'Category I18n'),
+			'category_i18n_id' => Yii::t('m/categoryi18n', 'Category I18n'),
 			'category_id' => null,
 			'language_id' => null,
-			'title' => Yii::t('M/categoryi18n', 'Title'),
-			'keywords' => Yii::t('M/categoryi18n', 'Keywords'),
-			'description' => Yii::t('M/categoryi18n', 'Description'),
+			'title' => Yii::t('m/categoryi18n', 'Title'),
+			'keywords' => Yii::t('m/categoryi18n', 'Keywords'),
+			'description' => Yii::t('m/categoryi18n', 'Description'),
 			'category' => null,
 			'language' => null,
 		);
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('category_i18n_id', $this->category_i18n_id);
-		$criteria->compare('category_id', $this->category_id);
-		$criteria->compare('language_id', $this->language_id);
-		$criteria->compare('title', $this->title, true);
-		$criteria->compare('keywords', $this->keywords, true);
-		$criteria->compare('description', $this->description, true);
-
+		$criteria->compare("{$alias}.category_i18n_id", $this->category_i18n_id);
+		$criteria->compare("{$alias}.category_id", $this->category_id);
+		$criteria->compare("{$alias}.language_id", $this->language_id);
+		$criteria->compare("{$alias}.title", $this->title, true);
+		$criteria->compare("{$alias}.keywords", $this->keywords, true);
+		$criteria->compare("{$alias}.description", $this->description, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
-			'sort'=>array(
-				'attributes'=>array(
-					'*',
-				),
-			),
 		));
 	}
 

@@ -38,23 +38,19 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 	public function actionIndex() {
 		$model = new <?php echo $this->modelClass; ?>('search');
 		$model->unsetAttributes();
-<?php if($this->i18nRelation):?>
+<?php if($this->manyRelation){?>
 
-		$i18n = new <?php echo $this->i18nRelation[3]?>('search');
-		$i18n->unsetAttributes();
+		$model->filterInstance();
+<?php }?>
+<?php if($this->i18n):?>
 
-		$model->filterI18n = $i18n;
+		$model->filter-><?php echo $this->i18n->relationName?> = new <?php echo $this->i18n->className?>('search');
+		$model->filter-><?php echo $this->i18n->relationName?>->unsetAttributes();
 <?php endif;?>
 
 		if (isset($_GET['<?php echo $this->modelClass; ?>'])){
 			$model->setAttributes($_GET['<?php echo $this->modelClass; ?>']);
 		}
-<?php if($this->i18nRelation):?>
-
-		if (isset($_GET['<?php echo $this->i18nRelation[3]?>'])){
-			$i18n->setAttributes($_GET['<?php echo $this->i18nRelation[3]?>']);
-		}
-<?php endif;?>
 
 		$this->render('index', array(
 			'model' => $model,
@@ -64,8 +60,10 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 	public function actionView($id) {
 		$model = $this->loadModel($id, '<?php echo $this->modelClass; ?>');
 
-		//Yii::app()->clientScript->registerMetaTag($model-><?php echo $this->i18nRelation[0]?>->keywords, 'keywords', null, null, 'keywords');
-    	//Yii::app()->clientScript->registerMetaTag($model-><?php echo $this->i18nRelation[0]?>->description, 'description', null, null, 'description');
+<?php if($this->i18n){?>
+		//Yii::app()->clientScript->registerMetaTag($model-><?php echo $this->i18n->relationName?>->keywords, 'keywords', null, null, 'keywords');
+    	//Yii::app()->clientScript->registerMetaTag($model-><?php echo $this->i18n->relationName?>->description, 'description', null, null, 'description');
+<?php }?>
 
 		$this->render('view', array(
 			'model' => $model,

@@ -22,5 +22,6 @@ return array (
   'News I18n' => '',
   'NewsI18n|NewsI18ns' => '',
   'Pic' => '',
+  'Status' => '',
   'Title' => '',
 );

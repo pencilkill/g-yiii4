@@ -102,7 +102,7 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 			'CActiveRecordI18nBehavior' => array(
 				'class' => 'backend.behaviors.CActiveRecordI18nBehavior',
 				'relations' => array(
-					'categoryI18ns' => array(
+					'<?php echo $i18n->relationNamePluralized?>' => array(
 						'indexes' => CHtml::listData(Language::model()->findAll(), 'language_id', 'language_id'),
 					),
 				)
@@ -138,7 +138,7 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 		$criteria->together = true;
 <?php if($i18n):?>
 
-		$criteria->with = array('<?php echo $i18n->relationNamePluralized?>');
+		$criteria->with[] = '<?php echo $i18n->relationNamePluralized?>';
 <?php foreach($i18n->table->columns as $name=>$column):?>
 <?php if($column->autoIncrement) continue;?>
 <?php if($column->isForeignKey && isset($columns[$name]) && $columns[$name]->isPrimaryKey) continue;?>

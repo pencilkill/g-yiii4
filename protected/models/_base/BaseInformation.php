@@ -10,16 +10,16 @@
  * followed by relations of table "information" available as properties of the model.
  *
  * @property integer $information_id
- * @property integer $sort_id
- * @property integer $status
+ * @property integer $parent_id
+ * @property integer $sort_order
  * @property string $create_time
  * @property string $update_time
  *
- * @property InformationI18n[] $informationI18ns
+ * @property Information $parent
+ * @property Information[] $informations
+ * @property InformationI18n $informationI18n
  */
 abstract class BaseInformation extends GxActiveRecord {
-
-	public $filterI18n = null;
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
@@ -30,7 +30,7 @@ abstract class BaseInformation extends GxActiveRecord {
 	}
 
 	public static function label($n = 1) {
-		return Yii::t('M/information', 'Information|Informations', $n);
+		return Yii::t('m/information', 'Information|Informations', $n);
 	}
 
 	public static function representingColumn() {
@@ -39,16 +39,18 @@ abstract class BaseInformation extends GxActiveRecord {
 
 	public function rules() {
 		return array(
-			array('sort_id, status', 'numerical', 'integerOnly'=>true),
+			array('parent_id, sort_order', 'numerical', 'integerOnly'=>true),
 			array('create_time, update_time', 'safe'),
-			array('sort_id, status, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('information_id, sort_id, status, create_time, update_time', 'safe', 'on'=>'search'),
+			array('parent_id, sort_order, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('information_id, parent_id, sort_order, create_time, update_time', 'safe', 'on'=>'search'),
 		);
 	}
 
 	public function relations() {
 		return array(
-			'informationI18ns' => array(self::HAS_ONE, 'InformationI18n', 'information_id', 'joinType' => 'RIGHT OUTER JOIN',  'scopes' => array('i8' => array(Yii::app()->params->languageId))),
+			'parent' => array(self::BELONGS_TO, 'Information', 'parent_id'),
+			'informations' => array(self::HAS_MANY, 'Information', 'parent_id'),
+			'informationI18n' => array(self::HAS_ONE, 'InformationI18n', 'information_id', 'joinType' => 'RIGHT OUTER JOIN', 'scopes' => array('t')),
 		);
 	}
 
@@ -59,57 +61,30 @@ abstract class BaseInformation extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'information_id' => Yii::t('M/information', 'Information'),
-			'sort_id' => Yii::t('M/information', 'Sort'),
-			'status' => Yii::t('M/information', 'Status'),
-			'create_time' => Yii::t('M/information', 'Create Time'),
-			'update_time' => Yii::t('M/information', 'Update Time'),
+			'information_id' => Yii::t('m/information', 'Information'),
+			'parent_id' => null,
+			'sort_order' => Yii::t('m/information', 'Sort Order'),
+			'create_time' => Yii::t('m/information', 'Create Time'),
+			'update_time' => Yii::t('m/information', 'Update Time'),
+			'parent' => null,
+			'informations' => null,
 			'informationI18ns' => null,
 		);
 	}
 
 	public function search() {
-		$alias = $this->getTableAlias(false, false);
+		$alias = $this->tableAlias;
 
 		$criteria = new CDbCriteria;
 
 		$criteria->compare("{$alias}.information_id", $this->information_id);
-		$criteria->compare("{$alias}.sort_id", $this->sort_id);
-		$criteria->compare("{$alias}.status", $this->status);
+		$criteria->compare("{$alias}.parent_id", $this->parent_id);
+		$criteria->compare("{$alias}.sort_order", $this->sort_order);
 		$criteria->compare("{$alias}.create_time", $this->create_time, true);
 		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 
-		if($this->filterI18n !== null){
-			$criteria->with = array(
-				'informationI18ns' => array(
-					'scopes' => array(
-						'i8' => array(Yii::app()->params->languageId),
-					),
-				),
-			);
-			$criteria->group = "{$alias}.information_id";
-			$criteria->together = true;
-
-			$criteria->compare('informationI18ns.title', $this->filterI18n->title, true);
-			$criteria->compare('informationI18ns.keywords', $this->filterI18n->keywords, true);
-			$criteria->compare('informationI18ns.description', $this->filterI18n->description, true);
-		}
-
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
-			'sort' => array(
-				'attributes'=>array(
-					'sort_id'=>array(
-						'desc'=>"{$alias}.sort_id DESC",
-						'asc'=>"{$alias}.sort_id",
-					),
-					'*',
-				),
-			),
-			'pagination' => array(
-				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
-				'pageVar' => 'page',
-			),
 		));
 	}
 

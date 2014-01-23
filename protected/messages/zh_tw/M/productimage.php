@@ -17,11 +17,7 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Create Time' => '',
-  'Date Added' => '',
-  'News' => '',
-  'News|News' => '',
-  'Sort Order' => '',
-  'Top' => '',
-  'Update Time' => '',
+  'Pic' => '',
+  'Product Image' => '',
+  'ProductImage|ProductImages' => '',
 );

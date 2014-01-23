@@ -38,7 +38,8 @@
 	$relationModel = $relationData[1];
 
 	if($i18n && $relationModel == $i18n->className){
-		echo $relationModel . ' $' . $i18n->relationName . "\n * @property ";
+		echo $relationModel . ' $' . $i18n->relationName . "\n";
+		continue;
 	}
 
 	switch($relationType) {
@@ -99,8 +100,14 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 	if($i18n && preg_match("/^\s*array\(\s*self::HAS_MANY\s*,\s*'{$i18n->className}',\s*/i", $relation)) {
 		$name = $i18n->relationName;
 		$relation = preg_replace('/(^\s*)array\(\s*self::HAS_MANY\s*/', '\\1array(self::HAS_ONE', $relation);
-		$relation = preg_replace('/^([^\)]*?)(\)\s*)/', '\\1, \'scopes\' => array(\'t\' => array(Yii::app()->params->languageId)))', $relation);
-	}?>
+if($i18n && ($a = $i18n->table->getColumn('status')) && $a->type == 'integer'){
+		$relation = preg_replace('/^([^\)]*?)(\)\s*)/', '\\1, \'joinType\' => \'RIGHT OUTER JOIN\', \'scopes\' => array(\'t\'))', $relation);
+}else{
+		$relation = preg_replace('/^([^\)]*?)(\)\s*)/', '\\1, \'scopes\' => array(\'t\'))', $relation);
+}
+
+	}
+?>
 			<?php echo "'{$name}' => {$relation},\n"; ?>
 <?php endforeach; ?>
 		);
@@ -127,7 +134,7 @@ abstract class <?php echo $this->baseModelClass; ?> extends <?php echo $this->ba
 	}
 
 	public function search() {
-		$alias = $this->getTableAlias(false, false);
+		$alias = $this->tableAlias;
 
 		$criteria = new CDbCriteria;
 

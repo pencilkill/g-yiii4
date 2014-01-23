@@ -171,6 +171,26 @@ jQuery(function($) {
 
 <?php $this->widget('frontend.extensions.ckeditor.CKEditorWidget', array('htmlOptions' => array('class'=>'fck'))); ?>
 <?php $this->widget('frontend.extensions.fancybox.EFancyBox', array('target' => null, 'config' => array())); ?>
-
+<?php
+	$this->widget('zii.widgets.jui.CJuiDatePicker',
+		array(
+			'flat' => false,
+			'language' => Yii::app()->language,
+			'options' => array(
+				'showButtonPanel' => false,
+				'changeYear' => true,
+				'changeMonth' => true,
+				'dateFormat' => 'yy-mm-dd',
+				'yearRange' => '-5:+5',
+			),
+			'htmlOptions' => array(
+				'readonly' => 'readonly',
+				'id' => 'CJuiDatePickerTemplate,.CJuiDatePicker',
+				'class' => 'CJuiDatePickerTemplate',
+				'name' => 'CJuiDatePickerTemplate',
+				'value' => date('Y-m-d'),
+				'style' => 'display:none; width: 0px; height:0px; visibility:hidden;',
+	)), true);
+?>
 </body>
 </html>

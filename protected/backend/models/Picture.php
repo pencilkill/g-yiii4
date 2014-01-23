@@ -25,7 +25,7 @@ class Picture extends BasePicture
 			'CActiveRecordI18nBehavior' => array(
 				'class' => 'backend.behaviors.CActiveRecordI18nBehavior',
 				'relations' => array(
-					'categoryI18ns' => array(
+					'pictureI18ns' => array(
 						'indexes' => CHtml::listData(Language::model()->findAll(), 'language_id', 'language_id'),
 					),
 				)
@@ -54,7 +54,8 @@ class Picture extends BasePicture
 		$criteria->group = "{$alias}.picture_id";
 		$criteria->together = true;
 
-		$criteria->with = array('pictureI18ns');
+		$criteria->with[] = 'pictureI18ns';
+		$criteria->compare('pictureI18ns.status', $this->filter->pictureI18ns->status);
 		$criteria->compare('pictureI18ns.url', $this->filter->pictureI18ns->url, true);
 		$criteria->compare('pictureI18ns.title', $this->filter->pictureI18ns->title, true);
 		$criteria->compare('pictureI18ns.keywords', $this->filter->pictureI18ns->keywords, true);

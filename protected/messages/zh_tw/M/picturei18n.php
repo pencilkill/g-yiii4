@@ -17,11 +17,11 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Create Time' => '',
-  'Date Added' => '',
-  'News' => '',
-  'News|News' => '',
-  'Sort Order' => '',
-  'Top' => '',
-  'Update Time' => '',
+  'Description' => '',
+  'Keywords' => '',
+  'Picture I18n' => '',
+  'PictureI18n|PictureI18ns' => '',
+  'Status' => '',
+  'Title' => '',
+  'Url' => '',
 );

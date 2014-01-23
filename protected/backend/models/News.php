@@ -25,7 +25,7 @@ class News extends BaseNews
 			'CActiveRecordI18nBehavior' => array(
 				'class' => 'backend.behaviors.CActiveRecordI18nBehavior',
 				'relations' => array(
-					'categoryI18ns' => array(
+					'newsI18ns' => array(
 						'indexes' => CHtml::listData(Language::model()->findAll(), 'language_id', 'language_id'),
 					),
 				)
@@ -52,7 +52,7 @@ class News extends BaseNews
 		$criteria->group = "{$alias}.news_id";
 		$criteria->together = true;
 
-		$criteria->with = array('newsI18ns');
+		$criteria->with[] = 'newsI18ns';
 		$criteria->compare('newsI18ns.status', $this->filter->newsI18ns->status);
 		$criteria->compare('newsI18ns.pic', $this->filter->newsI18ns->pic, true);
 		$criteria->compare('newsI18ns.title', $this->filter->newsI18ns->title, true);

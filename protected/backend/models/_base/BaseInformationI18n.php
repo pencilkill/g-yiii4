@@ -76,15 +76,17 @@ abstract class BaseInformationI18n extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('information_i18n_id', $this->information_i18n_id);
-		$criteria->compare('information_id', $this->information_id);
-		$criteria->compare('language_id', $this->language_id);
-		$criteria->compare('status', $this->status);
-		$criteria->compare('title', $this->title, true);
-		$criteria->compare('keywords', $this->keywords, true);
-		$criteria->compare('description', $this->description, true);
+		$criteria->compare("{$alias}.information_i18n_id", $this->information_i18n_id);
+		$criteria->compare("{$alias}.information_id", $this->information_id);
+		$criteria->compare("{$alias}.language_id", $this->language_id);
+		$criteria->compare("{$alias}.status", $this->status);
+		$criteria->compare("{$alias}.title", $this->title, true);
+		$criteria->compare("{$alias}.keywords", $this->keywords, true);
+		$criteria->compare("{$alias}.description", $this->description, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

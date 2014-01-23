@@ -25,4 +25,4 @@ $this->breadcrumbs = array(
 <?php endforeach;?>
 </ul>
 
-<?php $this->widget('CLinkPager', array('pages' => $model->getPagination()));?>
+<?php $this->widget('ELinkPager', array('pages' => $model->getPagination()));?>

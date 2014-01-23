@@ -35,7 +35,7 @@ class Information extends BaseInformation
 			'CActiveRecordI18nBehavior' => array(
 				'class' => 'backend.behaviors.CActiveRecordI18nBehavior',
 				'relations' => array(
-					'categoryI18ns' => array(
+					'informationI18ns' => array(
 						'indexes' => CHtml::listData(Language::model()->findAll(), 'language_id', 'language_id'),
 					),
 				)
@@ -66,7 +66,7 @@ class Information extends BaseInformation
 		$criteria->group = "{$alias}.information_id";
 		$criteria->together = true;
 
-		$criteria->with = array('informationI18ns');
+		$criteria->with[] = 'informationI18ns';
 		$criteria->compare('informationI18ns.status', $this->filter->informationI18ns->status);
 		$criteria->compare('informationI18ns.title', $this->filter->informationI18ns->title, true);
 		$criteria->compare('informationI18ns.keywords', $this->filter->informationI18ns->keywords, true);

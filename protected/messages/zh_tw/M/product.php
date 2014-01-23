@@ -18,11 +18,8 @@
  */
 return array (
   'Create Time' => '',
-  'Date Added' => '',
   'Product' => '',
   'Product|Products' => '',
-  'Sort' => '',
-  'Status' => '',
-  'Top' => '',
+  'Sort Order' => '',
   'Update Time' => '',
 );

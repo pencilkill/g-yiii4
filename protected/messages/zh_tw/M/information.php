@@ -20,7 +20,6 @@ return array (
   'Create Time' => '',
   'Information' => '',
   'Information|Informations' => '',
-  'Sort' => '',
-  'Status' => '',
+  'Sort Order' => '',
   'Update Time' => '',
 );

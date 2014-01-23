@@ -1,8 +1,8 @@
 <?php
 
-Yii::import('frontend.models._base.BaseProduct2category');
+Yii::import('frontend.models._base.BaseProductImage');
 
-class Product2category extends BaseProduct2category
+class ProductImage extends BaseProductImage
 {
 
 	public static function model($className=__CLASS__) {
@@ -13,7 +13,7 @@ class Product2category extends BaseProduct2category
 		$alias = $this->getTableAlias(false, false);
 
 		return CMap::mergeArray(parent::defaultScope(), array(
-			'order' => "{$alias}.product2category_id DESC",
+			'order' => "{$alias}.product_image_id DESC",
 		));
 	}
 
@@ -22,21 +22,24 @@ class Product2category extends BaseProduct2category
 		$alias = $this->tableAlias;
 		$criteria = $_provider->getCriteria();
 
-		$criteria->group = "{$alias}.product2category_id";
+		$criteria->group = "{$alias}.product_image_id";
 		$criteria->together = true;
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
 				'defaultOrder' => array(
-					"{$alias}.product2category_id" => CSort::SORT_ASC,
+					"{$alias}.product_image_id" => CSort::SORT_ASC,
 				),
 				'multiSort'=>true,
 				'attributes'=>array(
 					'*',
 				),
 			),
-			'pagination' => false,
+			'pagination' => array(
+				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
+				'pageVar' => 'page',
+			),
 		));
 	}
 }

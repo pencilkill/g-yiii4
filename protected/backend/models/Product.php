@@ -25,7 +25,7 @@ class Product extends BaseProduct
 			'CActiveRecordI18nBehavior' => array(
 				'class' => 'backend.behaviors.CActiveRecordI18nBehavior',
 				'relations' => array(
-					'categoryI18ns' => array(
+					'productI18ns' => array(
 						'indexes' => CHtml::listData(Language::model()->findAll(), 'language_id', 'language_id'),
 					),
 				)
@@ -54,7 +54,7 @@ class Product extends BaseProduct
 		$criteria->group = "{$alias}.product_id";
 		$criteria->together = true;
 
-		$criteria->with = array('productI18ns');
+		$criteria->with[] = 'productI18ns';
 		$criteria->compare('productI18ns.status', $this->filter->productI18ns->status);
 		$criteria->compare('productI18ns.pic', $this->filter->productI18ns->pic, true);
 		$criteria->compare('productI18ns.title', $this->filter->productI18ns->title, true);

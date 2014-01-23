@@ -71,14 +71,16 @@ abstract class BaseNews extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('news_id', $this->news_id);
-		$criteria->compare('top', $this->top);
-		$criteria->compare('sort_order', $this->sort_order);
-		$criteria->compare('date_added', $this->date_added, true);
-		$criteria->compare('create_time', $this->create_time, true);
-		$criteria->compare('update_time', $this->update_time, true);
+		$criteria->compare("{$alias}.news_id", $this->news_id);
+		$criteria->compare("{$alias}.top", $this->top);
+		$criteria->compare("{$alias}.sort_order", $this->sort_order);
+		$criteria->compare("{$alias}.date_added", $this->date_added, true);
+		$criteria->compare("{$alias}.create_time", $this->create_time, true);
+		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

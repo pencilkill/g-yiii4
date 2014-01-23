@@ -16,12 +16,6 @@ class Language extends BaseLanguage
 			'CActiveRecordFilterBehavior' => array(
 				'class' => 'backend.behaviors.CActiveRecordFilterBehavior',
 			),
-			'CTimestampBehavior'=> array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-				'updateAttribute' => null,
-                'createAttribute' => null,
-				'setUpdateOnCreate' => true,
-			),
         ));
 	}
 
@@ -65,37 +59,34 @@ class Language extends BaseLanguage
 	}
 
 	public function search() {
+		$_provider = parent::search();
 		$alias = $this->tableAlias;
+		$criteria = $_provider->getCriteria();
 
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("{$alias}.language_id", $this->language_id);
-		$criteria->compare("{$alias}.code", $this->code, true);
-		$criteria->compare("{$alias}.title", $this->title, true);
-		$criteria->compare("{$alias}.sort_order", $this->sort_order);
-		$criteria->compare("{$alias}.status", $this->status);
 		$criteria->group = "{$alias}.language_id";
-		$criteria->together = true;
-
+        $criteria->together = true;
 
 		return new CActiveDataProvider($this, array(
-			'criteria' => $criteria,
-			'sort'=>array(
-				'defaultOrder' => "{$alias}.sort_order DESC, {$alias}.language_id ASC",
-				'multiSort'=>true,
-				'attributes'=>array(
-					'sort_order'=>array(
-						'desc'=>"{$alias}.sort_order DESC",
-						'asc'=>"{$alias}.sort_order ASC",
-					),
-					'*',
-				),
-			),
-			'pagination' => array(
-				'pageSize' => Yii::app()->request->getParam('pageSize', 10),
-				'pageVar' => 'page',
-			),
-		));
+            'criteria' => $criteria,
+            'sort'=>array(
+                'defaultOrder' => array(
+                    "{$alias}.sort_order" => CSort::SORT_DESC,
+                    "{$alias}.language_id" => CSort::SORT_ASC,
+                ),
+                'multiSort'=>true,
+                'attributes'=>array(
+                    'sort_order'=>array(
+                        'desc'=>"{$alias}.sort_order DESC",
+                        'asc'=>"{$alias}.sort_order ASC",
+                    ),
+                    '*',
+                ),
+            ),
+            'pagination' => array(
+                'pageSize' => Yii::app()->request->getParam('pageSize', 10),
+                'pageVar' => 'page',
+            ),
+        ));
 	}
 
 }

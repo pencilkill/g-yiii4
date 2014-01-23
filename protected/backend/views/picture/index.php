@@ -100,10 +100,11 @@ $this->breadcrumbs = array(
 								'type' => 'raw',
 								'name' => 'pic',
 								'value' => 'CHtml::image(HCimage::resize($data->pic, 80, 80), "", array("width" => 80, "heigth" => 80))',
+								'filter' => false,
 							),
 							array(
 					        	'name' => 'pictureI18n.title',
-								'filter' => CHtml::activeTextField($model->filter->pictureI18n, 'title'),
+								'filter' => CHtml::activeTextField($model->filter->pictureI18ns, 'title'),
 							),
 
 							array(
@@ -116,13 +117,6 @@ $this->breadcrumbs = array(
 								'name' => 'picture_type_id',
 								'value' => 'CHtml::value($data, "pictureType", Yii::t("app", "None"))',
 								'filter' => CHtml::activeDropDownList($model, 'picture_type_id', CHtml::listData(PictureType::model()->findAll(), 'picture_type_id', 'picture_type'), array('prompt' => '')),
-							),
-
-							array(
-								'type' => 'raw',
-								'name' => 'status',
-								'value' => 'CHtml::dropDownList("edit[$data->picture_id][status]", $data->status, array("0"=>Yii::t("app", "No"), "1"=>Yii::t("app", "Yes")), array("class"=>"editable"))',
-								'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
 							),
 
 							array(

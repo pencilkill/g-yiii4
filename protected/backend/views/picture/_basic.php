@@ -35,15 +35,4 @@
 			</td>
 		</tr><!-- row -->
 
-
-		<tr>
-			<td>
-				<?php echo $form->labelEx($model,'status'); ?>
-			</td>
-			<td>
-				<?php echo $form->checkBox($model, 'status'); ?>
-				<?php echo $form->error($model,'status'); ?>
-			</td>
-		</tr><!-- row -->
-
 		</table>

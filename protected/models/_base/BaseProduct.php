@@ -10,20 +10,15 @@
  * followed by relations of table "product" available as properties of the model.
  *
  * @property integer $product_id
- * @property integer $top
- * @property integer $sort_id
- * @property integer $status
- * @property string $date_added
+ * @property integer $sort_order
  * @property string $create_time
  * @property string $update_time
  *
  * @property Product2category[] $product2categories
- * @property Product2image[] $product2images
- * @property ProductI18n[] $productI18ns
+ * @property ProductI18n $productI18n
+ * @property ProductImage[] $productImages
  */
 abstract class BaseProduct extends GxActiveRecord {
-
-	public $filterI18n;
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
@@ -34,27 +29,27 @@ abstract class BaseProduct extends GxActiveRecord {
 	}
 
 	public static function label($n = 1) {
-		return Yii::t('M/product', 'Product|Products', $n);
+		return Yii::t('m/product', 'Product|Products', $n);
 	}
 
 	public static function representingColumn() {
-		return 'date_added';
+		return 'create_time';
 	}
 
 	public function rules() {
 		return array(
-			array('top, sort_id, status', 'numerical', 'integerOnly'=>true),
-			array('date_added, create_time, update_time', 'safe'),
-			array('top, sort_id, status, date_added, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('product_id, top, sort_id, status, date_added, create_time, update_time', 'safe', 'on'=>'search'),
+			array('sort_order', 'numerical', 'integerOnly'=>true),
+			array('create_time, update_time', 'safe'),
+			array('sort_order, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('product_id, sort_order, create_time, update_time', 'safe', 'on'=>'search'),
 		);
 	}
 
 	public function relations() {
 		return array(
 			'product2categories' => array(self::HAS_MANY, 'Product2category', 'product_id'),
-			'product2images' => array(self::HAS_MANY, 'Product2image', 'product_id'),
-			'productI18ns' => array(self::HAS_ONE, 'ProductI18n', 'product_id', 'scopes' => array('t' => array(Yii::app()->params->languageId))),
+			'productI18n' => array(self::HAS_ONE, 'ProductI18n', 'product_id', 'joinType' => 'RIGHT OUTER JOIN', 'scopes' => array('t')),
+			'productImages' => array(self::HAS_MANY, 'ProductImage', 'product_id'),
 		);
 	}
 
@@ -65,59 +60,28 @@ abstract class BaseProduct extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'product_id' => Yii::t('M/product', 'Product'),
-			'top' => Yii::t('M/product', 'Top'),
-			'sort_id' => Yii::t('M/product', 'Sort'),
-			'status' => Yii::t('M/product', 'Status'),
-			'date_added' => Yii::t('M/product', 'Date Added'),
-			'create_time' => Yii::t('M/product', 'Create Time'),
-			'update_time' => Yii::t('M/product', 'Update Time'),
+			'product_id' => Yii::t('m/product', 'Product'),
+			'sort_order' => Yii::t('m/product', 'Sort Order'),
+			'create_time' => Yii::t('m/product', 'Create Time'),
+			'update_time' => Yii::t('m/product', 'Update Time'),
 			'product2categories' => null,
-			'product2images' => null,
 			'productI18ns' => null,
+			'productImages' => null,
 		);
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('product_id', $this->product_id);
-		$criteria->compare('top', $this->top);
-		$criteria->compare('sort_id', $this->sort_id);
-		$criteria->compare('status', $this->status);
-		$criteria->compare('date_added', $this->date_added, true);
-		$criteria->compare('create_time', $this->create_time, true);
-		$criteria->compare('update_time', $this->update_time, true);
-
-		$criteria->with = array(
-			'productI18ns' => array(
-				'scopes' => array(
-					't' => array(Yii::app()->params->languageId),
-				),
-			),
-		);
-		$criteria->group = 't.product_id';
-		$criteria->together = true;
-
-		$criteria->compare('productI18ns.pic', $this->filterI18n->pic, true);
-		$criteria->compare('productI18ns.title', $this->filterI18n->title, true);
-		$criteria->compare('productI18ns.keywords', $this->filterI18n->keywords, true);
-		$criteria->compare('productI18ns.description', $this->filterI18n->description, true);
+		$criteria->compare("{$alias}.product_id", $this->product_id);
+		$criteria->compare("{$alias}.sort_order", $this->sort_order);
+		$criteria->compare("{$alias}.create_time", $this->create_time, true);
+		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
-			'sort'=>array(
-				'attributes'=>array(
-					'sort_id'=>array(
-						'desc'=>'sort_id DESC',
-						'asc'=>'sort_id',
-					),
-					'*',
-				),
-			),
-			'pagination' => array(
-				'pageSize'=>10,
-			),
 		));
 	}
 

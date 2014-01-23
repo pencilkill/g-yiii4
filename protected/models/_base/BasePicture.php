@@ -18,7 +18,6 @@
  *
  * @property PictureType $pictureType
  * @property PictureI18n $pictureI18n
- * @property PictureI18n[] $pictureI18ns
  */
 abstract class BasePicture extends GxActiveRecord {
 
@@ -52,8 +51,7 @@ abstract class BasePicture extends GxActiveRecord {
 	public function relations() {
 		return array(
 			'pictureType' => array(self::BELONGS_TO, 'PictureType', 'picture_type_id'),
-			'pictureI18n' => array(self::HAS_ONE, 'PictureI18n', 'picture_id', 'scopes' => array('t' => array())),
-			'pictureI18ns' => array(self::HAS_MANY, 'PictureI18n', 'picture_id', 'index' => 'language_id'),
+			'pictureI18n' => array(self::HAS_ONE, 'PictureI18n', 'picture_id', 'joinType' => 'RIGHT OUTER JOIN', 'scopes' => array('t')),
 		);
 	}
 
@@ -91,4 +89,5 @@ abstract class BasePicture extends GxActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
+
 }

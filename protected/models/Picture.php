@@ -1,8 +1,8 @@
 <?php
 
-Yii::import('frontend.models._base.BaseInformation');
+Yii::import('frontend.models._base.BasePicture');
 
-class Information extends BaseInformation
+class Picture extends BasePicture
 {
 
 	public $filter;
@@ -16,9 +16,9 @@ class Information extends BaseInformation
 
 		return CMap::mergeArray(parent::defaultScope(), array(
 			'with' => array(
-				'informationI18n',
+				'pictureI18n',
 			),
-			'order' => "{$alias}.sort_order DESC, {$alias}.information_id DESC",
+			'order' => "{$alias}.sort_order DESC, {$alias}.picture_id DESC",
 		));
 	}
 
@@ -35,21 +35,22 @@ class Information extends BaseInformation
 		$alias = $this->tableAlias;
 		$criteria = $_provider->getCriteria();
 
-		$criteria->group = "{$alias}.information_id";
+		$criteria->group = "{$alias}.picture_id";
 		$criteria->together = true;
 
-		$criteria->with[] = 'informationI18n';
-		$criteria->compare('informationI18n.status', $this->filter->informationI18n->status);
-		$criteria->compare('informationI18n.title', $this->filter->informationI18n->title, true);
-		$criteria->compare('informationI18n.keywords', $this->filter->informationI18n->keywords, true);
-		$criteria->compare('informationI18n.description', $this->filter->informationI18n->description, true);
+		$criteria->with[] = 'pictureI18n';
+		$criteria->compare('pictureI18n.status', $this->filter->pictureI18n->status);
+		$criteria->compare('pictureI18n.url', $this->filter->pictureI18n->url, true);
+		$criteria->compare('pictureI18n.title', $this->filter->pictureI18n->title, true);
+		$criteria->compare('pictureI18n.keywords', $this->filter->pictureI18n->keywords, true);
+		$criteria->compare('pictureI18n.description', $this->filter->pictureI18n->description, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
 				'defaultOrder' => array(
 					"{$alias}.sort_order" => CSort::SORT_DESC,
-					"{$alias}.information_id" => CSort::SORT_ASC,
+					"{$alias}.picture_id" => CSort::SORT_ASC,
 				),
 				'multiSort'=>true,
 				'attributes'=>array(

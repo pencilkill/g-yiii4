@@ -77,17 +77,19 @@ abstract class BaseAdmin extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('admin_id', $this->admin_id);
-		$criteria->compare('name', $this->name, true);
-		$criteria->compare('username', $this->username, true);
-		$criteria->compare('email', $this->email, true);
-		$criteria->compare('password', $this->password, true);
-		$criteria->compare('status', $this->status);
-		$criteria->compare('super', $this->super);
-		$criteria->compare('create_time', $this->create_time, true);
-		$criteria->compare('update_time', $this->update_time, true);
+		$criteria->compare("{$alias}.admin_id", $this->admin_id);
+		$criteria->compare("{$alias}.name", $this->name, true);
+		$criteria->compare("{$alias}.username", $this->username, true);
+		$criteria->compare("{$alias}.email", $this->email, true);
+		$criteria->compare("{$alias}.password", $this->password, true);
+		$criteria->compare("{$alias}.status", $this->status);
+		$criteria->compare("{$alias}.super", $this->super);
+		$criteria->compare("{$alias}.create_time", $this->create_time, true);
+		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

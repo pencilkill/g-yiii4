@@ -79,4 +79,5 @@ abstract class BasePictureType extends GxActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
+
 }

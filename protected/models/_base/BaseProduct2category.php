@@ -18,7 +18,6 @@
  */
 abstract class BaseProduct2category extends GxActiveRecord {
 
-
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -28,7 +27,7 @@ abstract class BaseProduct2category extends GxActiveRecord {
 	}
 
 	public static function label($n = 1) {
-		return Yii::t('M/product2category', 'Product2category|Product2categories', $n);
+		return Yii::t('m/product2category', 'Product2category|Product2categories', $n);
 	}
 
 	public static function representingColumn() {
@@ -57,7 +56,7 @@ abstract class BaseProduct2category extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'product2category_id' => Yii::t('M/product2category', 'Product2category'),
+			'product2category_id' => Yii::t('m/product2category', 'Product2category'),
 			'product_id' => null,
 			'category_id' => null,
 			'product' => null,
@@ -66,20 +65,16 @@ abstract class BaseProduct2category extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('product2category_id', $this->product2category_id);
-		$criteria->compare('product_id', $this->product_id);
-		$criteria->compare('category_id', $this->category_id);
-
+		$criteria->compare("{$alias}.product2category_id", $this->product2category_id);
+		$criteria->compare("{$alias}.product_id", $this->product_id);
+		$criteria->compare("{$alias}.category_id", $this->category_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
-			'sort'=>array(
-				'attributes'=>array(
-					'*',
-				),
-			),
 		));
 	}
 

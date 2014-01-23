@@ -73,12 +73,14 @@ abstract class BaseProduct extends GxActiveRecord {
 	}
 
 	public function search() {
+		$alias = $this->tableAlias;
+
 		$criteria = new CDbCriteria;
 
-		$criteria->compare('product_id', $this->product_id);
-		$criteria->compare('sort_order', $this->sort_order);
-		$criteria->compare('create_time', $this->create_time, true);
-		$criteria->compare('update_time', $this->update_time, true);
+		$criteria->compare("{$alias}.product_id", $this->product_id);
+		$criteria->compare("{$alias}.sort_order", $this->sort_order);
+		$criteria->compare("{$alias}.create_time", $this->create_time, true);
+		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

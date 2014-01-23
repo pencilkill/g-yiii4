@@ -75,4 +75,5 @@ abstract class BaseProductImage extends GxActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
+
 }

@@ -8,8 +8,12 @@
 //$this->pageTitle = null;
 /*
 $this->breadcrumbs = array(
+<?php if($this->i18n){?>
 	$model->label(2) => array('index'),
-	$model-><?php echo $this->i18nRelation[0]?>->title,
+	$model-><?php echo $this->i18n->relationName?>->title,
+<?php }else{?>
+	$model->label(2),
+<?php }?>
 );
 */
 ?>

@@ -1,8 +1,8 @@
 <?php
 
-Yii::import('frontend.models._base.BaseInformation');
+Yii::import('frontend.models._base.BasePictureType');
 
-class Information extends BaseInformation
+class PictureType extends BasePictureType
 {
 
 	public $filter;
@@ -15,10 +15,7 @@ class Information extends BaseInformation
 		$alias = $this->getTableAlias(false, false);
 
 		return CMap::mergeArray(parent::defaultScope(), array(
-			'with' => array(
-				'informationI18n',
-			),
-			'order' => "{$alias}.sort_order DESC, {$alias}.information_id DESC",
+			'order' => "{$alias}.picture_type_id DESC",
 		));
 	}
 
@@ -35,28 +32,17 @@ class Information extends BaseInformation
 		$alias = $this->tableAlias;
 		$criteria = $_provider->getCriteria();
 
-		$criteria->group = "{$alias}.information_id";
+		$criteria->group = "{$alias}.picture_type_id";
 		$criteria->together = true;
-
-		$criteria->with[] = 'informationI18n';
-		$criteria->compare('informationI18n.status', $this->filter->informationI18n->status);
-		$criteria->compare('informationI18n.title', $this->filter->informationI18n->title, true);
-		$criteria->compare('informationI18n.keywords', $this->filter->informationI18n->keywords, true);
-		$criteria->compare('informationI18n.description', $this->filter->informationI18n->description, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
 				'defaultOrder' => array(
-					"{$alias}.sort_order" => CSort::SORT_DESC,
-					"{$alias}.information_id" => CSort::SORT_ASC,
+					"{$alias}.picture_type_id" => CSort::SORT_ASC,
 				),
 				'multiSort'=>true,
 				'attributes'=>array(
-					'sort_order'=>array(
-						'desc'=>"{$alias}.sort_order DESC",
-						'asc'=>"{$alias}.sort_order ASC",
-					),
 					'*',
 				),
 			),

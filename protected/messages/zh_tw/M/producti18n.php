@@ -22,5 +22,6 @@ return array (
   'Pic' => '',
   'Product I18n' => '',
   'ProductI18n|ProductI18ns' => '',
+  'Status' => '',
   'Title' => '',
 );
