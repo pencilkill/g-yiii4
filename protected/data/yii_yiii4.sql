@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2014 年 01 月 21 日 13:32
+-- 生成日期: 2014 年 01 月 23 日 11:14
 -- 服务器版本: 5.5.24-log
 -- PHP 版本: 5.3.0
 
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
 INSERT INTO `admin` (`admin_id`, `name`, `username`, `email`, `password`, `status`, `super`, `create_time`, `update_time`) VALUES
 (1, 'admin', 'admin', 'sam@ozchamp.net', '1a85380e2ae37e8385ecd73b468f632d', 1, 1, '2013-06-01 00:00:00', '2013-08-22 03:51:54'),
 (2, 'administrator', 'administrator', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 1, '2013-06-01 12:03:02', '2013-08-22 03:47:36'),
-(5, 'ozchamp', 'ozchamp', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 0, '2013-08-22 03:27:11', '2014-01-18 13:16:23');
+(5, 'ozchamp', 'ozchamp', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 0, '2013-08-22 03:27:11', '2014-01-22 16:33:42');
 
 -- --------------------------------------------------------
 
@@ -93,12 +93,13 @@ CREATE TABLE IF NOT EXISTS `authitem` (
 
 INSERT INTO `authitem` (`name`, `type`, `description`, `bizrule`, `data`) VALUES
 ('Admin', 2, 'role which can access all', NULL, 'N;'),
-('Admin.Account', 0, NULL, NULL, 'N;'),
-('Admin.Create', 0, NULL, NULL, 'N;'),
-('Admin.Delete', 0, NULL, NULL, 'N;'),
-('Admin.Gridviewdelete', 0, NULL, NULL, 'N;'),
-('Admin.Index', 0, NULL, NULL, 'N;'),
-('Admin.Update', 0, NULL, NULL, 'N;'),
+('Admin.Account', 0, 'Admin.Account', NULL, 'N;'),
+('Admin.Create', 0, 'Admin.Create', NULL, 'N;'),
+('Admin.Delete', 0, 'Admin.Delete', NULL, 'N;'),
+('Admin.Gridviewdelete', 0, 'Admin.Gridviewdelete', NULL, 'N;'),
+('Admin.Gridviewupdate', 0, 'Admin.Gridviewupdate', NULL, 'N;'),
+('Admin.Index', 0, 'Admin.Index', NULL, 'N;'),
+('Admin.Update', 0, 'Admin.Update', NULL, 'N;'),
 ('Administrator', 2, 'role which can access all but not the super admin ,that is mean the super property of admin model belong to items of this role is equal to false', NULL, 'N;'),
 ('Authenticated', 2, 'role which can not access admin controller except account action to update himself informations', NULL, 'N;'),
 ('Category.*', 1, 'Category.*', NULL, 'N;'),
@@ -106,8 +107,8 @@ INSERT INTO `authitem` (`name`, `type`, `description`, `bizrule`, `data`) VALUES
 ('Guest', 2, 'role which can access a few actions only.\r\ncause rights RBAC can not get actions() item from controller,role guest filter actions will be defined in site controller->allowedactions()', NULL, 'N;'),
 ('Information.*', 1, 'Information.*', NULL, 'N;'),
 ('News.*', 1, 'News.*', NULL, 'N;'),
-('Pic.*', 1, 'Pic.*', NULL, 'N;'),
-('PicType.*', 1, 'PicType.*', NULL, 'N;'),
+('Picture.*', 1, 'Picture.*', NULL, 'N;'),
+('PictureType.*', 1, 'PictureType.*', NULL, 'N;'),
 ('Product.*', 1, 'Product.*', NULL, 'N;'),
 ('Setting.*', 1, 'Setting.*', NULL, 'N;'),
 ('Site.*', 1, 'Site.*', NULL, 'N;');
@@ -134,6 +135,7 @@ INSERT INTO `authitemchild` (`parent`, `child`) VALUES
 ('Administrator', 'Admin.Create'),
 ('Administrator', 'Admin.Delete'),
 ('Administrator', 'Admin.Gridviewdelete'),
+('Administrator', 'Admin.Gridviewupdate'),
 ('Administrator', 'Admin.Index'),
 ('Administrator', 'Admin.Update'),
 ('Administrator', 'Authenticated'),
@@ -142,8 +144,8 @@ INSERT INTO `authitemchild` (`parent`, `child`) VALUES
 ('Authenticated', 'Guest'),
 ('Authenticated', 'Information.*'),
 ('Authenticated', 'News.*'),
-('Authenticated', 'Pic.*'),
-('Authenticated', 'PicType.*'),
+('Authenticated', 'Picture.*'),
+('Authenticated', 'PictureType.*'),
 ('Authenticated', 'Product.*'),
 ('Authenticated', 'Setting.*'),
 ('Authenticated', 'Site.*');
@@ -169,9 +171,9 @@ CREATE TABLE IF NOT EXISTS `category` (
 --
 
 INSERT INTO `category` (`category_id`, `parent_id`, `sort_order`, `create_time`, `update_time`) VALUES
-(4, NULL, 0, '2013-08-24 04:13:48', '2014-01-14 16:42:20'),
+(4, NULL, 3, '2013-08-24 04:13:48', '2014-01-22 16:07:14'),
 (7, 4, 1, '2013-08-24 05:23:17', '2014-01-08 19:28:22'),
-(10, NULL, 0, '2014-01-14 20:39:00', '2014-01-15 00:47:05');
+(10, NULL, 0, '2014-01-14 20:39:00', '2014-01-22 16:07:14');
 
 -- --------------------------------------------------------
 
@@ -369,7 +371,7 @@ CREATE TABLE IF NOT EXISTS `news` (
 --
 
 INSERT INTO `news` (`news_id`, `top`, `sort_order`, `date_added`, `create_time`, `update_time`) VALUES
-(1, 1, 0, '2013-07-23 00:00:00', '2013-07-24 00:32:49', '2013-10-25 09:38:29');
+(1, 1, 0, '2013-07-04 00:00:00', '2013-07-24 00:32:49', '2014-01-23 17:54:55');
 
 -- --------------------------------------------------------
 
@@ -389,15 +391,15 @@ CREATE TABLE IF NOT EXISTS `news_i18n` (
   PRIMARY KEY (`news_i18n_id`),
   KEY `news_id` (`news_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- 转存表中的数据 `news_i18n`
 --
 
 INSERT INTO `news_i18n` (`news_i18n_id`, `news_id`, `language_id`, `status`, `pic`, `title`, `keywords`, `description`) VALUES
-(1, 1, 1, 1, 'upload/2013/07/23/51eeaff87c4b8.jpg', 'tw', 'ktw', '<p>\r\n	ddddddddddddtw</p>\r\n'),
-(2, 1, 2, 1, 'upload/2013/07/23/51eeb009c6f69.jpg', 'enttt', 'ken', '<p>\r\n	ennnnnnnnnnnnnnnnnnnggggdddddddddddd</p>\r\n');
+(7, 1, 1, 1, 'upload/2013/07/23/51eeaff87c4b8.jpg', 'tw', 'ktw', '<p>\r\n	ddddddddddddtw</p>\r\n'),
+(8, 1, 2, 1, 'upload/2013/07/23/51eeb009c6f69.jpg', 'enttt', 'ken', '<p>\r\n	ennnnnnnnnnnnnnnnnnnggggdddddddddddd</p>\r\n');
 
 -- --------------------------------------------------------
 
@@ -410,7 +412,6 @@ CREATE TABLE IF NOT EXISTS `picture` (
   `sort_order` int(11) NOT NULL DEFAULT '0',
   `pic` varchar(256) NOT NULL,
   `picture_type_id` int(11) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT '1',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`picture_id`),
@@ -421,8 +422,8 @@ CREATE TABLE IF NOT EXISTS `picture` (
 -- 转存表中的数据 `picture`
 --
 
-INSERT INTO `picture` (`picture_id`, `sort_order`, `pic`, `picture_type_id`, `status`, `create_time`, `update_time`) VALUES
-(13, 0, 'upload/2013/08/21/521421eedbc32.jpg', 1, 1, '2013-08-21 10:13:17', '2013-08-21 10:13:17');
+INSERT INTO `picture` (`picture_id`, `sort_order`, `pic`, `picture_type_id`, `create_time`, `update_time`) VALUES
+(13, 0, 'upload/2013/08/21/521421eedbc32.jpg', 1, '2013-08-21 10:13:17', '2013-08-21 10:13:17');
 
 -- --------------------------------------------------------
 
@@ -434,6 +435,7 @@ CREATE TABLE IF NOT EXISTS `picture_i18n` (
   `picture_i18n_id` int(15) NOT NULL AUTO_INCREMENT,
   `picture_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `url` varchar(256) DEFAULT NULL,
   `title` varchar(256) DEFAULT NULL,
   `keywords` text,
@@ -447,9 +449,9 @@ CREATE TABLE IF NOT EXISTS `picture_i18n` (
 -- 转存表中的数据 `picture_i18n`
 --
 
-INSERT INTO `picture_i18n` (`picture_i18n_id`, `picture_id`, `language_id`, `url`, `title`, `keywords`, `description`) VALUES
-(1, 13, 1, 'http://www.google.com.hk/', 'tw', 'ktw', '<p>\r\n	ddddtw</p>\r\n'),
-(2, 13, 2, 'http://www.google.com/', 'en', 'ken', '<p>\r\n	dddden</p>\r\n');
+INSERT INTO `picture_i18n` (`picture_i18n_id`, `picture_id`, `language_id`, `status`, `url`, `title`, `keywords`, `description`) VALUES
+(1, 13, 1, 1, 'http://www.google.com.hk/', 'tw', 'ktw', '<p>\r\n	ddddtw</p>\r\n'),
+(2, 13, 2, 1, 'http://www.google.com/', 'en', 'ken', '<p>\r\n	dddden</p>\r\n');
 
 -- --------------------------------------------------------
 
@@ -591,14 +593,15 @@ CREATE TABLE IF NOT EXISTS `rights` (
 --
 
 INSERT INTO `rights` (`itemname`, `type`, `weight`) VALUES
-('Category.*', 1, 0),
-('Contact.*', 1, 1),
-('Information.*', 1, 2),
-('News.*', 1, 3),
-('Pic.*', 1, 6),
-('PicType.*', 1, 4),
-('Product.*', 1, 5),
-('Setting.*', 1, 7);
+('Category.*', 1, 3),
+('Contact.*', 1, 4),
+('Information.*', 1, 5),
+('News.*', 1, 6),
+('Picture.*', 1, 0),
+('PictureType.*', 1, 1),
+('Product.*', 1, 7),
+('Setting.*', 1, 8),
+('Site.*', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -618,7 +621,7 @@ CREATE TABLE IF NOT EXISTS `setting` (
 --
 
 INSERT INTO `setting` (`key`, `value`) VALUES
-('analysis_google', 's:1:"s";'),
+('analysis_google', 's:0:"";'),
 ('mail_email_contact', 's:15:"sam@ozchamp.net";'),
 ('mail_smtp_host', 's:12:"smtp.163.com";'),
 ('mail_smtp_password', 's:9:"oz3661000";'),
