@@ -22,6 +22,13 @@ return array(
 			// it will translate from coreMessage of Yii::app()->sourceLanguage if there is no onMissingTranslation event
             'basePath'=>null,
         ),
+        /*
+        'urlManager'=>array(
+            'urlFormat' => 'path',
+        	'showScriptName' => false,
+        	'urlSuffix' => '.html',
+        ),
+        */
 		// example to config widget
 		'widgetFactory' => array(
 			'widgets' => array(
