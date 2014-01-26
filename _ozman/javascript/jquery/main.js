@@ -113,7 +113,7 @@ jQuery(function($) {
 	 * CKEditor Dynamic Update Value
 	 */
 	CKFormUpdateValue = function (){
-		for (instance in CKEDITOR.instances){
+		for (var instance in CKEDITOR.instances){
 	        CKEDITOR.instances[instance].updateElement();
 		}
 	}
