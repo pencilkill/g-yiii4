@@ -103,7 +103,7 @@ class Mail{
 	public function AddAddresses($addresses, $delimiter = ','){
 		$addresses = is_array($addresses) ? $addresses : explode($delimiter, $addresses);
 
-		if($addresses && ($addresses = array_filter($addresses))){
+		if($addresses){
 			foreach($addresses as $key => $val){
 				$address = $key;
 				$name = $val;
@@ -113,7 +113,9 @@ class Mail{
 					$name = '';		// PHPMailer default value
 				}
 
-				$this->_PHPMailer->AddAddress($address, $name);
+				if(trim($address)){
+					$this->_PHPMailer->AddAddress($address, $name);
+				}
 			}
 		}
 	}

@@ -39,28 +39,28 @@ $this->breadcrumbs = array(
 	?>
 
 	<div class="box">
-		<div class="search-form" style="display:none;">
-
-		<?php
-			/*
-			$this->renderPartial(
-				'_search',
-				array(
-					'model' => $model,
-				)
-			);
-			*/
-		?>
-
-		</div><!-- search-form -->
 
 		<div class="heading">
 			<div class="buttons">
-				<?php echo GxHtml::link(Yii::t('app', 'Advanced Search'), '#', array('class' => 'search-button button', 'style' => 'display: none;')); ?>
+				<?php //echo GxHtml::link(Yii::t('app', 'Advanced Search'), '#', array('class' => 'search-button button', 'style' => 'display: none;')); ?>
 				<a onclick="location='<?php echo $this->createUrl('create')?>';" class="button"><?php echo Yii::t('app', 'Create')?></a>
 				<a onclick="GVUpdate();" class="button"><?php echo Yii::t('app', 'Save')?></a>
 				<a onclick="GVDelete();" class="button"><?php echo Yii::t('app', 'Delete')?></a>
 			</div>
+			<div class="search-form">
+
+			<?php
+				/*
+				$this->renderPartial(
+					'_search',
+					array(
+						'model' => $model,
+					)
+				);
+				*/
+			?>
+
+			</div><!-- search-form -->
 		</div>
 
 		<div class="content">
@@ -68,7 +68,7 @@ $this->breadcrumbs = array(
 			<form id="language-grid-form" action="<?php echo $this->createUrl('gridviewupdate')?>" method="post">
 				<?php  echo CHtml::hiddenField('returnUrl', Yii::app()->getRequest()->url)?>
 
-				<?php 
+				<?php
 					$this->widget('zii.widgets.grid.CGridView', array(
 						'id' => 'language-grid',
 						'ajaxUpdate' => true,
@@ -95,24 +95,24 @@ $this->breadcrumbs = array(
 									'name' => 'GridViewSelect[]',
 								),
 							),
-																																		
+
 							'code',
-																		
+
 							'title',
-																		
+
 							array(
 								'type' => 'raw',
 								'name' => 'sort_order',
 								'value' => 'CHtml::textField("edit[$data->language_id][sort_order]", $data->sort_order, array("class"=>"editable"))',
 							),
-																		
+
 							array(
 								'type' => 'raw',
 								'name' => 'status',
 								'value' => 'CHtml::dropDownList("edit[$data->language_id][status]", $data->status, array("0"=>Yii::t("app", "No"), "1"=>Yii::t("app", "Yes")), array("class"=>"editable"))',
 								'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
 							),
-												
+
 							array(
 								'header' => Yii::t('app', 'Grid Actions'),
 								'class' => 'CButtonColumn',

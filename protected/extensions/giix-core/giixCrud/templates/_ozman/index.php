@@ -49,28 +49,29 @@ echo "<?php\n
 	?>
 
 	<div class="box">
-		<div class="search-form" style="display:none;">
-
-		<?php echo "<?php\n"?>
-			/*
-			$this->renderPartial(
-				'_search',
-				array(
-					'model' => $model,
-				)
-			);
-			*/
-		?>
-
-		</div><!-- search-form -->
 
 		<div class="heading">
 			<div class="buttons">
-				<?php echo '<?php'?> echo GxHtml::link(Yii::t('app', 'Advanced Search'), '#', array('class' => 'search-button button', 'style' => 'display: none;')); ?>
+				<?php echo '<?php'?> //echo GxHtml::link(Yii::t('app', 'Advanced Search'), '#', array('class' => 'search-button button', 'style' => 'display: none;')); ?>
 				<a onclick="location='<?php echo '<?php'?> echo $this->createUrl('create')?>';" class="button"><?php echo '<?php'?> echo Yii::t('app', 'Create')?></a>
 				<a onclick="GVUpdate();" class="button"><?php echo '<?php'?> echo Yii::t('app', 'Save')?></a>
 				<a onclick="GVDelete();" class="button"><?php echo '<?php'?> echo Yii::t('app', 'Delete')?></a>
 			</div>
+
+			<div class="search-form">
+
+			<?php echo "<?php\n"?>
+				/*
+				$this->renderPartial(
+					'_search',
+					array(
+						'model' => $model,
+					)
+				);
+				*/
+			?>
+
+			</div><!-- search-form -->
 		</div>
 
 		<div class="content">

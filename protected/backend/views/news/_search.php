@@ -1,4 +1,4 @@
-<div class="wide form">
+<div class="wide form buttons">
 
 <?php $form = $this->beginWidget('GxActiveForm', array(
 	'action' => Yii::app()->createUrl($this->route),
@@ -25,29 +25,13 @@
 
 	<div class="row">
 		<?php echo $form->label($model, 'date_added'); ?>
-		<?php $form->widget('zii.widgets.jui.CJuiDatePicker', array(
-			'model' => $model,
-			'attribute' => 'date_added',
-			'language' => Yii::app()->language,
-			'options' => array(
-				'showButtonPanel' => false,
-				'changeYear' => true,
-				'changeMonth' => true,
-				'dateFormat' => 'yy-mm-dd',
-				'yearRange' => '-5:+5',
-			),
-			'htmlOptions' => array(
-				'readonly' => 'readonly',
-				'value' => $model->date_added ? date('Y-m-d', strtotime($model->date_added)) : date('Y-m-d'),
-			),
-			));
-; ?>
+		<?php echo $form->textField($model, 'date_added', array('class' => 'CJuiDatePicker', 'value' => ($a = CHtml::resolveValue($model, 'date_added')) ? date('Y-m-d', strtotime($a)) : date('Y-m-d'))); ?>
 	</div>
 
 
 
-	<div class="row buttons">
-		<?php echo GxHtml::submitButton(Yii::t('app', 'Search')); ?>
+	<div class="row">
+		<?php echo GxHtml::linkButton(Yii::t('app', 'Search'), array('class' => 'button')); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

@@ -232,10 +232,11 @@ label.error {
 	margin-bottom: 15px;
 }
 .box > .heading {
-	height: 38px;
+	min-height: 38px;
 	padding-left: 7px;
 	padding-right: 7px;
 	border: 1px solid #DBDBDB;
+	/*background-color: #EFEFEF;*/
 	background: url('../image/box.png') repeat-x;
 	-webkit-border-radius: 7px 7px 0px 0px;
 	-moz-border-radius: 7px 7px 0px 0px;
@@ -278,6 +279,7 @@ label.error {
 	border-bottom: 1px solid #CCCCCC;
 	min-height: 300px;
 	overflow: auto;
+	clear:both;
 }
 a.button, .list a.button {
 	text-decoration: none;

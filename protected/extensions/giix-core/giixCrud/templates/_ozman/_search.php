@@ -4,7 +4,7 @@
  * - $this: the CrudCode object
  */
 ?>
-<div class="wide form">
+<div class="wide form buttons">
 
 <?php echo "<?php \$form = \$this->beginWidget('GxActiveForm', array(
 	'action' => Yii::app()->createUrl(\$this->route),
@@ -27,8 +27,8 @@
 	</div>
 
 <?php endforeach; ?>
-	<div class="row buttons">
-		<?php echo "<?php echo GxHtml::submitButton(Yii::t('app', 'Search')); ?>\n"; ?>
+	<div class="row">
+		<?php echo "<?php echo GxHtml::linkButton(Yii::t('app', 'Search'), array('class' => 'button')); ?>\n"; ?>
 	</div>
 
 <?php echo "<?php \$this->endWidget(); ?>\n"; ?>

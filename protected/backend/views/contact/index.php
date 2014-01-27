@@ -39,27 +39,27 @@ $this->breadcrumbs = array(
 	?>
 
 	<div class="box">
-		<div class="search-form" style="display:none;">
-
-		<?php
-			/*
-			$this->renderPartial(
-				'_search',
-				array(
-					'model' => $model,
-				)
-			);
-			*/
-		?>
-
-		</div><!-- search-form -->
 
 		<div class="heading">
 			<div class="buttons">
-				<?php echo GxHtml::link(Yii::t('app', 'Advanced Search'), '#', array('class' => 'search-button button', 'style' => 'display: none;')); ?>
+				<?php //echo GxHtml::link(Yii::t('app', 'Advanced Search'), '#', array('class' => 'search-button button', 'style' => 'display: none;')); ?>
 				<a onclick="GVUpdate();" class="button"><?php echo Yii::t('app', 'Save')?></a>
 				<a onclick="GVDelete();" class="button"><?php echo Yii::t('app', 'Delete')?></a>
 			</div>
+			<div class="search-form">
+
+			<?php
+				/*
+				$this->renderPartial(
+					'_search',
+					array(
+						'model' => $model,
+					)
+				);
+				*/
+			?>
+
+			</div><!-- search-form -->
 		</div>
 
 		<div class="content">
