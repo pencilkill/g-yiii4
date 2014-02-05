@@ -30,7 +30,7 @@ return array (
   'Mail' => '郵件主機',
   'Mail Email' => '郵箱',
   'Mail Smtp' => '主機',
-  'Meta' => '搜索優化',
+  'Meta' => '搜尋優化',
   'Setting' => '設置',
   'Update' => '更新',
 );

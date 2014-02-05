@@ -18,7 +18,7 @@
  */
 return array (
   'Tabs Image' => '產品多圖',
-  'Advanced Search' => '高級搜索',
+  'Advanced Search' => '高級搜尋',
   'All' => '全部',
   'Cancel' => '取消',
   'Commition Failure' => '失敗：提交資料失敗',
@@ -45,7 +45,7 @@ return array (
   'Operation Success' => '成功：操作成功',
   'Parent_id can not be self or children' => '上級分類不能是自身或其子分類',
   'Save' => '送出',
-  'Search' => '搜索',
+  'Search' => '搜尋',
   'Select A Image' => '選擇圖片',
   'Tabs Basic' => '基本設置',
   'Unnoticed' => '未閱讀',
