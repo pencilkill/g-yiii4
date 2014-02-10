@@ -112,6 +112,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 					if (Yii::app()->getRequest()->getIsAjaxRequest()){
 						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+						
 						Yii::app()->end();
 					}else{
 						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
@@ -195,6 +196,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 					if (Yii::app()->getRequest()->getIsAjaxRequest()){
 						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+						
 						Yii::app()->end();
 					}else{
 						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
@@ -227,6 +229,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 			if (Yii::app()->getRequest()->getIsAjaxRequest()){
 				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+				
 				Yii::app()->end();
 			}else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->createUrl('index'));
@@ -239,10 +242,10 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 	public function action<?php echo ucfirst(strtolower($this->gridViewDeleteAction))?>() {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
-			$selected = Yii::app()->getRequest()->getPost('selected');
+			$<?php echo $this->gridViewPostName?>Ids = Yii::app()->getRequest()->getPost('<?php echo $this->gridViewPostName?>');
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('<?php echo $this->tableSchema->primaryKey; ?>', $selected);
+			$criteria->compare('<?php echo $this->tableSchema->primaryKey; ?>', $<?php echo $this->gridViewPostName?>Ids);
 
 			$models = Category::model()->findAll($criteria);
 
@@ -271,6 +274,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
 				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+				
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
@@ -285,19 +289,20 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 		if (Yii::app()->getRequest()->getIsPostRequest()){
 
 			$<?php echo $this->gridViewEditName?>Posts = Yii::app()->getRequest()->getPost('<?php echo $this->gridViewEditName?>');
-			$<?php echo $this->gridViewEditName?>Ids = array_keys($<?php echo $this->gridViewEditName?>Posts);
+			$<?php echo $this->gridViewEdittedName?>Ids = Yii::app()->getRequest()->getPost('<?php echo $this->gridViewEdittedName?>');
 
 			$errorModel = null;
 
 			$model = new <?php echo $this->modelClass; ?>;
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('<?php echo $this->tableSchema->primaryKey; ?>', $<?php echo $this->gridViewEditName?>Ids);
+			$criteria->compare('<?php echo $this->tableSchema->primaryKey; ?>', $<?php echo $this->gridViewEdittedName?>Ids);
 
 			$models = <?php echo $this->modelClass; ?>::model()->findAll($criteria);
 
 			foreach ($models as $model){
 				$model->setAttributes($<?php echo $this->gridViewEditName?>Posts[$model-><?php echo $this->tableSchema->primaryKey; ?>]);
+				
 				if(!$model->validate()) {
 					$errorModel = $model;
 					break;
@@ -325,6 +330,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
 				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+				
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));

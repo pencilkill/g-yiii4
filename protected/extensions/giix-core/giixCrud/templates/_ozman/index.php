@@ -100,11 +100,28 @@ echo "<?php\n
 								'selectableRows' => 2,
 								'class' => 'CCheckBoxColumn',
 								'headerHtmlOptions' => array(
+									'style'=>'display:none;'
+								),
+								'filterHtmlOptions' => array(
+									'style'=>'display:none;'
+								),
+								'htmlOptions' => array(
+									'style'=>'display:none;'
+								),
+								'checkBoxHtmlOptions' => array(
+									// The value is autofill
+									'name' => '<?php echo $this->gridViewEdittedName?>[]',
+								),
+							),
+							array(
+								'selectableRows' => 2,
+								'class' => 'CCheckBoxColumn',
+								'headerHtmlOptions' => array(
 									'width' => 1,
 								),
 								'checkBoxHtmlOptions' => array(
 									// The value is autofill
-									'name' => 'GridViewSelect[]',
+									'name' => '<?php echo $this->gridViewSelectName?>[]',
 								),
 							),
 					<?php if($this->i18n){?>
@@ -161,6 +178,12 @@ echo "<?php\n
 
 
 <script type="text/javascript">
+jQuery('body').on('change', '#<?php echo $this->class2id($this->modelClass)?>-grid-form [name^="<?php echo $this->gridViewEditName?>"]', function(){
+	$(this).closest('tr').find(':checkbox[name^="<?php echo $this->gridViewEdittedName?>"]:not(:disabled)').attr({'checked':true});
+});
+</script>
+
+<script type="text/javascript">
 /*
  * Grid View Delete
  */
@@ -168,7 +191,8 @@ echo "<?php\n
 	 var params = {
 			id : '<?php echo $this->class2id($this->modelClass)?>-grid'
 			, url : '<?php echo '<?php'; ?> echo $this->createUrl('gridviewdelete'); ?>'
-			, checkBoxColumn : ':checkbox:not(:disabled)[name^="GridViewSelect"]:checked'
+			, checkBoxColumn : ':checkbox:not(:disabled)[name^="<?php echo $this->gridViewSelectName?>"]:checked'
+			, postName : '<?php echo $this->gridViewPostName?>'
 			, postData : {returnUrl : '<?php echo '<?php'; ?> echo Yii::app()->getRequest()->url?>'}
 			, deleteConfirmation : '<?php echo '<?php'; ?> echo Yii::t('app', 'Confirm Grid View Delete?')?>'
 			, selectNoneMessage : '<?php echo '<?php'; ?> echo Yii::t('app', 'No Results Found');?>'

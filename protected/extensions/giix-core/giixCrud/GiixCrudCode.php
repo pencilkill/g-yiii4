@@ -38,9 +38,15 @@ class GiixCrudCode extends CrudCode {
 	//
 	public $manyRelation = false;
 	//
+	public $gridViewSelectName = 'GridViewSelect';
+	//
+	public $gridViewPostName = 'selected';
+	//
 	public $gridViewDeleteAction = 'Gridviewdelete';
 	//
 	public $gridViewEditName = 'edit';
+	//
+	public $gridViewEdittedName = 'editted';
 	//
 	public $gridViewEditAction = 'Gridviewupdate';
 

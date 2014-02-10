@@ -46,7 +46,8 @@ jQuery(function($) {
 			{
 				id : null,	// grid form id
 				url : null,	// action url
-				checkBoxColumn : ':checkbox:not(:disabled)[name^="GridViewSelect"]:checked',	// checkbox selector 
+				checkBoxColumn : ':checkbox:not(:disabled)[name^="GridViewSelect"]:checked',	// checkbox selector
+				postName : 'select',
 				postData : {
 					returnUrl : window.location.href	// extra data to post
 				},
@@ -70,7 +71,7 @@ jQuery(function($) {
 				params.url, 
 				$.extend(
 						params.postData || {}, 
-						{'selected[]' : selected}
+						{params.postName + '[]' : selected}
 				), 
 				function(data) {
 					var ret = $.parseJSON(data);
