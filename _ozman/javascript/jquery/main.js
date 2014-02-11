@@ -66,13 +66,12 @@ jQuery(function($) {
 			selected.push($(this).val());
 		});
 		
+		params.postData[params.postName + '[]'] = selected;
+		
 		if (selected.length > 0) {
 			confirm(params.deleteConfirmation) && $.post(
 				params.url, 
-				$.extend(
-						params.postData || {}, 
-						{params.postName + '[]' : selected}
-				), 
+				params.postData, 
 				function(data) {
 					var ret = $.parseJSON(data);
 					if (ret != null && ret.success != null && ret.success) {

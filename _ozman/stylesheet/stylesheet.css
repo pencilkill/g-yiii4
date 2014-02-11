@@ -39,7 +39,7 @@ label {
 	cursor: pointer;
 }
 #header .div1 {
-	height: 56px;
+	height: 65px;
 	padding: 0px 30px;
 	background: url('../image/header.png') repeat-x;
 	min-width: 900px;
@@ -49,6 +49,12 @@ label {
 	padding: 18px 0px 0px 0px;
 	float: left;
 }
+#header .div2 span {
+	font-weight: bold;
+}
+#header .div2 .logo {
+	height: 30px;
+}
 #header .div3 {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
@@ -57,14 +63,16 @@ label {
 	padding: 15px 0px 0px 0px;
 	float: right;
 }
-#header .div2 span {
-	font-weight: bold;
+#header .div3 .lock {
+	position: relative;
+	height: 30px;
+	top: 3px;
 }
 #menu {
 	background: url('../image/menu.png') repeat-x;
 	position: relative;
 	z-index: 1;
-	height: 34px;
+	height: 36px;
 	clear: both;
 	padding: 0px 30px;
 	min-width: 900px;
@@ -96,7 +104,8 @@ label {
 	background: url('../image/split.png') center left no-repeat;
 }
 #menu > ul .top, #menu > ul li li.sfhover {
-	padding: 10px 15px 9px 17px;
+	text-shadow: 1px 1px 1px #444444;
+	padding: 11px 20px 10px 20px;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	color: #FFFFFF;
@@ -105,8 +114,18 @@ label {
 #menu > ul ul li {
 	padding: 2px;
 }
+#menu > ul li.selected + li{
+	background: none;
+}
 #menu > ul .selected .top {
-	background: url('../image/selected.png') repeat-x;
+	padding: 10px 20px 10px 20px;
+	border-top:1px solid #848484;
+	background:#757474;
+	-webkit-box-shadow: inset 0 3px 20px rgba(0, 0, 0, .2);
+	-moz-box-shadow: inset 0 3px 20px rgba(0, 0, 0, .2);
+	box-shadow: inset 0 3px 20px rgba(0, 0, 0, .2);
+	/*background: url('../image/selected.png') repeat-x;*/
+	color: #FFFFFF;
 	color: #FFFFFF;
 }
 #menu > ul .selected:hover a.top, #menu > ul .sfhover a.top {
@@ -133,7 +152,7 @@ label {
 	margin: -27px 0 0 157px;
 }
 #menu > ul li li:hover, #menu > ul li li.sfhover {
-	background: #C55B27;
+	background: #333333;
 	color: #000000;
 }
 #container {

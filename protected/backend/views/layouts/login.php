@@ -15,7 +15,7 @@
 <div id="container">
 <div id="header">
   <div class="div1">
-    <div class="div2"><img src="_ozman/image/logo.gif" style="height: 26px;" title="<?php echo Yii::app()->name; ?>" onclick="location = '<?php echo Yii::app()->homeUrl; ?>'" /></div>
+    <div class="div2"><img class="logo" src="_ozman/image/logo.gif" title="<?php echo Yii::app()->name; ?>" onclick="location = '<?php echo Yii::app()->homeUrl; ?>'" /></div>
   </div>
 </div>
 

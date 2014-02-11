@@ -36,9 +36,9 @@
 <div id="container">
 <div id="header">
   <div class="div1">
-    <div class="div2"><img src="_ozman/image/logo.gif" style="height: 26px;" title="<?php echo Yii::app()->name; ?>" onclick="location = '<?php echo Yii::app()->homeUrl; ?>'" /></div>
+    <div class="div2"><img class="logo" src="_ozman/image/logo.gif" title="<?php echo Yii::app()->name; ?>" onclick="location = '<?php echo Yii::app()->homeUrl; ?>'" /></div>
     <?php if (empty(Yii::app()->user->isGuest)) : ?>
-    <div class="div3"><img src="_ozman/image/lock.png" alt="" style="position: relative; top: 3px;" />&nbsp;<?php echo Yii::t('app', 'Welcome to administration panel:') . Yii::app()->user->name; ?></div>
+    <div class="div3"><img class="lock" src="_ozman/image/lock.png"/>&nbsp;<?php echo Yii::t('app', 'Welcome to administration panel:') . Yii::app()->user->name; ?></div>
     <?php endif; ?>
   </div>
   <?php if (empty(Yii::app()->user->isGuest)) : ?>
