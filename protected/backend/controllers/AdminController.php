@@ -14,6 +14,8 @@ class AdminController extends GxController {
 		// except super ar
 		$model->super = 0;
 
+		Yii::app()->user->setState('admin-grid-url', Yii::app()->request->url);
+
 		$this->render('index', array(
 			'model' => $model,
 		));
@@ -36,28 +38,43 @@ class AdminController extends GxController {
 			// 超級管理員只可手動設定
 			$model->super = 0;
 
+			$valid = $model->validate();
 
-			if ($model->validate()) {
-				$model->save(false);
+			if ($valid) {
+				$transaction = Yii::app()->db->beginTransaction();
 
-				// RBAC revoke roles
-				$assignedRoles = Rights::getAssignedRoles($model->admin_id, false); // sort false
-				foreach ($assignedRoles as $roleName => $roleItem){
-					Rights::revoke($roleName, $model->admin_id);
-				}
+                try{
+					$model->save(false);
 
-				// RBAC assign roles, acctual rights recursive setting is already finished
-				// here is just for compatibility
-				foreach($model->roles as $role){
-					Rights::assign($role, $model->admin_id);
-				}
+					// RBAC revoke roles
+					$assignedRoles = Rights::getAssignedRoles($model->admin_id, false); // sort false
+					foreach ($assignedRoles as $roleName => $roleItem){
+						Rights::revoke($roleName, $model->admin_id);
+					}
 
-				if (Yii::app()->getRequest()->getIsAjaxRequest()){
-					Yii::app()->end();
-				}else{
-					$this->redirect(array('index'));
-				}
-			}
+					// RBAC assign roles, acctual rights recursive setting is already finished
+					// here is just for compatibility
+					foreach($model->roles as $role){
+						Rights::assign($role, $model->admin_id);
+					}
+
+					$transaction->commit();
+
+	                if (Yii::app()->getRequest()->getIsAjaxRequest()){
+						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+
+                        Yii::app()->end();
+                    }else{
+                        $this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
+                    }
+                }catch(CDbException $e){
+                    $transaction->rollback();
+
+                    Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
+                }
+            }else{
+                Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
+            }
 		}
 		// authenticatedName as default
 		if(empty($model->roles) && $role = Yii::app()->getModule('rights')->authenticatedName){
@@ -88,27 +105,44 @@ class AdminController extends GxController {
 
 			$model->setAttributes($_POST['Admin']);
 
-			if ($model->validate()) {
-				$model->save(false);
+			$valid = $model->validate();
 
-				// RBAC revoke roles
-				$assignedRoles = Rights::getAssignedRoles($model->admin_id, false); // sort false
-				foreach ($assignedRoles as $roleName => $roleItem){
-					Rights::revoke($roleName, $model->admin_id);
-				}
+			if ($valid) {
+				$transaction = Yii::app()->db->beginTransaction();
 
-				// RBAC assign roles, acctual rights recursive setting is already finished
-				// here is just for compatibility
-				foreach($model->roles as $role){
-					Rights::assign($role, $model->admin_id);
-				}
+				try{
 
-				if (Yii::app()->getRequest()->getIsAjaxRequest()){
-					Yii::app()->end();
-				}else{
-					$this->redirect(array('index'));
-				}
-			}
+					$model->save(false);
+
+					// RBAC revoke roles
+					$assignedRoles = Rights::getAssignedRoles($model->admin_id, false); // sort false
+					foreach ($assignedRoles as $roleName => $roleItem){
+						Rights::revoke($roleName, $model->admin_id);
+					}
+
+					// RBAC assign roles, acctual rights recursive setting is already finished
+					// here is just for compatibility
+					foreach($model->roles as $role){
+						Rights::assign($role, $model->admin_id);
+					}
+
+					$transaction->commit();
+
+                    if (Yii::app()->getRequest()->getIsAjaxRequest()){
+                        echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+
+                        Yii::app()->end();
+                    }else{
+                        $this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
+                    }
+                }catch(CDbException $e){
+                    $transaction->rollback();
+
+                    Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
+                }
+            }else{
+                Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
+            }
 		}
 
 		$this->render('update', array(
@@ -132,17 +166,36 @@ class AdminController extends GxController {
 		if (isset($_POST['Admin'])) {
 			$model->setAttributes($_POST['Admin']);
 
-			if ($model->validate()) {
-				$model->save(false);
+			$valid = $model->validate();
 
-				if (Yii::app()->getRequest()->getIsAjaxRequest())
-					Yii::app()->end();
-				else{
-					Yii::app()->user->setFlash('success', Yii::t('app', 'Operation Success'));
-					$this->refresh();
-					$this->redirect(array('account', array('id' => $id)));
-				}
-			}
+			if ($valid) {
+				$transaction = Yii::app()->db->beginTransaction();
+
+				try{
+
+					$model->save(false);
+
+					$transaction->commit();
+
+                    if (Yii::app()->getRequest()->getIsAjaxRequest()){
+                        echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+
+                        Yii::app()->end();
+                    }else{
+                        Yii::app()->user->setFlash('success', Yii::t('app', 'Operation Success'));
+
+                        $this->refresh();
+
+                        $this->redirect(array('account', array('id' => $id)));
+                    }
+                }catch(CDbException $e){
+                    $transaction->rollback();
+
+                    Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
+                }
+            }else{
+                Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
+            }
 		}
 
 		$this->render('account', array(
@@ -152,23 +205,32 @@ class AdminController extends GxController {
 
 	public function actionDelete($id) {
 		if (Yii::app()->getRequest()->getIsPostRequest()) {
-			$this->loadModel($id, 'Admin')->delete();
+            $model = $this->loadModel($id, 'Admin');
 
-			if (!Yii::app()->getRequest()->getIsAjaxRequest()){
-				$this->redirect(array('index'));
-			}
-		} else {
-			throw new CHttpException(400, Yii::t('app', 'Your request is invalid.'));
-		}
+            if(!$model->delete()){
+                Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure'));
+            }
+
+            if (Yii::app()->getRequest()->getIsAjaxRequest()){
+                echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+
+                Yii::app()->end();
+            }else{
+                $this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->createUrl('index'));
+            }
+        } else {
+            throw new CHttpException(400, Yii::t('app', 'Your request is invalid.'));
+        }
 	}
 
 
 	public function actionGridviewdelete() {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
-			$selected = Yii::app()->getRequest()->getPost('selected');
+			$selectedIds = Yii::app()->getRequest()->getPost('selected');
 
-			$criteria= new CDbCriteria;
-			$criteria->compare('admin_id', $selected);
+            $criteria= new CDbCriteria;
+            $criteria->compare('admin_id', $selectedIds);
+
 			// except super ar
 			$criteria->compare('super', 0);
 
@@ -199,6 +261,7 @@ class AdminController extends GxController {
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
 				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
@@ -212,14 +275,16 @@ class AdminController extends GxController {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
 
 			$editPosts = Yii::app()->getRequest()->getPost('edit');
-			$editIds = array_keys($editPosts);
+            $edittedIds = Yii::app()->getRequest()->getPost('editted');
 
 			$errorModel = null;
 
 			$model = new Admin;
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('admin_id', $editIds);
+			$criteria->compare('admin_id', $edittedIds);
+
+			// except super ar
 			$criteria->compare('super', 0);
 
 			$models = Admin::model()->findAll($criteria);
@@ -232,6 +297,7 @@ class AdminController extends GxController {
 
 				if(!$model->validate()) {
 					$errorModel = $model;
+
 					break;
 				}
 			}
@@ -257,6 +323,7 @@ class AdminController extends GxController {
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
 				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));

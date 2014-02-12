@@ -112,7 +112,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 					if (Yii::app()->getRequest()->getIsAjaxRequest()){
 						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
-						
+
 						Yii::app()->end();
 					}else{
 						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
@@ -196,7 +196,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 					if (Yii::app()->getRequest()->getIsAjaxRequest()){
 						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
-						
+
 						Yii::app()->end();
 					}else{
 						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
@@ -229,7 +229,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 			if (Yii::app()->getRequest()->getIsAjaxRequest()){
 				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
-				
+
 				Yii::app()->end();
 			}else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->createUrl('index'));
@@ -274,7 +274,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
 				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
-				
+
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
@@ -302,9 +302,10 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 			foreach ($models as $model){
 				$model->setAttributes($<?php echo $this->gridViewEditName?>Posts[$model-><?php echo $this->tableSchema->primaryKey; ?>]);
-				
+
 				if(!$model->validate()) {
 					$errorModel = $model;
+
 					break;
 				}
 			}
@@ -330,7 +331,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
 				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
-				
+
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));

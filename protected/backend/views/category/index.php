@@ -50,14 +50,14 @@ $this->breadcrumbs = array(
 			<div class="search-form">
 
 			<?php
-
+				/*
 				$this->renderPartial(
 					'_search',
 					array(
 						'model' => $model,
 					)
 				);
-
+				*/
 			?>
 
 			</div><!-- search-form -->
@@ -84,6 +84,23 @@ $this->breadcrumbs = array(
 						'dataProvider' => $model->search(),
 						'filter' => $model,
 						'columns' => array(
+							array(
+								'selectableRows' => 2,
+								'class' => 'CCheckBoxColumn',
+								'headerHtmlOptions' => array(
+									'style'=>'display:none;'
+								),
+								'filterHtmlOptions' => array(
+									'style'=>'display:none;'
+								),
+								'htmlOptions' => array(
+									'style'=>'display:none;'
+								),
+								'checkBoxHtmlOptions' => array(
+									// The value is autofill
+									'name' => 'editted[]',
+								),
+							),
 							array(
 								'selectableRows' => 2,
 								'class' => 'CCheckBoxColumn',
@@ -141,29 +158,45 @@ $this->breadcrumbs = array(
 
 
 <script type="text/javascript">
-/*
- * Grid View Delete
- */
- function GVDelete(){
-	 var params = {
-			id : 'category-grid'
-			, url : '<?php echo $this->createUrl('gridviewdelete'); ?>'
-			, checkBoxColumn : ':checkbox:not(:disabled)[name^="GridViewSelect"]:checked'
-			, postData : {returnUrl : '<?php echo Yii::app()->getRequest()->url?>'}
-			, deleteConfirmation : '<?php echo Yii::t('app', 'Confirm Grid View Delete?')?>'
-			, selectNoneMessage : '<?php echo Yii::t('app', 'No Results Found');?>'
-			, warningMessage : '<?php echo Yii::t('app', 'Operation Failure');?>'
-		};
-	 GridViewDelete(params);
- }
-/*
- * Grid View Update
- */
- function GVUpdate(){
-	var params = {
-		id : 'category-grid-form'
-		, submitConfirmation : '<?php echo Yii::t('app', 'Confirm Grid View Update?')?>'
-	};
-	GridViewUpdate(params);
- }
+jQuery(function($){
+    /*
+     * Grid View Delete
+     */
+     function GVDelete(){
+         var params = {
+                id : 'contact-grid'
+                , url : '<?php echo $this->createUrl('gridviewdelete'); ?>'
+                , checkBoxColumn : ':checkbox:not(:disabled)[name^="GridViewSelect"]:checked'
+                , postName : 'selected'
+                , postData : {returnUrl : '<?php echo Yii::app()->getRequest()->url?>'}
+                , deleteConfirmation : '<?php echo Yii::t('app', 'Confirm Grid View Delete?')?>'
+                , selectNoneMessage : '<?php echo Yii::t('app', 'No Results Found');?>'
+                , warningMessage : '<?php echo Yii::t('app', 'Operation Failure');?>'
+            };
+         GridViewDelete(params);
+     }
+    /*
+     * Grid View Update
+     */
+     function GVUpdate(){
+        var params = {
+            id : 'contact-grid-form'
+            , submitConfirmation : '<?php echo Yii::t('app', 'Confirm Grid View Update?')?>'
+        };
+        GridViewUpdate(params);
+     }
+    /*
+     * Grid View Changed
+     */
+     function GVChanged(){
+        var params = {
+            id : 'contact-grid-form'
+            ,trackEm : '[name^="edit"]'
+            ,parentEm : 'tr'
+            ,checkEm : '[name^="editted"]'
+        };
+        GridViewChanged(params);
+     }
+     GVChanged();
+});
 </script>

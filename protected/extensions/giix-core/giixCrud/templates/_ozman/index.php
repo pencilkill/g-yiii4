@@ -178,36 +178,45 @@ echo "<?php\n
 
 
 <script type="text/javascript">
-jQuery('body').on('change', '#<?php echo $this->class2id($this->modelClass)?>-grid-form [name^="<?php echo $this->gridViewEditName?>"]', function(){
-	$(this).closest('tr').find(':checkbox[name^="<?php echo $this->gridViewEdittedName?>"]:not(:disabled)').attr({'checked':true});
-});
-</script>
-
-<script type="text/javascript">
-/*
- * Grid View Delete
- */
- function GVDelete(){
-	 var params = {
-			id : '<?php echo $this->class2id($this->modelClass)?>-grid'
-			, url : '<?php echo '<?php'; ?> echo $this->createUrl('gridviewdelete'); ?>'
-			, checkBoxColumn : ':checkbox:not(:disabled)[name^="<?php echo $this->gridViewSelectName?>"]:checked'
-			, postName : '<?php echo $this->gridViewPostName?>'
-			, postData : {returnUrl : '<?php echo '<?php'; ?> echo Yii::app()->getRequest()->url?>'}
-			, deleteConfirmation : '<?php echo '<?php'; ?> echo Yii::t('app', 'Confirm Grid View Delete?')?>'
-			, selectNoneMessage : '<?php echo '<?php'; ?> echo Yii::t('app', 'No Results Found');?>'
-			, warningMessage : '<?php echo '<?php'; ?> echo Yii::t('app', 'Operation Failure');?>'
+jQuery(function($){
+	/*
+	 * Grid View Delete
+	 */
+	 function GVDelete(){
+		 var params = {
+				id : '<?php echo $this->class2id($this->modelClass)?>-grid'
+				, url : '<?php echo '<?php'; ?> echo $this->createUrl('gridviewdelete'); ?>'
+				, checkBoxColumn : ':checkbox:not(:disabled)[name^="<?php echo $this->gridViewSelectName?>"]:checked'
+				, postName : '<?php echo $this->gridViewPostName?>'
+				, postData : {returnUrl : '<?php echo '<?php'; ?> echo Yii::app()->getRequest()->url?>'}
+				, deleteConfirmation : '<?php echo '<?php'; ?> echo Yii::t('app', 'Confirm Grid View Delete?')?>'
+				, selectNoneMessage : '<?php echo '<?php'; ?> echo Yii::t('app', 'No Results Found');?>'
+				, warningMessage : '<?php echo '<?php'; ?> echo Yii::t('app', 'Operation Failure');?>'
+			};
+		 GridViewDelete(params);
+	 }
+	/*
+	 * Grid View Update
+	 */
+	 function GVUpdate(){
+		var params = {
+			id : '<?php echo $this->class2id($this->modelClass)?>-grid-form'
+			, submitConfirmation : '<?php echo '<?php'; ?> echo Yii::t('app', 'Confirm Grid View Update?')?>'
 		};
-	 GridViewDelete(params);
- }
-/*
- * Grid View Update
- */
- function GVUpdate(){
-	var params = {
-		id : '<?php echo $this->class2id($this->modelClass)?>-grid-form'
-		, submitConfirmation : '<?php echo '<?php'; ?> echo Yii::t('app', 'Confirm Grid View Update?')?>'
-	};
-	GridViewUpdate(params);
- }
+		GridViewUpdate(params);
+	 }
+	/*
+	 * Grid View Changed
+	 */
+	 function GVChanged(){
+		var params = {
+			id : '<?php echo $this->class2id($this->modelClass)?>-grid-form'
+			,trackEm : '[name^="<?php echo $this->gridViewEditName?>"]'
+			,parentEm : 'tr'
+			,checkEm : '[name^="<?php echo $this->gridViewEdittedName?>"]'
+		};
+		GridViewChanged(params);
+	 }
+	 GVChanged();
+});
 </script>

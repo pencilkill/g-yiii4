@@ -87,10 +87,10 @@ class ContactController extends GxController {
 
 	public function actionGridviewdelete() {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
-			$selected = Yii::app()->getRequest()->getPost('selected');
+			$selectedIds = Yii::app()->getRequest()->getPost('selected');
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('contact_id', $selected);
+			$criteria->compare('contact_id', $selectedIds);
 
 			$models = Category::model()->findAll($criteria);
 
@@ -133,14 +133,14 @@ class ContactController extends GxController {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
 
 			$editPosts = Yii::app()->getRequest()->getPost('edit');
-			$editIds = array_keys($editPosts);
+			$edittedIds = Yii::app()->getRequest()->getPost('editted');
 
 			$errorModel = null;
 
 			$model = new Contact;
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('contact_id', $editIds);
+			$criteria->compare('contact_id', $edittedIds);
 
 			$models = Contact::model()->findAll($criteria);
 

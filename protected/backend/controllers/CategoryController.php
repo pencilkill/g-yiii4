@@ -191,10 +191,10 @@ class CategoryController extends GxController {
 
 	public function actionGridviewdelete() {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
-			$selected = Yii::app()->getRequest()->getPost('selected');
+			$selectedIds = Yii::app()->getRequest()->getPost('selected');
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('category_id', $selected);
+			$criteria->compare('category_id', $selectedIds);
 
 			$models = Category::model()->findAll($criteria);
 
@@ -237,14 +237,14 @@ class CategoryController extends GxController {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
 
 			$editPosts = Yii::app()->getRequest()->getPost('edit');
-			$editIds = array_keys($editPosts);
+			$edittedIds = Yii::app()->getRequest()->getPost('editted');
 
 			$errorModel = null;
 
 			$model = new Category;
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('category_id', $editIds);
+			$criteria->compare('category_id', $edittedIds);
 
 			$models = Category::model()->findAll($criteria);
 
@@ -277,6 +277,7 @@ class CategoryController extends GxController {
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
 				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));

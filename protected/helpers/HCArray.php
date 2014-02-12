@@ -145,7 +145,7 @@ class HCArray {
 		foreach ($array as $key => $val)
 		{
 			// Map the callback to the key
-			$array[$key] = is_array($val) ? arr::map_recursive($callback, $val) : call_user_func($callback, $val);
+			$array[$key] = is_array($val) ? self::map_recursive($callback, $val) : call_user_func($callback, $val);
 		}
 
 		return $array;
@@ -183,7 +183,7 @@ class HCArray {
 			}
 		}
 
-		if ($high == count($haystack) OR $haystack[$high] != $needle)
+		if ($high == count($haystack) || $haystack[$high] != $needle)
 		{
 			if ($nearest === FALSE)
 			return FALSE;
@@ -219,7 +219,7 @@ class HCArray {
 					if (is_array($val))
 					{
 						// Arrays are merged recursively
-						$result[$key] = arr::merge($result[$key], $val);
+						$result[$key] = self::merge($result[$key], $val);
 					}
 					elseif (is_int($key))
 					{
@@ -303,7 +303,7 @@ class HCArray {
 			if (is_array($value))
 			{
 				// Convert the array to an object
-				$value = arr::to_object($value, $class);
+				$value = self::to_object($value, $class);
 			}
 
 			// Add the value to the object
@@ -471,7 +471,7 @@ class HCArray {
 		print_r(array_last_dimension($_POST['example']));
 	 *
 	 */
-public static function array_last_dimension(array $array = NULL, string $leftSymbol = NULL, string $rightSymbol = NULL){
+	public static function array_last_dimension(array $array = NULL, string $leftSymbol = NULL, string $rightSymbol = NULL){
 		$argc = func_num_args();
 		$params = func_get_args();
 
@@ -517,5 +517,32 @@ public static function array_last_dimension(array $array = NULL, string $leftSym
 		}
 
 		return $inputs;
+	}
+
+	/**
+	 * Array differ associate recursive
+	 *
+	 * @param $array1, Array
+	 * @param $array2, Array
+	 */
+	public static function array_diff_assoc_recursive($array1, $array2) {
+	    $difference=array();
+	    foreach($array1 as $key => $value) {
+	        if(is_array($value)) {
+	            if(!isset($array2[$key]) || !is_array($array2[$key])) {
+	                $difference[$key] = $value;
+	            } else {
+	                $new_diff = self::array_diff_assoc_recursive($value, $array2[$key]);
+
+	                if(!empty($new_diff)){
+	                    $difference[$key] = $new_diff;
+	                }
+	            }
+	        } else if(!array_key_exists($key,$array2) || $array2[$key] !== $value ) {
+	            $difference[$key] = $value;
+	        }
+	    }
+
+	    return $difference;
 	}
 } // End arr

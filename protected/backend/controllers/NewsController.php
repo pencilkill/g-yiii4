@@ -187,10 +187,10 @@ class NewsController extends GxController {
 
 	public function actionGridviewdelete() {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
-			$selected = Yii::app()->getRequest()->getPost('selected');
+			$selectedIds = Yii::app()->getRequest()->getPost('selected');
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('news_id', $selected);
+			$criteria->compare('news_id', $selectedIds);
 
 			$models = Category::model()->findAll($criteria);
 
@@ -233,14 +233,14 @@ class NewsController extends GxController {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
 
 			$editPosts = Yii::app()->getRequest()->getPost('edit');
-			$editIds = array_keys($editPosts);
+			$edittedIds = Yii::app()->getRequest()->getPost('editted');
 
 			$errorModel = null;
 
 			$model = new News;
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('news_id', $editIds);
+			$criteria->compare('news_id', $edittedIds);
 
 			$models = News::model()->findAll($criteria);
 

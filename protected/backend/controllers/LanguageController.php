@@ -134,10 +134,10 @@ class LanguageController extends GxController {
 
 	public function actionGridviewdelete() {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
-			$selected = Yii::app()->getRequest()->getPost('selected');
+			$selectedIds = Yii::app()->getRequest()->getPost('selected');
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('language_id', $selected);
+			$criteria->compare('language_id', $selectedIds);
 
 			$models = Category::model()->findAll($criteria);
 
@@ -180,14 +180,14 @@ class LanguageController extends GxController {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
 
 			$editPosts = Yii::app()->getRequest()->getPost('edit');
-			$editIds = array_keys($editPosts);
+			$edittedIds = Yii::app()->getRequest()->getPost('editted');
 
 			$errorModel = null;
 
 			$model = new Language;
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('language_id', $editIds);
+			$criteria->compare('language_id', $edittedIds);
 
 			$models = Language::model()->findAll($criteria);
 

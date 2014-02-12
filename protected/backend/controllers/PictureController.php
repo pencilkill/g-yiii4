@@ -187,10 +187,10 @@ class PictureController extends GxController {
 
 	public function actionGridviewdelete() {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
-			$selected = Yii::app()->getRequest()->getPost('selected');
+			$selectedIds = Yii::app()->getRequest()->getPost('selected');
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('picture_id', $selected);
+			$criteria->compare('picture_id', $selectedIds);
 
 			$models = Category::model()->findAll($criteria);
 
@@ -233,14 +233,14 @@ class PictureController extends GxController {
 		if (Yii::app()->getRequest()->getIsPostRequest()){
 
 			$editPosts = Yii::app()->getRequest()->getPost('edit');
-			$editIds = array_keys($editPosts);
+			$edittedIds = Yii::app()->getRequest()->getPost('editted');
 
 			$errorModel = null;
 
 			$model = new Picture;
 
 			$criteria= new CDbCriteria;
-			$criteria->compare('picture_id', $editIds);
+			$criteria->compare('picture_id', $edittedIds);
 
 			$models = Picture::model()->findAll($criteria);
 

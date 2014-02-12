@@ -87,6 +87,23 @@ $this->breadcrumbs = array(
 								'selectableRows' => 2,
 								'class' => 'CCheckBoxColumn',
 								'headerHtmlOptions' => array(
+									'style'=>'display:none;'
+								),
+								'filterHtmlOptions' => array(
+									'style'=>'display:none;'
+								),
+								'htmlOptions' => array(
+									'style'=>'display:none;'
+								),
+								'checkBoxHtmlOptions' => array(
+									// The value is autofill
+									'name' => 'editted[]',
+								),
+							),
+							array(
+								'selectableRows' => 2,
+								'class' => 'CCheckBoxColumn',
+								'headerHtmlOptions' => array(
 									'width' => 1,
 								),
 								'checkBoxHtmlOptions' => array(

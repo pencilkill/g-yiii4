@@ -110,6 +110,27 @@ jQuery(function($) {
 		return false;
 	}
 	/**
+	 * Grid View Changed event
+	 */
+	GridViewChanged = function (params) {
+		var params = $.extend({}, {
+			id : null,
+			trackEm : '[name^="edit"]',
+			parentEm : 'tr',
+			checkEm : '[name^="editted"]'
+		}, params || {});
+		
+		if (!params.id){
+			return false;
+		}
+		
+		jQuery('body').on('change', '#' + params.id + ' ' + params.trackEm, function(){
+			$(this).closest(params.parentEm).find(':checkbox' + params.checkEm + ':not(:disabled)').attr({'checked':true});
+		});
+		
+		return false;
+	}
+	/**
 	 * CKEditor Dynamic Update Value
 	 */
 	CKFormUpdateValue = function (){
