@@ -97,8 +97,16 @@ class CSqlDataProvider extends CDataProvider
 		if(($pagination=$this->getPagination())!==false)
 		{
 			$pagination->setItemCount($this->getTotalItemCount());
+
 			$limit=$pagination->getLimit();
 			$offset=$pagination->getOffset();
+			$itemCount = $pagination->getItemCount();
+
+			// fix limit(e.g. mssql) sam@ozchamp.net
+            if(($limit + $offset) > $itemCount){
+            	$limit = $itemCount - $offset;
+            }
+
 			$command->text=$command->getConnection()->getCommandBuilder()->applyLimit($command->text,$limit,$offset);
 		}
 

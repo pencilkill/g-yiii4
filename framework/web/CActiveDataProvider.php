@@ -177,6 +177,15 @@ class CActiveDataProvider extends CDataProvider
 		{
 			$pagination->setItemCount($this->getTotalItemCount());
 			$pagination->applyLimit($criteria);
+
+			$limit=$pagination->getLimit();
+			$offset=$pagination->getOffset();
+			$itemCount = $pagination->getItemCount();
+
+			// fix limit(e.g. mssql) sam@ozchamp.net
+            if(($limit + $offset) > $itemCount){
+            	$criteria->limit = $itemCount - $offset;
+            }
 		}
 
 		$baseCriteria=$this->model->getDbCriteria(false);

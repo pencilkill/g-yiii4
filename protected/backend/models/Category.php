@@ -105,7 +105,7 @@ class Category extends BaseCategory
     }
 
 
-    public function beforeDelete(){
+    protected function beforeDelete(){
     	// Raise event
     	if(!parent::beforeDelete()) return false;
 

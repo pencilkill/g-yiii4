@@ -37,7 +37,7 @@
               <?php echo $form->textField($model,'verifyCode'); ?>
               <?php echo $form->error($model,'verifyCode'); ?>
               <br />
-              <?php $this->widget('CCaptcha'); ?>
+              <?php $this->widget('CCaptcha', array('imageOptions' => array('width' => 120, 'height' => 50))); ?>
               <br />
               <br />
               <?php echo $form->checkBox($model,'rememberMe'); ?>

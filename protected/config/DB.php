@@ -3,12 +3,17 @@ if(strpos(strtolower($_SERVER['HTTP_HOST']),'local')!==false){
 	return array(
 		'initSQLs'=>array('SET time_zone=\'+08:00\';'),
 		'emulatePrepare' => true,
-		'charset' => 'utf8',
-		'tablePrefix' => '',
 		'connectionString' => 'mysql:host=localhost;dbname=yii_yiii4',
 		'username' => 'root',
 		'password' => '123456',
-		// enable for toolbar
+		/*
+		'connectionString' => 'sqlsrv:Server=pc-20120330mgyk\sqlexpress;Database=twheiar',
+		'username' => 'sa',
+		'password' => '123456',
+		*/
+		'charset' => 'utf8',
+		'tablePrefix' => '',
+		//
 		'enableProfiling' => true,
      	'enableParamLogging' => true,
 	);
@@ -16,12 +21,12 @@ if(strpos(strtolower($_SERVER['HTTP_HOST']),'local')!==false){
 	return array(
 		'initSQLs'=>array('SET time_zone=\'+08:00\';'),
 		'emulatePrepare' => true,
-		'charset' => 'utf8',
-		'tablePrefix' => '',
 		'connectionString' => 'mysql:host=localhost;dbname=yii_yiii',
 		'username' => '',
 		'password' => '',
-		// enable for toolbar
+		'charset' => 'utf8',
+		'tablePrefix' => '',
+		//
 		'enableProfiling' => true,
      	'enableParamLogging' => true,
 	);
@@ -29,12 +34,12 @@ if(strpos(strtolower($_SERVER['HTTP_HOST']),'local')!==false){
 	return array(
 		'initSQLs'=>array('SET time_zone=\'+08:00\';'),
 		'emulatePrepare' => true,
-		'charset' => 'utf8',
-		'tablePrefix' => '',
 		'connectionString' => 'mysql:host=localhost;dbname=yii_yiii',
 		'username' => '',
 		'password' => '',
-		// enable for toolbar
+		'charset' => 'utf8',
+		'tablePrefix' => '',
+		//
 		'enableProfiling' => true,
      	'enableParamLogging' => true,
 	);

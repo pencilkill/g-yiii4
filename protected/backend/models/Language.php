@@ -36,7 +36,7 @@ class Language extends BaseLanguage
 		));
 	}
 
-	public function beforeSave(){
+	protected function beforeSave(){
 		if(!parent::beforeSave()) return false;
 
 		if(Language::model()->count() == 1){
@@ -46,7 +46,7 @@ class Language extends BaseLanguage
 		return true;
 	}
 
-	public function beforeDelete(){
+	protected function beforeDelete(){
 		if(!parent::beforeDelete()) return false;
 
 		if(Language::model()->count() == 1){

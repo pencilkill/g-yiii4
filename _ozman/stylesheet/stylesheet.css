@@ -7,6 +7,7 @@ body {
 	margin: 0;
 	padding: 0;
 	height: 100%;
+	min-width: 1280px;
 	background: #FFFFFF;
 }
 body, td, th, input, select, textarea, option, optgroup {
@@ -41,7 +42,7 @@ label {
 #header .div1 {
 	height: 65px;
 	padding: 0px 30px;
-	background: url('../image/header.png') repeat-x;
+	background: #282828;
 	min-width: 900px;
 }
 #header .div2 {
@@ -105,7 +106,7 @@ label {
 }
 #menu > ul .top, #menu > ul li li.sfhover {
 	text-shadow: 1px 1px 1px #444444;
-	padding: 11px 20px 10px 20px;
+	padding: 10px 20px 10px 20px;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	color: #FFFFFF;
@@ -260,12 +261,12 @@ label.error {
 	-moz-border-radius: 7px 7px 0px 0px;
 	-khtml-border-radius: 7px 7px 0px 0px;
 	background-color: #EFEFEF;
-	background: -webkit-gradient(linear,0 0,0 100%,from(#DBDBDB),to(#EFEFEF));
-	background: -moz-linear-gradient(#DBDBDB, #EFEFEF);
-	background: -o-linear-gradient(#DBDBDB, #EFEFEF);
-	background: linear-gradient(top center, #DBDBDB, #EFEFEF);
-	filter:alpha(opacity=100 finishopacity=50 style=1 startx=0,starty=0,finishx=0,finishy=130) progid:DXImageTransform.Microsoft.gradient(startcolorstr='#DBDBDB',endcolorstr='#EFEFEF',gradientType=0);
-	-ms-filter:alpha(opacity=100 finishopacity=50 style=1 startx=0,starty=0,finishx=0,finishy=130) progid:DXImageTransform.Microsoft.gradient(startcolorstr='#DBDBDB',endcolorstr='#EFEFEF',gradientType=0);
+	background: -webkit-gradient(linear,0 0,0 100%,from(#EFEFEF),to(#DBDBDB));
+	background: -moz-linear-gradient(#EFEFEF, #DBDBDB);
+	background: -o-linear-gradient(#EFEFEF, #DBDBDB);
+	background: linear-gradient(top center, #EFEFEF, #DBDBDB);
+	filter:alpha(opacity=100 finishopacity=50 style=1 startx=0,starty=0,finishx=0,finishy=130) progid:DXImageTransform.Microsoft.gradient(startcolorstr='#EFEFEF',endcolorstr='#DBDBDB',gradientType=0);
+	-ms-filter:alpha(opacity=100 finishopacity=50 style=1 startx=0,starty=0,finishx=0,finishy=130) progid:DXImageTransform.Microsoft.gradient(startcolorstr='#EFEFEF',endcolorstr='#DBDBDB',gradientType=0);
 }
 /*
 .box > .heading {

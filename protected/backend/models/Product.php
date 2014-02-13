@@ -85,7 +85,7 @@ class Product extends BaseProduct
 	}
 
 
-    public function beforeDelete(){
+    protected function beforeDelete(){
     	// Raise event
     	if(!parent::beforeDelete()) return false;
 

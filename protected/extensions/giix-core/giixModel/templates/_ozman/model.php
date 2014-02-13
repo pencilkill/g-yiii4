@@ -203,7 +203,7 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseModelClass."\n"; 
 <?php endif;?>
 <?php if($beforeDelete){?>
 
-    public function beforeDelete(){
+    protected function beforeDelete(){
     	// Raise event
     	if(!parent::beforeDelete()) return false;
 

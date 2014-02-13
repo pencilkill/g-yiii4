@@ -63,7 +63,7 @@ class PictureType extends BasePictureType
 	}
 
 
-    public function beforeDelete(){
+    protected function beforeDelete(){
     	// Raise event
     	if(!parent::beforeDelete()) return false;
 

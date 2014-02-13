@@ -82,7 +82,7 @@ class Admin extends BaseAdmin
 		return $valid;
     }
 
-	public function beforeSave() {
+	protected function beforeSave() {
 		if( ! parent::beforeSave()) return false;
 
 		if(trim($this->password)){
@@ -94,11 +94,13 @@ class Admin extends BaseAdmin
 		return true;
 	}
 
-	public function beforeDelete() {
+	protected function beforeDelete() {
 		return $this->super ? false : true;
 	}
 
-	public function afterDelete(){
+	protected function afterDelete(){
+		parent::afterDelete();
+
 		$assignedRoles = Rights::getAssignedRoles($this->admin_id, false); // sort false
 		foreach ($assignedRoles as $roleName => $roleItem){
 			Rights::revoke($roleName, $this->admin_id);
