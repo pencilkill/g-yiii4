@@ -13,6 +13,7 @@ return array(
 		'frontend.models.*',
 		'frontend.components.*',
 		'frontend.extensions.ELinkPager',
+		'frontend.extensions.MobileDetect.MobileDetect',
 	),
 	// application components
 	'components'=>array(
