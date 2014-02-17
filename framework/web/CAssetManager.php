@@ -226,7 +226,10 @@ class CAssetManager extends CApplicationComponent
 					@chmod($dstDir,$this->newDirMode);
 				}
 
-				if($this->linkAssets && !is_file($dstFile)) symlink($src,$dstFile);
+				if($this->linkAssets && !is_file($dstFile))
+				{
+					 symlink($src,$dstFile);
+				}
 				elseif(@filemtime($dstFile)<@filemtime($src))
 				{
 					copy($src,$dstFile);

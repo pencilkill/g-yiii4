@@ -33,4 +33,5 @@ return array (
   'Meta' => '搜尋優化',
   'Setting' => '設置',
   'Update' => '更新',
+  'Asset Manager' => '緩存管理',
 );

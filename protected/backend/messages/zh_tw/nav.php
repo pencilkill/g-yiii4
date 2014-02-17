@@ -29,6 +29,7 @@ return array (
   'News' => '最新消息',
   'Product' => '產品',
   'Setting' => '網站設定',
+  'Asset' => '緩存管理',
   'Site Frontend' => '網站首頁',
   'System' => '系統設定',
 );

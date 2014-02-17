@@ -22,19 +22,21 @@ class Controller extends CController
 	public $breadcrumbs=array();
 
 	/**
-	 * @var assetsUrl
+	 * @var skinUrl(assetsUrl), based on theme
 	 */
-	public $assetsUrl;
+	public $skinUrl;
 
 	/**
 	 * see app behavior to get more about init()
 	 */
 	public function init() {
 		parent::init();
-		// default head
-		$this->setDefaultMeta();
-		// assetsUrl
-		$this->assetsUrl = $this->assetsUrl();
+
+		// $skinUrl
+		$this->skinUrl = $this->publishThemeAssets();
+
+		// default Meta
+		$this->registerBaseMetas();
 	}
 
 	/**
@@ -81,7 +83,7 @@ class Controller extends CController
      * The core jquery script is not included, it will be registered in main layout if necessary
      * We can change title and meta dynamically using the meta unique id which is the fifth parameter for app registerMetaTag()
      */
-    public function setDefaultMeta(){
+    public function registerBaseMetas(){
     	$li = Yii::app()->params->languageId;
     	$mt = 'meta_title_'.$li;
     	$mk = 'meta_keywords_'.$li;
@@ -89,30 +91,31 @@ class Controller extends CController
 
     	// title
     	$this->pageTitle = Yii::app()->config->get($mt);
+
     	// metaTags
     	Yii::app()->clientScript->registerMetaTag(Yii::app()->config->get($mk), 'keywords', null, null, 'keywords');
     	Yii::app()->clientScript->registerMetaTag(Yii::app()->config->get($md), 'description', null, null, 'description');
     }
 
     /**
-     * Using to get assetsUrl dynamically
+     * Using to get publishUrl dynamically, base on theme
      * @see this->init()
      * @param $assets
      */
-    public function assetsUrl($assets = 'assets'){
-    	$publishPath = null;
-
-    	if(empty($publishPath) && Yii::app()->theme && is_dir($path = Yii::app()->theme->basePath . DIRECTORY_SEPARATOR . $assets)){
-	    	$publishPath = Yii::app()->assetManager->publish($path);
+    public function publishThemeAssets($base = NULl){
+    	if($base == null){
+    		$base = CAssetManager::DEFAULT_BASEPATH;	// assets
     	}
 
-    	if(empty($publishPath) && is_dir($path = Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR . $assets)){
-	    	$publishPath = Yii::app()->baseUrl . '/' . $assets;
+    	$skinUrl = Yii::app()->assetManager->baseUrl;
+
+    	if(Yii::app()->theme && is_dir($path = Yii::app()->theme->basePath . DIRECTORY_SEPARATOR . $base)){
+	    	$skinUrl = Yii::app()->assetManager->publish($path);
     	}
 
-    	return $publishPath;
+    	return $skinUrl;
     }
-/**
+	/**
      * pdfable
      */
 	public function enablePdfable($option = array(), $pageOptions = array(), $tmpAlias = null){

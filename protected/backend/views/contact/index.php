@@ -120,7 +120,7 @@ $this->breadcrumbs = array(
 							array(
 								'name' => 'sex',
 								'value' => '($data->sex == 0) ? Yii::t("app", "No") : Yii::t("app", "Yes")',
-								'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
+								'filter' => array('0' => Yii::t('app', 'Female'), '1' => Yii::t('app', 'Male')),
 							),
 
 							'email',

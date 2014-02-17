@@ -25,14 +25,12 @@ class BeforeRequestBehavior extends CBehavior
      * @see beginRequest()
      */
     public function beginRequest($event) {
-    	/**
-    	 * The turns for setMultiLanguage() and setTranslation() should be important
-    	 */
+    	// set current language for multiple languages
         $this->setMultiLanguage();
         // forece translation
         $this->setTranslation(true);
         // theme base on language
-        $this->setTheme($this->owner->language);
+        //$this->setTheme($this->owner->language);
     }
 	/**
 	 * language forceTranslation if using Yii::t()

@@ -29,6 +29,8 @@ Yii::setPathOfAlias('frontend', $frontend);
 return array(
 	'basePath'=>$frontend,
 
+	'theme'=>'_basic',
+
 	'language'=>'zh_tw',
 
 	'name'=>'元伸科技',
@@ -72,24 +74,7 @@ return array(
 			//'allowAutoLogin'=>true,
 			'stateKeyPrefix'=>'front',
 		),
-		// uncomment the following to enable URLs in path-format
-		/*
-		'urlManager'=>array(
-			'urlFormat'=>'path',
-			'rules'=>array(
-				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
-				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
-				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
-			),
-		),
-		*/
-		/*
-		'db'=>array(
-			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
-		),
-		*/
 
-		// uncomment the following to use a MySQL database
 		'db'=>require_once(dirname(__FILE__).'/DB.php'),
 
 		'config' => array(
@@ -112,7 +97,7 @@ return array(
         ),
 		 // assets
 		 'assetManager' => array(
-		 	'forceCopy' => (boolean)YII_DEBUG,
+		 	//'forceCopy' => (boolean)YII_DEBUG,
 		 ),
 
 		// example to config widget

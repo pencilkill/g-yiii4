@@ -28,7 +28,7 @@ class SettingController extends GxController {
 		if(isset($_POST['Setting'])){
 			$settings = CMap::mergeArray($settings, $_POST['Setting']);
 		}
-		
+
 		foreach($settings as $name => $value){
 			$model->$name = $value;
 		}
@@ -69,4 +69,35 @@ class SettingController extends GxController {
 
 	}
 
+	public function actionAsset(){
+		$dir = Yii::app()->assetManager->basePath;
+
+		$removeExclude = array('index.html');
+
+		$base = isset($_GET['base']) ? $_GET['base'] . DIRECTORY_SEPARATOR: '';
+
+		if(isset($_POST['remove'])){
+
+			foreach($_POST['remove'] as $item){
+				if(basename($item)=='.' || basename($item)=='..' || in_array($item, $removeExclude))
+					continue;
+
+				$item = $dir . DIRECTORY_SEPARATOR . $item;
+
+				if(is_dir($item)){
+					CFileHelper::removeDirectory($item);
+				}else if(is_file($item)){
+					unlink($item);
+				}
+			}
+		}
+
+		$files = glob($dir . DIRECTORY_SEPARATOR . $base . '*');
+
+		$this->render('assets', array(
+			'files' => $files,
+			'dir' => $dir,
+			'base' => $base,
+		));
+	}
 }

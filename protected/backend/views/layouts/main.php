@@ -80,6 +80,7 @@
         <ul>
           <li><a href="<?php echo Yii::app()->createUrl('admin/account', array()); ?>"><?php echo Yii::t('nav', 'Account'); ?></a></li>
           <li><a href="<?php echo Yii::app()->createUrl('setting/index', array()); ?>"><?php echo Yii::t('nav', 'Setting'); ?></a></li>
+          <li><a href="<?php echo Yii::app()->createUrl('setting/asset', array()); ?>"><?php echo Yii::t('nav', 'Asset'); ?></a></li>
         </ul>
       </li>
     </ul>
