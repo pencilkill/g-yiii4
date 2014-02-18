@@ -84,17 +84,18 @@ class Controller extends CController
      * We can change title and meta dynamically using the meta unique id which is the fifth parameter for app registerMetaTag()
      */
     public function registerBaseMetas(){
-    	$li = Yii::app()->params->languageId;
-    	$mt = 'meta_title_'.$li;
-    	$mk = 'meta_keywords_'.$li;
-    	$md = 'meta_description_'.$li;
+    	$id = Yii::app()->params->languageId;
+
+    	$title = 'meta_title_'.$id;
+    	$keywords = 'meta_keywords_'.$id;
+    	$description = 'meta_description_'.$id;
 
     	// title
-    	$this->pageTitle = Yii::app()->config->get($mt);
+    	$this->pageTitle = Yii::app()->config->get($title);
 
     	// metaTags
-    	Yii::app()->clientScript->registerMetaTag(Yii::app()->config->get($mk), 'keywords', null, null, 'keywords');
-    	Yii::app()->clientScript->registerMetaTag(Yii::app()->config->get($md), 'description', null, null, 'description');
+    	Yii::app()->clientScript->registerMetaTag(Yii::app()->config->get($keywords), 'keywords', null, null, 'keywords');
+    	Yii::app()->clientScript->registerMetaTag(Yii::app()->config->get($description), 'description', null, null, 'description');
     }
 
     /**
@@ -107,10 +108,15 @@ class Controller extends CController
     		$base = CAssetManager::DEFAULT_BASEPATH;	// assets
     	}
 
-    	$skinUrl = Yii::app()->assetManager->baseUrl;
+    	// default as webroot
+    	$skinUrl = Yii::app()->baseUrl;
 
     	if(Yii::app()->theme && is_dir($path = Yii::app()->theme->basePath . DIRECTORY_SEPARATOR . $base)){
+	    	// uncomment the following as a published folder
 	    	$skinUrl = Yii::app()->assetManager->publish($path);
+
+	    	// uncomment the following if you do not need to publish folder
+	    	//$skinUrl = Yii::app()->theme->baseUrl . '/' . $base;
     	}
 
     	return $skinUrl;
