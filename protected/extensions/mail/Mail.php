@@ -90,7 +90,8 @@ class Mail{
 		}
 
 		$ref = new ReflectionMethod($class, $method);
-		$ref->invokeArgs($class, $args);
+
+		return $ref->invokeArgs($class, $args);
 	}
 
 	/**

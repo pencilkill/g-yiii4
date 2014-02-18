@@ -44,9 +44,9 @@ class HCUrl {
      */
 
 	public static function filter($filter = array(), $url = null){
-		$queryString = html_entity_decode(urldecode($url === null ? Yii::app()->request->queryString : $url));
+		$query = html_entity_decode(urldecode($url === null ? Yii::app()->request->queryString : $url));
 
-		parse_str($queryString, $params);
+		parse_str($query, $params);
 
 		$params = array_diff_key($params, array_flip($filter));
 
