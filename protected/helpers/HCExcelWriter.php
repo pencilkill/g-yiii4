@@ -8,8 +8,9 @@
 class HCExcelWriter
 {
 
+	private $_excel;
+	//
 	public $version;
-	public $phpexcel;
 
 	public function __construct($version = 'Excel5'){
         $this->version = in_array($version, array('Excel5', 'Excel2007')) ? $version : 'Excel5';
@@ -19,7 +20,7 @@ class HCExcelWriter
         Yii::import('frontend.extensions.PHPExcel');
         Yii::import('frontend.extensions.PHPExcel.IOFactory');
 
-        $this->phpexcel = new PHPExcel();
+        $this->_excel = new PHPExcel();
 	}
 	/**
 	 * Setting excel data, the data should be convertted to target charset before setted as data
@@ -33,7 +34,7 @@ class HCExcelWriter
 		$col_header_index = $col_start;
 		$row_header_index = $row_start;
 		foreach($header as $val){
-			$this->phpexcel->getActiveSheet()->setCellValue(PHPExcel_Cell::stringFromColumnIndex($col_header_index).$row_header_index, $val);
+			$this->_excel->getActiveSheet()->setCellValue(PHPExcel_Cell::stringFromColumnIndex($col_header_index).$row_header_index, $val);
 			$col_header_index++;
 		}
 		// Data
@@ -41,7 +42,7 @@ class HCExcelWriter
 		foreach($data as $row){
 			$col_index = $col_start;
 			foreach ($row as $val){
-				$this->phpexcel->getActiveSheet()->setCellValue(PHPExcel_Cell::stringFromColumnIndex($col_index).$row_index, $val);
+				$this->_excel->getActiveSheet()->setCellValue(PHPExcel_Cell::stringFromColumnIndex($col_index).$row_index, $val);
 				$col_index++;
 			}
 			$row_index++;
@@ -67,7 +68,7 @@ class HCExcelWriter
        	$name = strtr(urlencode($filename), array('+'=>'%20'));
 
        	$writer = "PHPExcel_Writer_{$this->version}";
-       	$obj_writer = new $writer($this->phpexcel);
+       	$obj_writer = new $writer($this->_excel);
 
        	header("Content-type:application/vnd.ms-excel");
     	if (preg_match("/MSIE/", $ua)) {

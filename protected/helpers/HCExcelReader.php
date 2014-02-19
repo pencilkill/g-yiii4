@@ -11,7 +11,7 @@ class HCExcelReader
 {
 	public $currentSheet;
 
-	public $filePath;
+	public $fileName;
 
 	public $fileType;
 
@@ -28,11 +28,11 @@ class HCExcelReader
 	}
 	/**
 	 * Initialize file
-	 * @param $filePath, String, the file path
+	 * @param $fileName, String, the file name
 	 */
-	public function initialized($filePath) {
-		if (file_exists($filePath)) {
-			$this->filePath=$filePath;
+	public function initialized($fileName) {
+		if (file_exists($fileName)) {
+			$this->fileName=$fileName;
 		}else{
 			return array();
 		}
@@ -44,7 +44,7 @@ class HCExcelReader
 		PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
 
 		//文件類型
-		$file_ext=strtolower(pathinfo($this->filePath, PATHINFO_EXTENSION));
+		$file_ext=strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION));
 
 		switch ($file_ext) {
 			case 'csv':
@@ -71,16 +71,16 @@ class HCExcelReader
 
 			//默認的輸出字符集
 
-			if(!$PHPReader->canRead($this->filePath)){
+			if(!$PHPReader->canRead($this->fileName)){
 				return array();
 			}
 		}elseif ($this->fileType=='excel'){
 			$PHPReader = new PHPExcel_Reader_Excel2007();
 
-			if(!$PHPReader->canRead($this->filePath)){
+			if(!$PHPReader->canRead($this->fileName)){
 				$PHPReader = new PHPExcel_Reader_Excel5();
 
-				if(!$PHPReader->canRead($this->filePath)){
+				if(!$PHPReader->canRead($this->fileName)){
 					return array();
 				}
 			}
@@ -90,7 +90,7 @@ class HCExcelReader
 
 		$PHPReader->setReadDataOnly(true);
 
-		$PHPExcel = $PHPReader->load($this->filePath);
+		$PHPExcel = $PHPReader->load($this->fileName);
 
 		$this->currentSheet = $PHPExcel->getSheet((int)$this->sheetIndex);
 
