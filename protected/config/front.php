@@ -18,7 +18,7 @@ return array(
 	// application components
 	'components'=>array(
 		'user'=>array(
-			'class'=>'WebUserFrontend',
+			'class'=>'WebUser',
 
 			// enable cookie-based authentication
         	'allowAutoLogin'=>true,

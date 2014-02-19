@@ -1,5 +1,5 @@
 <?php
-class WebUserBackend extends RWebUser{
+class WebUser extends CWebUser{
 	//
 	public function logout($destroySession=false){
 		parent::logout($destroySession);
