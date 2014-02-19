@@ -31,14 +31,6 @@ $backCfg = array(
 
 	'language'=>'zh_tw',
 
-	/**
-	 * uncomment the following when system maintenance
-	 * change the controller if you like
-	 */
-	/*
-	'catchAllRequest'=>array('site/maintenance'),
-	*/
-
 	'controllerPath' => $backend.'/controllers',
     'viewPath' => $backend.'/views',
     'runtimePath' => $backend.'/runtime',
@@ -58,7 +50,6 @@ $backCfg = array(
 		'frontend.modules.rights.*',
 		'frontend.modules.rights.components.*',
 	),
-
 
 	'defaultController'=>'site/index',
 
@@ -106,17 +97,17 @@ $backCfg = array(
 	// application components
 	'components'=>array(
 		'user'=>array(
-			'class'=>'WebUser',
+			'class' => 'WebUser',
 
 			// enable cookie-based authentication
-        	'allowAutoLogin'=>true,
-			'autoRenewCookie'=>true,
+        	'allowAutoLogin' => true,
+			'autoRenewCookie' => true,
 			// Notice that the second parameter of Yii::app()->user->login($identity, $duration) can not be setted as 0 if you want to enable the authTimeout
-			'authTimeout'=>60 * 24 * 365,
+			'authTimeout' => 60 * 24 * 365,
 
-			'stateKeyPrefix'=>'back',
-			'loginUrl'=>array('site/login'),
-			'returnUrl'=>array('site/index'),
+			'stateKeyPrefix' => 'back',
+			'loginUrl' => array('site/login'),
+			'returnUrl' => array('site/index'),
 			// ajax session timeout
 			'loginRequiredAjaxResponse' => 'YII_LOGIN_REQUIRED',
 		),
@@ -163,26 +154,6 @@ $backCfg = array(
 				),
 			),
 		),
-
-		// uncomment the following to enable URLs in path-format
-		/*
-		'urlManager'=>array(
-			'urlFormat'=>'path',
-			'rules'=>array(
-				//'<controller:\w+>/<id:\d+>'=>'<controller>/view',
-				//'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
-				//'<language:\w+>/<controller:\w+>/<action:\w+>'=>'<language>/<controller>/<action>',
-			),
-		),
-		*/
-		/*
-		'db'=>array(
-			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
-		),
-		*/
-		// uncomment the following to use a MySQL database
-
-		//'db'=>require_once(dirname(__FILE__).'/cfg.db.php'),
 
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors

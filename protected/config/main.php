@@ -37,6 +37,14 @@ return array(
 
 	'timeZone' => 'PRC',
 
+	/**
+	 * uncomment the following when system maintenance
+	 * change the controller if you like
+	 */
+	/*
+	 'catchAllRequest'=>array('site/maintenance'),
+	*/
+
 	// autoloading model and component classes
 	'import'=>array(
 		//required for module giix
