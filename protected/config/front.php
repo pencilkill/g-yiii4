@@ -17,6 +17,22 @@ return array(
 	),
 	// application components
 	'components'=>array(
+		'user'=>array(
+			'class'=>'WebUserFrontend',
+
+			// enable cookie-based authentication
+        	'allowAutoLogin'=>true,
+			'autoRenewCookie'=>true,
+			// Notice that the second parameter of Yii::app()->user->login($identity, $duration) can not be setted as 0 if you want to enable the authTimeout
+			'authTimeout'=>60 * 24 * 365,
+
+			'stateKeyPrefix'=>'front',
+			'loginUrl'=>array('site/login'),
+			'returnUrl'=>array('site/index'),
+			// ajax session timeout
+			'loginRequiredAjaxResponse' => 'YII_LOGIN_REQUIRED',
+		),
+
 		'coreMessages'=>array(
 			// Set basePath as null, it will customize coreMessages
 			// Notice that app will not translate from coreMessage of Yii::app()->language,

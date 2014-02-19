@@ -61,9 +61,38 @@
 					validatingCssClass: settings.validatingCssClass
 				}, this);
 			});
-			$form.data('settings', settings);
+			//$form.data('settings', settings);
+			
+			/**
+			 * append attributes if settings.attributes existed, sam@ozchamp.net
+			 */
+			if(settings.hasOwnProperty('attributes') && $.isArray(settings.attributes) && settings.attributes.length > 0){
+				var formSettings = $form.data('settings');
+				
+				if(formSettings && formSettings.hasOwnProperty('attributes') && $.isArray(formSettings.attributes) && formSettings.attributes.length > 0){
+					for(var i in settings.attributes){
+						formSettings.attributes.push(settings.attributes[i]);
+					}
+				}else{
+					$form.data('settings', settings);					
+				}
+			}else{
+				$form.data('settings', settings);									
+			}
+			
+			/**
+			 * Add attributes to validate without change any other settings, sam@ozchamp.net
+			 */
+			var addValidateAttributes = function (attributes){
+				var optionsNew = $.extend({}, $form.data('settings'));
+				
+				optionsNew.attributes = attributes;
+				
+				$form.yiiactiveform(optionsNew);
+			}
 
 			settings.submitting = false;  // whether it is waiting for ajax submission result
+			
 			var validate = function (attribute, forceValidate) {
 				if (forceValidate) {
 					attribute.status = 2;
@@ -377,7 +406,7 @@
 			}
 		});
 	};
-
+	
 	/**
 	 * Returns the configuration for the specified form.
 	 * The configuration contains all needed information to perform ajax-based validation.

@@ -112,11 +112,18 @@ class Controller extends CController
     	$skinUrl = Yii::app()->baseUrl;
 
     	if(Yii::app()->theme && is_dir($path = Yii::app()->theme->basePath . DIRECTORY_SEPARATOR . $base)){
-	    	// uncomment the following as a published folder
-	    	$skinUrl = Yii::app()->assetManager->publish($path);
+	    	/**
+	    	 * Assets folder published should be deleted for re-publishing in this case
+			 * backend GUI for assets management is accessable for administrator
+	    	 * uncomment the following as a published folder
+	    	 */
+	    	//$skinUrl = Yii::app()->assetManager->publish($path);
 
-	    	// uncomment the following if you do not need to publish folder
-	    	//$skinUrl = Yii::app()->theme->baseUrl . '/' . $base;
+    		/**
+    		 * Without assets, we can update file(s) immediately in this case
+    		 * uncomment the following if you do not need to publish folder
+    		 */
+	    	$skinUrl = Yii::app()->theme->baseUrl . '/' . $base;
     	}
 
     	return $skinUrl;

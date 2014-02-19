@@ -32,7 +32,7 @@ class CTreeBehavior extends CActiveRecordBehavior {
 		if($this->_instance) return true;
 
 		if($this->modelName === null){
-				$this->modelName = CHtml::modelName($this->getOwner());
+			$this->modelName = CHtml::modelName($this->getOwner());
 		}
 
 		$modelName = $this->modelName;

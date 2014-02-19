@@ -106,7 +106,7 @@ $backCfg = array(
 	// application components
 	'components'=>array(
 		'user'=>array(
-			'class'=>'RWebUser',
+			'class'=>'WebUserBackend',
 
 			// enable cookie-based authentication
         	'allowAutoLogin'=>true,

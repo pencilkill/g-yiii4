@@ -69,12 +69,6 @@ return array(
 
 	// application components
 	'components'=>array(
-		'user'=>array(
-			// enable cookie-based authentication
-			//'allowAutoLogin'=>true,
-			'stateKeyPrefix'=>'front',
-		),
-
 		'db'=>require_once(dirname(__FILE__).'/DB.php'),
 
 		'config' => array(
