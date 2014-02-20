@@ -10,7 +10,7 @@ class HCOutput {
 	 * @param $url
 	 * @param $name
 	 */
-	public static function file($url, $name=null){
+	public static function file($url, $name=NULL){
 		$file = HCUrl::decode($url);
        	$name = $name ? HCUrl::decode($name) : HCString::random(10);
         $ext = strtolower(strrchr($name, '.'))==strtolower(strrchr($file, '.')) ? '' : strtolower(strrchr($file, '.'));

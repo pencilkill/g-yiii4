@@ -10,14 +10,14 @@ class HCUrl {
 	 * @param $array
 	 * @return String
 	 */
-    public static function encode($array)
+    public static function encode($data)
     {
         $arr = array(
             '=' => '_',
             '+' => '.'
         );
 
-        return strtr(base64_encode(serialize($array)),$arr);
+        return strtr(base64_encode(serialize($data)),$arr);
     }
 
     /**
@@ -25,14 +25,14 @@ class HCUrl {
 	 * @param $array
 	 * @return Array
 	 */
-    public static function decode($array)
+    public static function decode($string)
     {
         $arr = array(
             '_' => '=',
             '.' => '+'
         );
 
-        return unserialize(base64_decode(strtr($array,$arr)));
+        return unserialize(base64_decode(strtr($string,$arr)));
     }
 
     /**
