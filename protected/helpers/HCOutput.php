@@ -18,7 +18,7 @@ class HCOutput {
 
 
        	$ua = $_SERVER['HTTP_USER_AGENT'];
-       	$uname = strtr(urlencode($name), array('+'=>'%20'));
+       	$uname = rawurldecode($name);
 
        	header('Content-Description: File Transfer');
     	header('Content-type: application/octet-stream');
@@ -33,10 +33,9 @@ class HCOutput {
 		header('Expires: 0');
 		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Pragma: public');
-        ob_start();
-    	@readfile($file);
-        header('Content-Length: ' . ob_get_length());
-        ob_end_flush();
+        header('Content-Length: '.filesize($file));
+
+        @readfile($file);
 
     	exit();
 	}
@@ -47,7 +46,7 @@ class HCOutput {
 	 */
 	public static function content($content, $name){
        	$ua = $_SERVER['HTTP_USER_AGENT'];
-       	$uname = strtr(urlencode($name), array('+'=>'%20'));
+       	$uname = rawurldecode($name);
 
        	header('Content-Description: File Transfer');
     	header('Content-type: application/octet-stream');
@@ -62,6 +61,7 @@ class HCOutput {
 		header('Expires: 0');
 		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Pragma: public');
+
         ob_start();
     	$fp = fopen('php://output', 'w');
     	fwrite($fp, $content);

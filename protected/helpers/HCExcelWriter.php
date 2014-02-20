@@ -65,7 +65,7 @@ class HCExcelWriter
 		}
 
 		$ua = $_SERVER["HTTP_USER_AGENT"];
-       	$name = strtr(urlencode($filename), array('+'=>'%20'));
+       	$name = rawurlencode($filename);
 
        	$writer = "PHPExcel_Writer_{$this->version}";
        	$obj_writer = new $writer($this->_excel);
