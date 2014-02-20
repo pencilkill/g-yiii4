@@ -30,6 +30,22 @@ class SiteController extends GxController
 	 */
 	public function actionIndex()
 	{
+		Yii::app()->shoppingCart->clear();
+
+		$p = Product::model()->findByPk(4);
+
+		Yii::app()->shoppingCart->put($p, 5);
+
+		$p = Product::model()->findByPk(5);
+
+		Yii::app()->shoppingCart->put($p);
+
+		echo Yii::app()->shoppingCart->getCount();
+		echo '<br/>';
+		echo Yii::app()->shoppingCart->getItemsCount();
+		echo '<br/>';
+		echo Yii::app()->shoppingCart->getCost();
+		//
 		$this->render('//site/index');
 	}
 

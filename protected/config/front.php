@@ -10,10 +10,12 @@ return array(
 	),
 
 	'import'=>array(
+		'frontend.behaviors.*',
 		'frontend.models.*',
 		'frontend.components.*',
 		'frontend.extensions.ELinkPager',
 		'frontend.extensions.MobileDetect.MobileDetect',
+		'frontend.extensions.shoppingCart.*',
 	),
 
 	// application components

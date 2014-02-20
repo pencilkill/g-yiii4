@@ -2,7 +2,7 @@
 
 Yii::import('frontend.models._base.BaseProduct');
 
-class Product extends BaseProduct
+class Product extends BaseProduct implements IECartPosition
 {
 
 	public $filter;
@@ -67,4 +67,12 @@ class Product extends BaseProduct
 			),
 		));
 	}
+	// interface
+	function getId(){
+        return __CLASS__ . $this->getPrimaryKey();
+    }
+
+    function getPrice(){
+        return $this->price;
+    }
 }

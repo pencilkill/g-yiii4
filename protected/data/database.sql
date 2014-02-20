@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2014 年 02 月 20 日 03:50
+-- 生成日期: 2014 年 02 月 20 日 09:13
 -- 服务器版本: 5.5.24-log
 -- PHP 版本: 5.3.0
 
@@ -483,6 +483,7 @@ INSERT INTO `picture_type` (`picture_type_id`, `picture_type`, `create_time`, `u
 CREATE TABLE IF NOT EXISTS `product` (
   `product_id` int(11) NOT NULL AUTO_INCREMENT,
   `sort_order` int(11) NOT NULL DEFAULT '0',
+  `price` decimal(10,0) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`product_id`)
@@ -492,9 +493,9 @@ CREATE TABLE IF NOT EXISTS `product` (
 -- 转存表中的数据 `product`
 --
 
-INSERT INTO `product` (`product_id`, `sort_order`, `create_time`, `update_time`) VALUES
-(4, 0, '2013-07-29 23:21:01', '2014-01-15 14:09:47'),
-(5, 0, '2013-10-29 11:30:17', '2013-10-29 11:30:17');
+INSERT INTO `product` (`product_id`, `sort_order`, `price`, `create_time`, `update_time`) VALUES
+(4, 0, '300', '2013-07-29 23:21:01', '2014-02-20 16:17:47'),
+(5, 0, '289', '2013-10-29 11:30:17', '2014-02-20 16:20:39');
 
 -- --------------------------------------------------------
 
@@ -509,7 +510,7 @@ CREATE TABLE IF NOT EXISTS `product2category` (
   PRIMARY KEY (`product2category_id`),
   KEY `product_id` (`product_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 
 --
 -- 转存表中的数据 `product2category`
@@ -517,7 +518,7 @@ CREATE TABLE IF NOT EXISTS `product2category` (
 
 INSERT INTO `product2category` (`product2category_id`, `product_id`, `category_id`) VALUES
 (5, 5, 7),
-(9, 4, 7);
+(12, 4, 7);
 
 -- --------------------------------------------------------
 
@@ -537,7 +538,7 @@ CREATE TABLE IF NOT EXISTS `product_i18n` (
   PRIMARY KEY (`product_i18n_id`),
   KEY `product_id` (`product_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
 
 --
 -- 转存表中的数据 `product_i18n`
@@ -546,8 +547,8 @@ CREATE TABLE IF NOT EXISTS `product_i18n` (
 INSERT INTO `product_i18n` (`product_i18n_id`, `product_id`, `language_id`, `status`, `pic`, `title`, `keywords`, `description`) VALUES
 (12, 5, 1, 1, 'upload/2013/10/29/526f2bb450dd5.jpg', 'tw1', NULL, NULL),
 (13, 5, 2, 1, 'upload/2013/10/29/526f2bc317c47.jpg', 'en1', NULL, NULL),
-(16, 4, 1, 1, 'upload/2013/10/28/526dd05dbb6ea.jpg', 'tw', 'ktw', '<p>\r\n	dtw</p>\r\n'),
-(17, 4, 2, 1, 'upload/2014/01/15/52d6260bc91b3.jpg', 'en', 'ken', '<p>\r\n	den</p>\r\n');
+(22, 4, 1, 1, 'upload/2013/10/28/526dd05dbb6ea.jpg', 'tw', 'ktw', '<p>\r\n	dtw</p>\r\n'),
+(23, 4, 2, 1, 'upload/2014/01/15/52d6260bc91b3.jpg', 'en', 'ken', '<p>\r\n	den</p>\r\n');
 
 -- --------------------------------------------------------
 
@@ -561,19 +562,19 @@ CREATE TABLE IF NOT EXISTS `product_image` (
   `pic` varchar(256) NOT NULL,
   PRIMARY KEY (`product_image_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=171 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=189 ;
 
 --
 -- 转存表中的数据 `product_image`
 --
 
 INSERT INTO `product_image` (`product_image_id`, `product_id`, `pic`) VALUES
-(165, 4, 'upload/2013/07/29/51f6b4009933c.jpg'),
-(166, 4, 'upload/2013/07/29/51f6b4014a31d.jpg'),
-(167, 4, 'upload/2013/07/29/51f6abb0d6e59.jpg'),
-(168, 4, 'upload/2013/07/29/51f6ab5237318.jpg'),
-(169, 4, 'upload/2013/07/29/51f6abb18308f.jpg'),
-(170, 4, 'upload/2014/01/15/52d6255d16431.jpg');
+(183, 4, 'upload/2013/07/29/51f6b4009933c.jpg'),
+(184, 4, 'upload/2013/07/29/51f6b4014a31d.jpg'),
+(185, 4, 'upload/2013/07/29/51f6abb0d6e59.jpg'),
+(186, 4, 'upload/2013/07/29/51f6ab5237318.jpg'),
+(187, 4, 'upload/2013/07/29/51f6abb18308f.jpg'),
+(188, 4, 'upload/2014/01/15/52d6255d16431.jpg');
 
 -- --------------------------------------------------------
 
