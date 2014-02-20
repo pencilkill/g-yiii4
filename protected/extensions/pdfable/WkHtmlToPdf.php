@@ -189,17 +189,20 @@ class WkHtmlToPdf
             return false;
         }
 
+        if($filename === null){
+        	$filename = time() . '.pdf';
+        }
+
+        $ua = $_SERVER["HTTP_USER_AGENT"];
+	    $uname = rawurlencode($filename);
+
         header('Content-Type: application/pdf');
-        if($filename!==null){
-	        $ua = $_SERVER["HTTP_USER_AGENT"];
-	        $uname = rawurlencode($filename);
-	        if (preg_match("/MSIE/", $ua)) {
-	        	header('Content-Disposition: attachment; filename="' . $uname . '"');
-	        } else if (preg_match("/Firefox/", $ua)) {
-	        	header("Content-Disposition: attachment; filename*=\"utf8''" . $filename . '"');
-	        } else {
-	        	header('Content-Disposition: attachment; filename="' . $filename . '"');
-	        }
+        if (preg_match("/MSIE/", $ua)) {
+        	header('Content-Disposition: attachment; filename="' . $uname . '"');
+        } else if (preg_match("/Firefox/", $ua)) {
+        	header("Content-Disposition: attachment; filename*=\"utf8''" . $filename . '"');
+        } else {
+        	header('Content-Disposition: attachment; filename="' . $filename . '"');
         }
         header('Pragma: public');
         header('Expires: 0');
