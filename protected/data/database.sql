@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2014 年 01 月 23 日 11:14
+-- 生成日期: 2014 年 02 月 20 日 03:50
 -- 服务器版本: 5.5.24-log
 -- PHP 版本: 5.3.0
 
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
 INSERT INTO `admin` (`admin_id`, `name`, `username`, `email`, `password`, `status`, `super`, `create_time`, `update_time`) VALUES
 (1, 'admin', 'admin', 'sam@ozchamp.net', '1a85380e2ae37e8385ecd73b468f632d', 1, 1, '2013-06-01 00:00:00', '2013-08-22 03:51:54'),
 (2, 'administrator', 'administrator', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 1, '2013-06-01 12:03:02', '2013-08-22 03:47:36'),
-(5, 'ozchamp', 'ozchamp', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 0, '2013-08-22 03:27:11', '2014-01-22 16:33:42');
+(5, 'ozchamp', 'ozchamp', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 0, '2013-08-22 03:27:11', '2014-02-12 13:56:55');
 
 -- --------------------------------------------------------
 
