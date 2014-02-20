@@ -188,17 +188,27 @@ class WkHtmlToPdf
         if(($pdfFile = $this->getPdfFilename())===false)
             return false;
 
+        header('Content-Type: application/pdf');
+
+        if($filename!==null){
+	        $ua = $_SERVER["HTTP_USER_AGENT"];
+	        $uname = rawurlencode($filename);
+	        if (preg_match("/MSIE/", $ua)) {
+	        	header('Content-Disposition: attachment; filename="' . $uname . '"');
+	        } else if (preg_match("/Firefox/", $ua)) {
+	        	header("Content-Disposition: attachment; filename*=\"utf8''" . $filename . '"');
+	        } else {
+	        	header('Content-Disposition: attachment; filename="' . $filename . '"');
+	        }
+        }
+
         header('Pragma: public');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Content-Type: application/pdf');
         header('Content-Transfer-Encoding: binary');
-        header('Content-Length: '.filesize($pdfFile));
 
-        if($filename!==null)
-            header("Content-Disposition: attachment; filename=\"$filename\"");
+        header('X-Sendfile: ' . $pdfFile);
 
-        readfile($pdfFile);
         return true;
     }
     /**

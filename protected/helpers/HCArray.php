@@ -505,7 +505,7 @@ class HCArray {
 		return self::_flatten($params[0], $params[1], $params[2], $params[3]);
 	}
 	//
-	private function _flatten(array $array, $leftSymbol = '[', $rightSymbol = ']', $prefix = ''){
+	private static function _flatten(array $array, $leftSymbol = '[', $rightSymbol = ']', $prefix = ''){
 		$results = array();
 
 	     foreach ($array as $key => $value)
