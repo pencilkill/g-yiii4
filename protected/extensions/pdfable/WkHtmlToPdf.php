@@ -188,8 +188,13 @@ class WkHtmlToPdf
         if(($pdfFile = $this->getPdfFilename())===false)
             return false;
 
+<<<<<<< HEAD
 
         header('Content-Type: application/pdf');
+=======
+        header('Content-Type: application/pdf');
+
+>>>>>>> a2cd42382a2e2906afeb768761b01db6a68cbc7b
         if($filename!==null){
 	        $ua = $_SERVER["HTTP_USER_AGENT"];
 	        $uname = rawurlencode($filename);
@@ -201,13 +206,20 @@ class WkHtmlToPdf
 	        	header('Content-Disposition: attachment; filename="' . $filename . '"');
 	        }
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> a2cd42382a2e2906afeb768761b01db6a68cbc7b
         header('Pragma: public');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Content-Transfer-Encoding: binary');
-        header('Content-Length: '.filesize($pdfFile));
 
+<<<<<<< HEAD
         @readfile($pdfFile);
+=======
+        header('X-Sendfile: ' . $pdfFile);
+>>>>>>> a2cd42382a2e2906afeb768761b01db6a68cbc7b
 
         return true;
     }

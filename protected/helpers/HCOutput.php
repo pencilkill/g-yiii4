@@ -33,9 +33,14 @@ class HCOutput {
 		header('Expires: 0');
 		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Pragma: public');
+<<<<<<< HEAD
         header('Content-Length: '.filesize($file));
 
         @readfile($file);
+=======
+
+        header('X-Sendfile: ' . $file);
+>>>>>>> a2cd42382a2e2906afeb768761b01db6a68cbc7b
 
     	exit();
 	}
