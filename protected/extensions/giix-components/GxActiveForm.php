@@ -63,17 +63,20 @@ class GxActiveForm extends CActiveForm {
 			$many = isset($model['many']) ? $model['many'] : false;
 
 			if($many){
+					$model['model'] = is_array($model['model']) ? $model['model'][key($model['model'])] : $model['model'];
+
 					$modelName = CHtml::modelName($model['model']);
 
 					$posts = array();
 					if($loadInput && isset($_POST[$modelName])){
-						$posts = HCArray::array_last_dimension($_POST[$modelName]);
+						$posts = HCArray::flatten($_POST[$modelName]);
 					}
 
 					foreach($posts as $keyPrefix=>$values)
 					{
 						$model['model']->setAttributes($values);
 						$model['model']->validate($attributes);
+
 						foreach($model['model']->getErrors() as $attribute=>$errors){
 							$result[CHtml::activeId($model['model'], $keyPrefix . $attribute)]=$errors;
 						}

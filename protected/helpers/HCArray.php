@@ -315,6 +315,7 @@ class HCArray {
 
 	public static function sortNestedArray(&$array, $sort) {
 		$sort($array);
+
 		foreach ($array as $key=>$val) {
 			if (is_array($array[$key])) {
 				self::sortNestedArray($array[$key], $sort);
@@ -339,21 +340,21 @@ class HCArray {
 	 *                        of the column, or it may be the string key name.
 	 * @return array
 	 */
-	public static function array_column($input = null, $columnKey = null, $indexKey = null)
+	public static function pluck(array $array = NULL, $columnKey = NULL, $indexKey = NULL)
 	{
 		// Using func_get_args() in order to check for proper number of
 		// parameters and trigger errors exactly as the built-in array_column()
 		// does in PHP 5.5.
-		$argc = func_num_args();
+		$args = func_num_args();
 		$params = func_get_args();
 
-		if ($argc < 2) {
-			trigger_error("array_column() expects at least 2 parameters, {$argc} given", E_USER_WARNING);
+		if ($args < 2) {
+			trigger_error(__METHOD__ . '() expects at least 2 parameters, ' . $args . ' given', E_USER_WARNING);
 			return null;
 		}
 
 		if (!is_array($params[0])) {
-			trigger_error('array_column() expects parameter 1 to be array, ' . gettype($params[0]) . ' given', E_USER_WARNING);
+			trigger_error(__METHOD__ . '() expects parameter 1 to be array, ' . gettype($params[0]) . ' given', E_USER_WARNING);
 			return null;
 		}
 
@@ -363,7 +364,7 @@ class HCArray {
 		&& $params[1] !== null
 		&& !(is_object($params[1]) && method_exists($params[1], '__toString'))
 		) {
-			trigger_error('array_column(): The column key should be either a string or an integer', E_USER_WARNING);
+			trigger_error(__METHOD__ . '(): The column key should be either a string or an integer', E_USER_WARNING);
 			return false;
 		}
 
@@ -373,53 +374,51 @@ class HCArray {
 		&& !is_string($params[2])
 		&& !(is_object($params[2]) && method_exists($params[2], '__toString'))
 		) {
-			trigger_error('array_column(): The index key should be either a string or an integer', E_USER_WARNING);
+			trigger_error(__METHOD__ . '(): The index key should be either a string or an integer', E_USER_WARNING);
 			return false;
 		}
 
-		$paramsInput = $params[0];
-		$paramsColumnKey = ($params[1] !== null) ? (string) $params[1] : null;
+		$params[1] = ($params[1] !== null) ? (string) $params[1] : null;
 
-		$paramsIndexKey = null;
 		if (isset($params[2])) {
 			if (is_float($params[2]) || is_int($params[2])) {
-				$paramsIndexKey = (int) $params[2];
+				$params[2] = (int) $params[2];
 			} else {
-				$paramsIndexKey = (string) $params[2];
+				$params[2] = (string) $params[2];
 			}
 		}
 
-		$resultArray = array();
+		$result = array();
 
-		foreach ($paramsInput as $row) {
+		foreach ($params[0] as $row) {
 
 			$key = $value = null;
 			$keySet = $valueSet = false;
 
-			if ($paramsIndexKey !== null && array_key_exists($paramsIndexKey, $row)) {
+			if ($params[2] !== null && array_key_exists($params[2], $row)) {
 				$keySet = true;
-				$key = (string) $row[$paramsIndexKey];
+				$key = (string) $row[$params[2]];
 			}
 
-			if ($paramsColumnKey === null) {
+			if ($params[1] === null) {
 				$valueSet = true;
 				$value = $row;
-			} elseif (is_array($row) && array_key_exists($paramsColumnKey, $row)) {
+			} elseif (is_array($row) && array_key_exists($params[1], $row)) {
 				$valueSet = true;
-				$value = $row[$paramsColumnKey];
+				$value = $row[$params[1]];
 			}
 
 			if ($valueSet) {
 				if ($keySet) {
-					$resultArray[$key] = $value;
+					$result[$key] = $value;
 				} else {
-					$resultArray[] = $value;
+					$result[] = $value;
 				}
 			}
 
 		}
 
-		return $resultArray;
+		return $result;
 	}
 
 	/**
@@ -431,26 +430,26 @@ class HCArray {
 	 * @param array $array Multidimensional array to extract values from
 	 * @return array
 	 */
-	public static function array_values_dimensions(array $array)
+	public static function values(array $array)
 	{
-		$argc = func_num_args();
+		$args = func_num_args();
 		$params = func_get_args();
 
-		if ($argc < 1) {
-			trigger_error("array_values_dimensions() expects at least 1 parameter, {$argc} given", E_USER_WARNING);
-			return null;
+		if ($args < 1) {
+			trigger_error(__METHOD__. '() expects at least 1 parameter, ' . $args . ' given', E_USER_WARNING);
+			return false;
 		}
 
 		if (!is_array($params[0])) {
-			trigger_error('array_values_dimensions() expects parameter 1 to be array, ' . gettype($params[0]) . ' given', E_USER_WARNING);
-			return null;
+			trigger_error(__METHOD__. '() expects parameter 1 to be array, ' . gettype($params[0]) . ' given', E_USER_WARNING);
+			return false;
 		}
 
-		$return = array();
+		$result = array();
 
-		array_walk_recursive($params[0], function($val, $key) use(&$return){$return[] = $val;});
+		array_walk_recursive($params[0], function($val, $key) use(&$result){$result[] = $val;});
 
-		return $return;
+		return $result;
 	}
 
 	/**
@@ -460,29 +459,28 @@ class HCArray {
 	 * @param $maxDepth
 	 * @param $leftSymbol
 	 * @param $rightSymbol
-	 *
-	 * Get last dimension values from  a multidimentional array
+	 * @param $prefix
 	 *
 	 * @example
 	 	$_POST['example'][2][7]['c'] = 'lemon';
 		$_POST['example'][2][7]['a'] = 'lemon1';
 		$_POST['example'][3][7]['b'] = 'lemon2';
 		$_POST['example'][3][7]['d'] = 'lemon3';
-		print_r(array_last_dimension($_POST['example']));
+		print_r(flatten($_POST['example']));
 	 *
 	 */
-	public static function array_last_dimension(array $array = NULL, string $leftSymbol = NULL, string $rightSymbol = NULL){
-		$argc = func_num_args();
+	public static function flatten(array $array = NULL, string $leftSymbol = NULL, string $rightSymbol = NULL, string $prefix = NULL){
+		$args = func_num_args();
 		$params = func_get_args();
 
-		if ($argc < 1) {
-			trigger_error("array_last_dimension() expects at least 1 parameter, {$argc} given", E_USER_WARNING);
-			return null;
+		if ($args < 1) {
+			trigger_error(__METHOD__ . '() expects at least 1 parameter, ' . $args . ' given', E_USER_WARNING);
+			return false;
 		}
 
 		if (!is_array($params[0])) {
-			trigger_error('array_last_dimension() expects parameter 1 to be array, ' . gettype($params[0]) . ' given', E_USER_WARNING);
-			return null;
+			trigger_error(__METHOD__ . '() expects parameter 1 to be array, ' . gettype($params[0]) . ' given', E_USER_WARNING);
+			return false;
 		}
 
 
@@ -498,41 +496,66 @@ class HCArray {
 			$params[2] = (string)$params[2];
 		}
 
-		$iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($params[0]), RecursiveIteratorIterator::LEAVES_ONLY);
-		$iterator->rewind();
-
-		$maxDepth = max($iterator->getDepth() -1, 0);
-
-		$iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($params[0]), RecursiveIteratorIterator::SELF_FIRST);
-		$iterator->setMaxDepth($maxDepth);
-
-		$inputs = array();
-		foreach($iterator as $key => $value){
-			if($iterator->getDepth() == $maxDepth){
-				for($i = $maxDepth - 1, $key = $params[1] . $key . $params[2]; $i >= 0; $i--) {
-					$key = $params[1] . $iterator->getSubIterator($i)->key() . $params[2] . $key;
-				}
-				$inputs[$key] = $value;
-			}
+		if(!isset($params[3]) || is_null($params[3])){
+			$params[3] = '';
+		}else{
+			$params[3] = (string)$params[3];
 		}
 
-		return $inputs;
+		return self::_flatten($params[0], $params[1], $params[2], $params[3]);
 	}
+	//
+	private function _flatten(array $array, $leftSymbol = '[', $rightSymbol = ']', $prefix = ''){
+		$results = array();
 
+	     foreach ($array as $key => $value)
+	     {
+	         if(is_array($value)){
+	             $results = array_merge($results, self::_flatten($value, $leftSymbol, $rightSymbol, $prefix . $leftSymbol . $key . $rightSymbol));
+	         }else{
+	         	 // keep last key
+	             $results[$prefix][$key] = $value;
+	         }
+	     }
+
+	     return $results;
+	}
 	/**
 	 * Array differ associate recursive
 	 *
 	 * @param $array1, Array
 	 * @param $array2, Array
 	 */
-	public static function array_diff_assoc_recursive($array1, $array2) {
-	    $difference=array();
+	public static function diff_assoc(array $array1, array $array2) {
+		$args = func_num_args();
+		$params = func_get_args();
+
+		if ($args < 2) {
+			trigger_error(__METHOD__ . '() expects at least 2 parameter, ' . $args . ' given', E_USER_WARNING);
+			return false;
+		}
+
+		if (!is_array($params[0])) {
+			trigger_error(__METHOD__ . '() expects parameter 1 to be array, ' . gettype($params[0]) . ' given', E_USER_WARNING);
+			return false;
+		}
+
+		if (!is_array($params[1])) {
+			trigger_error(__METHOD__ . '() expects parameter 2 to be array, ' . gettype($params[1]) . ' given', E_USER_WARNING);
+			return false;
+		}
+
+	    return self::_diff_assoc($params[0], $params[1]);
+	}
+	//
+	private static function _diff_assoc(array $array1, array $array2) {
+		$difference=array();
 	    foreach($array1 as $key => $value) {
 	        if(is_array($value)) {
 	            if(!isset($array2[$key]) || !is_array($array2[$key])) {
 	                $difference[$key] = $value;
 	            } else {
-	                $new_diff = self::array_diff_assoc_recursive($value, $array2[$key]);
+	                $new_diff = self::_diff_assoc($value, $array2[$key]);
 
 	                if(!empty($new_diff)){
 	                    $difference[$key] = $new_diff;
