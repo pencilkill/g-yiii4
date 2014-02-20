@@ -34,6 +34,10 @@ return array(
 			'loginRequiredAjaxResponse' => 'YII_LOGIN_REQUIRED',
 		),
 
+		'shoppingCart' => array(
+			'class' => 'frontend.extensions.shoppingCart.EShoppingCart',
+		),
+
 		'coreMessages'=>array(
 			// Set basePath as null, it will customize coreMessages
 			// Notice that app will not translate from coreMessage of Yii::app()->language,

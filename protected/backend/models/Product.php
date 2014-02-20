@@ -35,6 +35,7 @@ class Product extends BaseProduct
 
 	public function rules() {
 		return CMap::mergeArray(parent::rules(), array(
+			array('price', 'match', 'pattern'=>'/^[0-9]{1,10}(\.[0-9]{0,2})?$/', 'message' => Yii::t('app', 'Price Formatter Is Incorrect')),
 		));
 	}
 
@@ -73,6 +74,10 @@ class Product extends BaseProduct
 					'sort_order'=>array(
 						'desc'=>"{$alias}.sort_order DESC",
 						'asc'=>"{$alias}.sort_order ASC",
+					),
+					'price'=>array(
+						'desc'=>"{$alias}.price DESC",
+						'asc'=>"{$alias}.price ASC",
 					),
 					'*',
 				),

@@ -11,6 +11,7 @@
  *
  * @property integer $product_id
  * @property integer $sort_order
+ * @property string $price
  * @property string $create_time
  * @property string $update_time
  *
@@ -34,15 +35,16 @@ abstract class BaseProduct extends GxActiveRecord {
 	}
 
 	public static function representingColumn() {
-		return 'create_time';
+		return 'price';
 	}
 
 	public function rules() {
 		return array(
 			array('sort_order', 'numerical', 'integerOnly'=>true),
+			array('price', 'length', 'max'=>10),
 			array('create_time, update_time', 'safe'),
-			array('sort_order, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('product_id, sort_order, create_time, update_time', 'safe', 'on'=>'search'),
+			array('sort_order, price, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('product_id, sort_order, price, create_time, update_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,6 +66,7 @@ abstract class BaseProduct extends GxActiveRecord {
 		return array(
 			'product_id' => Yii::t('m/product', 'Product'),
 			'sort_order' => Yii::t('m/product', 'Sort Order'),
+			'price' => Yii::t('m/product', 'Price'),
 			'create_time' => Yii::t('m/product', 'Create Time'),
 			'update_time' => Yii::t('m/product', 'Update Time'),
 			'product2categories' => null,
@@ -79,6 +82,7 @@ abstract class BaseProduct extends GxActiveRecord {
 
 		$criteria->compare("{$alias}.product_id", $this->product_id);
 		$criteria->compare("{$alias}.sort_order", $this->sort_order);
+		$criteria->compare("{$alias}.price", $this->price);
 		$criteria->compare("{$alias}.create_time", $this->create_time, true);
 		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 

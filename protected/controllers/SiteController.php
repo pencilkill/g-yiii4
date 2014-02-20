@@ -1,42 +1,6 @@
 <?php
 /**
  * @author Sam@ozchamp.net
- * @example
- * for multiple language model
- *
-	1. AR read like this :
-
- 	$model = $this->loadModel(1, 'Category');
-	// Getting language i18n like this
-	var_dump($model->categoryI18ns->title);
-	// Getting language i18n specified like this
-	var_dump($model->categoryI18ns(array('scopes' => array('t' => array(Yii::app()->params->languages['en_us']->language_id))))->title);
-
-	2. ARS read like this :
-	$model = new Category('search');
-	$i18n = new CategoryI18n('search');
-	$model->filterI18n = $i18n;
-	$data = $model->search()->getData();
-	$pagination = $model->search()->getPagination();
-	// Widget actually output in view
-	$this->widget('ELinkPager',array('pages' => $pagination));
-	...
-	// Getting language i18n like this
-	var_dump($data[0]->categoryI18ns->title);
-	// Getting language i18n specified like this
-	var_dump($data[0]->categoryI18ns(array('scopes' => array('t' => array(Yii::app()->params->languages['en_us']->language_id))))->title);
-
-	3. ARS specified pagesize read like this :
-	$model = new Information('search');
-	$i18n = new InformationI18n('search');
-	$model->filterI18n = $i18n;
-	$provider = $model->search();
-	$provider->pagination->pageSize = 3;
-	$data = $provider->getData();
-	var_dump($data);
-	$pagination = $provider->getPagination();
-	// Widget actually output in view
-	$this->widget('ELinkPager',array('pages' => $pagination));
  *
  */
 class SiteController extends GxController

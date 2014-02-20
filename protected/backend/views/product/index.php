@@ -120,6 +120,12 @@ $this->breadcrumbs = array(
 
 							array(
 								'type' => 'raw',
+								'name' => 'price',
+								'value' => 'CHtml::textField("edit[$data->product_id][price]", $data->price, array("class"=>"editable"))',
+							),
+
+							array(
+								'type' => 'raw',
 								'name' => 'sort_order',
 								'value' => 'CHtml::textField("edit[$data->product_id][sort_order]", $data->sort_order, array("class"=>"editable"))',
 							),
@@ -152,45 +158,47 @@ $this->breadcrumbs = array(
 
 
 <script type="text/javascript">
+/*
+ * Grid View Delete
+ */
+ function GVDelete(){
+     var params = {
+            id : 'product-grid'
+            , url : '<?php echo $this->createUrl('gridviewdelete'); ?>'
+            , checkBoxColumn : ':checkbox:not(:disabled)[name^="GridViewSelect"]:checked'
+            , postName : 'selected'
+            , postData : {returnUrl : '<?php echo Yii::app()->getRequest()->url?>'}
+            , deleteConfirmation : '<?php echo Yii::t('app', 'Confirm Grid View Delete?')?>'
+            , selectNoneMessage : '<?php echo Yii::t('app', 'No Results Found');?>'
+            , warningMessage : '<?php echo Yii::t('app', 'Operation Failure');?>'
+        };
+     GridViewDelete(params);
+ }
+/*
+ * Grid View Update
+ */
+ function GVUpdate(){
+    var params = {
+        id : 'product-grid-form'
+        , submitConfirmation : '<?php echo Yii::t('app', 'Confirm Grid View Update?')?>'
+    };
+    GridViewUpdate(params);
+ }
+/*
+ * Grid View Changed
+ */
+ function GVChanged(){
+    var params = {
+        id : 'product-grid-form'
+        ,trackEm : '[name^="edit"]'
+        ,parentEm : 'tr'
+        ,checkEm : '[name^="editted"]'
+    };
+    GridViewChanged(params);
+ }
+//
 jQuery(function($){
-    /*
-     * Grid View Delete
-     */
-     function GVDelete(){
-         var params = {
-                id : 'product-grid'
-                , url : '<?php echo $this->createUrl('gridviewdelete'); ?>'
-                , checkBoxColumn : ':checkbox:not(:disabled)[name^="GridViewSelect"]:checked'
-                , postName : 'selected'
-                , postData : {returnUrl : '<?php echo Yii::app()->getRequest()->url?>'}
-                , deleteConfirmation : '<?php echo Yii::t('app', 'Confirm Grid View Delete?')?>'
-                , selectNoneMessage : '<?php echo Yii::t('app', 'No Results Found');?>'
-                , warningMessage : '<?php echo Yii::t('app', 'Operation Failure');?>'
-            };
-         GridViewDelete(params);
-     }
-    /*
-     * Grid View Update
-     */
-     function GVUpdate(){
-        var params = {
-            id : 'product-grid-form'
-            , submitConfirmation : '<?php echo Yii::t('app', 'Confirm Grid View Update?')?>'
-        };
-        GridViewUpdate(params);
-     }
-    /*
-     * Grid View Changed
-     */
-     function GVChanged(){
-        var params = {
-            id : 'product-grid-form'
-            ,trackEm : '[name^="edit"]'
-            ,parentEm : 'tr'
-            ,checkEm : '[name^="editted"]'
-        };
-        GridViewChanged(params);
-     }
+	// GVChanged
      GVChanged();
 });
 </script>

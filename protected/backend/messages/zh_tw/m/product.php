@@ -17,9 +17,10 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Sort Order' => '排序',
+  'Price' => '價格',
   'Create Time' => '創建時間',
   'Product' => '產品',
   'Product|Products' => '產品',
+  'Sort Order' => '排序',
   'Update Time' => '更新時間',
 );

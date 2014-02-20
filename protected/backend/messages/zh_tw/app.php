@@ -17,7 +17,8 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Tabs Image' => '產品多圖',
+  'Files' => '項目',
+  'Price Formatter Is Incorrect' => '價格不正確',
   'Advanced Search' => '高級搜尋',
   'All' => '全部',
   'Cancel' => '取消',
@@ -48,6 +49,7 @@ return array (
   'Search' => '搜尋',
   'Select A Image' => '選擇圖片',
   'Tabs Basic' => '基本設置',
+  'Tabs Image' => '產品多圖',
   'Unnoticed' => '未閱讀',
   'Update' => '編輯',
   'Upload Successfully' => '文件上傳成功',

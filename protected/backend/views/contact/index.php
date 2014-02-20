@@ -203,4 +203,21 @@ $this->breadcrumbs = array(
 	};
 	GridViewUpdate(params);
  }
+ /*
+  * Grid View Changed
+  */
+  function GVChanged(){
+     var params = {
+         id : 'contact-grid-form'
+         ,trackEm : '[name^="edit"]'
+         ,parentEm : 'tr'
+         ,checkEm : '[name^="editted"]'
+     };
+     GridViewChanged(params);
+  }
+//
+jQuery(function($){
+	// GVChanged
+  GVChanged();
+});
 </script>

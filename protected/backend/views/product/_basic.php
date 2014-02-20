@@ -31,6 +31,16 @@
 
 		<tr>
 			<td>
+				<?php echo $form->labelEx($model,'price'); ?>
+			</td>
+			<td>
+				<?php echo $form->textField($model, 'price'); ?>
+				<?php echo $form->error($model,'price'); ?>
+			</td>
+		</tr><!-- row -->
+
+		<tr>
+			<td>
 				<?php echo $form->labelEx($model,'sort_order'); ?>
 			</td>
 			<td>
