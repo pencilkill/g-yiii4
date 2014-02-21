@@ -21,10 +21,15 @@
 			var prop = id.toString();
 			
 			if(_twzip.hasOwnProperty(prop)){
+				var vv = $this.attr('v');
 				var html = '';
 				
 				$.each(_twzip[prop], function(k, v){
-					html += '<option k="' + v + '" value="' + k + '">' + k + '</option>';
+					if(v == vv){
+						html += '<option k="' + v + '" value="' + k + '" selected="selected">' + k + '</option>';
+					}else{
+						html += '<option k="' + v + '" value="' + k + '">' + k + '</option>';
+					}
 				});
 				
 				$this.html(html);
@@ -36,10 +41,15 @@
 					dataType:	'json',
 					data:{'id':id},
 					success:	function(data, status, xhr){
+						var vv = $this.attr('v');
 						var html = '';
 						
 						$.each(data, function(k, v){
-							html += '<option k="' + v + '" value="' + k + '">' + k + '</option>';
+							if(v == vv){
+								html += '<option k="' + v + '" value="' + k + '" selected="selected">' + k + '</option>';
+							}else{
+								html += '<option k="' + v + '" value="' + k + '">' + k + '</option>';
+							}
 						});
 						
 						$this.html(html);
@@ -84,10 +94,15 @@
 				url:	$this.attr('url'),
 				dataType:	'json',
 				success:	function(data, status, xhr){
+					var vv = $this.attr('v'); 
 					var html = '';
 					
 					$.each(data, function(k, v){
-						html += '<option k="' + k + '" value="' + v + '">' + v + '</option>';
+						if(v == vv){
+							html += '<option k="' + k + '" value="' + v + '" selected="selected">' + v + '</option>';
+						}else{
+							html += '<option k="' + k + '" value="' + v + '">' + v + '</option>';
+						}
 					});
 					
 					$this.html(html);
