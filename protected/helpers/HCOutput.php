@@ -18,9 +18,14 @@ class HCOutput {
 
 
        	$ua = $_SERVER['HTTP_USER_AGENT'];
-       	$uname = rawurldecode($name);
+       	$uname = rawurlencode($name);
 
+        header('Pragma: public');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+		header('Content-Transfer-Encoding: binary');
        	header('Content-Description: File Transfer');
+    	header('Content-type: application/force-download');
     	header('Content-type: application/octet-stream');
     	if (preg_match('/MSIE/', $ua)) {
     		header('Content-Disposition: attachment; filename="' . $uname . '"');
@@ -29,15 +34,11 @@ class HCOutput {
 		} else {
 			header('Content-Disposition: attachment; filename="' . $name . '"');
 		}
-		header('Content-Transfer-Encoding: binary');
-		header('Expires: 0');
-		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Pragma: public');
         header('Content-Length: '.filesize($file));
 
-        @readfile($file);
+        readfile($file);
 
-    	exit();
+        return true;
 	}
 	/**
 	 * content
@@ -46,9 +47,14 @@ class HCOutput {
 	 */
 	public static function content($content, $name){
        	$ua = $_SERVER['HTTP_USER_AGENT'];
-       	$uname = rawurldecode($name);
+       	$uname = rawurlencode($name);
 
+        header('Pragma: public');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+		header('Content-Transfer-Encoding: binary');
        	header('Content-Description: File Transfer');
+       	header('Content-type: application/force-download');
     	header('Content-type: application/octet-stream');
     	if (preg_match('/MSIE/', $ua)) {
     		header('Content-Disposition: attachment; filename="' . $uname . '"');
@@ -57,10 +63,6 @@ class HCOutput {
 		} else {
 			header('Content-Disposition: attachment; filename="' . $name . '"');
 		}
-		header('Content-Transfer-Encoding: binary');
-		header('Expires: 0');
-		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Pragma: public');
 
         ob_start();
     	$fp = fopen('php://output', 'w');
@@ -69,7 +71,7 @@ class HCOutput {
         header('Content-Length: ' . ob_get_length());
         ob_end_flush();
 
-    	exit();
+        return true;
 	}
 }
 ?>

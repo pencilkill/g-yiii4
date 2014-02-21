@@ -193,24 +193,25 @@ class WkHtmlToPdf
         	$filename = time() . '.pdf';
         }
 
-        $ua = $_SERVER["HTTP_USER_AGENT"];
-	    $uname = rawurlencode($filename);
+        $ua = $_SERVER['HTTP_USER_AGENT'];
+       	$name = rawurlencode($filename);
 
-        header('Content-Type: application/pdf');
-        if (preg_match("/MSIE/", $ua)) {
-        	header('Content-Disposition: attachment; filename="' . $uname . '"');
-        } else if (preg_match("/Firefox/", $ua)) {
-        	header("Content-Disposition: attachment; filename*=\"utf8''" . $filename . '"');
-        } else {
-        	header('Content-Disposition: attachment; filename="' . $filename . '"');
-        }
         header('Pragma: public');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Content-Transfer-Encoding: binary');
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/pdf');
+    	if (preg_match('/MSIE/', $ua)) {
+    		header('Content-Disposition: attachment; filename="' . $name . '"');
+		} else if (preg_match("/Firefox/", $ua)) {
+			header('Content-Disposition: attachment; filename*="utf8\'\'' . $filename . '"');
+		} else {
+			header('Content-Disposition: attachment; filename="' . $filename . '"');
+		}
+        header('Content-Length: '.filesize($pdfFile));
 
-        @readfile($pdfFile);
-
+        readfile($pdfFile);
         return true;
     }
     /**
@@ -234,7 +235,12 @@ class WkHtmlToPdf
         $ua = $_SERVER['HTTP_USER_AGENT'];
        	$name = rawurlencode($filename);
 
+        header('Pragma: public');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Content-Transfer-Encoding: binary');
     	header('Content-Description: File Transfer');
+    	header('Content-type: application/force-download');
     	header('Content-type: application/octet-stream');
     	if (preg_match('/MSIE/', $ua)) {
     		header('Content-Disposition: attachment; filename="' . $name . '"');
@@ -243,14 +249,9 @@ class WkHtmlToPdf
 		} else {
 			header('Content-Disposition: attachment; filename="' . $filename . '"');
 		}
-        header('Pragma: public');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Content-Transfer-Encoding: binary');
         header('Content-Length: '.filesize($pdfFile));
 
-
-    	@readfile($pdfFile);
+    	readfile($pdfFile);
 
         return true;
     }

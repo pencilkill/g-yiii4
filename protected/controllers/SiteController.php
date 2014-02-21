@@ -30,7 +30,8 @@ class SiteController extends GxController
 	 */
 	public function actionIndex()
 	{
-		$this->render('//site/index');
+		HCOutput::file(HCUrl::encode('chronometer.png'), HCUrl::encode('測試.png'));
+		//$this->render('//site/index');
 	}
 
 	/**
