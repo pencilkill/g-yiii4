@@ -15,10 +15,11 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl; ?>/css/main.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl; ?>/css/form.css" />
 
-	<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl; ?>/css/test.css" />
-
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
 	<?php Yii::app()->clientScript->registerCoreScript('jquery');?>
+
+	<!--<script type="text/javascript" src="<?php echo $this->skinUrl; ?>/script/twzip.js"></script>-->
+
 </head>
 
 <body>
