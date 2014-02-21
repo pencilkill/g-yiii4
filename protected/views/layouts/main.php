@@ -11,7 +11,6 @@
 	<!--[if lt IE 8]>
 	<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl; ?>/css/ie.css" media="screen, projection" />
 	<![endif]-->
-
 	<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl; ?>/css/main.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl; ?>/css/form.css" />
 
