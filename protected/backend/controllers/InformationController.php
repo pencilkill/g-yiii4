@@ -196,7 +196,7 @@ class InformationController extends GxController {
 			$criteria= new CDbCriteria;
 			$criteria->compare('information_id', $selectedIds);
 
-			$models = Category::model()->findAll($criteria);
+			$models = Information::model()->findAll($criteria);
 
 			$errorModel = null;
 

@@ -192,7 +192,7 @@ class PictureController extends GxController {
 			$criteria= new CDbCriteria;
 			$criteria->compare('picture_id', $selectedIds);
 
-			$models = Category::model()->findAll($criteria);
+			$models = Picture::model()->findAll($criteria);
 
 			$errorModel = null;
 

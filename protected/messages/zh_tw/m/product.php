@@ -18,6 +18,7 @@
  */
 return array (
   'Create Time' => '',
+  'Price' => '',
   'Product' => '',
   'Product|Products' => '',
   'Sort Order' => '',

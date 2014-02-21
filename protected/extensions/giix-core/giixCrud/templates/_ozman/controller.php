@@ -247,7 +247,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 			$criteria= new CDbCriteria;
 			$criteria->compare('<?php echo $this->tableSchema->primaryKey; ?>', $<?php echo $this->gridViewPostName?>Ids);
 
-			$models = Category::model()->findAll($criteria);
+			$models = <?php echo $this->modelClass; ?>::model()->findAll($criteria);
 
 			$errorModel = null;
 

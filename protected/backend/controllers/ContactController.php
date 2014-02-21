@@ -92,7 +92,7 @@ class ContactController extends GxController {
 			$criteria= new CDbCriteria;
 			$criteria->compare('contact_id', $selectedIds);
 
-			$models = Category::model()->findAll($criteria);
+			$models = Contact::model()->findAll($criteria);
 
 			$errorModel = null;
 

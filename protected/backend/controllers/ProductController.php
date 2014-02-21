@@ -116,6 +116,7 @@ class ProductController extends GxController {
 
 					if (Yii::app()->getRequest()->getIsAjaxRequest()){
 						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+
 						Yii::app()->end();
 					}else{
 						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
@@ -235,6 +236,7 @@ class ProductController extends GxController {
 
 					if (Yii::app()->getRequest()->getIsAjaxRequest()){
 						echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+
 						Yii::app()->end();
 					}else{
 						$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : array('index'));
@@ -269,6 +271,7 @@ class ProductController extends GxController {
 
 			if (Yii::app()->getRequest()->getIsAjaxRequest()){
 				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+
 				Yii::app()->end();
 			}else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->createUrl('index'));
@@ -286,7 +289,7 @@ class ProductController extends GxController {
 			$criteria= new CDbCriteria;
 			$criteria->compare('product_id', $selectedIds);
 
-			$models = Category::model()->findAll($criteria);
+			$models = Product::model()->findAll($criteria);
 
 			$errorModel = null;
 
@@ -313,6 +316,7 @@ class ProductController extends GxController {
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
 				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') : $this->createUrl('index'));
@@ -367,6 +371,7 @@ class ProductController extends GxController {
 
 			if(Yii::app()->getRequest()->getIsAjaxRequest()) {
 				echo CJSON::encode(Yii::app()->user->getFlashes(false) ? Yii::app()->user->getFlashes(true) : array('success' => true));
+
 				Yii::app()->end();
 			} else{
 				$this->redirect(Yii::app()->getRequest()->getPost('returnUrl') ? Yii::app()->getRequest()->getPost('returnUrl') :  $this->create('index'));

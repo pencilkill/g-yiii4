@@ -192,7 +192,7 @@ class NewsController extends GxController {
 			$criteria= new CDbCriteria;
 			$criteria->compare('news_id', $selectedIds);
 
-			$models = Category::model()->findAll($criteria);
+			$models = News::model()->findAll($criteria);
 
 			$errorModel = null;
 

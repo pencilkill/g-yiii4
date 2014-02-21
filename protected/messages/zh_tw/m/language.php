@@ -18,10 +18,9 @@
  */
 return array (
   'Code' => '',
-  'Image' => '',
   'Language' => '',
   'Language|Languages' => '',
-  'Sort' => '',
+  'Sort Order' => '',
   'Status' => '',
   'Title' => '',
 );

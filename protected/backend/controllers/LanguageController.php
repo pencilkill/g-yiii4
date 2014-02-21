@@ -139,7 +139,7 @@ class LanguageController extends GxController {
 			$criteria= new CDbCriteria;
 			$criteria->compare('language_id', $selectedIds);
 
-			$models = Category::model()->findAll($criteria);
+			$models = Language::model()->findAll($criteria);
 
 			$errorModel = null;
 
