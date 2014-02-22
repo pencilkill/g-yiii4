@@ -13,7 +13,7 @@
 
 	$permutation=HCMath::permutation(array($color, $size, $tax, $method));
 
-	echo sizeOf($permutation) . ' elements <hr/>';
+	echo sizeof($permutation) . ' elements <hr/>';
 
 	foreach($permutation as $val){
 		echo implode('_',$val),'<br/>';
@@ -28,7 +28,7 @@
 
 	$combination=HCMath::combination('紅', 'M', '自付', '快遞');
 
-	echo sizeOf($combination) . ' elements <hr/>';
+	echo sizeof($combination) . ' elements <hr/>';
 
 	foreach($combination as $val){
 		echo implode('_',$val),'<br/>';

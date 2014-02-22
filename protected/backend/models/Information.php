@@ -109,7 +109,7 @@ class Information extends BaseInformation
     	// Raise event
     	if(!parent::beforeDelete()) return false;
 
-    	if(sizeOf($this->informations)){
+    	if(sizeof($this->informations)){
     		Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure Including SubItems'));
 
     		return false;

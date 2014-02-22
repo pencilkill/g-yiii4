@@ -92,7 +92,7 @@ class CTreeBehavior extends CActiveRecordBehavior {
 					$ancestorName => $category->$ancestorName,
 					'level' => $level,
 					'title' => CHtml::value($category, $textAttribute),
-					'totalSubCategories' => sizeOf($subCategories),
+					'totalSubCategories' => sizeof($subCategories),
 				);
 				$storage = CMap::mergeArray($storage, $subCategories);
 			}

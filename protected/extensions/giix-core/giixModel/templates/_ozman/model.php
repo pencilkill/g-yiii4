@@ -38,7 +38,7 @@
 		// beforeDelete
 		if(preg_match("/^\s*array\s*\(\s*self::(HAS|MANY)_MANY\s*,.*/i", $relation)){
 			if(empty($i18n) || ($name != $i18n->relationNamePluralized)){
-				$beforeDelete[] = 'sizeOf($this->' . $name . ')';
+				$beforeDelete[] = 'sizeof($this->' . $name . ')';
 			}
 		}
 

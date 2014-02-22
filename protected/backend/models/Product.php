@@ -94,7 +94,7 @@ class Product extends BaseProduct
     	// Raise event
     	if(!parent::beforeDelete()) return false;
 
-    	if(sizeOf($this->product2categories) || sizeOf($this->productImages)){
+    	if(sizeof($this->product2categories) || sizeof($this->productImages)){
     		Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure Including SubItems'));
 
     		return false;

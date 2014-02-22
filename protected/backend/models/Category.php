@@ -109,7 +109,7 @@ class Category extends BaseCategory
     	// Raise event
     	if(!parent::beforeDelete()) return false;
 
-    	if(sizeOf($this->categories) || sizeOf($this->product2categories)){
+    	if(sizeof($this->categories) || sizeof($this->product2categories)){
     		Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure Including SubItems'));
 
     		return false;

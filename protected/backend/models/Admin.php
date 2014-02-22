@@ -71,7 +71,7 @@ class Admin extends BaseAdmin
         $authorizer = Yii::app()->getModule('rights')->getAuthorizer();
 		$roles = $authorizer->getRoles(false);
 
-		$valid = (bool)sizeOf($this->roles);
+		$valid = (bool)sizeof($this->roles);
 		foreach($this->roles as $role){
 			$valid = array_key_exists($role, $roles) && $valid;
 			if(! $valid){

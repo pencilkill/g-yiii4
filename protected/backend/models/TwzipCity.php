@@ -63,7 +63,7 @@ class TwzipCity extends BaseTwzipCity
     	// Raise event
     	if(!parent::beforeDelete()) return false;
 
-    	if(sizeOf($this->twzipCounties)){
+    	if(sizeof($this->twzipCounties)){
     		Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure Including SubItems'));
 
     		return false;

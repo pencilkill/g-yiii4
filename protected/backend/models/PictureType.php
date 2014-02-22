@@ -67,7 +67,7 @@ class PictureType extends BasePictureType
     	// Raise event
     	if(!parent::beforeDelete()) return false;
 
-    	if(sizeOf($this->pictures)){
+    	if(sizeof($this->pictures)){
     		Yii::app()->user->setFlash('warning', Yii::t('app', 'Operation Failure Including SubItems'));
 
     		return false;
