@@ -6,12 +6,18 @@
  */
 class HCValidator {
 	/**
+	 * Validate multiple email by a specified separator
 	 *
-	 * @param $email
-	 * @param $separator
+	 * @param $email, mixed, String or Array
+	 * @param $required, Bool, whether the email is required
+	 * @param $separator, Char, email separator for argument 0 if it is string
 	 */
-	public static function emails($email, $separator = ','){
-		$email = trim($email);
+	public static function email($email, $required = true, $separator = ','){
+		$email = is_array($email) ? $email : (is_string($email) ? explode($separator, trim($email)) : array());
+
+		if(empty($email) && $required){
+			return false;
+		}
 
 		$valid = true;
 
