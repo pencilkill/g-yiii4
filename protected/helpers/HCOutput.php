@@ -75,11 +75,7 @@ class HCOutput {
 	}
 	/**
 	 * CSV(Comma Separated Values)
-	 *
-	 * The output file support :
-	 *
-	 * MS-excel, directly
-	 * OpenOffice, charset UTF-8
+	 * The output file support : MS-excel(directly), OpenOffice(charset UTF-8)
 	 *
 	 * @param $data, Array
 	 * @param $name, download file name
