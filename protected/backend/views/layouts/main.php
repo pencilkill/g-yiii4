@@ -178,6 +178,7 @@ jQuery(function($) {
 			'flat' => false,
 			'language' => Yii::app()->language,
 			'options' => array(
+				'showMonthAfterYear' => false,
 				'showButtonPanel' => false,
 				'changeYear' => true,
 				'changeMonth' => true,
