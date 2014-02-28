@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2014 年 02 月 21 日 07:03
+-- 生成日期: 2014 年 02 月 28 日 10:56
 -- 服务器版本: 5.5.24-log
 -- PHP 版本: 5.3.0
 
@@ -242,6 +242,52 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`contact_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `customer`
+--
+
+CREATE TABLE IF NOT EXISTS `customer` (
+  `customer_id` int(11) NOT NULL AUTO_INCREMENT,
+  `customer_group_id` int(11) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `username` varchar(32) NOT NULL,
+  `password` varchar(32) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`customer_id`),
+  UNIQUE KEY `username` (`username`),
+  KEY `customer_group_id` (`customer_group_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- 转存表中的数据 `customer`
+--
+
+INSERT INTO `customer` (`customer_id`, `customer_group_id`, `name`, `username`, `password`, `status`, `create_time`, `update_time`) VALUES
+(1, 1, 'Sam', 'sam@ozchamp.net', '123456', 1, '2014-02-28 17:10:33', '2014-02-28 17:10:33');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `customer_group`
+--
+
+CREATE TABLE IF NOT EXISTS `customer_group` (
+  `customer_group_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  PRIMARY KEY (`customer_group_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- 转存表中的数据 `customer_group`
+--
+
+INSERT INTO `customer_group` (`customer_group_id`, `name`) VALUES
+(1, 'Default');
 
 -- --------------------------------------------------------
 
@@ -1099,6 +1145,12 @@ ALTER TABLE `category`
 ALTER TABLE `category_i18n`
   ADD CONSTRAINT `category_i18n_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `category_i18n_ibfk_2` FOREIGN KEY (`language_id`) REFERENCES `language` (`language_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- 限制表 `customer`
+--
+ALTER TABLE `customer`
+  ADD CONSTRAINT `customer_ibfk_4` FOREIGN KEY (`customer_group_id`) REFERENCES `customer_group` (`customer_group_id`) ON UPDATE CASCADE;
 
 --
 -- 限制表 `information`

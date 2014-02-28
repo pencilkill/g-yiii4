@@ -22,8 +22,6 @@
 $frontend=dirname(dirname(__FILE__));
 Yii::setPathOfAlias('frontend', $frontend);
 
-//Yii::setPathOfAlias('weburl', strtr('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'], array(strtr($_SERVER['SCRIPT_FILENAME'], array(Yii::getPathOfAlias('webroot')=>''))=>'')));
-
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 return array(

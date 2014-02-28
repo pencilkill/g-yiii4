@@ -75,6 +75,12 @@
       <li id="information"><a href="<?php echo Yii::app()->createUrl('information/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Information'); ?></a></li>
       <li id="pic"><a href="<?php echo Yii::app()->createUrl('picture/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Picture'); ?></a></li>
       <li id="contact"><a href="<?php echo Yii::app()->createUrl('contact/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Contact'); ?></a></li>
+      <li id="customer"><a class="top"><?php echo Yii::t('nav', 'Customers'); ?></a>
+        <ul>
+          <li><a href="<?php echo Yii::app()->createUrl('customer/index', array()); ?>"><?php echo Yii::t('nav', 'Customer'); ?></a></li>
+          <li><a href="<?php echo Yii::app()->createUrl('customerGroup/index', array()); ?>"><?php echo Yii::t('nav', 'CustomerGroup'); ?></a></li>
+        </ul>
+      </li>
       <li id="admin"><a href="<?php echo Yii::app()->createUrl('admin/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Admin'); ?></a></li>
       <li id="system"><a class="top"><?php echo Yii::t('nav', 'System'); ?></a>
         <ul>

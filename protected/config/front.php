@@ -41,10 +41,14 @@ return array(
 		),
 
 		'coreMessages'=>array(
-			// Set basePath as null, it will customize coreMessages
-			// Notice that app will not translate from coreMessage of Yii::app()->language,
-			// it will translate from coreMessage of Yii::app()->sourceLanguage if there is no onMissingTranslation event
-            'basePath'=>null,
+			/**
+			 *  Set basePath as null, it will customize coreMessages
+			 *  Notice that app will not translate from coreMessage of Yii::app()->language,
+			 *  it will translate from coreMessage of Yii::app()->sourceLanguage if there is no onMissingTranslation event
+			 *
+			 *  uncomment the following to use framework coreMessages
+			 */
+            //'basePath'=>null,
         ),
         /*
         'urlManager'=>array(

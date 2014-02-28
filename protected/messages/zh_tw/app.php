@@ -18,5 +18,6 @@
  */
 return array (
   'List' => '',
+  'Verification Code' => '驗證碼',
   'Congratulations! You have successfully created your Yii application.' => '您已經成功創建第一個YII應用，祝賀您！',
 );

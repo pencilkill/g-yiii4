@@ -17,9 +17,12 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Picture' => '圖片管理',
+  'Customer' => '會員',
+  'CustomerGroup' => '群組',
+  'Customers' => '會員管理',
   'Account' => '帳號設定',
   'Admin' => '管理員',
+  'Asset' => '緩存管理',
   'Catalog' => '產品管理',
   'Category' => '分類',
   'Contact' => '聯絡我們',
@@ -27,9 +30,9 @@ return array (
   'Exit System' => '退出系統',
   'Information' => '單頁訊息',
   'News' => '最新消息',
+  'Picture' => '圖片管理',
   'Product' => '產品',
   'Setting' => '網站設定',
-  'Asset' => '緩存管理',
   'Site Frontend' => '網站首頁',
   'System' => '系統設定',
 );

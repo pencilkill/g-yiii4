@@ -27,30 +27,53 @@ class ContactController extends GxController {
 	public function accessRules()
     {
         return array(
-            array('deny',
+            array('allow',
             ),
         );
     }
 
 	public function actionIndex() {
-		$model=new ContactForm;
-		if(isset($_POST['ContactForm']))
+		$model=new Contact;
+
+		$this->performAjaxValidation($model);
+
+		if(isset($_POST['Contact']))
 		{
-			$model->attributes=$_POST['ContactForm'];
+			$model->attributes=$_POST['Contact'];
 			if($model->validate())
 			{
-				$name='=?UTF-8?B?'.base64_encode($model->name).'?=';
-				$subject='=?UTF-8?B?'.base64_encode($model->subject).'?=';
-				$headers="From: $name <{$model->email}>\r\n".
-					"Reply-To: {$model->email}\r\n".
-					"MIME-Version: 1.0\r\n".
-					"Content-type: text/plain; charset=UTF-8";
+				$model->save(false);
 
-				mail(Yii::app()->params['adminEmail'],$subject,$model->body,$headers);
-				Yii::app()->user->setFlash('contact','Thank you for contacting us. We will respond to you as soon as possible.');
+				$subject = Yii::app()->name . ' - ' . Yii::t('app', 'Contact Us');
+
+				$label = (object)$model->attributeLabels();
+				$e = (object)$model->attributes;
+
+				$e->sex = $e->sex ? Yii::t('app', 'Male') : Yii::t('app', 'Female');
+				$e->message = nl2br($e->message);
+
+				$body = $this->renderPartial('mail', array('label' => $label, 'e' => $e), true);
+
+				$body = $this->renderPartial('//layouts/mail', array('subject' => $subject, 'body' => $body), true);
+
+				$mail = new Mail;
+				$mail->SetFrom($model->email, $model->firstname .' '. $model->lastname);
+			    $mail->AddReplyTo($model->email, $model->firstname .' '. $model->lastname);
+			    $mail->AddAddresses(Yii::app()->config->get('mail_email_contact'));
+			    $mail->Subject = $subject;
+			    $mail->MsgHTML($body);
+			    $mail->Send();
+
+			    if($mail->isError()){
+			    	//var_dump($mail->ErrorInfo);
+			    }
+
+				Yii::app()->user->setFlash('contact', Yii::t('m/contact','Thank you for contacting us. We will respond to you as soon as possible.'));
+
 				$this->refresh();
 			}
 		}
+
 		$this->render('index',array('model'=>$model));
 	}
 

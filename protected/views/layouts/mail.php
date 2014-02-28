@@ -14,10 +14,10 @@ body {
 <body>
 <table width="700px" border="0px" align="center" cellpadding="0px" cellspacing="0px">
 	<tr>
-		<td height="80" bgcolor="#ea6c42" style="font-size: 25px; font-family: '微软雅黑'; padding-left: 19px; color: #FFF;"><?php echo $subject?></td>
+		<td height="80" bgcolor="#549ED6" style="font-size: 25px; font-family: '微软雅黑'; padding-left: 19px; color: #FFF;"><?php echo $subject?></td>
 	</tr>
 	<tr>
-		<td style="border: 1px solid #d6d6d6; border-top: none; color: #333; font-size: 15px; line-height: 200%; padding: 10px 60px 90px 61px;">
+		<td style="border: 1px solid #D6D6D6; border-top: none; color: #333; font-size: 15px; line-height: 200%;">
 		<?php echo $body?>
 		</td>
 	</tr>
