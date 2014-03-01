@@ -2,35 +2,28 @@
 
 
 class ContactController extends GxController {
-
-	public function actions()
-	{
+	public function actions(){
 		return array(
-		// captcha action renders the CAPTCHA image displayed on the contact page
-
+			/*
+			 * Notice testLimit should be not less than 2 times if enableAjaxValidation is true for CActiveForm
+			 */
 			'captcha'=>array(
 				'class'=>'CCaptchaAction',
 				'backColor'=>0xFFFFFF,
+				//'backend'=>'',
+				//'fontFile'=>'',
+				//'foreColor'=>'',
+				'offset'=>0,
+				'transparent'=>false,
+				'padding'=>2,
+				'height'=>50,
+				'width'=>120,
+				'minLength'=>5,
+				'maxLength'=>5,
 				'testLimit'=>1,
-		),
-
+			),
 		);
 	}
-
-	public function filters()
-	{
-		return array(
-            'accessControl',
-		);
-	}
-
-	public function accessRules()
-    {
-        return array(
-            array('allow',
-            ),
-        );
-    }
 
 	public function actionIndex() {
 		$model=new Contact;

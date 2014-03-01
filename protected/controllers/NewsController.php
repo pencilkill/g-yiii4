@@ -3,8 +3,6 @@
 
 class NewsController extends GxController {
 
-
-
 	public function actionIndex() {
 		$model = new News('search');
 		$model->unsetAttributes();

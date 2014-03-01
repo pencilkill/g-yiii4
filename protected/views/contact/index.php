@@ -27,7 +27,6 @@ If you have business inquiries or other questions, please fill out the following
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'contact-form',
-	'enableAjaxValidation' => true,
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(
 		'validateOnSubmit'=>true,
@@ -100,14 +99,14 @@ If you have business inquiries or other questions, please fill out the following
 
 	<?php if(CCaptcha::checkRequirements()): ?>
 	<div class="row">
-		<?php echo $form->labelEx($model,'verify_code'); ?>
+		<?php echo $form->labelEx($model,'verifyCode'); ?>
 		<div>
 		<?php $this->widget('CCaptcha'); ?>
-		<?php echo $form->textField($model,'verify_code'); ?>
+		<?php echo $form->textField($model,'verifyCode'); ?>
 		</div>
 		<div class="hint">Please enter the letters as they are shown in the image above.
 		<br/>Letters are not case-sensitive.</div>
-		<?php echo $form->error($model,'verify_code'); ?>
+		<?php echo $form->error($model,'verifyCode'); ?>
 	</div>
 	<?php endif; ?>
 

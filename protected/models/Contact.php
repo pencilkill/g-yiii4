@@ -4,7 +4,7 @@ Yii::import('frontend.models._base.BaseContact');
 
 class Contact extends BaseContact
 {
-	public $verify_code;
+	public $verifyCode;
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
@@ -27,14 +27,14 @@ class Contact extends BaseContact
 			// email has to be a valid email address
 			array('email', 'email'),
 			// verifyCode needs to be entered correctly
-			array('verify_code', 'captcha', 'allowEmpty'=>!CCaptcha::checkRequirements()),
+			array('verifyCode', 'captcha', 'allowEmpty'=>!CCaptcha::checkRequirements()),
 		));
 	}
 
 	public function attributeLabels()
 	{
 		return CMap::mergeArray(parent::attributeLabels(), array(
-			'verify_code'=>Yii::t('app', 'Verification Code'),
+			'verifyCode'=>Yii::t('app', 'Verification Code'),
 		));
 	}
 }

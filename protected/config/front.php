@@ -30,7 +30,7 @@ return array(
 			'authTimeout' => 60 * 24 * 365,
 
 			'stateKeyPrefix' => 'front',
-			'loginUrl' => array('site/login'),
+			'loginUrl' => array('customer/login'),
 			'returnUrl' => array('site/index'),
 			// ajax session timeout
 			'loginRequiredAjaxResponse' => 'YII_LOGIN_REQUIRED',

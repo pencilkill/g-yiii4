@@ -14,6 +14,7 @@
  * @property string $name
  * @property string $username
  * @property string $password
+ * @property string $token
  * @property integer $status
  * @property string $create_time
  * @property string $update_time
@@ -40,12 +41,12 @@ abstract class BaseCustomer extends GxActiveRecord {
 
 	public function rules() {
 		return array(
-			array('customer_group_id, name, username, password', 'required'),
+			array('customer_group_id, name, username, password, token', 'required'),
 			array('customer_group_id, status', 'numerical', 'integerOnly'=>true),
-			array('name, username, password', 'length', 'max'=>32),
+			array('name, username, password, token', 'length', 'max'=>32),
 			array('create_time, update_time', 'safe'),
 			array('status, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('customer_id, customer_group_id, name, username, password, status, create_time, update_time', 'safe', 'on'=>'search'),
+			array('customer_id, customer_group_id, name, username, password, token, status, create_time, update_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -67,6 +68,7 @@ abstract class BaseCustomer extends GxActiveRecord {
 			'name' => Yii::t('m/customer', 'Name'),
 			'username' => Yii::t('m/customer', 'Username'),
 			'password' => Yii::t('m/customer', 'Password'),
+			'token' => Yii::t('m/customer', 'Token'),
 			'status' => Yii::t('m/customer', 'Status'),
 			'create_time' => Yii::t('m/customer', 'Create Time'),
 			'update_time' => Yii::t('m/customer', 'Update Time'),
@@ -84,6 +86,7 @@ abstract class BaseCustomer extends GxActiveRecord {
 		$criteria->compare("{$alias}.name", $this->name, true);
 		$criteria->compare("{$alias}.username", $this->username, true);
 		$criteria->compare("{$alias}.password", $this->password, true);
+		$criteria->compare("{$alias}.token", $this->token, true);
 		$criteria->compare("{$alias}.status", $this->status);
 		$criteria->compare("{$alias}.create_time", $this->create_time, true);
 		$criteria->compare("{$alias}.update_time", $this->update_time, true);

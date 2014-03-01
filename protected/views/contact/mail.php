@@ -25,18 +25,18 @@
 	</tr>
 	<tr>
 		<td align="right" bgcolor="#eceaea"><?php echo $label->address?>　</td>
-		<td height="28" bgcolor="#f3f2f2" >　<?php echo $e->address?></td>
+		<td height="28" bgcolor="#FFFFFF" >　<?php echo $e->address?></td>
 	</tr>
 	<tr>
 		<td align="right" bgcolor="#eceaea"><?php echo $label->telephone?>　</td>
-		<td height="28" bgcolor="#FFFFFF" >　<?php echo $e->telephone?></td>
+		<td height="28" bgcolor="#f3f2f2" >　<?php echo $e->telephone?></td>
 	</tr>
 	<tr>
 		<td align="right" bgcolor="#eceaea"><?php echo $label->fax?>　</td>
-		<td height="28" bgcolor="#f3f2f2" >　<?php echo $e->fax?></td>
+		<td height="28" bgcolor="#FFFFFF" >　<?php echo $e->fax?></td>
 	</tr>
 	<tr>
 		<td valign="top" align="right" bgcolor="#eceaea"><?php echo $label->message?>　</td>
-		<td height="28" bgcolor="#FFFFFF" >　<?php echo $e->message?></td>
+		<td height="28" bgcolor="#f3f2f2" >　<?php echo $e->message?></td>
 	</tr>
 </table>

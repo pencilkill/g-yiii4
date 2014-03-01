@@ -3,8 +3,6 @@
 
 class ProductController extends GxController {
 
-
-
 	public function actionIndex() {
 		$model = new Product('search');
 		$model->unsetAttributes();

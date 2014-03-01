@@ -3,21 +3,6 @@
 
 class CategoryController extends GxController {
 
-
-	public function actions()
-	{
-		return array(
-			// captcha action renders the CAPTCHA image displayed on the contact page
-			/*
-			'captcha'=>array(
-				'class'=>'CCaptchaAction',
-				'backColor'=>0xFFFFFF,
-				'testLimit'=>1,
-			),
-			*/
-		);
-	}
-
 	public function actionIndex() {
 		$model = new Category('search');
 		$model->unsetAttributes();

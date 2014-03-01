@@ -3,10 +3,6 @@
 
 class InformationController extends GxController {
 
-
-
-	
-
 	public function actionView($id) {
 		$model = $this->loadModel($id, 'Information');
 

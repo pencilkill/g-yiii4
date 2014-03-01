@@ -6,7 +6,7 @@ class Customer extends BaseCustomer
 {
 
 	public $confirm_password;
-	public $verify_code;
+	public $verifyCode;
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
@@ -43,14 +43,15 @@ class Customer extends BaseCustomer
 			array('confirm_password, password', 'required', 'on' => 'insert'),
 			array('confirm_password, password', 'length', 'min' => 6),
 			array('confirm_password', 'compare', 'compareAttribute' => 'password'),
-			array('verify_code', 'captcha', 'allowEmpty'=>!CCaptcha::checkRequirements()),
+			array('verifyCode', 'captcha', 'allowEmpty'=>!CCaptcha::checkRequirements()),
 		));
 	}
 
 	public function attributeLabels()
 	{
 		return CMap::mergeArray(parent::attributeLabels(), array(
-			'verify_code'=>Yii::t('app', 'Verification Code'),
+			'confirm_password' => Yii::t('m/customer', 'Confirm Password'),
+			'verifyCode'=>Yii::t('app', 'Verification Code'),
 		));
 	}
 
