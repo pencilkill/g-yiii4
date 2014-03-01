@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2014 年 02 月 28 日 10:56
+-- 生成日期: 2014 年 03 月 01 日 04:52
 -- 服务器版本: 5.5.24-log
 -- PHP 版本: 5.3.0
 
@@ -241,7 +241,14 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`contact_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- 转存表中的数据 `contact`
+--
+
+INSERT INTO `contact` (`contact_id`, `status`, `firstname`, `lastname`, `sex`, `telephone`, `cellphone`, `fax`, `email`, `company`, `address`, `message`, `remark`, `create_time`, `update_time`) VALUES
+(1, 0, 'fi', 'a', 1, '0123456789', NULL, NULL, 'cmd.dos@hotmail.com', NULL, NULL, NULL, NULL, '2014-03-01 11:03:23', '2014-03-01 11:03:23');
 
 -- --------------------------------------------------------
 
@@ -255,6 +262,7 @@ CREATE TABLE IF NOT EXISTS `customer` (
   `name` varchar(32) NOT NULL,
   `username` varchar(32) NOT NULL,
   `password` varchar(32) NOT NULL,
+  `token` varchar(32) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
@@ -267,8 +275,8 @@ CREATE TABLE IF NOT EXISTS `customer` (
 -- 转存表中的数据 `customer`
 --
 
-INSERT INTO `customer` (`customer_id`, `customer_group_id`, `name`, `username`, `password`, `status`, `create_time`, `update_time`) VALUES
-(1, 1, 'Sam', 'sam@ozchamp.net', '123456', 1, '2014-02-28 17:10:33', '2014-02-28 17:10:33');
+INSERT INTO `customer` (`customer_id`, `customer_group_id`, `name`, `username`, `password`, `token`, `status`, `create_time`, `update_time`) VALUES
+(1, 1, 'Sam', 'sam@ozchamp.net', '123456', '', 1, '2014-02-28 17:10:33', '2014-02-28 17:10:33');
 
 -- --------------------------------------------------------
 
