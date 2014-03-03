@@ -11,10 +11,10 @@ $this->breadcrumbs=array(
 
 <h1>Contact Us</h1>
 
-<?php if(Yii::app()->user->hasFlash('contact')): ?>
+<?php if(Yii::app()->user->hasFlash('success')): ?>
 
 <div class="flash-success">
-	<?php echo Yii::app()->user->getFlash('contact'); ?>
+	<?php echo Yii::app()->user->getFlash('success'); ?>
 </div>
 
 <?php else: ?>

@@ -46,20 +46,44 @@ class CustomerController extends GxController {
 	}
 
 	public function actionRegister(){
-		$model=new LoginForm;
+		$model=new Customer;
 
-		$this->performAjaxValidation($model, '');
+		$this->performAjaxValidation($model);
 
 		// collect user input data
-		if(isset($_POST['LoginForm']))
+		if(isset($_POST['Customer']))
 		{
-			$model->attributes=$_POST['LoginForm'];
-			// validate user input and redirect to the previous page if valid
-			if($model->validate() && $model->login())
-				$this->redirect(Yii::app()->user->returnUrl);
+			$model->setAttributes($_POST['Customer']);
+
+			// status
+			$model->status = 0;
+			// token
+			$token = md5(uniqid());
+			$model->token = $token;
+
+			if($model->validate()){
+				$transaction = Yii::app()->db->beginTransaction();
+
+				try{
+					$model->save(false);
+
+					$transaction->commit();
+
+					// send check mail
+					// TODO
+
+					Yii::app()->user->setFlash('success', Yii::t('app', 'Please check your email: {email} to activate your account before login'));
+
+					$this->redirect(array('site/success'));
+				}catch(CDbException $e){
+                    $transaction->rollback();
+
+                    Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
+                }
+			}
 		}
-		// display the login form
-		$this->render('login',array('model'=>$model));
+
+		$this->render('register',array('model'=>$model));
 	}
 
 	public function actionActivate(){
