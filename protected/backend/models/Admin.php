@@ -30,6 +30,7 @@ class Admin extends BaseAdmin
 			array('confirm_password, password', 'length', 'min' => 6),
 			array('confirm_password', 'compare', 'compareAttribute' => 'password'),
 			array('username', 'unique', 'className' => 'Admin', 'attributeName' => 'username', 'on' => 'insert, update'),
+			array('username', 'unsafe', 'on' => 'update'),
 			array('roles', 'validRoles', 'on' => 'insert, update'),
 			array('roles', 'safe', 'on'=>'search'),
 		));

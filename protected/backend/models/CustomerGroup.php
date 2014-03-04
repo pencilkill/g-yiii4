@@ -56,6 +56,16 @@ class CustomerGroup extends BaseCustomerGroup
 		));
 	}
 
+    protected function beforeSave(){
+    	// Raise event
+    	if(!parent::beforeSave()) return false;
+
+    	if(!empty($model->default)){
+    		CustomerGroup::model()->updateAll(array('default' => 0));
+    	}
+
+    	return true;
+    }
 
     protected function beforeDelete(){
     	// Raise event

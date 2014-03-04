@@ -10,9 +10,9 @@ return array(
 	),
 
 	'import'=>array(
-		'frontend.behaviors.*',
-		'frontend.models.*',
 		'frontend.components.*',
+		'frontend.models.*',
+		'frontend.behaviors.*',
 		'frontend.extensions.ELinkPager',
 		'frontend.extensions.MobileDetect.MobileDetect',
 		'frontend.extensions.shoppingCart.*',
@@ -31,6 +31,8 @@ return array(
 
 			'stateKeyPrefix' => 'front',
 			'loginUrl' => array('customer/login'),
+			'profileUrl' => array('customer/profile'),
+			'logoutUrl' => array('customer/logout'),
 			'returnUrl' => array('site/index'),
 			// ajax session timeout
 			'loginRequiredAjaxResponse' => 'YII_LOGIN_REQUIRED',
@@ -56,7 +58,7 @@ return array(
         	'showScriptName' => false,
         	'urlSuffix' => '.html',
         ),
-        */
+		*/
 		// example to config widget
 		'widgetFactory' => array(
 			'widgets' => array(

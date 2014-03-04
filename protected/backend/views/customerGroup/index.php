@@ -69,7 +69,7 @@ $this->breadcrumbs = array(
 			<form id="customer-group-grid-form" action="<?php echo $this->createUrl('gridviewupdate')?>" method="post">
 				<?php  echo CHtml::hiddenField('returnUrl', Yii::app()->getRequest()->url)?>
 
-				<?php 
+				<?php
 					$this->widget('zii.widgets.grid.CGridView', array(
 						'id' => 'customer-group-grid',
 						'ajaxUpdate' => true,
@@ -113,9 +113,15 @@ $this->breadcrumbs = array(
 									'name' => 'GridViewSelect[]',
 								),
 							),
-																																		
+
 							'name',
-												
+
+							array(
+								'name' => 'default',
+								'value' => '($data->default == 0) ? Yii::t("app", "No") : Yii::t("app", "Yes")',
+								'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
+							),
+
 							array(
 								'header' => Yii::t('app', 'Grid Actions'),
 								'class' => 'CButtonColumn',

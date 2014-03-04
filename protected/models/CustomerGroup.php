@@ -15,7 +15,7 @@ class CustomerGroup extends BaseCustomerGroup
 		$alias = $this->getTableAlias(false, false);
 
 		return CMap::mergeArray(parent::defaultScope(), array(
-			'order' => "{$alias}.customer_group_id DESC",
+			'order' => "{$alias}.default DESC, {$alias}.customer_group_id DESC",
 		));
 	}
 
@@ -52,4 +52,5 @@ class CustomerGroup extends BaseCustomerGroup
 			),
 		));
 	}
+
 }

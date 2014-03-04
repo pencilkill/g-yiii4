@@ -5,11 +5,22 @@ Yii::import('frontend.models._base.BaseCustomer');
 class Customer extends BaseCustomer
 {
 
-	public $confirm_password;
+	public $confirm_password = '';
 	public $verifyCode;
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
+	}
+
+	public function behaviors() {
+		return CMap::mergeArray(parent::behaviors(), array(
+			'CTimestampBehavior'=> array(
+				'class' => 'zii.behaviors.CTimestampBehavior',
+				'updateAttribute' => 'update_time',
+				'createAttribute' => 'create_time',
+				'setUpdateOnCreate' => true,
+			),
+        ));
 	}
 
 	public function group($customer_group_id)
@@ -38,12 +49,14 @@ class Customer extends BaseCustomer
 
 	public function rules(){
 		return CMap::mergeArray(parent::rules(), array(
-			array('username', 'unique', 'className' => 'Admin', 'attributeName' => 'username', 'on' => 'insert, update'),
+			array('username', 'unique', 'className' => 'Customer', 'attributeName' => 'username', 'on' => 'insert, update'),
 			array('username', 'email'),
+			array('username, customer_group_id, token, status', 'unsafe', 'on' => 'update'),
 			array('confirm_password, password', 'required', 'on' => 'insert'),
 			array('confirm_password, password', 'length', 'min' => 6),
 			array('confirm_password', 'compare', 'compareAttribute' => 'password'),
-			array('verifyCode', 'captcha', 'allowEmpty'=>!CCaptcha::checkRequirements()),
+			array('verifyCode', 'captcha', 'allowEmpty'=>!CCaptcha::checkRequirements(), 'on' => 'insert'),
+			array('verifyCode', 'captcha', 'allowEmpty' => true, 'on'=>'update'),
 		));
 	}
 
@@ -53,6 +66,28 @@ class Customer extends BaseCustomer
 			'confirm_password' => Yii::t('m/customer', 'Confirm Password'),
 			'verifyCode'=>Yii::t('app', 'Verification Code'),
 		));
+	}
+
+	public function validatePassword($password)
+    {
+        return $this->hashPassword($password) === $this->password;
+    }
+
+    public function hashPassword($password)
+    {
+        return md5($password);
+    }
+
+	protected function beforeSave() {
+		if( ! parent::beforeSave()) return false;
+
+		if(trim($this->password)){
+			$this->password = $this->hashPassword($this->password);
+		}else{
+			unset($this->password);
+		}
+
+		return true;
 	}
 
 	public function search() {

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2014 年 03 月 01 日 04:52
+-- 生成日期: 2014 年 03 月 04 日 07:46
 -- 服务器版本: 5.5.24-log
 -- PHP 版本: 5.3.0
 
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
 INSERT INTO `admin` (`admin_id`, `name`, `username`, `email`, `password`, `status`, `super`, `create_time`, `update_time`) VALUES
 (1, 'admin', 'admin', 'sam@ozchamp.net', '1a85380e2ae37e8385ecd73b468f632d', 1, 1, '2013-06-01 00:00:00', '2013-08-22 03:51:54'),
 (2, 'administrator', 'administrator', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 1, '2013-06-01 12:03:02', '2013-08-22 03:47:36'),
-(5, 'ozchamp', 'ozchamp', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 0, '2013-08-22 03:27:11', '2014-02-12 13:56:55');
+(5, 'ozchamp', 'ozchamp', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 0, '2013-08-22 03:27:11', '2014-03-04 12:14:10');
 
 -- --------------------------------------------------------
 
@@ -262,21 +262,22 @@ CREATE TABLE IF NOT EXISTS `customer` (
   `name` varchar(32) NOT NULL,
   `username` varchar(32) NOT NULL,
   `password` varchar(32) NOT NULL,
-  `token` varchar(32) NOT NULL,
+  `token` varchar(32) DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`customer_id`),
   UNIQUE KEY `username` (`username`),
   KEY `customer_group_id` (`customer_group_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
 -- 转存表中的数据 `customer`
 --
 
 INSERT INTO `customer` (`customer_id`, `customer_group_id`, `name`, `username`, `password`, `token`, `status`, `create_time`, `update_time`) VALUES
-(1, 1, 'Sam', 'sam@ozchamp.net', '123456', '', 1, '2014-02-28 17:10:33', '2014-02-28 17:10:33');
+(1, 1, 'Sam', 'sam@ozchamp.net', 'fcea920f7412b5da7be0cf42b8c93759', NULL, 1, '2014-02-28 17:10:33', '2014-03-04 15:13:27'),
+(6, 1, 'Sam', 'cmd.dos@hotmail.com', '14e1b600b1fd579f47433b88e8d85291', '', 1, '2014-03-04 15:16:09', '2014-03-04 15:17:37');
 
 -- --------------------------------------------------------
 
@@ -287,6 +288,7 @@ INSERT INTO `customer` (`customer_id`, `customer_group_id`, `name`, `username`, 
 CREATE TABLE IF NOT EXISTS `customer_group` (
   `customer_group_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
+  `default` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`customer_group_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
@@ -294,8 +296,8 @@ CREATE TABLE IF NOT EXISTS `customer_group` (
 -- 转存表中的数据 `customer_group`
 --
 
-INSERT INTO `customer_group` (`customer_group_id`, `name`) VALUES
-(1, 'Default');
+INSERT INTO `customer_group` (`customer_group_id`, `name`, `default`) VALUES
+(1, 'Default', 1);
 
 -- --------------------------------------------------------
 

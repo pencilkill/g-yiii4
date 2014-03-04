@@ -11,6 +11,7 @@
  *
  * @property integer $customer_group_id
  * @property string $name
+ * @property integer $default
  *
  * @property Customer[] $customers
  */
@@ -35,8 +36,10 @@ abstract class BaseCustomerGroup extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('name', 'required'),
+			array('default', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>32),
-			array('customer_group_id, name', 'safe', 'on'=>'search'),
+			array('default', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('customer_group_id, name, default', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -55,6 +58,7 @@ abstract class BaseCustomerGroup extends GxActiveRecord {
 		return array(
 			'customer_group_id' => Yii::t('m/customergroup', 'Customer Group'),
 			'name' => Yii::t('m/customergroup', 'Name'),
+			'default' => Yii::t('m/customergroup', 'Default'),
 			'customers' => null,
 		);
 	}
@@ -66,6 +70,7 @@ abstract class BaseCustomerGroup extends GxActiveRecord {
 
 		$criteria->compare("{$alias}.customer_group_id", $this->customer_group_id);
 		$criteria->compare("{$alias}.name", $this->name, true);
+		$criteria->compare("{$alias}.default", $this->default);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

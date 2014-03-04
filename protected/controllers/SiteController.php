@@ -42,6 +42,13 @@ class SiteController extends GxController
 		}
 	}
 	/**
+	 * This is the action to handle external exceptions.
+	 */
+	public function actionMessage()
+	{
+		$this->render('message');
+	}
+	/**
 	 * Notice: the parameters url and name should be type of HCUrl::encode separator from each other
 	 * @param $url, fileurl
 	 * @param $name, download name

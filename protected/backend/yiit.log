@@ -149,14 +149,14 @@ Extracting messages from E:\wamp\www\g-yiii4\protected\backend\views\site\login.
 Extracting messages from E:\wamp\www\g-yiii4\protected\backend\yiic.php...
 Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\app.php...nothing new...skipped.
 Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\m/admin.php...nothing new...skipped.
+Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\m/customer.php...translation merged.
 Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\m/language.php...nothing new...skipped.
 Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\m/loginform.php...nothing new...skipped.
 Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\m/authassignment.php...nothing new...skipped.
 Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\m/category.php...nothing new...skipped.
 Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\m/categoryi18n.php...nothing new...skipped.
 Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\m/contact.php...nothing new...skipped.
-Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\m/customer.php...saved.
-Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\m/customergroup.php...saved.
+Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\m/customergroup.php...translation merged.
 Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\m/information.php...nothing new...skipped.
 Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\m/informationi18n.php...nothing new...skipped.
 Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\m/news.php...nothing new...skipped.
@@ -173,5 +173,5 @@ Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\m/settin
 Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\setting.php...nothing new...skipped.
 Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\m/twzipcity.php...nothing new...skipped.
 Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\m/twzipcounty.php...nothing new...skipped.
-Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\nav.php...translation merged.
+Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\nav.php...nothing new...skipped.
 Saving messages to E:\wamp\www\g-yiii4\protected\backend\messages\zh_tw\error.php...nothing new...skipped.

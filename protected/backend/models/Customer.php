@@ -5,7 +5,7 @@ Yii::import('backend.models._base.BaseCustomer');
 class Customer extends BaseCustomer
 {
 
-	public $confirm_password;
+	public $confirm_password = '';
 
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
@@ -26,6 +26,7 @@ class Customer extends BaseCustomer
 		return CMap::mergeArray(parent::rules(), array(
 			array('username', 'unique', 'className' => 'Admin', 'attributeName' => 'username', 'on' => 'insert, update'),
 			array('username', 'email'),
+			array('username', 'unsafe', 'on' => 'update'),
 			array('confirm_password, password', 'required', 'on' => 'insert'),
 			array('confirm_password, password', 'length', 'min' => 6),
 			array('confirm_password', 'compare', 'compareAttribute' => 'password'),
@@ -38,6 +39,27 @@ class Customer extends BaseCustomer
 			'customer_group_id' => null,
 			'customerGroup' => null,
 		));
+	}
+
+    public function hashPassword($password)
+    {
+        return md5($password);
+    }
+
+	protected function beforeSave() {
+		if( ! parent::beforeSave()) return false;
+		//
+		if(trim($this->password)){
+			$this->password = $this->hashPassword($this->password);
+		}else{
+			unset($this->password);
+		}
+		//
+		if(empty($this->status)){
+			$this->token = '';		// Customer can not change status if administrator disable the status
+		}
+
+		return true;
 	}
 
 	public function search() {

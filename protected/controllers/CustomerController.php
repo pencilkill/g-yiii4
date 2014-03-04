@@ -32,11 +32,15 @@ class CustomerController extends GxController {
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions'=>array('register', 'activate', 'login'),
+				'actions'=>array('captcha', 'activate', 'login'),
 				'users'=>array('*'),
 			),
 			array('allow',
-				'actions'=>array('edit'),
+				'actions'=>array('register'),
+				'users'=>array('?'),
+			),
+			array('allow',
+				'actions'=>array('profile', 'logout'),
 				'users'=>array('@'),
 			),
 			array('deny',
@@ -46,7 +50,7 @@ class CustomerController extends GxController {
 	}
 
 	public function actionRegister(){
-		$model=new Customer;
+		$model = new Customer;
 
 		$this->performAjaxValidation($model);
 
@@ -57,9 +61,20 @@ class CustomerController extends GxController {
 
 			// status
 			$model->status = 0;
+
 			// token
 			$token = md5(uniqid());
+
 			$model->token = $token;
+
+			// group
+			$model->customer_group_id = 0;
+
+			$group = CustomerGroup::model()->find();
+
+			if(!empty($group->customer_group_id)){
+				$model->customer_group_id = $group->customer_group_id;
+			}
 
 			if($model->validate()){
 				$transaction = Yii::app()->db->beginTransaction();
@@ -70,11 +85,35 @@ class CustomerController extends GxController {
 					$transaction->commit();
 
 					// send check mail
-					// TODO
+					$message = Yii::t('app', '<br/>Welcome to <a href="{baseUrl}">{app}</a>.<br/><br/>Now, you can activate your account by clicking the following link:<br/><br/><a href="{link}">{link}</a><br/><br/>', array(
+						'{baseUrl}' => Yii::app()->getBaseUrl(true),
+						'{app}' => Yii::app()->name,
+						'{link}' => Yii::app()->createAbsoluteUrl('customer/activate', array('id' => $model->customer_id, 'token' => $model->token)),
+					));
 
-					Yii::app()->user->setFlash('success', Yii::t('app', 'Please check your email: {email} to activate your account before login'));
+					$subject = Yii::app()->name . '-' . Yii::t('app', 'Register');
 
-					$this->redirect(array('site/success'));
+					$body = $this->renderPartial('//mail/register', array('message' => $message), true);
+
+					$body = $this->renderPartial('//layouts/mail', array('subject' => $subject, 'body' => $body), true);
+
+					$mail = new Mail;
+					$mail->SetFrom(Yii::app()->config->get('mail_smtp_user'), Yii::app()->name);
+				    $mail->AddReplyTo(Yii::app()->config->get('mail_smtp_user'), Yii::app()->name);
+				    $mail->AddAddresses($model->username);	// username == email
+				    $mail->Subject = $subject;
+				    $mail->MsgHTML($body);
+				    $mail->Send();
+
+				    if($mail->isError()){
+				    	//var_dump($mail->ErrorInfo);
+				    }
+
+					Yii::app()->user->setFlash('success', Yii::t('app', 'Please check your email: {email} to activate your account before login', array(
+						'{email}' => $model->username,
+					)));
+
+					$this->redirect(array('site/message'));
 				}catch(CDbException $e){
                     $transaction->rollback();
 
@@ -86,26 +125,27 @@ class CustomerController extends GxController {
 		$this->render('register',array('model'=>$model));
 	}
 
-	public function actionActivate(){
-		$model=new LoginForm;
+	public function actionActivate($id, $token){
+		// force logout
+		Yii::app()->user->logout();
 
-		// if it is ajax validation request
-		if(isset($_POST['ajax']) && $_POST['ajax']==='login-form')
-		{
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
+		$model = $this->loadModel($id, 'Customer');
+
+		if($model->token && ($model->token == $token)){
+			$model->token = '';		// Customer can not change status if administrator disable the status
+
+			$model->status = 1;
+
+			$model->save(false);
+
+			Yii::app()->user->setFlash('success', Yii::t('app', 'Your account: {username} has been activated successfully !', array(
+				'{username}' => $model->username,
+			)));
+		}else{
+			Yii::app()->user->setFlash('warning', Yii::t('app', 'Sorry, account activated failed ! Contact us if you have any question.'));
 		}
 
-		// collect user input data
-		if(isset($_POST['LoginForm']))
-		{
-			$model->attributes=$_POST['LoginForm'];
-			// validate user input and redirect to the previous page if valid
-			if($model->validate() && $model->login())
-				$this->redirect(Yii::app()->user->returnUrl);
-		}
-		// display the login form
-		$this->render('login',array('model'=>$model));
+		$this->render('activate',array('model'=>$model));
 	}
 
 	public function actionLogin(){
@@ -116,39 +156,54 @@ class CustomerController extends GxController {
 		// collect user input data
 		if(isset($_POST['LoginForm']))
 		{
-			$model->attributes=$_POST['LoginForm'];
+			$model->setAttributes($_POST['LoginForm']);
 			// validate user input and redirect to the previous page if valid
-			if($model->validate() && $model->login())
+			if($model->validate() && $model->login()){
 				$this->redirect(Yii::app()->user->returnUrl);
+			}
 		}
 		// display the login form
 		$this->render('login',array('model'=>$model));
 	}
 
-	public function actionEdit(){
-		$model=new LoginForm;
+	public function actionProfile(){
+		$id = Yii::app()->user->id;
 
-		// if it is ajax validation request
-		if(isset($_POST['ajax']) && $_POST['ajax']==='login-form')
-		{
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
-		}
+		$model = $this->loadModel($id, 'Customer');
+
+		$this->performAjaxValidation($model);
 
 		// collect user input data
-		if(isset($_POST['LoginForm']))
+		if(isset($_POST['Customer']))
 		{
-			$model->attributes=$_POST['LoginForm'];
-			// validate user input and redirect to the previous page if valid
-			if($model->validate() && $model->login())
-				$this->redirect(Yii::app()->user->returnUrl);
+			// Not all attributes, check rules
+			$model->setAttributes($_POST['Customer']);
+
+			if($model->validate()){
+				$transaction = Yii::app()->db->beginTransaction();
+
+				try{
+					$model->save(false);
+
+					$transaction->commit();
+
+                    Yii::app()->user->setFlash('success', Yii::t('app', 'You have updated your profile successfully .'));
+				}catch(CDbException $e){
+                    $transaction->rollback();
+
+                    Yii::app()->user->setFlash('warning', Yii::t('app', 'Commition Failure'));
+                }
+			}else{
+				Yii::app()->user->setFlash('warning', Yii::t('app', 'Validation Failure'));
+			}
 		}
 		// display the login form
-		$this->render('login',array('model'=>$model));
+		$this->render('profile',array('model'=>$model));
 	}
 
 	public function actionLogout(){
 		Yii::app()->user->logout();
+
 		$this->redirect(Yii::app()->homeUrl);
 	}
 

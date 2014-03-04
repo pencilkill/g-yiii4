@@ -57,7 +57,7 @@
 				<?php echo $form->labelEx($model,'username'); ?>
 			</td>
 			<td>
-				<?php echo $form->textField($model, 'username', array('maxlength' => 32)); ?>
+				<?php echo $form->textField($model, 'username', array('maxlength' => 32, 'readonly' => 'readonly')); ?>
 				<?php echo $form->error($model,'username'); ?>
 			</td>
 		</tr><!-- row -->
@@ -67,7 +67,7 @@
 				<?php echo $form->labelEx($model,'password'); ?>
 			</td>
 			<td>
-				<?php echo $form->passwordField($model, 'password', array('maxlength' => 32)); ?>
+				<?php echo $form->passwordField($model, 'password', array('maxlength' => 32, 'value' => '')); ?>
 				<?php echo $form->error($model,'password'); ?>
 			</td>
 		</tr><!-- row -->
@@ -77,7 +77,7 @@
 				<?php echo $form->labelEx($model,'confirm_password'); ?>
 			</td>
 			<td>
-				<?php echo $form->passwordField($model, 'confirm_password', array('maxlength' => 32)); ?>
+				<?php echo $form->passwordField($model, 'confirm_password', array('maxlength' => 32, 'value' => '')); ?>
 				<?php echo $form->error($model,'confirm_password'); ?>
 			</td>
 		</tr><!-- row -->

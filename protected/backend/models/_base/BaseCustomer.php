@@ -41,11 +41,11 @@ abstract class BaseCustomer extends GxActiveRecord {
 
 	public function rules() {
 		return array(
-			array('customer_group_id, name, username, password, token', 'required'),
+			array('customer_group_id, name, username', 'required'),
 			array('customer_group_id, status', 'numerical', 'integerOnly'=>true),
 			array('name, username, password, token', 'length', 'max'=>32),
 			array('create_time, update_time', 'safe'),
-			array('status, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('token, status, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
 			array('customer_id, customer_group_id, name, username, password, token, status, create_time, update_time', 'safe', 'on'=>'search'),
 		);
 	}

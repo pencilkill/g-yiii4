@@ -95,6 +95,7 @@ return array(
             // ImageMagick setup path
             'params'=>array('directory'=>'assets'),
         ),
+
 		 // assets
 		 'assetManager' => array(
 		 	//'forceCopy' => (boolean)YII_DEBUG,

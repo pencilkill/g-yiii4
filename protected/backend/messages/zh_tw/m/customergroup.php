@@ -17,6 +17,7 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
+  'Default' => '默認',
   'Customer Group' => '群組',
   'CustomerGroup|CustomerGroups' => '群組',
   'Name' => '名稱',

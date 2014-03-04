@@ -45,7 +45,7 @@ class ContactController extends GxController {
 				$e->sex = $e->sex ? Yii::t('app', 'Male') : Yii::t('app', 'Female');
 				$e->message = nl2br($e->message);
 
-				$body = $this->renderPartial('mail', array('label' => $label, 'e' => $e), true);
+				$body = $this->renderPartial('//mail/contact', array('label' => $label, 'e' => $e), true);
 
 				$body = $this->renderPartial('//layouts/mail', array('subject' => $subject, 'body' => $body), true);
 

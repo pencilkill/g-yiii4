@@ -34,7 +34,7 @@
 		));
 	?>
 
-	<?php 
+	<?php
 		if($returnUrl = Yii::app()->user->getState('customer-group-grid-url')){
 			echo CHtml::hiddenField('returnUrl', $returnUrl);
 		}
@@ -49,6 +49,16 @@
 			<td>
 				<?php echo $form->textField($model, 'name', array('maxlength' => 32)); ?>
 				<?php echo $form->error($model,'name'); ?>
+			</td>
+		</tr><!-- row -->
+
+		<tr>
+			<td>
+				<?php echo $form->labelEx($model,'default'); ?>
+			</td>
+			<td>
+				<?php echo $form->checkBox($model, 'default'); ?>
+				<?php echo $form->error($model,'default'); ?>
 			</td>
 		</tr><!-- row -->
 
