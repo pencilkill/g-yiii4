@@ -1,5 +1,5 @@
 <?php $this->breadcrumbs = array(
-	'Rights'=>Rights::getBaseUrl(),
+	Rights::t('core', 'Rights')=>Rights::getBaseUrl(),
 	Rights::getAuthItemTypeNamePlural($model->type)=>Rights::getAuthItemRoute($model->type),
 	$model->name,
 ); ?>

@@ -91,6 +91,7 @@ return array (
   'Relations' => '關系',
   'Remove' => '刪除',
   'Revoke' => '撤銷',
+  'Rights' => '權限管理',
   'Role' => '角色',
   'Roles' => '角色',
   'Roles exist at the top of the authorization hierarchy and can therefore inherit from other roles, tasks and/or operations.' => '角色在授權層次結構的頂部存在，因此可以從其他角色，任務和/或操作中繼承。',

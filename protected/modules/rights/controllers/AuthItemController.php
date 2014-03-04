@@ -24,7 +24,7 @@ class AuthItemController extends RController
 	{
 		$this->_authorizer = $this->module->getAuthorizer();
 		$this->layout = $this->module->layout;
-		$this->defaultAction = 'permissions';
+		$this->defaultAction = 'roles';
 
 		// Register the scripts
 		$this->module->registerScripts();

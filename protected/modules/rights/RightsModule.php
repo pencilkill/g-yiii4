@@ -115,7 +115,7 @@ class RightsModule extends CWebModule
 		));
 
 		// Normally the default controller is Assignment.
-		$this->defaultController = 'assignment';
+		$this->defaultController = 'authitem';
 
 		// Set the installer if necessary.
 		if( $this->install===true )

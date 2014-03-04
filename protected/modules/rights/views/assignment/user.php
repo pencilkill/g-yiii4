@@ -1,5 +1,5 @@
 <?php $this->breadcrumbs = array(
-	'Rights'=>Rights::getBaseUrl(),
+	Rights::t('core', 'Rights')=>Rights::getBaseUrl(),
 	Rights::t('core', 'Assignments')=>array('assignment/view'),
 	$model->getName(),
 ); ?>
@@ -9,7 +9,7 @@
 	<h2><?php echo Rights::t('core', 'Assignments for :username', array(
 		':username'=>$model->getName()
 	)); ?></h2>
-	
+
 	<div class="assignments span-12 first">
 
 		<?php $this->widget('zii.widgets.grid.CGridView', array(

@@ -212,6 +212,7 @@ class WkHtmlToPdf
         header('Content-Length: '.filesize($pdfFile));
 
         readfile($pdfFile);
+
         return true;
     }
     /**

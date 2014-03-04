@@ -30,7 +30,7 @@
 				<?php echo $form->labelEx($model,'picture_type_id'); ?>
 			</td>
 			<td>
-				<?php echo $form->dropDownList($model, 'picture_type_id', CHtml::listData(PictureType::model()->findAll(), 'picture_type_id', 'picture_type'), array('prompt' => '')); ?>
+				<?php echo $form->dropDownList($model, 'picture_type_id', CHtml::listData(PictureType::model()->findAll(), 'picture_type_id', 'picture_type')); ?>
 				<?php echo $form->error($model,'picture_type_id'); ?>
 			</td>
 		</tr><!-- row -->

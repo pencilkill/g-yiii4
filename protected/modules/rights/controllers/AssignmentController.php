@@ -141,7 +141,7 @@ class AssignmentController extends RController
 		if( Yii::app()->request->isPostRequest===true )
 		{
 			$itemName = $this->getItemName();
-			
+
 			// Revoke the item from the user and load it
 			$this->_authorizer->authManager->revoke($itemName, $_GET['id']);
 			$item = $this->_authorizer->authManager->getAuthItem($itemName);
@@ -161,7 +161,7 @@ class AssignmentController extends RController
 			throw new CHttpException(400, Rights::t('core', 'Invalid request. Please do not repeat this request again.'));
 		}
 	}
-	
+
 	/**
 	* @return string the item name or null if not set.
 	*/

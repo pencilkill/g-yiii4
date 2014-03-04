@@ -3,6 +3,12 @@
 <div id="rights" class="container">
 
 	<div id="content">
+		<?php if(isset($this->breadcrumbs)):?>
+			<?php $this->widget('zii.widgets.CBreadcrumbs', array(
+				'links'=>$this->breadcrumbs,
+			)); ?><!-- breadcrumbs -->
+		<?php endif?>
+
 
 		<?php if( $this->id!=='install' ): ?>
 
