@@ -20,7 +20,7 @@ class CActiveRecordI18nBehavior extends CActiveRecordBehavior {
 	 *
 	 * @param CModelEvent $event event parameter
 	 */
-	public function afterConstruct() {
+	public function afterConstruct($event) {
 		// format relations
 		$_relations = is_string($this->relations) ? array($this->relations => array()) : (is_array($this->relations) ? $this->relations : array());
 		$_definations = $this->getOwner()->relations();

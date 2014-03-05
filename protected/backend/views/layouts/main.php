@@ -190,6 +190,7 @@ jQuery(function($) {
 				'changeMonth' => true,
 				'dateFormat' => 'yy-mm-dd',
 				'yearRange' => '-5:+5',
+				'yearSuffix' => '',
 			),
 			'htmlOptions' => array(
 				'readonly' => 'readonly',
@@ -199,6 +200,7 @@ jQuery(function($) {
 				'value' => date('Y-m-d'),
 				'style' => 'display:none; width: 0px; height:0px; visibility:hidden;',
 	)), true);
+	//Yii::app()->clientScript->registerScriptFile('_ozman/javascript/jquery/jquery.datepicker.TW.js', CClientScript::POS_END);
 ?>
 </body>
 </html>
