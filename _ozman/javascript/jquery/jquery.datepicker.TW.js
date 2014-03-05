@@ -10,7 +10,7 @@ jQuery.datepicker._generateMonthYearHeader = function(inst, drawMonth, drawYear,
 			// nothing
 		} else {
 			var bbb = parseInt(year) - 1911;
-			var aaa = suffix + (bbb < 0 ? '前' : '國' ) + Math.abs(bbb);
+			var aaa = suffix + (bbb < 0 ? '前' : '國' ) + (bbb==0 ? '元' : Math.abs(bbb)) + '年';
 			result.children(".ui-datepicker-year").children().eq(x).text(aaa);
 		}
 	});
