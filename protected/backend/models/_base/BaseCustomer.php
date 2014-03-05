@@ -15,6 +15,7 @@
  * @property string $username
  * @property string $password
  * @property string $token
+ * @property integer $activated
  * @property integer $status
  * @property string $create_time
  * @property string $update_time
@@ -42,11 +43,11 @@ abstract class BaseCustomer extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('customer_group_id, name, username', 'required'),
-			array('customer_group_id, status', 'numerical', 'integerOnly'=>true),
+			array('customer_group_id, activated, status', 'numerical', 'integerOnly'=>true),
 			array('name, username, password, token', 'length', 'max'=>32),
 			array('create_time, update_time', 'safe'),
-			array('token, status, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('customer_id, customer_group_id, name, username, password, token, status, create_time, update_time', 'safe', 'on'=>'search'),
+			array('token, activated, status, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('customer_id, customer_group_id, name, username, password, token, activated, status, create_time, update_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -69,6 +70,7 @@ abstract class BaseCustomer extends GxActiveRecord {
 			'username' => Yii::t('m/customer', 'Username'),
 			'password' => Yii::t('m/customer', 'Password'),
 			'token' => Yii::t('m/customer', 'Token'),
+			'activated' => Yii::t('m/customer', 'Activated'),
 			'status' => Yii::t('m/customer', 'Status'),
 			'create_time' => Yii::t('m/customer', 'Create Time'),
 			'update_time' => Yii::t('m/customer', 'Update Time'),
@@ -87,6 +89,7 @@ abstract class BaseCustomer extends GxActiveRecord {
 		$criteria->compare("{$alias}.username", $this->username, true);
 		$criteria->compare("{$alias}.password", $this->password, true);
 		$criteria->compare("{$alias}.token", $this->token, true);
+		$criteria->compare("{$alias}.activated", $this->activated);
 		$criteria->compare("{$alias}.status", $this->status);
 		$criteria->compare("{$alias}.create_time", $this->create_time, true);
 		$criteria->compare("{$alias}.update_time", $this->update_time, true);

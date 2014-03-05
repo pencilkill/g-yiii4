@@ -23,7 +23,7 @@ class UserIdentity extends CUserIdentity
 
 		if($user===null){
 			$this->errorCode=self::ERROR_USERNAME_INVALID;
-		}else if(!$user->status){
+		}else if(!($user->activated && $user->status)){
 			$this->errorCode=self::ERROR_UNKNOWN_IDENTITY;
 		}else if(!$user->validatePassword($this->password)){
 			$this->errorCode=self::ERROR_PASSWORD_INVALID;

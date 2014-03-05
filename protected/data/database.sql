@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2014 年 03 月 04 日 07:46
+-- 生成日期: 2014 年 03 月 05 日 03:28
 -- 服务器版本: 5.5.24-log
--- PHP 版本: 5.3.0
+-- PHP 版本: 5.4.3
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `authitem` (
 --
 
 INSERT INTO `authitem` (`name`, `type`, `description`, `bizrule`, `data`) VALUES
-('Admin', 2, 'role which can access all', NULL, 'N;'),
+('Admin', 2, '開發模式。\r\n任意權限。', NULL, 'N;'),
 ('Admin.Account', 0, 'Admin.Account', NULL, 'N;'),
 ('Admin.Create', 0, 'Admin.Create', NULL, 'N;'),
 ('Admin.Delete', 0, 'Admin.Delete', NULL, 'N;'),
@@ -100,11 +100,13 @@ INSERT INTO `authitem` (`name`, `type`, `description`, `bizrule`, `data`) VALUES
 ('Admin.Gridviewupdate', 0, 'Admin.Gridviewupdate', NULL, 'N;'),
 ('Admin.Index', 0, 'Admin.Index', NULL, 'N;'),
 ('Admin.Update', 0, 'Admin.Update', NULL, 'N;'),
-('Administrator', 2, 'role which can access all but not the super admin ,that is mean the super property of admin model belong to items of this role is equal to false', NULL, 'N;'),
-('Authenticated', 2, 'role which can not access admin controller except account action to update himself informations', NULL, 'N;'),
+('Administrator', 2, '超級用戶。\r\n具備普通管理員的權限。\r\n同時允許管理後臺用戶。', NULL, 'N;'),
+('Authenticated', 2, '普通用戶。\r\n具備多數內容的操作權限。\r\n允許且僅允許更新自身個人信息。', NULL, 'N;'),
 ('Category.*', 1, 'Category.*', NULL, 'N;'),
 ('Contact.*', 1, 'Contact.*', NULL, 'N;'),
-('Guest', 2, 'role which can access a few actions only.\r\ncause rights RBAC can not get actions() item from controller,role guest filter actions will be defined in site controller->allowedactions()', NULL, 'N;'),
+('Customer.*', 1, 'Customer.*', NULL, 'N;'),
+('CustomerGroup.*', 1, 'CustomerGroup.*', NULL, 'N;'),
+('Guest', 2, '匿名用戶。\r\n不具備管理權限。', NULL, 'N;'),
 ('Information.*', 1, 'Information.*', NULL, 'N;'),
 ('News.*', 1, 'News.*', NULL, 'N;'),
 ('Picture.*', 1, 'Picture.*', NULL, 'N;'),
@@ -141,6 +143,8 @@ INSERT INTO `authitemchild` (`parent`, `child`) VALUES
 ('Administrator', 'Authenticated'),
 ('Authenticated', 'Category.*'),
 ('Authenticated', 'Contact.*'),
+('Authenticated', 'Customer.*'),
+('Authenticated', 'CustomerGroup.*'),
 ('Authenticated', 'Guest'),
 ('Authenticated', 'Information.*'),
 ('Authenticated', 'News.*'),
@@ -263,21 +267,22 @@ CREATE TABLE IF NOT EXISTS `customer` (
   `username` varchar(32) NOT NULL,
   `password` varchar(32) NOT NULL,
   `token` varchar(32) DEFAULT NULL,
+  `activated` tinyint(1) NOT NULL DEFAULT '0',
   `status` tinyint(1) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`customer_id`),
   UNIQUE KEY `username` (`username`),
   KEY `customer_group_id` (`customer_group_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- 转存表中的数据 `customer`
 --
 
-INSERT INTO `customer` (`customer_id`, `customer_group_id`, `name`, `username`, `password`, `token`, `status`, `create_time`, `update_time`) VALUES
-(1, 1, 'Sam', 'sam@ozchamp.net', 'fcea920f7412b5da7be0cf42b8c93759', NULL, 1, '2014-02-28 17:10:33', '2014-03-04 15:13:27'),
-(6, 1, 'Sam', 'cmd.dos@hotmail.com', '14e1b600b1fd579f47433b88e8d85291', '', 1, '2014-03-04 15:16:09', '2014-03-04 15:17:37');
+INSERT INTO `customer` (`customer_id`, `customer_group_id`, `name`, `username`, `password`, `token`, `activated`, `status`, `create_time`, `update_time`) VALUES
+(1, 1, 'Sam', 'sam@ozchamp.net', 'fcea920f7412b5da7be0cf42b8c93759', NULL, 1, 1, '2014-02-28 17:10:33', '2014-03-05 10:22:31'),
+(7, 1, 'Sam2', 'cmd.dos@hotmail.com', '14e1b600b1fd579f47433b88e8d85291', '59f61aa9478c77d0943ed50862278bfa', 1, 1, '2014-03-05 10:11:52', '2014-03-05 10:20:29');
 
 -- --------------------------------------------------------
 
@@ -321,7 +326,7 @@ CREATE TABLE IF NOT EXISTS `information` (
 
 INSERT INTO `information` (`information_id`, `parent_id`, `sort_order`, `create_time`, `update_time`) VALUES
 (1, 2, 0, '2013-06-30 03:22:08', '2014-01-15 09:01:50'),
-(2, NULL, 0, '2013-08-30 03:32:29', '2014-01-15 09:05:08'),
+(2, NULL, 1, '2013-08-30 03:32:29', '2014-03-04 16:11:59'),
 (3, 1, 0, '2013-08-30 03:35:07', '2014-01-15 09:02:02'),
 (4, NULL, 0, '2013-08-30 03:50:44', '2013-10-29 11:24:38'),
 (5, NULL, 0, '2013-08-30 03:50:53', '2013-10-29 11:24:38'),

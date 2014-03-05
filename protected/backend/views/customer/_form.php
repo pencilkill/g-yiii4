@@ -94,6 +94,16 @@
 
 		<tr>
 			<td>
+				<?php echo $form->labelEx($model,'activated'); ?>
+			</td>
+			<td>
+				<?php echo $form->checkBox($model, 'activated'); ?>
+				<?php echo $form->error($model,'activated'); ?>
+			</td>
+		</tr><!-- row -->
+
+		<tr>
+			<td>
 				<?php echo $form->labelEx($model,'status'); ?>
 			</td>
 			<td>

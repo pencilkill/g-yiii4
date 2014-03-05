@@ -51,7 +51,7 @@ class Customer extends BaseCustomer
 		return CMap::mergeArray(parent::rules(), array(
 			array('username', 'unique', 'className' => 'Customer', 'attributeName' => 'username', 'on' => 'insert, update'),
 			array('username', 'email'),
-			array('username, customer_group_id, token, status', 'unsafe', 'on' => 'update'),
+			array('username, customer_group_id, token, activated, status', 'unsafe', 'on' => 'update'),
 			array('confirm_password, password', 'required', 'on' => 'insert'),
 			array('confirm_password, password', 'length', 'min' => 6),
 			array('confirm_password', 'compare', 'compareAttribute' => 'password'),
@@ -76,6 +76,10 @@ class Customer extends BaseCustomer
     public function hashPassword($password)
     {
         return md5($password);
+    }
+
+    public static function token(){
+    	return md5(uniqid());
     }
 
 	protected function beforeSave() {

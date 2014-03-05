@@ -17,6 +17,7 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
+  'Activated' => '驗證',
   'Token' => '',
   'Confirm Password' => '確認密碼',
   'Create Time' => '註冊日期',

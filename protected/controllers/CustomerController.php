@@ -3,6 +3,7 @@
 
 class CustomerController extends GxController {
 
+
 	public function actions(){
 		return array(
 			'captcha'=>array(
@@ -59,11 +60,14 @@ class CustomerController extends GxController {
 		{
 			$model->setAttributes($_POST['Customer']);
 
+			// activated
+			$model->activated = 0;
+
 			// status
-			$model->status = 0;
+			$model->status = 1;
 
 			// token
-			$token = md5(uniqid());
+			$token = Customer::token();
 
 			$model->token = $token;
 
@@ -131,10 +135,14 @@ class CustomerController extends GxController {
 
 		$model = $this->loadModel($id, 'Customer');
 
-		if($model->token && ($model->token == $token)){
-			$model->token = '';		// Customer can not change status if administrator disable the status
+		if($model->activated){
+			Yii::app()->user->setFlash('success', Yii::t('app', 'Your account: {username} had been activated already, please do not request this page algain!', array(
+				'{username}' => $model->username,
+			)));
+		}else if($model->token && ($model->token == $token)){
+			$model->token = Customer::token();
 
-			$model->status = 1;
+			$model->activated = 1;
 
 			$model->save(false);
 
@@ -142,7 +150,7 @@ class CustomerController extends GxController {
 				'{username}' => $model->username,
 			)));
 		}else{
-			Yii::app()->user->setFlash('warning', Yii::t('app', 'Sorry, account activated failed ! Contact us if you have any question.'));
+			Yii::app()->user->setFlash('warning', Yii::t('app', 'Sorry, failed to activate your account! Contact us if you have any question.'));
 		}
 
 		$this->render('activate',array('model'=>$model));

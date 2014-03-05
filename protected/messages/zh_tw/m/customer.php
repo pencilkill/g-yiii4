@@ -17,12 +17,15 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
+  'Activated' => '',
+  'Confirm Password' => '',
   'Create Time' => '',
   'Customer' => '',
   'Customer|Customers' => '',
+  'Status' => '',
+  'Token' => '',
+  'Update Time' => '',
   'Name' => '姓名',
   'Password' => '密碼',
-  'Status' => '',
-  'Update Time' => '',
   'Username' => '帳號',
 );

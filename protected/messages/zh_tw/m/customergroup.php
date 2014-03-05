@@ -19,5 +19,6 @@
 return array (
   'Customer Group' => '',
   'CustomerGroup|CustomerGroups' => '',
+  'Default' => '',
   'Name' => '',
 );

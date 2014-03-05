@@ -54,10 +54,6 @@ class Customer extends BaseCustomer
 		}else{
 			unset($this->password);
 		}
-		//
-		if(empty($this->status)){
-			$this->token = '';		// Customer can not change status if administrator disable the status
-		}
 
 		return true;
 	}

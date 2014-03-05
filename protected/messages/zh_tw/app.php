@@ -17,7 +17,19 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
+  '<br/>Welcome to <a href="{baseUrl}">{app}</a>.<br/><br/>Now, you can activate your account by clicking the following link:<br/><br/><a href="{link}">{link}</a><br/><br/>' => '',
+  'Commition Failure' => '',
+  'Contact Us' => '',
+  'Female' => '',
   'List' => '',
-  'Verification Code' => '驗證碼',
+  'Male' => '',
+  'Please check your email: {email} to activate your account before login' => '',
+  'Register' => '',
+  'Sorry, failed to activate your account! Contact us if you have any question.' => '',
+  'The page will redirect in {t} seconds' => '',
+  'Validation Failure' => '',
+  'You have updated your profile successfully .' => '',
+  'Your account: {username} has been activated successfully !' => '',
   'Congratulations! You have successfully created your Yii application.' => '您已經成功創建第一個YII應用，祝賀您！',
+  'Verification Code' => '驗證碼',
 );

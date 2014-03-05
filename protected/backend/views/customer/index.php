@@ -126,6 +126,13 @@ $this->breadcrumbs = array(
 
 							array(
 								'type' => 'raw',
+								'name' => 'activated',
+								'value' => 'empty($data->activated) ? Yii::t("app", "No") : Yii::t("app", "Yes")',
+								'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
+							),
+
+							array(
+								'type' => 'raw',
 								'name' => 'status',
 								'value' => 'CHtml::dropDownList("edit[$data->customer_id][status]", $data->status, array("0"=>Yii::t("app", "No"), "1"=>Yii::t("app", "Yes")), array("class"=>"editable"))',
 								'filter' => array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')),
