@@ -18,6 +18,10 @@ return array(
 		'frontend.extensions.shoppingCart.*',
 	),
 
+	'modules' => array(
+		//
+	),
+
 	// application components
 	'components'=>array(
 		'user'=>array(

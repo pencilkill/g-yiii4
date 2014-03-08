@@ -568,4 +568,29 @@ class HCArray {
 
 	    return $difference;
 	}
+	/**
+	 * quick sort, default sort ASC
+	 * @param array $array
+	 */
+	public static function quickSort(array $array){
+	    if(sizeof($array) <= 1){
+	    	return $array;
+	    }
+
+	    $key = $array[0];
+	    $left = array();
+	    $right = array();
+	    for($i=1; $i < sizeof($array); $i++){
+	        if ($array[$i] <= $key){
+	            $left[] = $array[$i];
+	        }else{
+	            $right[] = $array[$i];
+	        }
+	    }
+
+	    $left = self::quickSort($left);
+	    $right = self::quickSort($right);
+
+	    return array_merge($left, array($key), $right);
+	}
 } // End arr

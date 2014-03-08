@@ -19,8 +19,6 @@ class HCSite {
 	 * @return String, ul,li code
 	 */
 	private static function superFishNode($pk, $model, $relationName, $textAttribute, $url, $amp, $path = ''){
-		static $fn = __FUNCTION__;
-
 		$path = $path . ($path ? '_' : '') . $model->$pk;
 		$models = $model->$relationName;
 
@@ -34,7 +32,7 @@ class HCSite {
 			$html .= '<ul>';
 		}
 		foreach($models as $model){
-			$html .= self::$fn($pk, $model, $relationName, $textAttribute, $url, $amp , $path);
+			$html .= self::superFishNode($pk, $model, $relationName, $textAttribute, $url, $amp , $path);
 		}
 		if($models){
 			$html .= '</ul>';
