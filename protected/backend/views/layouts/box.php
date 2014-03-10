@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
 <meta name="language" content="en" />
 <meta name="keywords" content="<?php echo $this->pageTitle; ?>" />
 <meta name="description" content="<?php echo $this->pageTitle; ?>" />
