@@ -101,6 +101,15 @@ return array(
 		 	//'forceCopy' => (boolean)YII_DEBUG,
 		 ),
 
+		 // cache
+		 /*
+		 'cache' => array (
+		 	'class' => 'system.caching.CFileCache',
+		 	'keyPrefix' => false,	// share cache between frontend and backend
+		 	'cachePath' => dirname(dirname(__DIR__)) . '/assets/ccache',
+		 ),
+		 */
+
 		// example to config widget
 		'widgetFactory' => array(
 			'widgets' => array(

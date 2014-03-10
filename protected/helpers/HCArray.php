@@ -569,7 +569,7 @@ class HCArray {
 	    return $difference;
 	}
 	/**
-	 * quick sort, default sort ASC
+	 * preserve key quick sort, default sort ASC
 	 * @param array $array
 	 */
 	public static function quickSort(array $array){
@@ -577,20 +577,17 @@ class HCArray {
 	    	return $array;
 	    }
 
-	    $key = $array[0];
-	    $left = array();
-	    $right = array();
-	    for($i=1; $i < sizeof($array); $i++){
-	        if ($array[$i] <= $key){
-	            $left[] = $array[$i];
-	        }else{
-	            $right[] = $array[$i];
-	        }
+	    $_key = key($array);
+	    $_val = array_shift($array);
+
+	    $left = $right = array();
+	    foreach($array as $key => $val){
+	    	$array[$key] < $_val ? ($left[$key] = $val) : ($right[$key] = $val);
 	    }
 
 	    $left = self::quickSort($left);
 	    $right = self::quickSort($right);
 
-	    return array_merge($left, array($key), $right);
+	    return array_merge($left, array($_key => $_val), $right);
 	}
 } // End arr

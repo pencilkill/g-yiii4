@@ -43,6 +43,7 @@ $backCfg = array(
 	),
 	*/
 
+
 	// autoloading model and component classes
 	'import'=>array(
 		'backend.models.*',
@@ -84,7 +85,7 @@ $backCfg = array(
 			'baseUrl'=>'/rights',
 			'layout'=>'rights.views.layouts.main',
 			'appLayout'=>'backend.views.layouts.main',
-			'cssFile'=>'/_ozman/stylesheet/rights.css',
+			'cssFile'=>'/themes/_ozman/assets/stylesheet/rights.css',
 			'debug'=>false,
 		),
 

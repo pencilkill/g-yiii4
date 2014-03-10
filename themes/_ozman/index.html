@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="language" content="en" />
-	<meta http-equiv="Refresh" content="0; url=../../../index.php" />
+	<meta http-equiv="Refresh" content="0; url=../../index.php" />
 </head>
 <body></body>
 </html>

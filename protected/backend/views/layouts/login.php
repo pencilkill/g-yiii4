@@ -9,13 +9,13 @@
 <!-- core jquery -->
 <?php Yii::app()->clientScript->registerCoreScript('jquery');?>
 <title><?php echo $this->pageTitle; ?></title>
-<link rel="stylesheet" type="text/css" href="_ozman/stylesheet/stylesheet.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl?>/stylesheet/stylesheet.css" />
 </head>
 <body>
 <div id="container">
 <div id="header">
   <div class="div1">
-    <div class="div2"><img class="logo" src="_ozman/image/logo.gif" title="<?php echo Yii::app()->name; ?>" onclick="location = '<?php echo Yii::app()->homeUrl; ?>'" /></div>
+    <div class="div2"><img class="logo" src="<?php echo $this->skinUrl?>/image/logo.gif" title="<?php echo Yii::app()->name; ?>" onclick="location = '<?php echo Yii::app()->homeUrl; ?>'" /></div>
   </div>
 </div>
 

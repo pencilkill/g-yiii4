@@ -5,8 +5,8 @@
  */
 return array(
 	// preloading 'log' component
-	'preload'=>YII_DEBUG == false ? array() : array(
-		'log',
+	'preload'=>array(
+		//'log',
 	),
 
 	'import'=>array(

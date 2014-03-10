@@ -62,7 +62,8 @@ class LoginForm extends CFormModel
 	{
 		if($this->hasErrors())
 		{
-			Yii::app()->user->setFlash('warning', array_shift($this->getErrors('verifyCode')));
+			$errors = $this->getErrors('verifyCode');
+			Yii::app()->user->setFlash('warning', array_shift($errors));
 			return false;
 		}else{
 			$this->_identity=new UserIdentity($this->username,$this->password);

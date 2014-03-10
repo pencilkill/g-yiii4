@@ -10,11 +10,11 @@
 <?php Yii::app()->clientScript->registerCoreScript('jquery');?>
 <title><?php echo $this->pageTitle; ?></title>
 
-<link rel="stylesheet" type="text/css" href="_ozman/stylesheet/stylesheet.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl?>/stylesheet/stylesheet.css" />
 
-<script type="text/javascript" src="_ozman/javascript/jquery/tabs.js"></script>
-<script type="text/javascript" src="_ozman/javascript/jquery/superfish/js/superfish.js"></script>
-<script type="text/javascript" src="_ozman/javascript/jquery/main.js"></script>
+<script type="text/javascript" src="<?php echo $this->skinUrl?>/javascript/jquery/tabs.js"></script>
+<script type="text/javascript" src="<?php echo $this->skinUrl?>/javascript/jquery/superfish/js/superfish.js"></script>
+<script type="text/javascript" src="<?php echo $this->skinUrl?>/javascript/jquery/main.js"></script>
 <?php
     if (Yii::app()->user->loginRequiredAjaxResponse){
         Yii::app()->clientScript->registerScript('ajaxLoginRequired',
@@ -36,9 +36,9 @@
 <div id="container">
 <div id="header">
   <div class="div1">
-    <div class="div2"><img class="logo" src="_ozman/image/logo.gif" title="<?php echo Yii::app()->name; ?>" onclick="location = '<?php echo Yii::app()->homeUrl; ?>'" /></div>
+    <div class="div2"><img class="logo" src="<?php echo $this->skinUrl?>/image/logo.gif" title="<?php echo Yii::app()->name; ?>" onclick="location = '<?php echo Yii::app()->homeUrl; ?>'" /></div>
     <?php if (empty(Yii::app()->user->isGuest)) : ?>
-    <div class="div3"><img class="lock" src="_ozman/image/lock.png"/>&nbsp;<?php echo Yii::t('app', 'Welcome to administration panel:') . Yii::app()->user->name; ?></div>
+    <div class="div3"><img class="lock" src="<?php echo $this->skinUrl?>/image/lock.png"/>&nbsp;<?php echo Yii::t('app', 'Welcome to administration panel:') . Yii::app()->user->name; ?></div>
     <?php endif; ?>
   </div>
   <?php if (empty(Yii::app()->user->isGuest)) : ?>
@@ -200,7 +200,7 @@ jQuery(function($) {
 				'value' => date('Y-m-d'),
 				'style' => 'display:none; width: 0px; height:0px; visibility:hidden;',
 	)), true);
-	//Yii::app()->clientScript->registerScriptFile('_ozman/javascript/jquery/jquery.datepicker.TW.js', CClientScript::POS_END);
+	//Yii::app()->clientScript->registerScriptFile('<?php echo $this->skinUrl?>/javascript/jquery/jquery.datepicker.TW.js', CClientScript::POS_END);
 ?>
 </body>
 </html>

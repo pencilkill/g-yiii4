@@ -7,7 +7,7 @@
 <div id="content">
   <div class="box" style="width: 400px; min-height: 300px; margin-top: 40px; margin-left: auto; margin-right: auto;">
     <div class="heading">
-      <h1><img src="_ozman/image/lockscreen.png" alt="" /><?php echo Yii::t('app', 'Login'); ?></h1>
+      <h1><img src="<?php echo $this->skinUrl?>/image/lockscreen.png" alt="" /><?php echo Yii::t('app', 'Login'); ?></h1>
     </div>
     <div class="content" style="min-height: 150px; overflow: hidden;">
 
@@ -21,7 +21,7 @@
 		)); ?>
         <table style="width: 100%;">
           <tr>
-            <td style="text-align: center;" rowspan="4"><img src="_ozman/image/login.png" alt="<?php echo Yii::t('app', 'Login'); ?>" /></td>
+            <td style="text-align: center;" rowspan="4"><img src="<?php echo $this->skinUrl?>/image/login.png" alt="<?php echo Yii::t('app', 'Login'); ?>" /></td>
           </tr>
           <tr>
             <td><?php echo $form->labelEx($model,'username', array('style' => 'font-weight: bold; font-size: 0.9em;')); ?><br />

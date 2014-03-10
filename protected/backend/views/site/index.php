@@ -47,15 +47,15 @@ $this->breadcrumbs = array(
 		</div>
 		<div class="content">
 			<ul>
-				<li><a href="#" onclick="window.open('<?php echo Yii::app()->baseUrl; ?>'); return false;"><img src="_ozman/icon/home.png"/><span><?php echo Yii::t('nav', 'Site Frontend')?></span></a></li>
-				<li><a href="<?php echo Yii::app()->createUrl('category/index', array())?>"><img src="_ozman/icon/folder.png"/><span><?php echo Yii::t('nav', 'Category')?></span></a></li>
-				<li><a href="<?php echo Yii::app()->createUrl('product/index', array())?>"><img src="_ozman/icon/screen.png"/><span><?php echo Yii::t('nav', 'Product')?></span></a></li>
-				<li><a href="<?php echo Yii::app()->createUrl('news/index', array())?>"><img src="_ozman/icon/activity.png"/><span><?php echo Yii::t('nav', 'News')?></span></a></li>
-				<li><a href="<?php echo Yii::app()->createUrl('information/index', array())?>"><img src="_ozman/icon/info.png"/><span><?php echo Yii::t('nav', 'Information')?></span></a></li>
-				<li><a href="<?php echo Yii::app()->createUrl('picture/index', array())?>"><img src="_ozman/icon/photo.png"/><span><?php echo Yii::t('nav', 'Picture')?></span></a></li>
-				<li><a href="<?php echo Yii::app()->createUrl('contact/index', array())?>"><img src="_ozman/icon/mail.png"/><span><?php echo Yii::t('nav', 'Contact')?></span></a></li>
-				<li><a href="<?php echo Yii::app()->createUrl('admin/index', array())?>"><img src="_ozman/icon/person.png"/><span><?php echo Yii::t('nav', 'Admin')?></span></a></li>
-				<li><a href="<?php echo Yii::app()->createUrl('setting/index', array())?>"><img src="_ozman/icon/config.png"/><span><?php echo Yii::t('nav', 'Setting')?></span></a></li>
+				<li><a href="#" onclick="window.open('<?php echo Yii::app()->baseUrl; ?>'); return false;"><img src="<?php echo $this->skinUrl?>/icon/home.png"/><span><?php echo Yii::t('nav', 'Site Frontend')?></span></a></li>
+				<li><a href="<?php echo Yii::app()->createUrl('category/index', array())?>"><img src="<?php echo $this->skinUrl?>/icon/folder.png"/><span><?php echo Yii::t('nav', 'Category')?></span></a></li>
+				<li><a href="<?php echo Yii::app()->createUrl('product/index', array())?>"><img src="<?php echo $this->skinUrl?>/icon/screen.png"/><span><?php echo Yii::t('nav', 'Product')?></span></a></li>
+				<li><a href="<?php echo Yii::app()->createUrl('news/index', array())?>"><img src="<?php echo $this->skinUrl?>/icon/activity.png"/><span><?php echo Yii::t('nav', 'News')?></span></a></li>
+				<li><a href="<?php echo Yii::app()->createUrl('information/index', array())?>"><img src="<?php echo $this->skinUrl?>/icon/info.png"/><span><?php echo Yii::t('nav', 'Information')?></span></a></li>
+				<li><a href="<?php echo Yii::app()->createUrl('picture/index', array())?>"><img src="<?php echo $this->skinUrl?>/icon/photo.png"/><span><?php echo Yii::t('nav', 'Picture')?></span></a></li>
+				<li><a href="<?php echo Yii::app()->createUrl('contact/index', array())?>"><img src="<?php echo $this->skinUrl?>/icon/mail.png"/><span><?php echo Yii::t('nav', 'Contact')?></span></a></li>
+				<li><a href="<?php echo Yii::app()->createUrl('admin/index', array())?>"><img src="<?php echo $this->skinUrl?>/icon/person.png"/><span><?php echo Yii::t('nav', 'Admin')?></span></a></li>
+				<li><a href="<?php echo Yii::app()->createUrl('setting/index', array())?>"><img src="<?php echo $this->skinUrl?>/icon/config.png"/><span><?php echo Yii::t('nav', 'Setting')?></span></a></li>
 			</ul>
 		</div>
 	</div>
