@@ -12,12 +12,12 @@ class HCUrl {
 	 */
     public static function encode($data)
     {
-        $arr = array(
-            '=' => '_',
-            '+' => '.'
-        );
+    	$arr = array(
+    		'+' => '-',
+    		'/' => '_',
+    	);
 
-        return strtr(base64_encode(serialize($data)),$arr);
+        return rtrim(strtr(base64_encode(gzcompress(serialize($data))), $arr), '=');
     }
 
     /**
@@ -28,11 +28,11 @@ class HCUrl {
     public static function decode($string)
     {
         $arr = array(
-            '_' => '=',
-            '.' => '+'
+            '-' => '+',
+            '_' => '/'
         );
 
-        return unserialize(base64_decode(strtr($string,$arr)));
+        return unserialize(gzuncompress(base64_decode(str_pad(strtr($data, $arr), strlen($data) % 4, '=', STR_PAD_RIGHT))));
     }
 
     /**

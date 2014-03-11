@@ -391,7 +391,7 @@ class Image
         if ($status = $this->driver->process($this->image, $this->actions, $dir, $file)) {
             if ($chmod !== FALSE) {
                 // Set permissions
-                chmod($new_image, $chmod);
+                @chmod($new_image, $chmod);
             }
         }
 
@@ -434,9 +434,9 @@ class Image
 
 		if(!is_file($new_image) && $this->driver->process($this->image, $this->actions, $cachedir, $file)){
 			// Set permissions
-			chmod($new_image, 0644);
+			@chmod($new_image, 0644);
 		}else if (is_file($new_image) && (filemtime($this->image['file']) > filemtime($new_image)) && $this->driver->process($this->image, $this->actions, $cachedir, $file)){
-			chmod($new_image, 0644);
+			@chmod($new_image, 0644);
 		}
 
 		return strtr($new_image, array(Yii::getPathOfAlias('webroot').'/' => ''));

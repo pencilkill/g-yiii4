@@ -578,16 +578,15 @@ class HCArray {
 	    }
 
 	    $_key = key($array);
-	    $_val = array_shift($array);
 
 	    $left = $right = array();
 	    foreach($array as $key => $val){
-	    	$array[$key] < $_val ? ($left[$key] = $val) : ($right[$key] = $val);
+	    	$array[$key] < $array[$_key] ? ($left[$key] = $val) : ($right[$key] = $val);
 	    }
 
 	    $left = self::quickSort($left);
 	    $right = self::quickSort($right);
 
-	    return array_merge($left, array($_key => $_val), $right);
+	    return array_merge($left, array($_key => $array[$_key]), $right);
 	}
 } // End arr
