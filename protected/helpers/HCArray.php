@@ -587,6 +587,6 @@ class HCArray {
 	    $left = self::quickSort($left);
 	    $right = self::quickSort($right);
 
-	    return array_merge($left, array($_key => $array[$_key]), $right);
+	    return $left + array($_key => $array[$_key]) + $right;	// preserve keys
 	}
 } // End arr
