@@ -47,6 +47,8 @@ return array(
 	'import'=>array(
 		//required for module giix
 		'frontend.extensions.giix-components.*',
+		//image
+		'frontend.extensions.image.*',
 		//helpers
 		'frontend.helpers.*',
 		'frontend.extensions.mail.Mail',	// Just import and new it before we use it, cause component is life cycle, init is so boring ~~
