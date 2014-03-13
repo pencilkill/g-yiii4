@@ -1,13 +1,27 @@
 /**
  * @example
-  	<select id="city" url="index.php?r=twzip/city" county="county"></select>
- 	<select id="county" url="index.php?r=twzip/county" postcode="postcode"></select>
+  	<select id="city"></select>
+ 	<select id="county"></select>
  	<input id="postcode" type="text"/>
+	<script type="text/javascript"></script>
 	<script type="text/javascript">$('#city').twzip();</script>
  */
 (function($){
 	$.fn.twzip = function(options){
-		var defaultOptions = {};
+		var defaultOptions = {
+			city	:	undefined
+			,cityUrl	:	'index.php?r=twzip/city'
+			,cityValue:	undefined
+			,cityPlaceholder:	'-- 請選擇 --'
+			,countyAttrName	:	'county'
+			,county	:	'#county'
+			,countyUrl	:	'index.php?r=twzip/county'
+			,countyPlaceholder	:	'-- 請選擇 --'
+			,postcodeAttrName	:	'postcode'
+			,postcode	:	'#postcode'
+			,postcodeValue	:	undefined
+			,postcodePlaceholder	:	undefined
+		};
 		
 		var _county = function(id){
 			var $this = $(this);
@@ -18,37 +32,37 @@
 			
 			var _twzip = $this.data('twzip');
 			
-			var prop = id.toString();
+			var prop = id ? id.toString() : '';	// city
 			
 			if(_twzip.hasOwnProperty(prop)){
-				var vv = $this.attr('v');
-				var html = '';
+				var html = settings.countyPlaceholder ? '<option value>' + settings.countyPlaceholder + '</option>' : '';
 				
-				$.each(_twzip[prop], function(k, v){
-					if(v == vv){
-						html += '<option k="' + v + '" value="' + k + '" selected="selected">' + k + '</option>';
+				$.each(_twzip[prop], function(k, v){  
+					if(settings.countyValue && v == settings.countyValue){
+						html += '<option ' + settings.postcodeAttrName + '="' + v + '" value="' + k + '" selected="selected">' + k + '</option>';
 					}else{
-						html += '<option k="' + v + '" value="' + k + '">' + k + '</option>';
+						html += '<option ' + settings.postcodeAttrName + '="' + v + '" value="' + k + '">' + k + '</option>';
 					}
 				});
 				
 				$this.html(html);
 				
 				$this.trigger('change');
-			}else{
+			}else if(settings.countyUrl){
 				$.ajax({
-					url:	$this.attr('url'),
+					url:	settings.countyUrl,
 					dataType:	'json',
-					data:{'id':id},
+					data:{
+						'id'	:	prop	// city id
+					},
 					success:	function(data, status, xhr){
-						var vv = $this.attr('v');
-						var html = '';
+						var html = settings.countyPlaceholder ? '<option value>' + settings.countyPlaceholder + '</option>' : '';
 						
 						$.each(data, function(k, v){
-							if(v == vv){
-								html += '<option k="' + v + '" value="' + k + '" selected="selected">' + k + '</option>';
+							if(settings.countyValue && v == settings.countyValue){
+								html += '<option ' + settings.postcodeAttrName + '="' + v + '" value="' + k + '" selected="selected">' + k + '</option>';
 							}else{
-								html += '<option k="' + v + '" value="' + k + '">' + k + '</option>';
+								html += '<option ' + settings.postcodeAttrName + '="' + v + '" value="' + k + '">' + k + '</option>';
 							}
 						});
 						
@@ -65,52 +79,56 @@
 			
 		};
 		
+		var _postcode = function(code){
+			var $this = $(this);
+			
+			$this.attr({
+				'readonly'	:	'readonly'
+				,'value'	:	(code || '')
+				,'placeholder'	:	settings.postcodePlaceholder
+			}).css({
+				'background':	'#CCC'
+			});
+		}
+		
+		var settings = $.extend({}, defaultOptions || {}, options || {});
+
 		return this.each(function(){
-			var settings = $.extend({}, defaultOptions || {}, options || {});
 			
 			var $this = $(this);
 			
-			$this.on('change', function(){
-				var el = $this.attr('county');
-				
-				if(el && $('#' + el).length > 0){
-					var _el = $('#' + el);
-					
-					_el.on('change', function(){
-						var __el = _el.attr('postcode');
+			$this.on('change', function(){			
+				if($(settings.county).length > 0){
+					$(settings.county).on('change', function(){
+						if($(settings.postcode).length > 0){
+							_postcode.apply($(settings.postcode)[0], [$(settings.county).find(':selected').attr(settings.postcodeAttrName)]);
+						}
+					});
+					_county.apply($(settings.county)[0], [$this.find(':selected').attr(settings.countyAttrName)]);
+				}
+			});
+			
+			if(settings.cityUrl){
+				$.ajax({
+					url:	settings.cityUrl,
+					dataType:	'json',
+					success:	function(data, status, xhr){
+						var html = settings.cityPlaceholder ? '<option value>' + settings.cityPlaceholder + '</option>' : '';
 						
-						if(__el && $('#' + __el).length > 0){
-							var ___el = $('#' + __el);
-							
-							___el.attr({'readonly':'readonly', 'value':_el.find(':selected').attr('k'), 'style':'background:#CCC'});
-						}
-					});
-					
-					_county.apply(document.getElementById(el), [$this.find(':selected').attr('k')]);
-				}
-			});
-			
-			$.ajax({
-				url:	$this.attr('url'),
-				dataType:	'json',
-				success:	function(data, status, xhr){
-					var vv = $this.attr('v'); 
-					var html = '';
-					
-					$.each(data, function(k, v){
-						if(v == vv){
-							html += '<option k="' + k + '" value="' + v + '" selected="selected">' + v + '</option>';
-						}else{
-							html += '<option k="' + k + '" value="' + v + '">' + v + '</option>';
-						}
-					});
-					
-					$this.html(html);
-					
-					$this.trigger('change');
-				}
-			});
-			
+						$.each(data, function(k, v){
+							if(settings.cityValue && v == settings.cityValue){
+								html += '<option ' + settings.countyAttrName + '="' + k + '" value="' + v + '" selected="selected">' + v + '</option>';
+							}else{
+								html += '<option ' + settings.countyAttrName + '="' + k + '" value="' + v + '">' + v + '</option>';
+							}
+						});
+						
+						$this.html(html);
+						
+						$this.trigger('change');
+					}
+				});
+			}
 		});
 	};
 })(jQuery);
