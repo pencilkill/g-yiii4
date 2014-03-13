@@ -6,6 +6,17 @@
  */
 class HCFile{
 	const MODE_BASE = 1024;
+	public static $allowUnits = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+
+	/**
+	 * Normalize unit
+	 *
+	 * @param $size, mixed
+	 * @return string
+	 */
+	protected static function normalize($size){
+		return rtrim(strtoupper($size), 'B') . 'B';
+	}
 	/**
 	 * Convert file size to bytes based on 1024
 	 *
@@ -14,11 +25,9 @@ class HCFile{
 	 * @return float
 	 */
 	public static function toBytes($size, $precision = 2){
-		$units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+		$va = self::normalize($size);
 
-		$va = rtrim(strtoupper($size), 'B') . 'B';
-
-		if(preg_match('/([a-zA-Z]+)$/', $va, $matches) && ($pow = array_search($matches[1], $units)) !== false){
+		if(preg_match('/([a-zA-Z]+)$/', $va, $matches) && ($pow = array_search($matches[1], self::$allowUnits)) !== false){
 			$va = max(preg_replace('/' . $matches[1] . '$/', '', $va) + 0.0, 0.0);
 
 			$va *= pow(self::MODE_BASE, $pow);
@@ -37,17 +46,15 @@ class HCFile{
 	 */
 
 	public static function formatBytes($size, $unit = NULL, $precision = 2){
-		$units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
-
 		$unit = $unit ? strtoupper($unit) : NULL;
 
-		if(empty($unit) || array_search($unit, $units) == false){
+		if(empty($unit) || array_search($unit, self::$allowUnits) == false){
 			$unit = null;
 		}
 
 		$va = self::toBytes($size, 6);
 
-		foreach($units as $u){
+		foreach(self::$allowUnits as $u){
 			if($unit){
 				if($u == $unit){
 					$va = round($va, $precision) . $u;
@@ -63,7 +70,7 @@ class HCFile{
 			$va /= 1024;
 		}
 
-		return rtrim($va, 'B') . 'B';
+		return self::normalize($va);
 	}
 }
 ?>
