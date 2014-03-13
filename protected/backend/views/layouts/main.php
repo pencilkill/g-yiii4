@@ -201,7 +201,9 @@ jQuery(function($) {
 				'value' => date('Y-m-d'),
 				'style' => 'display:none; width: 0px; height:0px; visibility:hidden;',
 	)), true);
-	//Yii::app()->clientScript->registerScriptFile('<?php echo $this->skinUrl?>/javascript/jquery/jquery.datepicker.TW.js', CClientScript::POS_END);
+	/*
+	Yii::app()->clientScript->registerScriptFile('<?php echo $this->skinUrl?>/javascript/jquery/jquery.datepicker.TW.js', CClientScript::POS_END);
+	*/
 ?>
 </body>
 </html>
