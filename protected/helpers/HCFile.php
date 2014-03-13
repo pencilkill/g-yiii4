@@ -40,7 +40,7 @@ class HCFile{
 	 * Format file size which  based on 1024
 	 *
 	 * @param $size, file size
-	 * @param $unit, target unit. default null. if $unit is null, the format will return when a value size bigger than 1.0(unit) automically.
+	 * @param $unit, target unit. default null. if $unit is null, the format will return when a value size smaller than 1024 automically.
 	 * @param $precision, Integer. precision, default as 2
 	 * @return String
 	 */
