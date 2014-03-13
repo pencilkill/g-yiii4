@@ -79,11 +79,23 @@ class HCUploader {
 	 * Get server upload limit based on upload_max_filesize, post_max_size
 	 */
 
-	public static function uploadLimit(){
-		$umf = ini_get('upload_max_filesize');
-		$pms = ini_get('post_max_size');
+	public static function maxUploadSize(){
+		$sets = array(
+			'upload_max_filesize',
+			'post_max_size',
+			'memory_limit'
+		);
 
-		return HCFile::toBytes($umf) < HCFile::toBytes($pms) ? $umf : $pms ;
+
+		$maxUploadSize = ini_get(array_pop($sets));
+
+		foreach($sets as $set){
+			if(HCFile::toBytes($maxUploadSize) > HCFile::toBytes(ini_get($set))){
+				$maxUploadSize = ini_get($set);
+			}
+		}
+
+		return $maxUploadSize;
 	}
 }
 ?>

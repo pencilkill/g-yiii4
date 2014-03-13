@@ -5,6 +5,7 @@
  *
  */
 class HCFile{
+	const MODE_BASE = 1024;
 	/**
 	 * Convert file size to bytes based on 1024
 	 *
@@ -17,10 +18,10 @@ class HCFile{
 
 		$va = rtrim(strtoupper($size), 'B') . 'B';
 
-		if(preg_match('/([a-zA-Z]+)$/', $size, $matches) && ($pow = array_search($matches[1], $units)) !== false){
+		if(preg_match('/([a-zA-Z]+)$/', $va, $matches) && ($pow = array_search($matches[1], $units)) !== false){
 			$va = max(preg_replace('/' . $matches[1] . '$/', '', $va) + 0.0, 0.0);
 
-			$va *= pow(1024, $pow);
+			$va *= pow(self::MODE_BASE, $pow);
 		}
 
 		return round((float)$va, $precision);
@@ -35,10 +36,10 @@ class HCFile{
 	 * @return String
 	 */
 
-	public static function formatBytes($size, $unit = null, $precision = 2){
+	public static function formatBytes($size, $unit = NULL, $precision = 2){
 		$units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
 
-		$unit = strtoupper($unit);
+		$unit = $unit ? strtoupper($unit) : NULL;
 
 		if(empty($unit) || array_search($unit, $units) == false){
 			$unit = null;
@@ -49,12 +50,12 @@ class HCFile{
 		foreach($units as $u){
 			if($unit){
 				if($u == $unit){
-					$va .= round($va, $precision) . $u;
+					$va = round($va, $precision) . $u;
 
 					break;
 				}
-			}else if($va < 1.0){
-				$va .= round($va, $precision) . $u;
+			}else if($va < self::MODE_BASE){
+				$va = round($va, $precision) . $u;
 
 				break;
 			}
