@@ -29,26 +29,13 @@ class HCString {
     }
 
     /**
-     * utf8 strrev, compatiable Chinese
-     * @param $str
-     * @return String
-     */
-
-    public static function utf8_strrev($string)
-    {
-        preg_match_all('/./us', $string, $matches);
-
-        return implode('', array_reverse($matches[0]));
-    }
-
-    /**
      * Actually, Chinese compatiple
      *
      * @param $string
      * @param $length
      */
 
-    public static function utf8_substr($string, $length)
+    public static function substr($string, $length)
     {
 		$stringSize = strlen($string);
 
@@ -72,7 +59,7 @@ class HCString {
 				}
 			}
 
-			return implode($new_str) . ' ... ';
+			return implode($new_str) . ' &hellip; ';
 		}else{
 			return $string;
 		}
