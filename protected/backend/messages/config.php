@@ -24,4 +24,10 @@ return array(
 	),
 	'translator' => 'Yii::t',
 	'removeOld' => true,
+	// exclude core category
+	'excludeCore' => array(
+		'yii',
+		'zii',
+		'giix',
+	),
 );

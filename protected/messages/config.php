@@ -25,6 +25,12 @@ return array(
 		'/helpers',
 		'/modules/rights',
 	),
-	'translator' => 'Yii::t',
+	'translator' => 'Yii::t',	// preg_match_all(regex)
 	'removeOld' => true,
+	// exclude core category
+	'excludeCore' => array(
+		'yii',
+		'zii',
+		'giix',
+	),
 );

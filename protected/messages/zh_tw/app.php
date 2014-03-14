@@ -29,6 +29,7 @@ return array (
   'The page will redirect in {t} seconds' => '',
   'Validation Failure' => '',
   'You have updated your profile successfully .' => '',
+  'Your account: {username} had been activated already, please do not request this page algain!' => '',
   'Your account: {username} has been activated successfully !' => '',
   'Congratulations! You have successfully created your Yii application.' => '您已經成功創建第一個YII應用，祝賀您！',
   'Verification Code' => '驗證碼',

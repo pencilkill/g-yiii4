@@ -98,11 +98,18 @@ EOD;
 		if(!isset($sort))
 			$sort = false;
 
+		// update by sam@ozchamp.net
+		if(!isset($excludeCore))
+			$excludeCore = array();
+		else
+			$excludeCore = is_scalar($excludeCore) ? array($excludeCore) : $excludeCore;
+
 		$options=array();
 		if(isset($fileTypes))
 			$options['fileTypes']=$fileTypes;
 		if(isset($exclude))
 			$options['exclude']=$exclude;
+
 		$files=CFileHelper::findFiles(realpath($sourcePath),$options);
 
 		$messages=array();
@@ -116,6 +123,9 @@ EOD;
 				@mkdir($dir);
 			foreach($messages as $category=>$msgs)
 			{
+				// update by sam@ozchamp.net
+				if(in_array($category, $excludeCore)) continue;
+
 				$msgs=array_values(array_unique($msgs));
 				$this->generateMessageFile($msgs,$dir.DIRECTORY_SEPARATOR.$category.'.php',$overwrite,$removeOld,$sort);
 			}
