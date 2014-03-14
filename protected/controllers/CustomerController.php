@@ -28,15 +28,9 @@ class CustomerController extends GxController {
 			'accessControl',
 		);
 	}
-
+	// filter will break if rule is matched, the order of rules is very important in this case
 	public function accessRules() {
 		return array(
-			array('deny',
-				'users'=>array('*'),
-				'deniedCallback' => function(){
-					throw new CHttpException(404, Yii::t('yii', 'Your request is not valid.'));
-				},
-			),
 			array('allow',
 				'actions'=>array('captcha', 'activate', 'login'),
 				'users'=>array('*'),
@@ -48,6 +42,14 @@ class CustomerController extends GxController {
 			array('allow',
 				'actions'=>array('profile', 'logout'),
 				'users'=>array('@'),
+			),
+			array('deny',
+				'users'=>array('*'),
+				/*
+				'deniedCallback' => function(){
+					throw new CHttpException(404, Yii::t('yii', 'Your request is not valid.'));
+				},
+				*/
 			),
 		);
 	}
