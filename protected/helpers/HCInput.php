@@ -72,6 +72,9 @@ class HCInput {
 			fclose($fp);
 		}
 
+		//reset locale
+		setlocale(LC_ALL, NULL);
+
 		return $result;
 	}
 }
