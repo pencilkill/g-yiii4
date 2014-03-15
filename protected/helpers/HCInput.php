@@ -10,13 +10,13 @@ class HCInput {
 	 *
 	 * @param string $filename
 	 * @param string $locale, setlocale for csv file
-	 * @param string $to, mb_convert_encoding to charset for field
-	 * @param string $from, mb_convert_encoding from charset for field
+	 * @param string $to_encoding, mb_convert_encoding to charset for field
+	 * @param string $from_encoding, mb_convert_encoding from charset for field
 	 * @return multitype:multitype:string
 	 */
-	public static function fgetcsv($filename, $locale = 'en_US.UTF-8', $to = 'UTF-8', $from = 'UTF-8,BIG5,GBK')
+	public static function fgetcsv($filename, $locale = 'en_US.UTF-8', $to_encoding = 'UTF-8', $from_encoding = 'UTF-8,BIG5,GBK')
 	{
-		setlocale(LC_ALL, 'en_US.UTF-8');
+		setlocale(LC_ALL, $locale);
 
 		$result=array();
 
@@ -41,8 +41,7 @@ class HCInput {
 							if($k == $i)
 							{
 
-								$row[$i]=  mb_convert_encoding($row[$i],'UTF-8','UTF-8,GBK,BIG5');	// origin encoding : GBK
-								//$row[$i]=  mb_convert_encoding($row[$i],'UTF-8','UTF-8,BIG5,GBK');	// origin encoding : BIG5
+								$row[$i]=  mb_convert_encoding($row[$i], $to_encoding, $from_encoding);	// origin encoding : GBK
 
 								/*
 								 * Column callback
