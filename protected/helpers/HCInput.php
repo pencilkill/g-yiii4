@@ -41,7 +41,7 @@ class HCInput {
 							if($k == $i)
 							{
 
-								$row[$i]=  mb_convert_encoding($row[$i], $to_encoding, $from_encoding);	// origin encoding : GBK
+								$row[$i]=  mb_convert_encoding($row[$i], $to_encoding, $from_encoding);
 
 								/*
 								 * Column callback
