@@ -14,7 +14,7 @@ class HCInput {
 	 * @param string $from_encoding, mb_convert_encoding from charset for field
 	 * @return multitype:multitype:string
 	 */
-	public static function fgetcsv($filename, $locale = 'en_US.UTF-8', $to_encoding = 'UTF-8', $from_encoding = 'UTF-8,BIG5,GBK')
+	public static function fgetcsv($filename, $locale = 'zh_TW', $to_encoding = 'UTF-8', $from_encoding = 'UTF-8,BIG5,GBK')
 	{
 		setlocale(LC_ALL, $locale);
 
@@ -24,7 +24,7 @@ class HCInput {
 
 		if(($fp = fopen($filename, 'r')) !== false)
 		{
-			while(($row = self::_fgetcsv($fp)) !== false)
+			while(($row = fgetcsv($fp)) !== false)
 			{
 				$_row=array();
 
@@ -32,7 +32,7 @@ class HCInput {
 				{
 					if($index === 1)
 					{
-						$header[] = $row[$i];
+						$header[] = mb_convert_encoding($row[$i], $to_encoding, $from_encoding);
 					}
 					else
 					{
