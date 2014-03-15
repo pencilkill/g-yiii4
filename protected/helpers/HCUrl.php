@@ -32,7 +32,7 @@ class HCUrl {
             '_' => '/'
         );
 
-        return unserialize(gzuncompress(base64_decode(str_pad(strtr($data, $arr), strlen($data) % 4, '=', STR_PAD_RIGHT))));
+        return unserialize(gzuncompress(base64_decode(str_pad(strtr($string, $arr), strlen($string) % 4, '=', STR_PAD_RIGHT))));
     }
 
     /**
