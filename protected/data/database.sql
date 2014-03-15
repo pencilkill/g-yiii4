@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2014 年 03 月 05 日 03:28
+-- 生成日期: 2014 年 03 月 15 日 04:02
 -- 服务器版本: 5.5.24-log
 -- PHP 版本: 5.4.3
 
@@ -175,8 +175,8 @@ CREATE TABLE IF NOT EXISTS `category` (
 --
 
 INSERT INTO `category` (`category_id`, `parent_id`, `sort_order`, `create_time`, `update_time`) VALUES
-(4, NULL, 3, '2013-08-24 04:13:48', '2014-01-22 16:07:14'),
-(7, 4, 1, '2013-08-24 05:23:17', '2014-01-08 19:28:22'),
+(4, NULL, 3, '2013-08-24 04:13:48', '2014-03-10 16:13:23'),
+(7, 4, 1, '2013-08-24 05:23:17', '2014-03-10 15:58:47'),
 (10, NULL, 0, '2014-01-14 20:39:00', '2014-01-22 16:07:14');
 
 -- --------------------------------------------------------
@@ -195,32 +195,19 @@ CREATE TABLE IF NOT EXISTS `category_i18n` (
   PRIMARY KEY (`category_i18n_id`),
   KEY `category_id` (`category_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=46 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=80 ;
 
 --
 -- 转存表中的数据 `category_i18n`
 --
 
 INSERT INTO `category_i18n` (`category_i18n_id`, `category_id`, `language_id`, `title`, `keywords`, `description`) VALUES
-(19, 7, 1, 'twc2', NULL, NULL),
-(20, 7, 2, 'enc2', NULL, NULL),
-(21, 7, 2, 'enc2', NULL, NULL),
-(22, 7, 2, 'enc2', NULL, NULL),
-(23, 7, 2, 'enc2', NULL, NULL),
-(24, 7, 2, 'enc2', NULL, NULL),
-(25, 7, 2, 'enc2', NULL, NULL),
-(26, 7, 2, 'enc2', NULL, NULL),
-(27, 7, 2, 'enc2', NULL, NULL),
-(28, 7, 2, 'enc2', NULL, NULL),
-(29, 7, 2, 'enc2', NULL, NULL),
-(30, 7, 2, 'enc2', NULL, NULL),
-(32, 7, 2, 'enc2', NULL, NULL),
-(33, 7, 2, 'enc2', NULL, NULL),
-(34, 7, 2, 'enc2', NULL, NULL),
-(38, 4, 1, 'twc1', NULL, NULL),
-(39, 4, 2, 'enc1', NULL, NULL),
 (44, 10, 1, 'twc3', NULL, NULL),
-(45, 10, 2, 'aaaaaa3', NULL, NULL);
+(45, 10, 2, 'aaaaaa3', NULL, NULL),
+(58, 7, 1, 'twc2', NULL, NULL),
+(59, 7, 2, 'enc2', NULL, NULL),
+(78, 4, 1, 'twc1', NULL, NULL),
+(79, 4, 2, 'enc1', NULL, NULL);
 
 -- --------------------------------------------------------
 
