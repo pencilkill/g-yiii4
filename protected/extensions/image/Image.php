@@ -19,7 +19,6 @@ Yii::import('frontend.extensions.image.Image_Driver');
  */
 class Image
 {
-
     // Master Dimension
     const NONE = 1;
     const AUTO = 2;

@@ -243,4 +243,55 @@ class SiteController extends Controller
 	public function actionDownload($url, $name){
 		return HCOuput::download($url, $name);
 	}
+
+	public function actionCrop(){
+		$jcropData = array();
+		try{
+			$jcropData['src'] = $src = Yii::app()->request->getParam('src', NULL);
+			$jcropData['attribute'] = $attribute = Yii::app()->request->getParam('attribute', NULL);
+
+			$thumbPath = HCUploader::createUploadDirectory(Yii::app()->request->getParam('thumbPath', NULL), true);
+
+			if(strpos($src, Yii::app()->getBaseUrl(true)) !== false){
+				$src = strtr($src, array(Yii::app()->getBaseUrl(true) => ''));
+			}else if(strpos($src, Yii::app()->getBaseUrl(false)) !== false){
+				$src = strtr($src, array(Yii::app()->getBaseUrl(false) => ''));
+			}
+
+			$imageFile = Yii::getPathOfAlias('webroot') . '/' . ltrim($src, '/');
+
+			if(!is_file($imageFile)){
+				$jcropData['error'] = 'Image file is not found!';
+			}elseif(!is_dir($thumbPath)){
+				$jcropData['error'] = 'Thumb path file is not found!';
+			}elseif(empty($attribute)){
+				$jcropData['error'] = 'Attribute is not defined!';
+			}
+
+			if(!isset($jcropData['error'])){
+				Yii::import('frontend.extensions.jcrop.EJCropper');
+
+				$jcropper = new EJCropper();
+				$jcropper->thumbPath = $thumbPath;
+
+				// get the image cropping coordinates (or implement your own method)
+				$coords = $jcropper->getCoordsFromPost(CHtml::getIdByName($attribute));
+
+				// the absolute path
+				$imageFile = $jcropper->crop($imageFile, $coords);
+				// the relative url
+				$jcropData['src'] = $jcropData['thumb'] = strtr($imageFile, array(Yii::getPathOfAlias('webroot') . '/' => ''));
+
+				if($thumb = Yii::app()->request->getParam('thumb', array())){
+					$jcropData['thumb'] = HCImage::cache($imageFile, $thumb);
+				}
+			}
+
+			echo json_encode($jcropData);
+		}catch(Exception $e){
+			$jcropData['error'] = $e->getMessage();
+			echo json_encode($jcropData);
+		}
+		Yii::app()->end();
+	}
 }

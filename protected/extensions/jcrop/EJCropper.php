@@ -12,7 +12,7 @@ class EJCropper
 	/**
 	 * @var integer PNG compression level (0 = no compression).
 	 */
-	public $png_compression = 5;
+	public $png_compression = 0;
 	/**
 	 * @var integer The thumbnail width
 	 */
@@ -28,7 +28,7 @@ class EJCropper
 
 	/**
 	 * Get the cropping coordinates from post.
-	 * 
+	 *
 	 * @param type $attribute The model attribute name used.
 	 * @return array Cropping coordinates indexed by : x, y, h, w
 	 */
@@ -43,7 +43,7 @@ class EJCropper
 
 	/**
 	 * Crop an image and save the thumbnail.
-	 * 
+	 *
 	 * @param string $src Source image's full path.
 	 * @param array $coords Cropping coordinates indexed by : x, y, h, w
 	 * @return string $thumbName Path of thumbnail.
