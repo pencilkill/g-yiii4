@@ -391,10 +391,6 @@ a.button.small, .list a.button.small {
 	padding-right: 15px;
 	background: url('../image/desc.png') right center no-repeat;
 }
-.list tr.filter td {
-	padding: 5px;
-	background: #E7EFEF;
-}
 .list tr.odd td {
 	background: #FFFFFF;
 }
@@ -403,6 +399,10 @@ a.button.small, .list a.button.small {
 }
 .list tr:hover td {
 	background: #F7F7F7;
+}
+.list tr.filter td {
+	padding: 5px;
+	background: #E7EFEF;
 }
 .pagination {
 	border-top: 1px solid #DDDDDD;
