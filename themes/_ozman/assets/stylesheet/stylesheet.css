@@ -73,7 +73,7 @@ label {
 	background: url('../image/menu.png') repeat-x;
 	position: relative;
 	z-index: 1;
-	height: 36px;
+	height: 35px;
 	clear: both;
 	padding: 0px 30px;
 	min-width: 900px;
@@ -266,20 +266,6 @@ label.error {
 	filter:alpha(opacity=100 finishopacity=50 style=1 startx=0,starty=0,finishx=0,finishy=130) progid:DXImageTransform.Microsoft.gradient(startcolorstr='#EFEFEF',endcolorstr='#DBDBDB',gradientType=0);
 	-ms-filter:alpha(opacity=100 finishopacity=50 style=1 startx=0,starty=0,finishx=0,finishy=130) progid:DXImageTransform.Microsoft.gradient(startcolorstr='#EFEFEF',endcolorstr='#DBDBDB',gradientType=0);
 }
-/*
-.box > .heading {
-	min-height: 38px;
-	padding-left: 7px;
-	padding-right: 7px;
-	border: 1px solid #DBDBDB;
-	background-color: #EFEFEF;
-	background: url('../image/box.png') repeat-x;
-	-webkit-border-radius: 7px 7px 0px 0px;
-	-moz-border-radius: 7px 7px 0px 0px;
-	-khtml-border-radius: 7px 7px 0px 0px;
-	border-radius: 7px 7px 0px 0px;
-}
-*/
 .box > .heading h1 {
 	margin: 0px;
 	padding: 11px 0px 0px 0px;
@@ -408,6 +394,15 @@ a.button.small, .list a.button.small {
 .list tr.filter td {
 	padding: 5px;
 	background: #E7EFEF;
+}
+.list tr.odd td {
+	background: #FFFFFF;
+}
+.list tr.even td {
+	background: #FFFFFF;
+}
+.list tr:hover td {
+	background: #F7F7F7;
 }
 .pagination {
 	border-top: 1px solid #DDDDDD;

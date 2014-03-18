@@ -12,7 +12,6 @@
 <title><?php echo $this->pageTitle; ?></title>
 
 <link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl?>/stylesheet/stylesheet.css" />
-
 <script type="text/javascript" src="<?php echo $this->skinUrl?>/javascript/jquery/tabs.js"></script>
 <script type="text/javascript" src="<?php echo $this->skinUrl?>/javascript/jquery/superfish/js/superfish.js"></script>
 <script type="text/javascript" src="<?php echo $this->skinUrl?>/javascript/jquery/main.js"></script>
