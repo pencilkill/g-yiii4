@@ -204,5 +204,9 @@ jQuery(function($) {
 	Yii::app()->clientScript->registerScriptFile('<?php echo $this->skinUrl?>/javascript/jquery/jquery.datepicker.TW.js', CClientScript::POS_END);
 	*/
 ?>
+<!--[if lt IE 9]>
+<script type="text/javascript" src="<?php echo $this->skinUrl?>/javascript/jquery/jquery.corner.js"></script>
+<script type="text/javascript">$('.button, .success, .warning, .attention').corner();$('.heading').corner('top');</script>
+<![endif]-->
 </body>
 </html>

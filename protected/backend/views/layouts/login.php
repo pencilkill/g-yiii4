@@ -26,5 +26,9 @@
 <div id="footer">
 	Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.ozchamp.com/" rel="external" target="_blank"><?php echo Yii::t('app', 'Design Team')?></a>. All Rights Reserved.
 </div>
+<!--[if lt IE 9]>
+<script type="text/javascript" src="<?php echo $this->skinUrl?>/javascript/jquery/jquery.corner.js"></script>
+<script type="text/javascript">$('.button, .success, .warning, .attention').corner();$('.heading').corner('top');</script>
+<![endif]-->
 </body>
 </html>

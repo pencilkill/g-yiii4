@@ -53,6 +53,9 @@ body > #container {
 </div>
 
 <?php $this->widget('ext.ckeditor.CKEditorWidget',array('htmlOptions'=>array('class'=>'fck'))); ?>
-
+<!--[if lt IE 9]>
+<script type="text/javascript" src="<?php echo $this->skinUrl?>/javascript/jquery/jquery.corner.js"></script>
+<script type="text/javascript">$('.button, .success, .warning, .attention').corner();$('.heading').corner('top');</script>
+<![endif]-->
 </body>
 </html>
