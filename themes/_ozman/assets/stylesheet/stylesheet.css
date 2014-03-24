@@ -43,7 +43,6 @@ label {
 	height: 65px;
 	padding: 0px 30px;
 	background: #282828;
-	min-width: 900px;
 }
 #header .div2 {
 	color: #FFFFFF;
@@ -76,7 +75,6 @@ label {
 	height: 35px;
 	clear: both;
 	padding: 0px 30px;
-	min-width: 900px;
 }
 #menu > ul.left {
 	float: left;
