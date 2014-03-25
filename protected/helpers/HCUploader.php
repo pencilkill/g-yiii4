@@ -31,7 +31,7 @@ class HCUploader {
 	{
         if (is_object($file) && ($file instanceof CUploadedFile)) {
         	if(empty($uploadDir)){
-        		$uploadDir = HCUploader::createUploadDirectory(null, true);
+        		$uploadDir = self::createUploadDirectory(null, true);
         	}
             $fileName = $file->getName();
             $fileSize = $file->getSize();
@@ -45,13 +45,13 @@ class HCUploader {
             $uploadFile = strtr($uploadFullFile, array(Yii::getPathOfAlias('webroot').'/' => ''));
 
             if($serialize){
-            	$return = new stdClass;
-            	$return->name = $fileName;
-            	$return->size = $fileSize;
-            	$return->type = $fileType;
-            	$return->file = $uploadFile;
+            	$stdClass = new stdClass;
+            	$stdClass->name = $fileName;
+            	$stdClass->size = $fileSize;
+            	$stdClass->type = $fileType;
+            	$stdClass->file = $uploadFile;
             }
-            return $serialize ? serialize($return) : $uploadfile;
+            return $serialize ? serialize($stdClass) : $uploadfile;
         }
 
         return null;
