@@ -27,7 +27,7 @@ class HCUploader {
      * @param $serialize, Bool, default false. whether to serialize the return value. if set false, function returns an relative path of upload file, otherwise a serialized object string
      * @return String
      */
-    public static function uploadFile($file, $uploadDir=null, $serialize = false)
+    public static function uploadFile($file, $uploadDir=null, $object = false)
 	{
         if (is_object($file) && ($file instanceof CUploadedFile)) {
         	if(empty($uploadDir)){
@@ -44,14 +44,15 @@ class HCUploader {
 
             $uploadFile = strtr($uploadFullFile, array(Yii::getPathOfAlias('webroot').'/' => ''));
 
-            if($serialize){
+            if($object){
             	$stdClass = new stdClass;
             	$stdClass->name = $fileName;
             	$stdClass->size = $fileSize;
             	$stdClass->type = $fileType;
             	$stdClass->file = $uploadFile;
             }
-            return $serialize ? serialize($stdClass) : $uploadfile;
+
+            return $object ? $stdClass : $uploadfile;
         }
 
         return null;
