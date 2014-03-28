@@ -21,6 +21,8 @@ class AssignmentController extends RController
 		$this->_authorizer = $this->module->getAuthorizer();
 		$this->layout = $this->module->layout;
 		$this->defaultAction = 'view';
+		//
+		$this->skinUrl = HCTheme::publishThemeAssets();
 
 		// Register the scripts
 		$this->module->registerScripts();

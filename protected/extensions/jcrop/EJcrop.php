@@ -2,7 +2,7 @@
 
 /**
  * Jcrop Yii extension
- * 
+ *
  * Select a cropping area fro an image using the Jcrop jQuery tool and crop
  * it using PHP's GD functions.
  *
@@ -11,6 +11,48 @@
  * @author Jacques Basseck
  * @author Ianaré Sévi
  *
+ */
+/**
+ * @example
+	 $this->widget('ext.jcrop.EJcrop', array(
+		//
+		// Image URL
+		'url' => '/path/to/full/image.jpg',
+		//
+		// ALT text for the image
+		'alt' => 'Crop This Image',
+		//
+		// options for the IMG element
+		'htmlOptions' => array('id' => 'imageId'),
+		//
+		// Jcrop options (see Jcrop documentation)
+		'options' => array(
+			'minSize' => array(50, 50),
+			'aspectRatio' => 1,
+			'onRelease' => "js:function() {ejcrop_cancelCrop(this);}",
+		),
+		// if this array is empty, buttons will not be added
+		'buttons' => array(
+			'start' => array(
+				'label' => Yii::t('jcrop.promoter', 'Adjust thumbnail cropping'),
+				'htmlOptions' => array(
+					'class' => 'myClass',
+					'style' => 'color:red;' // make sure style ends with « ; »
+				)
+			),
+			'crop' => array(
+				'label' => Yii::t('jcrop.promoter', 'Apply cropping'),
+			),
+			'cancel' => array(
+				'label' => Yii::t('jcrop.promoter', 'Cancel cropping')
+			)
+		),
+		// URL to send request to (unused if no buttons)
+		'ajaxUrl' => 'controller/ajaxcrop',
+		//
+		// Additional parameters to send to the AJAX call (unused if no buttons)
+		'ajaxParams' => array('someParam' => 'someValue'),
+	));
  */
 Yii::import('zii.widgets.jui.CJuiWidget');
 
@@ -87,9 +129,9 @@ class EJcrop extends CJuiWidget
 
 	/**
 	 * Get the HTML options for the buttons.
-	 * 
+	 *
 	 * @param string $name button name
-	 * @return array HTML options 
+	 * @return array HTML options
 	 */
 	protected function getHtmlOptions($name, $display='none')
 	{

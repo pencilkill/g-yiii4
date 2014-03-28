@@ -25,6 +25,8 @@ class AuthItemController extends RController
 		$this->_authorizer = $this->module->getAuthorizer();
 		$this->layout = $this->module->layout;
 		$this->defaultAction = 'roles';
+		//
+		$this->skinUrl = HCTheme::publishThemeAssets();
 
 		// Register the scripts
 		$this->module->registerScripts();

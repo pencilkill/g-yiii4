@@ -23,6 +23,10 @@ class RController extends CController
 	* for more details on how to specify this property.
 	*/
 	public $breadcrumbs=array();
+	/**
+	 * @var skinUrl(appAssetsUrl), based on app theme
+	 */
+	public $skinUrl;
 
 	/**
 	* The filter method for 'rights' access filter.

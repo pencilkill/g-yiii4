@@ -30,6 +30,9 @@ class InstallController extends RController
 		$this->layout = $this->module->layout;
 		$this->defaultAction = 'run';
 
+		//
+		$this->skinUrl = HCTheme::publishThemeAssets();
+
 		// Register the scripts.
 		$this->module->registerScripts();
 	}
