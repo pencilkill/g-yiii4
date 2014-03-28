@@ -7,8 +7,7 @@
 class HCTheme {
 	/**
 	 * Using to get publishUrl dynamically, base on theme
-	 * @see this->init()
-	 * @param $assets
+	 * @param $assets resource relative to theme
 	 */
 	public static function publishThemeAssets($base = NULl){
 		if($base == null){
