@@ -5,27 +5,107 @@
  *
  */
 class HCString {
+	// plural set
+	private static $plural = array(
+		'/(quiz)$/i'               => "$1zes",
+		'/^(ox)$/i'                => "$1en",
+		'/([m|l])ouse$/i'          => "$1ice",
+		'/(matr|vert|ind)ix|ex$/i' => "$1ices",
+		'/(x|ch|ss|sh)$/i'         => "$1es",
+		'/([^aeiouy]|qu)y$/i'      => "$1ies",
+		'/(hive)$/i'               => "$1s",
+		'/(?:([^f])fe|([lr])f)$/i' => "$1$2ves",
+		'/(shea|lea|loa|thie)f$/i' => "$1ves",
+		'/sis$/i'                  => "ses",
+		'/([ti])um$/i'             => "$1a",
+		'/(tomat|potat|ech|her|vet)o$/i'=> "$1oes",
+		'/(bu)s$/i'                => "$1ses",
+		'/(alias)$/i'              => "$1es",
+		'/(octop)us$/i'            => "$1i",
+		'/(ax|test)is$/i'          => "$1es",
+		'/(us)$/i'                 => "$1es",
+		'/s$/i'                    => "s",
+		'/$/'                      => "s",
+	);
+
+	// singular set
+	private static $singular = array(
+		'/(quiz)zes$/i'             => "$1",
+		'/(matr)ices$/i'            => "$1ix",
+		'/(vert|ind)ices$/i'        => "$1ex",
+		'/^(ox)en$/i'               => "$1",
+		'/(alias)es$/i'             => "$1",
+		'/(octop|vir)i$/i'          => "$1us",
+		'/(cris|ax|test)es$/i'      => "$1is",
+		'/(shoe)s$/i'               => "$1",
+		'/(o)es$/i'                 => "$1",
+		'/(bus)es$/i'               => "$1",
+		'/([m|l])ice$/i'            => "$1ouse",
+		'/(x|ch|ss|sh)es$/i'        => "$1",
+		'/(m)ovies$/i'              => "$1ovie",
+		'/(s)eries$/i'              => "$1eries",
+		'/([^aeiouy]|qu)ies$/i'     => "$1y",
+		'/([lr])ves$/i'             => "$1f",
+		'/(tive)s$/i'               => "$1",
+		'/(hive)s$/i'               => "$1",
+		'/(li|wi|kni)ves$/i'        => "$1fe",
+		'/(shea|loa|lea|thie)ves$/i'=> "$1f",
+		'/(^analy)ses$/i'           => "$1sis",
+		'/((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$/i'  => "$1$2sis",
+		'/([ti])a$/i'               => "$1um",
+		'/(n)ews$/i'                => "$1ews",
+		'/(h|bl)ouses$/i'           => "$1ouse",
+		'/(corpse)s$/i'             => "$1",
+		'/(us)es$/i'                => "$1",
+		'/(us|ss)$/i'               => "$1",
+		'/s$/i'                     => "",
+	);
+
+	// irregular set
+	private static $irregular = array(
+		'move'   => 'moves',
+		'foot'   => 'feet',
+		'goose'  => 'geese',
+		'sex'    => 'sexes',
+		'child'  => 'children',
+		'man'    => 'men',
+		'tooth'  => 'teeth',
+		'person' => 'people',
+	);
+
+	// uncountable set
+	private static $uncountable = array(
+		'sheep',
+		'fish',
+		'deer',
+		'series',
+		'species',
+		'money',
+		'rice',
+		'information',
+		'equipment',
+	);
 
     /**
      * Rand making string from specified characters
      * @param $length
-     * @return String
+     * @return string
      */
 
     public static function random($length)
     {
-        $chars = '';
+        $string = '';
 
-        // remove o,0,1,l
-        $charSet = 'abcdefghijkmnpqrstuvwxyz-ABCDEFGHIJKLMNPQRSTUVWXYZ_23456789';
+        // Remove 0, 1, o, l, O, I
+        $characters = '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
 
-        $charSetSize = strlen($charsSet) - 1;
+        $range = strlen($characters) - 1;
 
-        for ($i = 0; $i < $length; $i++) {
-            $chars .= $charSet[rand(0, $charSetSize)];
+        for($i = 0; $i < $length; $i++) {
+            $string .= $characters[rand(0, $range)];
         }
 
-        return $chars;
+        return $string;
     }
 
     /**
@@ -33,6 +113,7 @@ class HCString {
      *
      * @param $string
      * @param $length
+     * @return string
      */
 
     public static function substr($string, $length)
@@ -40,22 +121,22 @@ class HCString {
 		$stringSize = strlen($string);
 
 		if($length < $stringSize){
-			for($i=0; $i<$length; $i++){
-				$temp_str = substr($string,0,1);
+			for($i=0; $i < $length; $i++){
+				$temp_str = substr($string, 0, 1);
 
 				if(ord($temp_str) > 127){
-					if($i <= $length-3)
+					if($i <= $length - 3)
 					{
-						$new_str[] = substr($string,0,3);
+						$new_str[] = substr($string, 0, 3);
 
-						$string = substr($string,3);
+						$string = substr($string, 3);
 
 						$i += 2;
 					}
 				}else{
-					$new_str[] = substr($string,0,1);
+					$new_str[] = substr($string, 0, 1);
 
-					$string = substr($string,1);
+					$string = substr($string, 1);
 				}
 			}
 
@@ -67,130 +148,99 @@ class HCString {
 
     /**
      *
-     * @param string $str
-     * @return Ambigous <string, mixed>
-     */
-
-    public static function singular(string $str)
-    {
-    	$result = strval($str);
-
-    	$singular_rules = array(
-    		'/(matr)ices$/'         => '\1ix',
-    		'/(vert|ind)ices$/'     => '\1ex',
-    		'/^(ox)en/'             => '\1',
-    		'/(alias)es$/'          => '\1',
-    		'/([octop|vir])i$/'     => '\1us',
-    		'/(cris|ax|test)es$/'   => '\1is',
-    		'/(shoe)s$/'            => '\1',
-    		'/(o)es$/'              => '\1',
-    		'/(bus|campus)es$/'     => '\1',
-    		'/([m|l])ice$/'         => '\1ouse',
-    		'/(x|ch|ss|sh)es$/'     => '\1',
-    		'/(m)ovies$/'           => '\1\2ovie',
-    		'/(s)eries$/'           => '\1\2eries',
-    		'/([^aeiouy]|qu)ies$/'  => '\1y',
-    		'/([lr])ves$/'          => '\1f',
-    		'/(tive)s$/'            => '\1',
-    		'/(hive)s$/'            => '\1',
-    		'/([^f])ves$/'          => '\1fe',
-    		'/(^analy)ses$/'        => '\1sis',
-    		'/((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$/' => '\1\2sis',
-    		'/([ti])a$/'            => '\1um',
-    		'/(p)eople$/'           => '\1\2erson',
-    		'/(m)en$/'              => '\1an',
-    		'/(s)tatuses$/'         => '\1\2tatus',
-    		'/(c)hildren$/'         => '\1\2hild',
-    		'/(n)ews$/'             => '\1\2ews',
-    		'/([^u])s$/'            => '\1',
-    	);
-
-    	foreach ($singular_rules as $rule => $replacement)
-    	{
-    		if (preg_match($rule, $result))
-    		{
-    			$result = preg_replace($rule, $replacement, $result);
-    			break;
-    		}
-    	}
-
-    	return $result;
-    }
-
-    /**
-     *
-     * @param string $str
-     * @param bool $force
-     * @return Ambigous <string, mixed>
-     */
-    public static function plural(string $str, bool $force = FALSE)
-    {
-    	$result = strval($str);
-
-    	$plural_rules = array(
-    		'/^(ox)$/'                 => '\1\2en',     // ox
-    		'/([m|l])ouse$/'           => '\1ice',      // mouse, louse
-    		'/(matr|vert|ind)ix|ex$/'  => '\1ices',     // matrix, vertex, index
-    		'/(x|ch|ss|sh)$/'          => '\1es',       // search, switch, fix, box, process, address
-    		'/([^aeiouy]|qu)y$/'       => '\1ies',      // query, ability, agency
-    		'/(hive)$/'                => '\1s',        // archive, hive
-    		'/(?:([^f])fe|([lr])f)$/'  => '\1\2ves',    // half, safe, wife
-    		'/sis$/'                   => 'ses',        // basis, diagnosis
-    		'/([ti])um$/'              => '\1a',        // datum, medium
-    		'/(p)erson$/'              => '\1eople',    // person, salesperson
-    		'/(m)an$/'                 => '\1en',       // man, woman, spokesman
-    		'/(c)hild$/'               => '\1hildren',  // child
-    		'/(buffal|tomat)o$/'       => '\1\2oes',    // buffalo, tomato
-    		'/(bu|campu)s$/'           => '\1\2ses',    // bus, campus
-    		'/(alias|status|virus)/'   => '\1es',       // alias
-    		'/(octop)us$/'             => '\1i',        // octopus
-    		'/(ax|cris|test)is$/'      => '\1es',       // axis, crisis
-    		'/s$/'                     => 's',          // no change (compatibility)
-    		'/$/'                      => 's',
-    	);
-
-    	foreach ($plural_rules as $rule => $replacement)
-    	{
-    		if (preg_match($rule, $result))
-    		{
-    			$result = preg_replace($rule, $replacement, $result);
-    			break;
-    		}
-    	}
-
-    	return $result;
-    }
-
-    /**
-     *
-     * @param string $str
+     * @param string $string
      * @return string
      */
-    public static function camelize(string $str)
-    {
-    	$str = 'x'.strtolower(trim($str));
-    	$str = ucwords(preg_replace('/[\s_]+/', ' ', $str));
-    	return substr(str_replace(' ', '', $str), 1);
-    }
+
+    public static function singularize(string $string)
+	{
+		$string = strval($string);
+
+		if(in_array(strtolower($string), self::$uncountable)){
+			return $string;
+		}
+
+		foreach(self::$irregular as $result => $pattern)
+		{
+			$pattern = '/' . $pattern . '$/i';
+
+			if(preg_match($pattern, $string)){
+				return preg_replace($pattern, $result, $string);
+			}
+		}
+
+		foreach(self::$singular as $pattern => $result)
+		{
+			if(preg_match($pattern, $string)){
+				return preg_replace($pattern, $result, $string);
+			}
+		}
+
+		return $string;
+	}
 
     /**
      *
-     * @param string $str
-     * @return mixed
-     */
-    public static function underscore(string $str)
-    {
-    	return preg_replace('/[\s]+/', '_', strtolower(trim($str)));
-    }
-
-    /**
-     *
-     * @param string $str
+     * @param string $string
      * @return string
      */
-    public static function humanize(string $str)
+	public static function pluralize(string $string)
+	{
+		$string = strval($string);
+
+		if(in_array(strtolower($string), self::$uncountable)){
+			return $string;
+		}
+
+		foreach(self::$irregular as $pattern => $result)
+		{
+			$pattern = '/' . $pattern . '$/i';
+
+			if(preg_match($pattern, $string)){
+				return preg_replace($pattern, $result, $string);
+			}
+		}
+
+		foreach(self::$plural as $pattern => $result)
+		{
+			if(preg_match($pattern, $string)){
+				return preg_replace($pattern, $result, $string);
+			}
+		}
+
+		return $string;
+	}
+
+    /**
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function camelize(string $string)
     {
-    	return ucwords(preg_replace('/[_]+/', ' ', strtolower(trim($str))));
+    	$string = 'x'.strtolower(trim($string));
+    	$string = ucwords(preg_replace('/[\s_]+/', ' ', $string));
+    	return substr(str_replace(' ', '', $string), 1);
+    }
+
+    /**
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function underscore(string $string)
+    {
+    	return preg_replace('/[\s]+/', '_', strtolower(trim($string)));
+    }
+
+    /**
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function humanize(string $string)
+    {
+    	return ucwords(preg_replace('/[_]+/', ' ', strtolower(trim($string))));
     }
 }
 ?>
