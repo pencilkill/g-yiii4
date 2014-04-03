@@ -11,16 +11,16 @@
 		var defaultOptions = {
 			city	:	undefined
 			,cityUrl	:	'index.php?r=twzip/city'
+			,cityAttrName	:	'data-city'	// city option attribute name which is used to get county data 
 			,cityValue:	'twzip_city_id'		// city option value to fill
 			,cityDefaultValue:	undefined
 			,cityPlaceholder:	'-- 請選擇 --'
-			,countyAttrName	:	'county'	// city option attribute name which is used to get county data 
 			,county	:	'#county'
 			,countyUrl	:	'index.php?r=twzip/county'
 			,countyValue	:	'twzip_county_id'	// county option value to fill
 			,countyDefaultValue	:	undefined
 			,countyPlaceholder	:	'-- 請選擇 --'
-			,postcodeAttrName	:	'postcode'	// county option attribute name which holds the county postcode value
+			,postcodeAttrName	:	'data-postcode'	// county option attribute name which holds the county postcode value
 			,postcode	:	'#postcode'
 			,postcodePlaceholder	:	undefined
 		};
@@ -106,7 +106,7 @@
 							_postcode.apply($(settings.postcode)[0], [$(settings.county).find(':selected').attr(settings.postcodeAttrName)]);
 						}
 					});
-					_county.apply($(settings.county)[0], [$this.find(':selected').attr(settings.countyAttrName)]);
+					_county.apply($(settings.county)[0], [$this.find(':selected').attr(settings.cityAttrName)]);
 				}
 			});
 			
@@ -119,9 +119,9 @@
 						
 						$.each(data, function(k, v){
 							if(settings.cityDefaultValue && v[settings.cityValue] == settings.cityDefaultValue){
-								html += '<option ' + settings.countyAttrName + '="' + v.twzip_city_id + '" value="' + v[settings.cityValue] + '" selected="selected">' + v.name + '</option>';
+								html += '<option ' + settings.cityAttrName + '="' + v.twzip_city_id + '" value="' + v[settings.cityValue] + '" selected="selected">' + v.name + '</option>';
 							}else{
-								html += '<option ' + settings.countyAttrName + '="' + v.twzip_city_id + '" value="' + v[settings.cityValue] + '">' + v.name + '</option>';
+								html += '<option ' + settings.cityAttrName + '="' + v.twzip_city_id + '" value="' + v[settings.cityValue] + '">' + v.name + '</option>';
 							}
 						});
 						
