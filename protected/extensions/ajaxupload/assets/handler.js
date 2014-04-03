@@ -28,8 +28,8 @@
     		canSubmit = true;	// default submit
     		
     		// trigger loginRequiredAjaxResponse, YII_LOGIN_REQUIRED
-    		if (this._settings.data.hasOwnProperty('loginRequiredAjaxResponse')){
-    			var url = window.location.href;	// Yii returnUrl enabled   			
+    		if (this._settings.data.hasOwnProperty('loginRequiredAjaxResponse') && this._settings.data.hasOwnProperty('loginRequiredReturnUrl')){
+    			var url = this.customSettings.loginRequiredReturnUrl;	// Yii returnUrl enabled   			
     			
     			yii_login_required = this._settings.data.loginRequiredAjaxResponse; 
     			

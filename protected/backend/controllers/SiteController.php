@@ -104,7 +104,13 @@ class SiteController extends Controller
 	public function actionSwfUpload()
 	{
 		try{
-			$file = CUploadedFile::getInstanceByName('Filedata');
+			$instanceName = 'Filedata';
+
+			if(!empty($_POST['instanceName'])){
+				$instanceName = $_POST['instanceName'];
+			}
+
+			$file = CUploadedFile::getInstanceByName($instanceName);
 			if(!$file || $file->getHasError()){
 				echo 'Error: Documento Invalido';
 				Yii::app()->end();

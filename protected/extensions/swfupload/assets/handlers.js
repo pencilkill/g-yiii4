@@ -37,12 +37,12 @@ function fileQueueError(file, errorCode, message) {
 function fileDialogComplete(numFilesSelected, numFilesQueued) {
 	canStart = true;	// default true
 	// trigger loginRequiredAjaxResponse, YII_LOGIN_REQUIRED
-	if (this.customSettings.hasOwnProperty('loginRequiredAjaxResponse')){
-		var url = window.location.href;	// Yii returnUrl enabled   			
+	if (this.customSettings.hasOwnProperty('loginRequiredAjaxResponse') && this.customSettings.hasOwnProperty('loginRequiredReturnUrl')){
+		var url = this.customSettings.loginRequiredReturnUrl;	// Yii returnUrl enabled   			
 		
 		yii_login_required = this.customSettings.loginRequiredAjaxResponse; 
 		
-		$.ajax({url:url, async: false}).done(function(data, status, xhr){canStart = (xhr.responseText != yii_login_required); });
+		jQuery.ajax({url:url, async: false}).done(function(data, status, xhr){canStart = (xhr.responseText != yii_login_required); });
 	}
 	
 	if(canStart){

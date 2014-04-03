@@ -61,7 +61,8 @@ class CSwfUpload extends CWidget
 		);
 
 		$postParams = array(
-			'PHPSESSID'=>session_id()
+			'PHPSESSID'=>session_id(),
+			//'instaceName'=>'Filedata',
 		);
 		if(isset($this->postParams))
 		{
@@ -77,6 +78,7 @@ class CSwfUpload extends CWidget
 		$customSettings=array(
 			'assets'=>$baseUrl,
 			'loginRequiredAjaxResponse' => Yii::app()->user->loginRequiredAjaxResponse,
+			'loginRequiredReturnUrl' => Yii::app()->createUrl('site/index'),
 		);
 		if(isset($this->customSettings))
 		{

@@ -87,6 +87,7 @@ class AjaxImageUploadWidget extends CInputWidget
 				//'instanceName' => 'userfile',	// specified parameter name of getInstanceByName()
 				'baseUrl' => $baseUrl,
 				'loginRequiredAjaxResponse' => Yii::app()->user->loginRequiredAjaxResponse,
+            	'loginRequiredReturnUrl' => Yii::app()->createUrl('site/index'),
 			),
 			//'autoSubmit'=>true,
 			//'responseType'=>'json',

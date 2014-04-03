@@ -90,7 +90,7 @@ class LoginForm extends CFormModel
 		{
 			// Override anyother setting if $duration set to 0
 			// It means never auto logout ignoring user setting authTimeout
-			$duration=$this->rememberMe ? 3600 * 24 * 30 : Yii::app()->user->authTimeout; // 30 days
+			$duration = $this->rememberMe ? 3600 * 24 * 30 : Yii::app()->user->authTimeout; // 30 days
 
 			Yii::app()->user->login($this->_identity, $duration);
 
