@@ -6,18 +6,16 @@
 	<meta name="language" content="en" />
 
 	<!-- blueprint CSS framework -->
-	<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl; ?>/css/screen.css" media="screen, projection" />
-	<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl; ?>/css/print.css" media="print" />
+	<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl; ?>/stylesheet/screen.css" media="screen, projection" />
+	<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl; ?>/stylesheet/print.css" media="print" />
 	<!--[if lt IE 8]>
-	<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl; ?>/css/ie.css" media="screen, projection" />
+	<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl; ?>/stylesheet/ie.css" media="screen, projection" />
 	<![endif]-->
-	<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl; ?>/css/main.css" />
-	<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl; ?>/css/form.css" />
+	<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl; ?>/stylesheet/main.css" />
+	<link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl; ?>/stylesheet/form.css" />
 
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
 	<?php Yii::app()->clientScript->registerCoreScript('jquery');?>
-
-	<!--<script type="text/javascript" src="<?php echo $this->skinUrl; ?>/script/twzip.js"></script>-->
 
 </head>
 
