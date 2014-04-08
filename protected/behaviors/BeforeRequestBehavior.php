@@ -25,6 +25,8 @@ class BeforeRequestBehavior extends CBehavior
      * @see beginRequest()
      */
     public function beginRequest($event) {
+    	//
+    	$this->parseUrl();
     	// set current language for multiple languages
         $this->setMultiLanguage();
         // forece translation
@@ -43,12 +45,6 @@ class BeforeRequestBehavior extends CBehavior
 	 * set multilanguage using get method
 	 */
 	public function setMultiLanguage() {
-		// required to get language query string if urlManager enabled
-		if($urlManager = $this->owner->urlManager){
-			$pathInfo = $urlManager->parseUrl($this->owner->request);
-
-			$urlManager->parsePathInfo($pathInfo);
-		}
 		// default languageId
 		if(! isset($this->owner->params->languageId)){
 			$this->owner->params = CMap::mergeArray($this->owner->params, array('languageId' => null));
@@ -121,10 +117,20 @@ class BeforeRequestBehavior extends CBehavior
 
 		return true;
 	}
-
-	// set current theme
+	/**
+	 * set current theme
+	 * @param string $theme
+	 */
 	public function setTheme($theme=null){
 		$this->owner->theme = $theme;
+	}
+	/**
+	 *	required to get language query string if urlManager enabled
+	 */
+	public function parseUrl(){
+		$pathInfo = $this->owner->getUrlManager()->parseUrl($this->owner->request);
+
+		$this->owner->getUrlManager()->parsePathInfo($pathInfo);
 	}
 }
 ?>
