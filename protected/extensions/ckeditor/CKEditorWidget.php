@@ -61,7 +61,6 @@ class CKEditorWidget extends CInputWidget
         if(!isset($this->ckFinder)){
             $this->ckFinder = Yii::getPathOfAlias('webroot').'/ckfinder/ckfinder.php';
         }
-
 		if(!isset($this->ckBasePath)){
 			$this->ckBasePath = Yii::app()->getBaseUrl().'/ckeditor/';
 		}

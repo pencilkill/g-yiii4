@@ -42,10 +42,7 @@ if(isset($config) && is_array($config)){
 		$oCKeditor->config[$key] = $value;
 	}
 }
-
-$baseUrl = Yii::app()->getBaseUrl() . '/';
-
-CKFinder::SetupCKEditor($oCKeditor, $baseUrl . 'ckfinder/');
+CKFinder::SetupCKEditor($oCKeditor, Yii::app()->getBaseUrl().'/ckfinder/');
 
 if(isset($htmlOptions['id'])){
 	$oCKeditor->replace($htmlOptions['id']);
@@ -55,7 +52,11 @@ if(isset($htmlOptions['id'])){
 	$oCKeditor->replaceAll($htmlOptions['class']);
 }
 
-// setting for dynamic
-$window = 'GLOBAL_CONFIG_CKEDITOR';
-Yii::app()->clientScript->registerScript($window, "window.{$window} = " . CJavaScript::encode($oCKeditor->config), CClientScript::POS_END);
+/**
+ * Assume textarea_1_id has been instanced already
+ * Dynamic instance ckeditor as following(both using element id)
+ * @example
+ 	CKEDITOR.replace('textarea_2_id', CKEDITOR.instances.textarea_1_id.config);
+ */
+
 ?>
