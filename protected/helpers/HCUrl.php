@@ -42,7 +42,6 @@ class HCUrl {
      * @param $filterKeys
      * @return Array, query array filtered
      */
-
 	public static function filter($filter = array(), $url = null){
 		$query = html_entity_decode(urldecode($url === null ? Yii::app()->request->queryString : $url));
 

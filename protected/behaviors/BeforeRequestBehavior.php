@@ -43,6 +43,12 @@ class BeforeRequestBehavior extends CBehavior
 	 * set multilanguage using get method
 	 */
 	public function setMultiLanguage() {
+		// required to get language query string if urlManager enabled
+		if($urlManager = $this->owner->urlManager){
+			$pathInfo = $urlManager->parseUrl($this->owner->request);
+
+			$urlManager->parsePathInfo($pathInfo);
+		}
 		// default languageId
 		if(! isset($this->owner->params->languageId)){
 			$this->owner->params = CMap::mergeArray($this->owner->params, array('languageId' => null));

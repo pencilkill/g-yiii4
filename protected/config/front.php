@@ -56,13 +56,13 @@ return array(
 			 */
             //'basePath'=>null,
         ),
-        /*
+
         'urlManager'=>array(
             'urlFormat' => 'path',
         	'showScriptName' => false,
         	'urlSuffix' => '.html',
         ),
-		*/
+
 		// example to config widget
 		'widgetFactory' => array(
 			'widgets' => array(
@@ -118,7 +118,7 @@ return array(
 		 * @var Mixed
 		 * @see app behavior, components/controller
 		 */
-		'showLanguageVar' => false,	// boolean
+		'showLanguageVar' => true,	// boolean
 		/**
 		 * customer prefered lanuage parameter , this is a var like routeVar
 		 * set it to boolean false to hidden language url key
