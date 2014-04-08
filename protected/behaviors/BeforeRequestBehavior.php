@@ -128,7 +128,7 @@ class BeforeRequestBehavior extends CBehavior
 	 *	required to get language query string if urlManager enabled
 	 */
 	public function parseUrl(){
-		$pathInfo = $this->owner->getUrlManager()->parseUrl($this->owner->request);
+		$pathInfo = $this->owner->getUrlManager()->parseUrl($this->owner->getRequest());
 
 		$this->owner->getUrlManager()->parsePathInfo($pathInfo);
 	}
