@@ -15,10 +15,10 @@ class HCExcelWriter
 	public function __construct($version = 'Excel5'){
         $this->version = in_array($version, array('Excel5', 'Excel2007')) ? $version : 'Excel5';
 
-        Yii::import('frontend.extensions.PHPExcel.Writer.IWriter');
-        Yii::import('frontend.extensions.PHPExcel.Writer.' . $this->version);
-        Yii::import('frontend.extensions.PHPExcel');
-        Yii::import('frontend.extensions.PHPExcel.IOFactory');
+        Yii::import('frontend.extensions.Excel.PHPExcel.Writer.IWriter');
+        Yii::import('frontend.extensions.Excel.PHPExcel.Writer.' . $this->version);
+        Yii::import('frontend.extensions.Excel.PHPExcel');
+        Yii::import('frontend.extensions.Excel.PHPExcel.IOFactory');
 
         $this->_excel = new PHPExcel();
 	}

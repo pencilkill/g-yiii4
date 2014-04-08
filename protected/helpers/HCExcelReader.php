@@ -24,7 +24,7 @@ class HCExcelReader
 	public $highestRow;
 
 	public function __construct(){
-		Yii::import('frontend.extensions.PHPExcel');
+		Yii::import('frontend.extensions.Excel.PHPExcel');
 	}
 	/**
 	 * Initialize file
