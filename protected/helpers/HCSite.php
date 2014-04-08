@@ -13,7 +13,7 @@ class HCSite {
 	 * @param CActiveRecord $model,
 	 * @param MANYRelation $relationName, CHASMANY or CMANYMANY
 	 * @param Attribure $textAttribute,
-	 * @param String $url,
+	 * @param Array $url, it is used as parameter for CHtml::normalizeUrl()
 	 * @param Char $amp, URL query string separator
 	 * @param String $path, default '',
 	 * @return String, ul,li code
@@ -26,18 +26,18 @@ class HCSite {
 
 		$link = CHtml::normalizeUrl($url);
 
-		$html = '';
-		$html .= '<li><a href="' . $link . '">' . CHtml::value($model, $textAttribute) . '</a>';
+		$html = CHtml::openTag('li');
+		$html .= CHtml::link(CHtml::value($model, $textAttribute), $link);
 		if($models){
-			$html .= '<ul>';
+			$html .= CHtml::openTag('ul');
 		}
 		foreach($models as $model){
 			$html .= self::superFishNode($pk, $model, $relationName, $textAttribute, $url, $path);
 		}
 		if($models){
-			$html .= '</ul>';
+			$html .= CHtml::closeTag('ul');
 		}
-		$html .= '</li>';
+		$html .= CHtml::closeTag('li');
 
 		return $html;
 	}
@@ -47,7 +47,7 @@ class HCSite {
 	 * @param CActiveRecord $model,
 	 * @param MANYRelation $relationName, CHASMANY or CMANYMANY
 	 * @param Attribure $textAttribute,
-	 * @param String $url,
+	 * @param Array $url, it is used as parameter for CHtml::normalizeUrl()
 	 * @param String $path, default '',
 	 * @return String, ul,li code
 	 */
@@ -59,16 +59,13 @@ class HCSite {
 		if($model && array_key_exists($relationName, $model->relations())){
 			// pk
 			$pk = $model->tableSchema->primaryKey;
-			// parse url
-			$url = is_array($url) ? $url : array(Yii::app()->controller->route, $_GET);
-
 
 			if(is_array($models)){
-				$html .= '<ul>';
+				$html .= CHtml::openTag('ul');
 				foreach($models as $model){
 					$html .= self::superFishNode($pk, $model, $relationName, $textAttribute, $url, $path = '');
 				}
-				$html .= '</ul>';
+				$html .= CHtml::closeTag('ul');
 			}else{
 				$html .= self::superFishNode($pk, $models, $relationName, $textAttribute, $url, $path = '');
 			}
