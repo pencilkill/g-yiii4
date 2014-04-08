@@ -18,13 +18,13 @@ class HCSite {
 	 * @param String $path, default '',
 	 * @return String, ul,li code
 	 */
-	private static function superFishNode($pk, $model, $relationName, $textAttribute, $url, $amp, $path = ''){
+	private static function superFishNode($pk, $model, $relationName, $textAttribute, $url, $path = ''){
 		$path = $path . ($path ? '_' : '') . $model->$pk;
 		$models = $model->$relationName;
 
-		$u = array('path' => $path, 'id' => $model->$pk);
+		$url = CMap::mergeArray($url, array('path' => $path, 'id' => $model->$pk));
 
-		$link = $url . $amp . http_build_query($u);
+		$link = CHtml::normalizeUrl($url);
 
 		$html = '';
 		$html .= '<li><a href="' . $link . '">' . CHtml::value($model, $textAttribute) . '</a>';
@@ -32,7 +32,7 @@ class HCSite {
 			$html .= '<ul>';
 		}
 		foreach($models as $model){
-			$html .= self::superFishNode($pk, $model, $relationName, $textAttribute, $url, $amp , $path);
+			$html .= self::superFishNode($pk, $model, $relationName, $textAttribute, $url, $path);
 		}
 		if($models){
 			$html .= '</ul>';
@@ -60,19 +60,17 @@ class HCSite {
 			// pk
 			$pk = $model->tableSchema->primaryKey;
 			// parse url
-			$url = is_array($url) ? CHtml::normalizeUrl($url) : $url;
-			// url amp
-			$amp = ($url && strpos($url, '?')===false) ? '?' : '&';
+			$url = is_array($url) ? $url : array(Yii::app()->controller->route, $_GET);
 
 
 			if(is_array($models)){
 				$html .= '<ul>';
 				foreach($models as $model){
-					$html .= self::superFishNode($pk, $model, $relationName, $textAttribute, $url, $amp, $path = '');
+					$html .= self::superFishNode($pk, $model, $relationName, $textAttribute, $url, $path = '');
 				}
 				$html .= '</ul>';
 			}else{
-				$html .= self::superFishNode($pk, $models, $relationName, $textAttribute, $url, $amp, $path = '');
+				$html .= self::superFishNode($pk, $models, $relationName, $textAttribute, $url, $path = '');
 			}
 		}
 
