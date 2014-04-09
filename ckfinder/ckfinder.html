@@ -133,8 +133,18 @@
 
 		// Always use 100% width and height when nested using this middle page.
 		config.width = config.height = '100%';
+		config.disableThumbnailSelection = true;
 
 		var ckfinder = new CKFinder( config );
+		
+		ckfinder.callback = function( api ) {
+			api.disableFolderContextMenuOption( 'CreateSubFolder', false );
+			api.disableFolderContextMenuOption( 'RenameFolder', false );
+			api.disableFolderContextMenuOption( 'DeleteFolder', false );
+			// Disable contextmenu
+			api.disableFileContextMenuOption( 'viewFile', false );
+		};
+		
 		ckfinder.replace( 'ckfinder', config );
 })();
 //]]>
