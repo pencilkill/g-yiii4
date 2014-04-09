@@ -34,7 +34,7 @@
 				<?php echo $form->labelEx($model,'description'); ?>
 			</td>
 			<td>
-				<?php echo $form->textArea($model, "[{$language_id}]description", array('class' => 'fck')); ?>
+				<?php echo $form->textArea($model, "[{$language_id}]description", array('class' => 'ckeditor')); ?>
 				<?php echo $form->error($model, "[$language_id]description"); ?>
 			</td>
 		</tr><!-- row -->
