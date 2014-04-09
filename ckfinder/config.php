@@ -79,7 +79,8 @@ Examples:
 
 ATTENTION: The trailing slash is required.
 */
-$baseDir = resolveUrl($baseUrl);
+//$baseDir = resolveUrl($baseUrl);
+$baseDir = dirname(__DIR__) . DIRECTORY_SEPARATOR . $baseUrl;
 
 /*
  * ### Advanced Settings
