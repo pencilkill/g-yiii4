@@ -8,9 +8,9 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
 	
-	config.filebrowserBrowseUrl = 'ckfinder/ckfinder.html';
-	config.filebrowserImageBrowseUrl = 'ckfinder/ckfinder.html?Type=Images';
-	config.filebrowserFlashBrowseUrl = 'ckfinder/ckfinder.html?Type=Flash';
+	config.filebrowserBrowseUrl = 'ckfinder/ckfinder.html.php';
+	config.filebrowserImageBrowseUrl = 'ckfinder/ckfinder.html.php?Type=Images';
+	config.filebrowserFlashBrowseUrl = 'ckfinder/ckfinder.html.php?Type=Flash';
 	config.filebrowserUploadUrl = 'ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files';
 	config.filebrowserImageUploadUrl = 'ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images';
 	config.filebrowserFlashUploadUrl = 'ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash';

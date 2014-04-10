@@ -1,3 +1,5 @@
+<?php require_once '_baseUrl.php';?>
+
 <?php
 /*
  * ### CKFinder : Configuration File - Basic Instructions
@@ -49,6 +51,7 @@ $config['LicenseKey'] = '';
 To make it easy to configure CKFinder, the $baseUrl and $baseDir can be used.
 Those are helper variables used later in this config file.
 */
+$_relativeUrl = 'upload/ckfinder/';
 
 /*
 $baseUrl : the base path used to build the final URL for the resources handled
@@ -60,7 +63,7 @@ Examples:
 
 ATTENTION: The trailing slash is required.
 */
-$baseUrl = 'upload/ckfinder/';
+$baseUrl = _baseUrl::url(false) . $_relativeUrl;
 
 /*
 $baseDir : the path to the local directory (in the server) which points to the
@@ -80,7 +83,7 @@ Examples:
 ATTENTION: The trailing slash is required.
 */
 //$baseDir = resolveUrl($baseUrl);
-$baseDir = dirname(__DIR__) . DIRECTORY_SEPARATOR . $baseUrl;
+$baseDir = _baseUrl::dir() . $_relativeUrl;
 
 /*
  * ### Advanced Settings
