@@ -155,7 +155,7 @@
 				}
 				_base.setAttribute('href', '<?php echo _baseUrl::url()?>');
 			};
-			console.log( api );
+
 			baseUrl( api );
 		};
 
