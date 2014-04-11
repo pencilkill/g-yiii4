@@ -62,7 +62,7 @@ class EFancyBox extends CWidget {
         $config = CJavaScript::encode($this->config);
         if(!empty($this->target)){
 	        Yii::app()->clientScript->registerScript($this->getId(), "
-				$('$this->target').fancybox($config);
+				$('{$this->target}').fancybox($config);
 			");
         }
     }

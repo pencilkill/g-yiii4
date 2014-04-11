@@ -236,7 +236,117 @@ class SiteController extends Controller
 			echo json_encode($severData);
 		}catch(Exception $e){
 			$severData['error'] = $e->getMessage();
+
 			echo json_encode($severData);
+		}
+		Yii::app()->end();
+	}
+
+	/**
+	 * Ajax crop
+	 */
+	public function actionAjaxCrop(){
+		$cropData = array();
+		try{
+			$instanceName = 'source';	// default value
+
+			if(!empty($_POST['instanceName'])){
+				$instanceName = $_POST['instanceName'];
+			}
+
+			$cropData['src'] = $src = trim(Yii::app()->request->getParam($instanceName, NULL));
+			$cropData['scale_width'] = $scale_width = (int)Yii::app()->request->getParam('scale_width', NULL);
+			$cropData['scale_height'] = $scale_height = (int)Yii::app()->request->getParam('scale_height', NULL);
+			$cropData['x1'] = $x1 = (int)Yii::app()->request->getParam('x1', NULL);
+			$cropData['x1'] = $x1 = (int)Yii::app()->request->getParam('x1', NULL);
+			$cropData['y1'] = $y1 = (int)Yii::app()->request->getParam('y1', NULL);
+			$cropData['width'] = $width = (int)Yii::app()->request->getParam('width', NULL);
+			$cropData['height'] = $height = (int)Yii::app()->request->getParam('height', NULL);
+
+			if(($baseUrl = Yii::app()->getBaseUrl(true)) && strpos($src, Yii::app()->getBaseUrl(true)) === 0){
+				$src = substr($src, strlen($baseUrl));
+			}else if(($baseUrl = Yii::app()->getBaseUrl(false)) && strpos($src, Yii::app()->getBaseUrl(true)) === 0){
+				$src = substr($src, strlen($baseUrl));
+			}
+
+
+
+			$imageFile = Yii::getPathOfAlias('webroot') . '/' . ltrim($src, '/');
+
+			if(!is_file($imageFile)){
+				$cropData['error'] = 'Image file is not found!';
+			}else if(empty($width) || empty($height) || $x1 < 0 || $y1 < 0){
+				// actually, client validate only cause scale
+				$cropData['error'] = 'Image parameters is incorrect!';
+			}
+
+			list($srcWidth, $srcHeight, $srcType, $srcAttr)= getimagesize($imageFile);
+
+			$cropData['srcWidth'] = $srcWidth;
+			$cropData['srcHeight'] = $srcHeight;
+
+			if(empty($srcWidth) || empty($srcHeight)){
+				$cropData['error'] = 'Image file can not be detected!';
+			}
+
+			$cropData['scaleWidth'] = $scaleWidth = (float)$srcWidth / (float)$scale_width;
+			$cropData['scaleHeight'] = $scaleHeight = (float)$srcHeight / (float)$scale_height;
+
+			$cropData['scale'] = $scale = ($scaleWidth + $scaleHeight) / 2.0;
+
+			if(($scale + 0.0) == 0.0){
+				$cropData['error'] = 'Image scale can not be calculate!';
+			}
+
+			if(!isset($cropData['error'])){
+				// path is relative webroot
+				$path = Yii::app()->getRequest()->getParam('path', Yii::app()->getParams()->uploadDir.'/'.date('Y/m/d'));
+
+				$fullPath = Yii::getPathOfAlias('webroot').'/'.$path.'/';
+				is_dir($fullPath) || CFileHelper::mkdir($fullPath);
+
+				//wtf, cache outputs the same image sometimes when using function time() to rename file ...
+				$rename = Yii::app()->getRequest()->getParam('rename', uniqid().'.'.CFileHelper::getExtension($imageFile));
+
+				// real size
+				$cropData['realWidth'] = $realWidth = (int)($width * $scale);
+				$cropData['realHeight'] = $realHeight = (int)($height * $scale);
+				$cropData['realX1'] = $realX1 = (int)($x1 * $scale);
+				$cropData['realY1'] = $realY1 = (int)($y1 * $scale);
+
+				$status = Yii::app()->image->load($imageFile)
+											->crop($realWidth, $realHeight, $realX1, $realY1)
+											->save($fullPath.$rename);
+
+				if($status){
+					$cropData['src'] = $src = $path . '/' . $rename;
+				}else{
+					$cropData['error'] = 'Failed to crop image!';
+				}
+
+				if(!isset($cropData['error'])){
+					// thumb
+					$resize = array('width'=>120, 'height'=>120, 'master'=>2);
+					if(Yii::app()->getRequest()->getParam('resize')){
+						$resize = CMap::mergeArray($resize, Yii::app()->getRequest()->getParam('resize'));
+					}
+
+					// This will display the thumbnail of the uploaded file to the view
+					// image wiget will check whether the file exists
+					$cropData['thumb'] = $thumb = Yii::app()->image->load($fullPath.$rename)
+							->resize($resize['width'], $resize['height'], $resize['master'])
+							->cache();
+				}
+
+				echo json_encode($cropData);
+			}else{
+				echo json_encode($cropData);
+
+			}
+		}catch(Exception $e){
+			$cropData['error'] = $e->getMessage();
+
+			echo json_encode($cropData);
 		}
 		Yii::app()->end();
 	}
@@ -248,56 +358,5 @@ class SiteController extends Controller
 	 */
 	public function actionDownload($url, $name){
 		return HCOuput::download($url, $name);
-	}
-
-	public function actionCrop(){
-		$jcropData = array();
-		try{
-			$jcropData['src'] = $src = Yii::app()->request->getParam('src', NULL);
-			$jcropData['attribute'] = $attribute = Yii::app()->request->getParam('attribute', NULL);
-
-			$thumbPath = HCUploader::createUploadDirectory(Yii::app()->request->getParam('thumbPath', NULL), true);
-
-			if(strpos($src, Yii::app()->getBaseUrl(true)) !== false){
-				$src = strtr($src, array(Yii::app()->getBaseUrl(true) => ''));
-			}else if(strpos($src, Yii::app()->getBaseUrl(false)) !== false){
-				$src = strtr($src, array(Yii::app()->getBaseUrl(false) => ''));
-			}
-
-			$imageFile = Yii::getPathOfAlias('webroot') . '/' . ltrim($src, '/');
-
-			if(!is_file($imageFile)){
-				$jcropData['error'] = 'Image file is not found!';
-			}elseif(!is_dir($thumbPath)){
-				$jcropData['error'] = 'Thumb path file is not found!';
-			}elseif(empty($attribute)){
-				$jcropData['error'] = 'Attribute is not defined!';
-			}
-
-			if(!isset($jcropData['error'])){
-				Yii::import('frontend.extensions.jcrop.EJCropper');
-
-				$jcropper = new EJCropper();
-				$jcropper->thumbPath = $thumbPath;
-
-				// get the image cropping coordinates (or implement your own method)
-				$coords = $jcropper->getCoordsFromPost(CHtml::getIdByName($attribute));
-
-				// the absolute path
-				$imageFile = $jcropper->crop($imageFile, $coords);
-				// the relative url
-				$jcropData['src'] = $jcropData['thumb'] = strtr($imageFile, array(Yii::getPathOfAlias('webroot') . '/' => ''));
-
-				if($thumb = Yii::app()->request->getParam('thumb', array())){
-					$jcropData['thumb'] = HCImage::cache($imageFile, $thumb);
-				}
-			}
-
-			echo json_encode($jcropData);
-		}catch(Exception $e){
-			$jcropData['error'] = $e->getMessage();
-			echo json_encode($jcropData);
-		}
-		Yii::app()->end();
 	}
 }

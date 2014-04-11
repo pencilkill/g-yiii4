@@ -62,10 +62,6 @@
     			if(hidden){
     				hidden.attr({'value':json.file});
     			}
-    			
-    			if(this._settings.data.hasOwnProperty('fancybox')){
-    				$(this._settings.data.fancybox).attr({'href':json.file});
-    			}
     		}
     		if (json['error']) {
     			alert(json['error']);
