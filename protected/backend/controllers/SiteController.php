@@ -104,15 +104,12 @@ class SiteController extends Controller
 	public function actionSwfUpload()
 	{
 		try{
-			$instanceName = 'Filedata';
-
-			if(!empty($_POST['instanceName'])){
-				$instanceName = $_POST['instanceName'];
-			}
+			$instanceName = Yii::app()->getRequest()->getParam('instanceName', 'Filedata');
 
 			$file = CUploadedFile::getInstanceByName($instanceName);
 			if(!$file || $file->getHasError()){
-				echo 'Error: Documento Invalido';
+				echo 'Error: ' . $file->getError();
+
 				Yii::app()->end();
 			}
 
@@ -173,7 +170,7 @@ class SiteController extends Controller
 			// Return the file id to the script
 			$serverData['fileid'] = $path.$rename;
 
-			echo "FILEID:".json_encode($serverData);
+			echo 'FILEID:' . json_encode($serverData);
 		}catch(Exception $e){
 			echo 'Error: ' . $e->getMessage();
 		}
@@ -189,16 +186,14 @@ class SiteController extends Controller
 	{
 		$severData = array();
 		try{
-			$instanceName = 'userfile';	// default value
-
-			if(!empty($_POST['instanceName'])){
-				$instanceName = $_POST['instanceName'];
-			}
+			$instanceName = Yii::app()->getRequest()->getParam('instanceName', 'userfile');
 
 			$file = CUploadedFile::getInstanceByName($instanceName);
 			if(!$file || $file->getHasError()){
-				$severData['error'] = 'Documento Invalido';
+				$severData['error'] = 'Error: ' . $file->getError();
+
 				echo json_encode($severData);
+
 				Yii::app()->end();
 			}
 
@@ -243,23 +238,22 @@ class SiteController extends Controller
 	}
 
 	/**
-	 * Ajax crop
+	 * ajaxupload
+	 * @author sam@ozchamp.net
+	 * @see ext.imageselect
 	 */
 	public function actionAjaxCrop(){
 		$cropData = array();
 		try{
-			$instanceName = 'source';	// default value
-
-			if(!empty($_POST['instanceName'])){
-				$instanceName = $_POST['instanceName'];
-			}
+			$instanceName = Yii::app()->getRequest()->getParam('instanceName', 'source');
 
 			$cropData['src'] = $src = trim(Yii::app()->request->getParam($instanceName, NULL));
 			$cropData['scale_width'] = $scale_width = (int)Yii::app()->request->getParam('scale_width', NULL);
 			$cropData['scale_height'] = $scale_height = (int)Yii::app()->request->getParam('scale_height', NULL);
 			$cropData['x1'] = $x1 = (int)Yii::app()->request->getParam('x1', NULL);
-			$cropData['x1'] = $x1 = (int)Yii::app()->request->getParam('x1', NULL);
 			$cropData['y1'] = $y1 = (int)Yii::app()->request->getParam('y1', NULL);
+			$cropData['x2'] = $x2 = (int)Yii::app()->request->getParam('x2', NULL);
+			$cropData['y2'] = $y2 = (int)Yii::app()->request->getParam('y2', NULL);
 			$cropData['width'] = $width = (int)Yii::app()->request->getParam('width', NULL);
 			$cropData['height'] = $height = (int)Yii::app()->request->getParam('height', NULL);
 
@@ -268,8 +262,6 @@ class SiteController extends Controller
 			}else if(($baseUrl = Yii::app()->getBaseUrl(false)) && strpos($src, Yii::app()->getBaseUrl(true)) === 0){
 				$src = substr($src, strlen($baseUrl));
 			}
-
-
 
 			$imageFile = Yii::getPathOfAlias('webroot') . '/' . ltrim($src, '/');
 
@@ -292,6 +284,7 @@ class SiteController extends Controller
 			$cropData['scaleWidth'] = $scaleWidth = (float)$srcWidth / (float)$scale_width;
 			$cropData['scaleHeight'] = $scaleHeight = (float)$srcHeight / (float)$scale_height;
 
+			// Average, better than each dimension ???
 			$cropData['scale'] = $scale = ($scaleWidth + $scaleHeight) / 2.0;
 
 			if(($scale + 0.0) == 0.0){
@@ -309,13 +302,14 @@ class SiteController extends Controller
 				$rename = Yii::app()->getRequest()->getParam('rename', uniqid().'.'.CFileHelper::getExtension($imageFile));
 
 				// real size
-				$cropData['realWidth'] = $realWidth = (int)($width * $scale);
-				$cropData['realHeight'] = $realHeight = (int)($height * $scale);
-				$cropData['realX1'] = $realX1 = (int)($x1 * $scale);
-				$cropData['realY1'] = $realY1 = (int)($y1 * $scale);
+				$cropData['realX1'] = $realX1 = min($srcWidth, (int)($x1 * $scale));
+				$cropData['realY1'] = $realY1 = min($srcHeight, (int)($y1 * $scale));
+
+				$cropData['realWidth'] = $realWidth = max(min($srcWidth, $srcWidth-$realX1, (int)($width * $scale)), 0);
+				$cropData['realHeight'] = $realHeight = max(min($srcHeight, $srcHeight-$realY1, (int)($height * $scale)), 0);
 
 				$status = Yii::app()->image->load($imageFile)
-											->crop($realWidth, $realHeight, $realX1, $realY1)
+											->crop($realWidth, $realHeight, $realY1, $realX1)
 											->save($fullPath.$rename);
 
 				if($status){
@@ -334,14 +328,13 @@ class SiteController extends Controller
 					// This will display the thumbnail of the uploaded file to the view
 					// image wiget will check whether the file exists
 					$cropData['thumb'] = $thumb = Yii::app()->image->load($fullPath.$rename)
-							->resize($resize['width'], $resize['height'], $resize['master'])
-							->cache();
+													->resize($resize['width'], $resize['height'], $resize['master'])
+													->cache();
 				}
 
 				echo json_encode($cropData);
 			}else{
 				echo json_encode($cropData);
-
 			}
 		}catch(Exception $e){
 			$cropData['error'] = $e->getMessage();

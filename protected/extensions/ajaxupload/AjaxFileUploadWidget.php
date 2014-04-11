@@ -30,20 +30,25 @@ class AjaxFileUploadWidget extends CInputWidget
 			if(!isset($this->attribute)){
 				throw new CHttpException(500,'"attribute" have to be set!');
 			}
+
 			$this->htmlOptions['id']=CHtml::activeId($this->model, $this->attribute);
-
-			if(!isset($this->htmlOptions['placeholder'])){
-				$this->htmlOptions['placeholder'] = 'http://';
-			}
-
-			if(!isset($this->htmlOptions['title'])){
-				$this->htmlOptions['title'] = 'Place your completed link here to override upload file ...';
-			}
-
-			if(!isset($this->htmlOptions['size'])){
-				$this->htmlOptions['size'] = 50;
-			}
     	}
+
+    	$this->name = $this->resolveName();
+
+    	$this->value = $this->resolveValue();
+
+		if(!isset($this->htmlOptions['placeholder'])){
+			$this->htmlOptions['placeholder'] = 'http://';
+		}
+
+		if(!isset($this->htmlOptions['title'])){
+			$this->htmlOptions['title'] = 'Place your completed link here to override upload file ...';
+		}
+
+		if(!isset($this->htmlOptions['size'])){
+			$this->htmlOptions['size'] = 50;
+		}
 	}
 
     public function run()
@@ -54,50 +59,22 @@ class AjaxFileUploadWidget extends CInputWidget
 		if(isset($this->jsHandlerUrl))
 		{
 			Yii::app()->clientScript->registerScriptFile($this->jsHandlerUrl, CClientScript::POS_HEAD);
-			unset($this->jsHandlerUrl);
 		}else{
 			Yii::app()->clientScript->registerScriptFile($baseUrl . '/handler.js', CClientScript::POS_HEAD);
 		}
 
-		// preview , value
-		if(isset($this->htmlOptions['value'])){
-			$value = $this->htmlOptions['value'];
-			unset($this->htmlOptions['value']);
-		}else if(isset($this->value)){
-			$value = $this->value;
-		}else if(isset($this->model, $this->attribute)){
-			$value = CHtml::resolveValue($this->model, $this->attribute);
-		}else{
-			$value = '';
-		}
+		// preview
+		$preview = $this->value;
 
-		if(isset($this->htmlOptions['name'])){
-			$name = $this->htmlOptions['name'];
-			unset($this->htmlOptions['name']);
-		}else if(isset($this->name)){
-			$name = $this->name;
-		}else if(isset($this->model, $this->attribute)){
-			$name = CHtml::activeName($this->model, $this->attribute);
-		}else{
-			$name = '';
-		}
-
-		$preview = $value;
-
-		if(preg_match('/\s*((http|https|ftp)\s*:\s*)?\/\//i', $value)){
-			// should be a remote link
-			$preview = $value;
-		}else if(isset($this->previewUrl) && is_array($this->previewUrl)){
-			$previewUrlParam = array('file' => $value);
+		if(isset($this->previewUrl) && is_array($this->previewUrl)){
+			$previewUrlParam = array('file' => $this->value);
 			if(isset($this->previewUrl[1])){
-				$previewUrlParam = CMap::mergeArray($previewUrlParam, $this->previewUrl[1]);
+				$previewUrlParam = CMap::mergeArray($this->previewUrl[1], $previewUrlParam);
 			}
 
 			$preview = Yii::app()->getUrlManager()->createUrl($this->previewUrl[0], $previewUrlParam);
 		}
 
-
-		$prefix = $this->htmlOptions['id'];
 
 		$settings = array(
             'action' => CHtml::normalizeUrl(Yii::app()->createUrl('site/ajaxUpload')),
@@ -106,7 +83,7 @@ class AjaxFileUploadWidget extends CInputWidget
 				//'instanceName' => 'userfile',	// specified parameter name of getInstanceByName()
 			   	'baseUrl' => $baseUrl,
 				'loginRequiredAjaxResponse' => Yii::app()->user->loginRequiredAjaxResponse,
-            	'loginRequiredReturnUrl' => Yii::app()->createUrl('site/index'),
+            	'loginRequiredReturnUrl' => CHtml::normalizeUrl(array('site/index')),
 			),
 			//'autoSubmit' => true,
 			//'responseType' => 'json',
@@ -122,15 +99,41 @@ class AjaxFileUploadWidget extends CInputWidget
 		$settings = CJavaScript::encode($settings);
 
 		// register id append $prefix to make sure unique
-		Yii::app()->getClientScript()->registerScript(__CLASS__.$prefix, "jQuery('#{$prefix}').ajaxUploadHandler($settings);");
+		Yii::app()->getClientScript()->registerScript(__CLASS__.$this->htmlOptions['id'], "jQuery('#{$this->htmlOptions['id']}').ajaxUploadHandler($settings);");
 
 		$this->render('file', array(
-			'name' => $name,
-			'value' => $value,
+			'name' => $this->name,
+			'value' => $this->value,
 			'htmlOptions' => $this->htmlOptions,
-			'prefix' => $prefix,
 			'preview' => $preview,
 		));
     }
 
+    protected function resolveName(){
+    	if(isset($this->htmlOptions['name'])){
+    		$name = $this->htmlOptions['name'];
+    	}else if(isset($this->name)){
+    		$name = $this->name;
+    	}else if(isset($this->model, $this->attribute)){
+    		$name = CHtml::activeName($this->model, $this->attribute);
+    	}else{
+    		$name = '';
+    	}
+
+    	return $name;
+    }
+
+    protected function resolveValue(){
+    	if(isset($this->htmlOptions['value'])){
+    		$value = $this->htmlOptions['value'];
+    	}else if(isset($this->value)){
+    		$value = $this->value;
+    	}else if(isset($this->model, $this->attribute)){
+    		$value = CHtml::resolveValue($this->model, $this->attribute);
+    	}else{
+    		$value = '';
+    	}
+
+    	return $value;
+    }
 }
