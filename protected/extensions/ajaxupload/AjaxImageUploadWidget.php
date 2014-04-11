@@ -8,6 +8,8 @@
  */
 class AjaxImageUploadWidget extends CInputWidget
 {
+	const FANCYBOX_KEY = 'fancybox';
+
 	public $jsHandlerUrl;
 
 	public $settings=array();
@@ -80,6 +82,20 @@ class AjaxImageUploadWidget extends CInputWidget
 
 		$prefix = $this->htmlOptions['id'];
 
+		// fancyBox
+		$fancybox_key = self::FANCYBOX_KEY;
+
+		$fancybox = array();
+		if(array_key_exists($fancybox_key, $this->htmlOptions) && $this->htmlOptions[$fancybox_key] !== false){
+			$fancybox['target'] = '#' . $prefix . '_' . $fancybox_key;
+
+			$fancybox['config'] = array_merge((array)$this->htmlOptions[$fancybox_key], array(
+				'type' => 'image',
+			));
+
+			unset($this->htmlOptions[$fancybox_key]);
+		}
+
 		$settings = array(
             'action'=>CHtml::normalizeUrl(Yii::app()->createUrl('site/ajaxUpload')),
             'name'=>'userfile',
@@ -88,6 +104,7 @@ class AjaxImageUploadWidget extends CInputWidget
 				'baseUrl' => $baseUrl,
 				'loginRequiredAjaxResponse' => Yii::app()->user->loginRequiredAjaxResponse,
             	'loginRequiredReturnUrl' => Yii::app()->createUrl('site/index'),
+            	'fancybox' => isset($fancybox['target']) ? $fancybox['target'] : '',
 			),
 			//'autoSubmit'=>true,
 			//'responseType'=>'json',
@@ -113,6 +130,8 @@ class AjaxImageUploadWidget extends CInputWidget
 			'preview' => $preview,
 			'previewX' => $previewX,
 			'resize' => $imageCache['resize'],
+			//
+			'fancybox' => $fancybox,
 		));
     }
 

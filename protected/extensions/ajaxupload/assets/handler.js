@@ -29,7 +29,7 @@
     		
     		// trigger loginRequiredAjaxResponse, YII_LOGIN_REQUIRED
     		if (this._settings.data.hasOwnProperty('loginRequiredAjaxResponse') && this._settings.data.hasOwnProperty('loginRequiredReturnUrl')){
-    			var url = this.customSettings.loginRequiredReturnUrl;	// Yii returnUrl enabled   			
+    			var url = this._settings.data.loginRequiredReturnUrl;	// Yii returnUrl enabled   			
     			
     			yii_login_required = this._settings.data.loginRequiredAjaxResponse; 
     			
@@ -60,7 +60,11 @@
     			}
     			
     			if(hidden){
-    				hidden.attr('value', json.file);
+    				hidden.attr({'value':json.file});
+    			}
+    			
+    			if(this._settings.data.hasOwnProperty('fancybox')){
+    				$(this._settings.data.fancybox).attr({'href':json.file});
     			}
     		}
     		if (json['error']) {
