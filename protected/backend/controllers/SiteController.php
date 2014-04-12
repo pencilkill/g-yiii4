@@ -281,11 +281,11 @@ class SiteController extends Controller
 				$cropData['error'] = 'Image file can not be detected!';
 			}
 
-			$cropData['scaleWidth'] = $scaleWidth = (float)$srcWidth / (float)$scale_width;
-			$cropData['scaleHeight'] = $scaleHeight = (float)$srcHeight / (float)$scale_height;
+			$cropData['scaleX'] = $scaleX = (float)$srcWidth / (float)$scale_width;
+			$cropData['scaleY'] = $scaleY = (float)$srcHeight / (float)$scale_height;
 
 			// Average, better than each dimension ???
-			$cropData['scale'] = $scale = ($scaleWidth + $scaleHeight) / 2.0;
+			$cropData['scale'] = $scale = ($scaleX + $scaleY) / 2.0;
 
 			if(($scale + 0.0) == 0.0){
 				$cropData['error'] = 'Image scale can not be calculate!';

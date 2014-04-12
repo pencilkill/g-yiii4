@@ -5,7 +5,7 @@
 				<?php echo $form->labelEx($model,'pic'); ?>
 			</td>
 			<td>
-				<?php echo HCUploader::ajaxImageUpload(array('model' => $model,'attribute' => "[{$language_id}]pic")); ?>
+				<?php echo HCUploader::ajaxImageUpload(array('model' => $model,'attribute' => "[{$language_id}]pic", 'imageSelect' => true)); ?>
 				<?php echo $form->error($model, "[$language_id]pic"); ?>
 			</td>
 		</tr><!-- row -->
