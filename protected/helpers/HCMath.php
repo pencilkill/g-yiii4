@@ -63,13 +63,17 @@ class HCMath{
 	}
 
 	private static function _permutate($base, &$result, $swap = array(), $offset = 0){
-		foreach($base[$offset] as $k=>$v) {
-			$swap[$offset] = $base[$offset][$k];
+		if(empty($base[$offset]) || !is_array($base[$offset])){
+			$result[] = $base;
+		}else{
+			foreach($base[$offset] as $k=>$v) {
+				$swap[$offset] = $base[$offset][$k];
 
-			if($offset == sizeof($base) - 1){
-				array_push($result,array_merge($swap));
-			}else{
-				self::_permutate($base, $result, $swap, $offset + 1);
+				if($offset == sizeof($base) - 1){
+					array_push($result,array_merge($swap));
+				}else{
+					self::_permutate($base, $result, $swap, $offset + 1);
+				}
 			}
 		}
 	}
