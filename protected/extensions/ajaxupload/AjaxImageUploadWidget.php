@@ -50,7 +50,7 @@ class AjaxImageUploadWidget extends AjaxUploadWidget
 		{
 			Yii::app()->clientScript->registerScriptFile($this->jsHandlerUrl, CClientScript::POS_HEAD);
 		}else{
-			Yii::app()->clientScript->registerScriptFile($baseUrl . '/handler.js', CClientScript::POS_HEAD);
+			Yii::app()->clientScript->registerScriptFile($baseUrl . '/ajaxuploadHandler.js', CClientScript::POS_HEAD);
 		}
 
 		// default thumb setting
@@ -73,10 +73,11 @@ class AjaxImageUploadWidget extends AjaxUploadWidget
             'action' => CHtml::normalizeUrl(Yii::app()->createUrl('site/ajaxUpload')),
             'name' => self::AJAX_FILE_NAME,
             'data' => array(
-				//'instanceName' => 'userfile',	// specified parameter name of getInstanceByName()
+				'instanceName' => 'userfile',	// specified parameter name of getInstanceByName()
 				'baseUrl' => $baseUrl,
 				'loginRequiredAjaxResponse' => Yii::app()->user->loginRequiredAjaxResponse,
             	'loginRequiredReturnUrl' => CHtml::normalizeUrl(array('site/index')),
+            	'params' => $this->params,
 			),
 			//'autoSubmit'=>true,
 			//'responseType'=>'json',

@@ -104,28 +104,31 @@ class SiteController extends Controller
 	public function actionSwfUpload()
 	{
 		try{
-			$instanceName = Yii::app()->getRequest()->getParam('instanceName', 'Filedata');
+			// remember the post params?
+			$model = Yii::app()->getRequest()->getParam('model');
+
+			$instanceName = Yii::app()->getRequest()->getParam('instanceName', CSwfUpload::FILE_POST_NAME);
 
 			$file = CUploadedFile::getInstanceByName($instanceName);
-			if(!$file || $file->getHasError()){
-				echo 'Error: ' . $file->getError();
+
+			if(!$file){
+				echo 'Error: ' .  Yii::t('app', 'Upload Failure');
 
 				Yii::app()->end();
+			}elseif($file instanceof CUploadedFile){
+				if($file->getHasError()){
+					echo 'Error: ' . $file->getError();
+
+					Yii::app()->end();
+				}
 			}
 
 			$serverData = array();
 
-			// remember the post params?
-			$modelClass = Yii::app()->getRequest()->getParam('modelClass');
-
-			// check modelClass though model file
-			if(empty($modelClass) || !is_file(Yii::getPathOfAlias('backend.models').'/'.$modelClass.'.php')){
-				echo 'Error: Model Invalido';
-				Yii::app()->end();
-			}
-
 			// path is relative webroot
-			$path = Yii::app()->getRequest()->getParam('path', Yii::app()->getParams()->uploadDir.'/'.date('Y/m/d'));
+			$path = Yii::app()->getRequest()->getParam('path', date('Y/m/d'));
+			// path should be under specified directory
+			$path = Yii::app()->getParams()->uploadDir.'/'.trim($path, '/');
 
 			$fullPath = Yii::getPathOfAlias('webroot').'/'.$path.'/';
 			is_dir($fullPath) || CFileHelper::mkdir($fullPath);
@@ -133,39 +136,101 @@ class SiteController extends Controller
 			//wtf, cache outputs the same image sometimes when using function time() to rename file ...
 			$rename = Yii::app()->getRequest()->getParam('rename', uniqid().'.'.$file->extensionName);
 
+			// attributes
+			$attributes = array();
+			if(Yii::app()->getRequest()->getParam('attributes')){
+				$attributes = CMap::mergeArray($attributes, Yii::app()->getRequest()->getParam('attributes'));
+			}
+
+			$default = array(
+				'callback' => 'activeHiddenField',
+				'attribute' => ''
+			);
+			$normalizeAttribute = null;
+
+			$normalizeAttribute = function () use($attributes, $default){
+				$results = array();
+
+				foreach ($attributes as $_attribute){
+					if(empty($_attribute['attribute'])) continue;
+
+					$result = $default;
+
+					// rebuild index
+					foreach($result as $key => $value){
+						$result[$key] = isset($_attribute[$key]) ? $_attribute[$key] : $value;
+					}
+
+					$results[] = $result;
+				}
+
+				return $results;
+			};
+
+			$attributes = $normalizeAttribute();
+
+			$image = new $model;
+
+			$validateAttributes = array();
+			foreach($attributes as $attribute){
+				if(empty($attribute['attribute'])) continue;
+
+				$validateAttributes[] = $attribute['attribute'];
+
+				if(isset($file->{$attribute['attribute']})){
+					$image->setAttribute($attribute['attribute'], $file->{$attribute['attribute']});
+				}
+			}
+
+			// attribute
+			$attribute = Yii::app()->getRequest()->getParam('attribute');
+
+			$image->{$attribute} = $file;
+
+			//$image->validate($validateAttributes);
+			$image->validate(array($attribute));
+
+			if($error = $image->getError($attribute)){
+				echo 'Error: ' . $error;
+
+				Yii::app()->end();
+			}
+
+			$image->{$attribute} = $path.'/'.$rename;
+
 			// Here should be checked if necessary
 			$file->saveAs($fullPath.$rename);
 
 			// thumb
-			$resize = array('width'=>120, 'height'=>120, 'master'=>2);
-			if(Yii::app()->getRequest()->getParam('resize')){
-				$resize = CMap::mergeArray($resize, Yii::app()->getRequest()->getParam('resize'));
+			$thumb = array('width'=>120, 'height'=>120, 'master'=>Image::AUTO);
+			if(Yii::app()->getRequest()->getParam('thumb')){
+				$thumb = CMap::mergeArray($thumb, Yii::app()->getRequest()->getParam('thumb'));
 			}
+
 			// This will display the thumbnail of the uploaded file to the view
 			// image wiget will check whether the file exists
-			$thumbSrc = Yii::app()->image->load($fullPath.$rename)
-					->resize($resize['width'], $resize['height'], $resize['master'])
+			$src = Yii::app()->image->load($fullPath.$rename)
+					->resize($thumb['width'], $thumb['height'], $thumb['master'])
 					->cache();
 
-			$serverData['attributes']['name'] = $file->name;
-			$serverData['attributes']['type'] = $file->type;
-			$serverData['attributes']['pic'] = $path.'/'.$rename;
+			$serverData['src'] = $src;
 
-			$serverData['thumbSrc'] = $thumbSrc;
-
-			$image = new $modelClass;
-			$image->setAttributes($serverData['attributes']);
-
-			$imageView = Yii::app()->getRequest()->getParam('imageView');
+			//
+			$imageView = Yii::app()->getRequest()->getParam(CSwfUpload::IMAGE_VIEW);
 			$imageViewFile=$this->getViewFile($imageView);
 			if(empty($imageViewFile)){
-				$viewFile = Yii::getPathOfAlias('frontend.extensions.swfupload.views').'/imageView.php';
+				$viewFile = Yii::getPathOfAlias('frontend.extensions.swfupload.views').'/'.CSwfUpload::IMAGE_VIEW.'.php';
 			}
-			$serverData['imageView'] = $this->renderFile($viewFile, array('image'=>$image, 'src'=>$thumbSrc, 'index'=>uniqid(), 'resize' => $resize), true);
 
-//			$serverData['modelClass'] = $modelClass;
-//			$serverData['attributes'] = $gallery->getAttributes();
-//			$serverData['languages'] = Yii::app()->getRequest()->getParam('languages') ? $this->languages : null;
+			$data = array(
+				'src'=>$src,
+				'image'=>$image,
+				'index'=>uniqid(),
+				'thumb' => $thumb,
+				'attributes' => $attributes,
+			);
+
+			$serverData['imageView'] = $this->renderFile($viewFile, $data, true);
 
 			// Return the file id to the script
 			$serverData['fileid'] = $path.$rename;
@@ -186,33 +251,45 @@ class SiteController extends Controller
 	{
 		$severData = array();
 		try{
-			$string = Yii::app()->getRequest()->getParam('params');
+			$params = array('model' => '', 'attribute' => '', 'id' => '', 'scenario' => '');
 
-			$params = HCUrl::decode($string);
-
-			if(!isset($params['model'], $params['attribute'])){
-				$severData['error'] = 'Error: params is incorrent!';
-
-				echo json_encode($severData);
-
-				Yii::app()->end();
+			if($_params = Yii::app()->getRequest()->getParam('params')){
+				$params = CMap::mergeArray($params, (array)$_params);
 			}
 
-			$model = $params['model'];
+			$model = $attribute = $modelInstance = null;
 
-			$attribute = $params['attribute'];
+			$modelInstance = function()use(&$model, &$attribute, $params){
+				if($params['model'] && $params['attribute']){
+					$model = $params['model'];
 
-			Yii::import('frontend.extensions.ajaxupload.AjaxUploadWidget');
+					$attribute = preg_replace('/\[[^]]*\]/', '', $params['attribute']);
+
+					$scenario = $params['scenario'];
+
+					if($id = $params['id']){
+						$model = $model::model()->findByPk($id);
+
+						if($scenario){
+							$model->scenario = $scenario;
+						}
+					}else{
+						$model = new $model($scenario);
+					}
+				}
+			};
+
+			$modelInstance();
 
 			$instanceName = Yii::app()->getRequest()->getParam('instanceName', AjaxUploadWidget::AJAX_FILE_NAME);
 
 			$file = CUploadedFile::getInstanceByName($instanceName);
 
 			if(!$file){
-				$severData['error'] = 'Error: no file!';
+				$severData['error'] = Yii::t('app', 'Upload Failure');
 			}elseif($file instanceof CUploadedFile){
 				if($file->getHasError()){
-					$severData['error'] = 'Error: ' . $file->getError();
+					$severData['error'] = $file->getError();
 				}
 			}
 
@@ -222,8 +299,24 @@ class SiteController extends Controller
 				Yii::app()->end();
 			}
 
+			if($model && $attribute){
+				$model->{$attribute} = $file;
+
+				$model->validate(array($attribute));
+
+				if($error = $model->getError($attribute)){
+					$severData['error'] = $error;
+
+					echo json_encode($severData);
+
+					Yii::app()->end();
+				}
+			}
+
 			// path is relative webroot
-			$path = Yii::app()->getRequest()->getParam('path', Yii::app()->getParams()->uploadDir.'/'.date('Y/m/d'));
+			$path = Yii::app()->getRequest()->getParam('path', date('Y/m/d'));
+			// path should be under specified directory
+			$path = Yii::app()->getParams()->uploadDir.'/'.trim($path, '/');
 
 			$fullPath = Yii::getPathOfAlias('webroot').'/'.$path.'/';
 			is_dir($fullPath) || CFileHelper::mkdir($fullPath);
@@ -263,7 +356,7 @@ class SiteController extends Controller
 	}
 
 	/**
-	 * ajaxupload
+	 * ajaxcrop
 	 * @author sam@ozchamp.net
 	 * @see ext.imageselect
 	 */
@@ -291,10 +384,10 @@ class SiteController extends Controller
 			$imageFile = Yii::getPathOfAlias('webroot') . '/' . ltrim($src, '/');
 
 			if(!is_file($imageFile)){
-				$cropData['error'] = 'Image file is not found!';
+				$cropData['error'] = Yii::t('crop', 'Image File Is Not Found');
 			}else if(empty($width) || empty($height) || $x1 < 0 || $y1 < 0){
 				// actually, client validate only cause scale
-				$cropData['error'] = 'Image parameters is incorrect!';
+				$cropData['error'] = Yii::t('crop', 'Image Parameters Is Incorrect');
 			}
 
 			list($srcWidth, $srcHeight, $srcType, $srcAttr)= getimagesize($imageFile);
@@ -303,7 +396,7 @@ class SiteController extends Controller
 			$cropData['srcHeight'] = $srcHeight;
 
 			if(empty($srcWidth) || empty($srcHeight)){
-				$cropData['error'] = 'Image file can not be detected!';
+				$cropData['error'] = Yii::t('crop', 'Image File Can Not Be Detected');
 			}
 
 			$cropData['scaleX'] = $scaleX = (float)$srcWidth / (float)$scale_width;
@@ -313,12 +406,14 @@ class SiteController extends Controller
 			$cropData['scale'] = $scale = ($scaleX + $scaleY) / 2.0;
 
 			if(($scale + 0.0) == 0.0){
-				$cropData['error'] = 'Image scale can not be calculate!';
+				$cropData['error'] = Yii::t('crop', 'Image Scale Can Not Be Calculate');
 			}
 
 			if(!isset($cropData['error'])){
 				// path is relative webroot
-				$path = Yii::app()->getRequest()->getParam('path', Yii::app()->getParams()->uploadDir.'/'.date('Y/m/d'));
+				$path = Yii::app()->getRequest()->getParam('path', date('Y/m/d'));
+				// path should be under specified directory
+				$path = Yii::app()->getParams()->uploadDir.'/'.trim($path, '/');
 
 				$fullPath = Yii::getPathOfAlias('webroot').'/'.$path.'/';
 				is_dir($fullPath) || CFileHelper::mkdir($fullPath);
@@ -340,7 +435,7 @@ class SiteController extends Controller
 				if($status){
 					$cropData['src'] = $src = $path . '/' . $rename;
 				}else{
-					$cropData['error'] = 'Failed to crop image!';
+					$cropData['error'] = Yii::t('crop', 'Failed To Crop Image');
 				}
 
 				if(!isset($cropData['error'])){

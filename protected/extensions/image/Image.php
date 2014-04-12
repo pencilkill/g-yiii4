@@ -511,6 +511,8 @@ class Image
                 }
                 break;
             case 'master':
+            	$value = (int)$value;
+
                 if ($value !== Image::NONE AND
                     $value !== Image::AUTO AND
                         $value !== Image::WIDTH AND

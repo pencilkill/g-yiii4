@@ -10,6 +10,11 @@ class AjaxUploadWidget extends CInputWidget
 {
 	const AJAX_FILE_NAME = 'userfile';
 
+	const AJAX_SCENARIO = __CLASS__;
+
+	// model information for validate file, no required
+	public $params = array();
+
 	public function init()
 	{
     	parent::init();
@@ -28,6 +33,8 @@ class AjaxUploadWidget extends CInputWidget
     	$this->name = $this->resolveName();
 
     	$this->value = $this->resolveValue();
+
+    	$this->params = $this->params();
 	}
 
     protected function resolveName(){
@@ -56,5 +63,16 @@ class AjaxUploadWidget extends CInputWidget
     	}
 
     	return $value;
+    }
+
+    protected function params(){
+    	$params = array(
+			'model' => CHtml::modelName($this->model),
+			'attribute' => CHtml::modelName($this->attribute),
+			'id' => CHtml::modelName($this->model->primaryKey),
+			'scenario' => self::AJAX_SCENARIO,
+		);
+
+    	return CMap::mergeArray($params, $this->params);
     }
 }

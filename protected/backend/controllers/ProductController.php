@@ -31,8 +31,8 @@ class ProductController extends GxController {
 
 		$i18ns = $model->getNewRelatedData('productI18ns');
 
-		$gallery = new ProductImage;
-		$galleries = $model->productImages;
+		$photo = new ProductImage;
+		$photos = $model->productImages;
 
 		$p2c = new Product2category;
 		$p2cs = $model->product2categories;
@@ -65,7 +65,7 @@ class ProductController extends GxController {
 				$i18ns[$val['language_id']] = $va;
 			}
 
-			$galleries = array();
+			$photos = array();
 			if(isset($_POST['ProductImage']) && is_array($_POST['ProductImage'])){
 				foreach($_POST['ProductImage'] as $val){
 					$va = new ProductImage;
@@ -74,7 +74,7 @@ class ProductController extends GxController {
 
 					$valid = $va->validate() && $valid;
 
-					$galleries[] = $va;
+					$photos[] = $va;
 				}
 			}
 
@@ -102,7 +102,7 @@ class ProductController extends GxController {
 						$va->save(false);
 					}
 
-					foreach($galleries as $va){
+					foreach($photos as $va){
 						$va->product_id = $model->product_id;
 						$va->save(false);
 					}
@@ -134,8 +134,8 @@ class ProductController extends GxController {
 		$this->render('create', array(
 			'model' => $model,
 			'i18ns' => $i18ns,
-			'gallery' => $gallery,
-			'galleries' => $galleries,
+			'photo' => $photo,
+			'photos' => $photos,
 			'p2c' => $p2c,
 			'p2cs' => $p2cs,
 		));
@@ -146,8 +146,8 @@ class ProductController extends GxController {
 
 		$i18ns = $model->productI18ns;
 
-		$gallery = new ProductImage;
-		$galleries = $model->productImages;
+		$photo = new ProductImage;
+		$photos = $model->productImages;
 
 		$p2c = new Product2category;
 		$p2cs = $model->product2categories;
@@ -180,7 +180,7 @@ class ProductController extends GxController {
 				$i18ns[$val['language_id']] = $va;
 			}
 
-			$galleries = array();
+			$photos = array();
 			if(isset($_POST['ProductImage']) && is_array($_POST['ProductImage'])){
 				foreach($_POST['ProductImage'] as $val){
 					$va = new ProductImage;
@@ -189,7 +189,7 @@ class ProductController extends GxController {
 
 					$valid = $va->validate() && $valid;
 
-					$galleries[] = $va;
+					$photos[] = $va;
 				}
 			}
 
@@ -221,7 +221,7 @@ class ProductController extends GxController {
 					}
 
 					ProductImage::model()->deleteAll($criteria);
-					foreach($galleries as $va){
+					foreach($photos as $va){
 						$va->product_id = $model->product_id;
 						$va->save(false);
 					}
@@ -254,8 +254,8 @@ class ProductController extends GxController {
 		$this->render('update', array(
 			'model' => $model,
 			'i18ns' => $i18ns,
-			'gallery' => $gallery,
-			'galleries' => $galleries,
+			'photo' => $photo,
+			'photos' => $photos,
 			'p2c' => $p2c,
 			'p2cs' => $p2cs,
 		));

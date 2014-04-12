@@ -1,7 +1,7 @@
 <li style="display:inline-block; margin:10px; ">
 	<table style="border:1px solid gray;">
 		<tr>
-			<td style="width:<?php echo $resize['width']?>px; height: <?php echo $resize['height']?>px;" align="center">
+			<td style="width:<?php echo $thumb['width']?>px; height: <?php echo $thumb['height']?>px;" align="center">
 				<img src="<?php echo $src?>"/>
 			</td>
 		</tr>
@@ -12,8 +12,13 @@
 		</tr>
 	</table>
 <?php
-	if($image->hasAttribute('pic')) echo CHtml::activeHiddenField($image,"[{$index}]pic");
-	if($image->hasAttribute('name')) echo CHtml::activeHiddenField($image,"[{$index}]name");
-	if($image->hasAttribute('type')) echo CHtml::activeHiddenField($image,"[{$index}]type");
+	foreach ($attributes as $attribute){
+		$callback = $attribute['callback'];
+
+		$attribute['callback'] = $image;
+		$attribute['attribute'] = '[' . $index .']' . $attribute['attribute'];
+
+		echo call_user_func_array(array('CHtml', $callback), $attribute);
+	}
 ?>
 </li>

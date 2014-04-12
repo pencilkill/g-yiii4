@@ -12,8 +12,8 @@ $this->renderPartial(
 	array(
 		'model' => $model,
 		'i18ns' => $i18ns,
-		'gallery' => $gallery,
-		'galleries' => $galleries,
+		'photo' => $photo,
+		'photos' => $photos,
 		'p2c' => $p2c,
 		'p2cs' => $p2cs,
 	)

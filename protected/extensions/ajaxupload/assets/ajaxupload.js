@@ -529,13 +529,39 @@
             form.style.display = 'none';
             document.body.appendChild(form);
             
-            // Create hidden input element for each data key
-            for (var prop in settings.data) {
-                if (settings.data.hasOwnProperty(prop)){
+            // Recursive create hidden input element for each data key
+            var flatten = function(data) {
+                var result = {};
+                var recurse = function (cur, prop) {
+                    if (Object(cur) !== cur) {
+                        result[prop] = cur;
+                    } else if (Array.isArray(cur)) {
+                         for(var i=0, l=cur.length; i<l; i++)
+                             recurse(cur[i], prop + '[' + i + ']');
+                        if (l == 0)
+                            result[prop] = [];
+                    } else {
+                        var isEmpty = true;
+                        for (var p in cur) {
+                            isEmpty = false;
+                            recurse(cur[p], prop ? prop + '[' + p + ']' : p);
+                        }
+                        if (isEmpty && prop)
+                            result[prop] = {};
+                    }
+                };
+                recurse(data, '');
+                return result;
+            };
+            
+            var _data = flatten(settings.data);
+            
+            for (var prop in _data) {
+                if (_data.hasOwnProperty(prop)){
                     var el = document.createElement("input");
                     el.setAttribute('type', 'hidden');
                     el.setAttribute('name', prop);
-                    el.setAttribute('value', settings.data[prop]);
+                    el.setAttribute('value', _data[prop]);
                     form.appendChild(el);
                 }
             }

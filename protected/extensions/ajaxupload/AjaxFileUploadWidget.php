@@ -48,7 +48,7 @@ class AjaxFileUploadWidget extends AjaxUploadWidget
 		{
 			Yii::app()->clientScript->registerScriptFile($this->jsHandlerUrl, CClientScript::POS_HEAD);
 		}else{
-			Yii::app()->clientScript->registerScriptFile($baseUrl . '/handler.js', CClientScript::POS_HEAD);
+			Yii::app()->clientScript->registerScriptFile($baseUrl . '/ajaxuploadHandler.js', CClientScript::POS_HEAD);
 		}
 
 		// preview
@@ -72,6 +72,7 @@ class AjaxFileUploadWidget extends AjaxUploadWidget
 			   	'baseUrl' => $baseUrl,
 				'loginRequiredAjaxResponse' => Yii::app()->user->loginRequiredAjaxResponse,
             	'loginRequiredReturnUrl' => CHtml::normalizeUrl(array('site/index')),
+            	'params' => $this->params,
 			),
 			//'autoSubmit' => true,
 			//'responseType' => 'json',

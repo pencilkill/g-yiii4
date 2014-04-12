@@ -52,6 +52,7 @@ return array (
   'Tabs Image' => '產品多圖',
   'Unnoticed' => '未閱讀',
   'Update' => '編輯',
+  'Upload Failure' => '文件上傳失敗',
   'Upload Successfully' => '文件上傳成功',
   'Validation Failure' => '失敗：操作失敗，請檢查欄位設置',
   'Welcome to administration panel:' => '您已登錄為：',
