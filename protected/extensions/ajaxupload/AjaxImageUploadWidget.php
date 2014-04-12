@@ -6,7 +6,10 @@
  *
  *
  */
-class AjaxImageUploadWidget extends CInputWidget
+
+Yii::import('frontend.extensions.ajaxupload.AjaxUploadWidget');
+
+class AjaxImageUploadWidget extends AjaxUploadWidget
 {
 	const IAS_API = 'imgAreaSelect';	// imgAreaSelect plugin default value
 	const IAS_IMAGE_CLASS = 'fancybox-image';
@@ -36,21 +39,6 @@ class AjaxImageUploadWidget extends CInputWidget
 	public function init()
 	{
     	parent::init();
-
-		if(!isset($this->htmlOptions['id'])){
-			if(!isset($this->model)){
-				throw new CHttpException(500,'"model" have to be set!');
-			}
-			if(!isset($this->attribute)){
-				throw new CHttpException(500,'"attribute" have to be set!');
-			}
-
-			$this->htmlOptions['id']=CHtml::activeId($this->model, $this->attribute);
-    	}
-
-    	$this->name = $this->resolveName();
-
-    	$this->value = $this->resolveValue();
 	}
 
     public function run()
@@ -82,13 +70,13 @@ class AjaxImageUploadWidget extends CInputWidget
 
 		//
 		$settings = array(
-            'action'=>CHtml::normalizeUrl(Yii::app()->createUrl('site/ajaxUpload')),
-            'name'=>'userfile',
+            'action' => CHtml::normalizeUrl(Yii::app()->createUrl('site/ajaxUpload')),
+            'name' => self::AJAX_FILE_NAME,
             'data' => array(
 				//'instanceName' => 'userfile',	// specified parameter name of getInstanceByName()
 				'baseUrl' => $baseUrl,
 				'loginRequiredAjaxResponse' => Yii::app()->user->loginRequiredAjaxResponse,
-            	'loginRequiredReturnUrl' => Yii::app()->createUrl('site/index'),
+            	'loginRequiredReturnUrl' => CHtml::normalizeUrl(array('site/index')),
 			),
 			//'autoSubmit'=>true,
 			//'responseType'=>'json',
@@ -116,34 +104,6 @@ class AjaxImageUploadWidget extends CInputWidget
 			'fancyBox' => $fancyBox,
 			'imageSelect' => $imageSelect,
 		));
-    }
-
-    protected function resolveName(){
-    	if(isset($this->htmlOptions['name'])){
-			$name = $this->htmlOptions['name'];
-		}else if(isset($this->name)){
-			$name = $this->name;
-		}else if(isset($this->model, $this->attribute)){
-			$name = CHtml::activeName($this->model, $this->attribute);
-		}else{
-			$name = '';
-		}
-
-		return $name;
-    }
-
-    protected function resolveValue(){
-    	if(isset($this->htmlOptions['value'])){
-    		$value = $this->htmlOptions['value'];
-    	}else if(isset($this->value)){
-    		$value = $this->value;
-    	}else if(isset($this->model, $this->attribute)){
-    		$value = CHtml::resolveValue($this->model, $this->attribute);
-    	}else{
-    		$value = '';
-    	}
-
-    	return $value;
     }
 
     protected function fancyBox(){

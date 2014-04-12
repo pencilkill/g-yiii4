@@ -6,7 +6,10 @@
  *
  *
  */
-class AjaxFileUploadWidget extends CInputWidget
+
+Yii::import('frontend.extensions.ajaxupload.AjaxUploadWidget');
+
+class AjaxFileUploadWidget extends AjaxUploadWidget
 {
 	public $jsHandlerUrl;
 
@@ -22,21 +25,6 @@ class AjaxFileUploadWidget extends CInputWidget
 	public function init()
 	{
     	parent::init();
-
-		if(!isset($this->htmlOptions['id'])){
-			if(!isset($this->model)){
-				throw new CHttpException(500,'"model" have to be set!');
-			}
-			if(!isset($this->attribute)){
-				throw new CHttpException(500,'"attribute" have to be set!');
-			}
-
-			$this->htmlOptions['id']=CHtml::activeId($this->model, $this->attribute);
-    	}
-
-    	$this->name = $this->resolveName();
-
-    	$this->value = $this->resolveValue();
 
 		if(!isset($this->htmlOptions['placeholder'])){
 			$this->htmlOptions['placeholder'] = 'http://';
@@ -78,7 +66,7 @@ class AjaxFileUploadWidget extends CInputWidget
 
 		$settings = array(
             'action' => CHtml::normalizeUrl(Yii::app()->createUrl('site/ajaxUpload')),
-            'name' => 'userfile',
+            'name' => self::AJAX_FILE_NAME,
             'data' => array(
 				//'instanceName' => 'userfile',	// specified parameter name of getInstanceByName()
 			   	'baseUrl' => $baseUrl,
@@ -107,33 +95,5 @@ class AjaxFileUploadWidget extends CInputWidget
 			'htmlOptions' => $this->htmlOptions,
 			'preview' => $preview,
 		));
-    }
-
-    protected function resolveName(){
-    	if(isset($this->htmlOptions['name'])){
-    		$name = $this->htmlOptions['name'];
-    	}else if(isset($this->name)){
-    		$name = $this->name;
-    	}else if(isset($this->model, $this->attribute)){
-    		$name = CHtml::activeName($this->model, $this->attribute);
-    	}else{
-    		$name = '';
-    	}
-
-    	return $name;
-    }
-
-    protected function resolveValue(){
-    	if(isset($this->htmlOptions['value'])){
-    		$value = $this->htmlOptions['value'];
-    	}else if(isset($this->value)){
-    		$value = $this->value;
-    	}else if(isset($this->model, $this->attribute)){
-    		$value = CHtml::resolveValue($this->model, $this->attribute);
-    	}else{
-    		$value = '';
-    	}
-
-    	return $value;
     }
 }

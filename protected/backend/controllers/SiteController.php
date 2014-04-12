@@ -186,12 +186,37 @@ class SiteController extends Controller
 	{
 		$severData = array();
 		try{
-			$instanceName = Yii::app()->getRequest()->getParam('instanceName', 'userfile');
+			$string = Yii::app()->getRequest()->getParam('params');
+
+			$params = HCUrl::decode($string);
+
+			if(!isset($params['model'], $params['attribute'])){
+				$severData['error'] = 'Error: params is incorrent!';
+
+				echo json_encode($severData);
+
+				Yii::app()->end();
+			}
+
+			$model = $params['model'];
+
+			$attribute = $params['attribute'];
+
+			Yii::import('frontend.extensions.ajaxupload.AjaxUploadWidget');
+
+			$instanceName = Yii::app()->getRequest()->getParam('instanceName', AjaxUploadWidget::AJAX_FILE_NAME);
 
 			$file = CUploadedFile::getInstanceByName($instanceName);
-			if(!$file || $file->getHasError()){
-				$severData['error'] = 'Error: ' . $file->getError();
 
+			if(!$file){
+				$severData['error'] = 'Error: no file!';
+			}elseif($file instanceof CUploadedFile){
+				if($file->getHasError()){
+					$severData['error'] = 'Error: ' . $file->getError();
+				}
+			}
+
+			if(isset($severData['error'])){
 				echo json_encode($severData);
 
 				Yii::app()->end();
