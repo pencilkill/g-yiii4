@@ -302,14 +302,14 @@ class SiteController extends Controller
 				$rename = Yii::app()->getRequest()->getParam('rename', uniqid().'.'.CFileHelper::getExtension($imageFile));
 
 				// real size
-				$cropData['realX1'] = $realX1 = min($srcWidth, (int)($x1 * $scale));
-				$cropData['realY1'] = $realY1 = min($srcHeight, (int)($y1 * $scale));
+				$cropData['calcX1'] = $calcX1 = min($srcWidth, (int)($x1 * $scale));
+				$cropData['calcY1'] = $calcY1 = min($srcHeight, (int)($y1 * $scale));
 
-				$cropData['realWidth'] = $realWidth = max(min($srcWidth, $srcWidth-$realX1, (int)($width * $scale)), 0);
-				$cropData['realHeight'] = $realHeight = max(min($srcHeight, $srcHeight-$realY1, (int)($height * $scale)), 0);
+				$cropData['calcWidth'] = $calcWidth = max(min($srcWidth, $srcWidth-$calcX1, (int)($width * $scale)), 0);
+				$cropData['calcHeight'] = $calcHeight = max(min($srcHeight, $srcHeight-$calcY1, (int)($height * $scale)), 0);
 
 				$status = Yii::app()->image->load($imageFile)
-											->crop($realWidth, $realHeight, $realY1, $realX1)
+											->crop($calcWidth, $calcHeight, $calcY1, $calcX1)
 											->save($fullPath.$rename);
 
 				if($status){
