@@ -38,6 +38,7 @@ class CKEditorWidget extends CInputWidget
 	public function run()
 	{
 		//
+		Yii::app()->clientScript->registerCoreScript('jquery');
 		Yii::app()->clientScript->registerScriptFile($this->CKBasePath . 'ckeditor.js', CClientScript::POS_HEAD);
 		Yii::app()->clientScript->registerScriptFile($this->CKBasePath . 'adapters/jquery.js', CClientScript::POS_HEAD);
 		//
