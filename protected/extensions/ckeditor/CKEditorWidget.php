@@ -51,8 +51,14 @@ class CKEditorWidget extends CInputWidget
 			$adapter = '[name="' . $this->htmlOptions['class'] . '"]';
 		}
 
+		$config = array();
+
+		if(isset($this->config)){
+			$config = CMap::mergeArray($config, $this->config);
+		}
+
 		if($adapter){
-			Yii::app()->clientScript->registerScript(__CLASS__ . uniqid(), "$('{$adapter}').ckeditor();");
+			Yii::app()->clientScript->registerScript(__CLASS__ . uniqid(), "$('{$adapter}').ckeditor(".CJavaScript::encode($config).");");
 		}
 	}
 }
