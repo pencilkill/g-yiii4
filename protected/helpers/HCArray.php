@@ -221,7 +221,7 @@ class HCArray {
 						// Arrays are merged recursively
 						$result[$key] = self::merge($result[$key], $val);
 					}
-					elseif (is_int($key))
+					elseif (is_numeric($key))
 					{
 						// Indexed arrays are appended
 						array_push($result, $val);
@@ -331,87 +331,38 @@ class HCArray {
 	 * array by the values from the $indexKey column in the input array.
 	 *
 	 * @param array $input A multi-dimensional array (record set) from which to pull
-	 *                     a column of values.
+	 *  a column of values.
 	 * @param mixed $columnKey The column of values to return. This value may be the
-	 *                         integer key of the column you wish to retrieve, or it
-	 *                         may be the string key name for an associative array.
+	 * 	integer key of the column you wish to retrieve, or it
+	 *  may be the string key name for an associative array.
 	 * @param mixed $indexKey (Optional.) The column to use as the index/keys for
-	 *                        the returned array. This value may be the integer key
-	 *                        of the column, or it may be the string key name.
+	 *  the returned array. This value may be the integer key
+	 *  of the column, or it may be the string key name.
 	 * @return array
 	 */
-	public static function pluck(array $array = NULL, $columnKey = NULL, $indexKey = NULL)
+	public static function pluck(array $array, $columnKey, $indexKey = NULL)
 	{
-		// Using func_get_args() in order to check for proper number of
-		// parameters and trigger errors exactly as the built-in array_column()
-		// does in PHP 5.5.
-		$args = func_num_args();
-		$params = func_get_args();
-
-		if ($args < 2) {
-			trigger_error(__METHOD__ . '() expects at least 2 parameters, ' . $args . ' given', E_USER_WARNING);
-			return null;
-		}
-
-		if (!is_array($params[0])) {
-			trigger_error(__METHOD__ . '() expects parameter 1 to be array, ' . gettype($params[0]) . ' given', E_USER_WARNING);
-			return null;
-		}
-
-		if (!is_int($params[1])
-		&& !is_float($params[1])
-		&& !is_string($params[1])
-		&& $params[1] !== null
-		&& !(is_object($params[1]) && method_exists($params[1], '__toString'))
-		) {
-			trigger_error(__METHOD__ . '(): The column key should be either a string or an integer', E_USER_WARNING);
-			return false;
-		}
-
-		if (isset($params[2])
-		&& !is_int($params[2])
-		&& !is_float($params[2])
-		&& !is_string($params[2])
-		&& !(is_object($params[2]) && method_exists($params[2], '__toString'))
-		) {
-			trigger_error(__METHOD__ . '(): The index key should be either a string or an integer', E_USER_WARNING);
-			return false;
-		}
-
-		$params[1] = ($params[1] !== null) ? (string) $params[1] : null;
-
-		if (isset($params[2])) {
-			if (is_float($params[2]) || is_int($params[2])) {
-				$params[2] = (int) $params[2];
-			} else {
-				$params[2] = (string) $params[2];
-			}
-		}
-
 		$result = array();
 
-		foreach ($params[0] as $row) {
+		foreach ($array as $row){
 
 			$key = $value = null;
 			$keySet = $valueSet = false;
 
-			if ($params[2] !== null && array_key_exists($params[2], $row)) {
+			if ($indexKey !== null && array_key_exists($indexKey, $row)){
 				$keySet = true;
-				$key = (string) $row[$params[2]];
+				$key = (string) $row[$indexKey];
 			}
 
-			if ($params[1] === null) {
+			if (is_array($row) && array_key_exists($columnKey, $row)){
 				$valueSet = true;
-				$value = $row;
-			} elseif (is_array($row) && array_key_exists($params[1], $row)) {
-				$valueSet = true;
-				$value = $row[$params[1]];
+				$value = $row[$columnKey];
 			}
 
-			if ($valueSet) {
-				if ($keySet) {
+			if($valueSet){
+				if ($keySet){
 					$result[$key] = $value;
-				} else {
+				} else{
 					$result[] = $value;
 				}
 			}
@@ -432,22 +383,9 @@ class HCArray {
 	 */
 	public static function values(array $array)
 	{
-		$args = func_num_args();
-		$params = func_get_args();
-
-		if ($args < 1) {
-			trigger_error(__METHOD__. '() expects at least 1 parameter, ' . $args . ' given', E_USER_WARNING);
-			return false;
-		}
-
-		if (!is_array($params[0])) {
-			trigger_error(__METHOD__. '() expects parameter 1 to be array, ' . gettype($params[0]) . ' given', E_USER_WARNING);
-			return false;
-		}
-
 		$result = array();
 
-		array_walk_recursive($params[0], function($val, $key) use(&$result){$result[] = $val;});
+		array_walk_recursive($array, function($val, $key) use(&$result){$result[] = $val;});
 
 		return $result;
 	}
@@ -456,62 +394,17 @@ class HCArray {
 	 * @author Sam@ozchamp.net
 	 *
 	 * @param $array
-	 * @param $maxDepth
 	 * @param $leftSymbol
 	 * @param $rightSymbol
 	 * @param $prefix
-	 *
-	 * @example
-	 	$_POST['example'][2][7]['c'] = 'lemon';
-		$_POST['example'][2][7]['a'] = 'lemon1';
-		$_POST['example'][3][7]['b'] = 'lemon2';
-		$_POST['example'][3][7]['d'] = 'lemon3';
-		print_r(flatten($_POST['example']));
-	 *
 	 */
-	public static function flatten(array $array = NULL, string $leftSymbol = NULL, string $rightSymbol = NULL, string $prefix = NULL){
-		$args = func_num_args();
-		$params = func_get_args();
-
-		if ($args < 1) {
-			trigger_error(__METHOD__ . '() expects at least 1 parameter, ' . $args . ' given', E_USER_WARNING);
-			return false;
-		}
-
-		if (!is_array($params[0])) {
-			trigger_error(__METHOD__ . '() expects parameter 1 to be array, ' . gettype($params[0]) . ' given', E_USER_WARNING);
-			return false;
-		}
-
-
-		if(!isset($params[1]) || is_null($params[1])){
-			$params[1] = '[';
-		}else{
-			$params[1] = (string)$params[1];
-		}
-
-		if(!isset($params[2]) || is_null($params[2])){
-			$params[2] = ']';
-		}else{
-			$params[2] = (string)$params[2];
-		}
-
-		if(!isset($params[3]) || is_null($params[3])){
-			$params[3] = '';
-		}else{
-			$params[3] = (string)$params[3];
-		}
-
-		return self::_flatten($params[0], $params[1], $params[2], $params[3]);
-	}
 	//
-	private static function _flatten(array $array, $leftSymbol = '[', $rightSymbol = ']', $prefix = ''){
+	public static function flatten(array $array, $leftSymbol = '[', $rightSymbol = ']', $prefix = ''){
 		$results = array();
 
-	     foreach ($array as $key => $value)
-	     {
+	     foreach ($array as $key => $value){
 	         if(is_array($value)){
-	             $results = array_merge($results, self::_flatten($value, $leftSymbol, $rightSymbol, $prefix . $leftSymbol . $key . $rightSymbol));
+	             $results = array_merge($results, self::flatten($value, $leftSymbol, $rightSymbol, $prefix . $leftSymbol . $key . $rightSymbol));
 	         }else{
 	         	 // keep last key
 	             $results[$prefix][$key] = $value;
@@ -521,47 +414,25 @@ class HCArray {
 	     return $results;
 	}
 	/**
-	 * Array differ associate recursive
+	 * Array diff key recursive
 	 *
 	 * @param $array1, Array
 	 * @param $array2, Array
 	 */
-	public static function diff_assoc(array $array1, array $array2) {
-		$args = func_num_args();
-		$params = func_get_args();
-
-		if ($args < 2) {
-			trigger_error(__METHOD__ . '() expects at least 2 parameter, ' . $args . ' given', E_USER_WARNING);
-			return false;
-		}
-
-		if (!is_array($params[0])) {
-			trigger_error(__METHOD__ . '() expects parameter 1 to be array, ' . gettype($params[0]) . ' given', E_USER_WARNING);
-			return false;
-		}
-
-		if (!is_array($params[1])) {
-			trigger_error(__METHOD__ . '() expects parameter 2 to be array, ' . gettype($params[1]) . ' given', E_USER_WARNING);
-			return false;
-		}
-
-	    return self::_diff_assoc($params[0], $params[1]);
-	}
-	//
-	private static function _diff_assoc(array $array1, array $array2) {
+	public static function diff_key(array $array1, array $array2){
 		$difference=array();
-	    foreach($array1 as $key => $value) {
-	        if(is_array($value)) {
-	            if(!isset($array2[$key]) || !is_array($array2[$key])) {
+	    foreach($array1 as $key => $value){
+	        if(is_array($value)){
+	            if(!isset($array2[$key]) || !is_array($array2[$key])){
 	                $difference[$key] = $value;
-	            } else {
-	                $new_diff = self::_diff_assoc($value, $array2[$key]);
+	            } else{
+	                $new_diff = self::diff_key($value, $array2[$key]);
 
 	                if(!empty($new_diff)){
 	                    $difference[$key] = $new_diff;
 	                }
 	            }
-	        } else if(!array_key_exists($key,$array2) || $array2[$key] !== $value ) {
+	        } else if(!array_key_exists($key,$array2) || $array2[$key] !== $value ){
 	            $difference[$key] = $value;
 	        }
 	    }
@@ -588,5 +459,21 @@ class HCArray {
 	    $right = self::quickSort($right);
 
 	    return $left + array($_key => $array[$_key]) + $right;	// preserve keys
+	}
+	/**
+	 * Array intersect key recursive
+	 *
+	 * @param $array1, Array
+	 * @param $array2, Array
+	 */
+	//
+	public static function intersect_key(array $array1, array $array2){
+		$array1 = array_intersect_key($array1, $array2);
+		foreach ($array1 as $key => &$value){
+			if (is_array($value)){
+				$value = self::intersect_key($value, $array2[$key]);
+			}
+		}
+		return $array1;
 	}
 } // End arr
