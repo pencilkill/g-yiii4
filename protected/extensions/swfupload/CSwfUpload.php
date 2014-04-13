@@ -197,7 +197,7 @@ class CSwfUpload extends CWidget
     		// As relation
     		list($class, $pk, $relationName) = explode('.', $this->photos);
 
-    		if($class && $pk && $relationName && $class instanceof CActiveRecord && ($model = $class::model()->findByPk($pk))){
+    		if($class && $pk && $relationName && class_exists($class) && $class instanceof CActiveRecord && ($model = $class::model()->findByPk($pk))){
     			$relations = $model->relations();
 
     			if(array_key_exists($relationName, $relations)){
