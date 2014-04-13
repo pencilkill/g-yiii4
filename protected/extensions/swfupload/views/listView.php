@@ -10,12 +10,11 @@
     <tr>
     	<td></td>
     	<td>
-		    <div id="divFileProgressContainer<?php echo $id?>" class="swfupload_divFileProgressContainer" style="height: 75px;"></div>
+		    <div id="divFileProgressContainer<?php echo $id?>" class="swfupload_divFileProgressContainer"></div>
 			<?php
 				$this->widget('zii.widgets.jui.CJuiSortable', array(
 					'items' => $items,
-		//			'tagName' => 'ul',
-		//			'itemTemplate' => '<li id="{id}">{content}</li>',
+					'tagName' => 'ul',
 					'itemTemplate' => '{content}',
 					'options' => array(
 						'cursor' => 'crosshair',
@@ -32,7 +31,7 @@
 						}',
 					),
 					'htmlOptions' => array(
-						'id' => 'thumbnails',
+						'id' => 'thumbnails'.$id,
 						'style' => 'margin: 0px; padding: 0px;',
 						'class' => 'images-sortable'
  					),

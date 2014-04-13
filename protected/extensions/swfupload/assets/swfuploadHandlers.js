@@ -26,8 +26,6 @@ function fileQueueError(file, errorCode, message) {
 			break;
 		}
 
-		addImage(imagesDir + '/' + imageName);
-
 	} catch (ex) {
 		this.debug(ex);
 	}
@@ -35,17 +33,14 @@ function fileQueueError(file, errorCode, message) {
 }
 
 function fileDialogComplete(numFilesSelected, numFilesQueued) {
-	canStart = true;	// default true
-	// trigger loginRequiredAjaxResponse, YII_LOGIN_REQUIRED
-	if (this.customSettings.hasOwnProperty('loginRequiredAjaxResponse') && this.customSettings.hasOwnProperty('loginRequiredReturnUrl')){
-		var url = this.customSettings.loginRequiredReturnUrl;	// Yii returnUrl enabled   			
-		
-		yii_login_required = this.customSettings.loginRequiredAjaxResponse; 
-		
-		jQuery.ajax({url:url, async: false}).done(function(data, status, xhr){canStart = (xhr.responseText != yii_login_required); });
+	var yiiLoginRequired = false;
+	if(this.customSettings.hasOwnProperty('yiiLoginRequired') && typeof this.customSettings.yiiLoginRequired === 'function'){
+		yiiLoginRequired = this.customSettings.yiiLoginRequired();
 	}
 	
-	if(canStart){
+	if(yiiLoginRequired){
+		this.stopUpload();
+	}else{
 		try {
 			if (numFilesQueued > 0) {
 				this.startUpload();
@@ -53,8 +48,6 @@ function fileDialogComplete(numFilesSelected, numFilesQueued) {
 		} catch (ex) {
 			this.debug(ex);
 		}
-	}else{
-		this.stopUpload();
 	}
 }
 
@@ -62,7 +55,7 @@ function uploadProgress(file, bytesLoaded) {
 
 	try {
 		var percent = Math.ceil((bytesLoaded / file.size) * 100);
-
+		console.log(this.customSettings.upload_target);
 		var progress = new FileProgress(file,  this.customSettings.upload_target);
 		progress.setProgress(percent);
 		if (percent === 100) {
@@ -86,17 +79,20 @@ function uploadSuccess(file, serverData) {
 		if (serverData.substring(0, 7) === "FILEID:") {
 			
 			var data = eval('(' + serverData.substring(7) + ')');
-
-			if(this.customSettings.thumb_url){
-				data.thumbSrc = this.customSettings.thumb_url + '&id=' + data.fileid;
+			
+			var filesContainer = 'thumbnails';
+			
+			if(this.customSettings.hasOwnProperty('filesContainer')){
+				filesContainer = this.customSettings.filesContainer;
 			}
 			
-			addImage(data);
+			if(data.hasOwnProperty('imageView')){
+				document.getElementById(filesContainer).innerHTML += data.imageView;
+			}
 
 			progress.setStatus("Thumbnail Created.");
 			progress.toggleCancel(false);
 		} else {
-			addImage(imagesDir + '/' + 'error.gif');
 			progress.setStatus("Error.");
 			progress.toggleCancel(false);
 			alert(serverData);
@@ -158,9 +154,6 @@ function uploadError(file, errorCode, message) {
 			alert(message);
 			break;
 		}
-
-		addImage(imagesDir + '/' + imageName);
-
 	} catch (ex3) {
 		this.debug(ex3);
 	}
@@ -168,8 +161,14 @@ function uploadError(file, errorCode, message) {
 }
 
 function addImage(data) {
+	var filesContainer = 'thumbnails';
+	
+	if(this.customSettings.hasOwnProperty('filesContainer')){
+		filesContainer = this.customSettings.filesContainer;
+	}
+	
 	if(data.hasOwnProperty('imageView')){
-		document.getElementById("thumbnails").innerHTML += data.imageView;
+		document.getElementById(filesContainer).innerHTML += data.imageView;
 	}
 }
 
@@ -252,10 +251,12 @@ function FileProgress(file, targetID) {
 
 		document.getElementById(targetID).appendChild(this.fileProgressWrapper);
 		fadeIn(this.fileProgressWrapper, 0);
-
 	} else {
 		this.fileProgressElement = this.fileProgressWrapper.firstChild;
 		this.fileProgressElement.childNodes[1].firstChild.nodeValue = file.name;
+		
+		document.getElementById(targetID).appendChild(this.fileProgressWrapper);
+		fadeIn(this.fileProgressWrapper, 0);
 	}
 
 	this.height = this.fileProgressWrapper.offsetHeight;

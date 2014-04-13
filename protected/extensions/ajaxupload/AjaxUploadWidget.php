@@ -12,6 +12,9 @@ class AjaxUploadWidget extends CInputWidget
 
 	const AJAX_SCENARIO = __CLASS__;
 
+	const AJAX_BUTTION_SUFFIX = '_button';
+	const AJAX_PREVIEW_SUFFIX = '_preview';
+
 	// model information for validate file, no required
 	public $params = array();
 

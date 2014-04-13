@@ -26,7 +26,11 @@ class CSwfUpload extends CWidget
 	 */
 	public $photos;
 	/*
-	 * $pic, the image attribute to show
+	 * $model, the image model, cause the photos can be empty array,
+	 */
+	public $model;
+	/*
+	 * $attribute, the image attribute to show
 	 */
 	public $attribute = 'pic';
 	/*
@@ -64,10 +68,38 @@ class CSwfUpload extends CWidget
 		'master'=>Image::AUTO
 	);
 
+	public function init(){
+		parent::init();
+
+		if(empty($this->model)){
+			throw new CHttpException(500,'"model" have to be set!');
+		}
+
+		if(empty($this->attribute)){
+			throw new CHttpException(500,'"attribute" have to be set!');
+		}
+
+		// thumb
+		$this->thumb = CMap::mergeArray(array('width'=>120, 'height'=>120, 'master'=>Image::AUTO), $this->thumb);
+		// attribute
+		$this->attributes = $this->normalizeAttribute($this->attributes);
+		// photos
+		$this->photos = $this->photos();
+
+		if(empty($this->listView)){
+			$this->listView = self::LIST_VIEW;
+		}
+		if(empty($this->imageView)){
+			$this->imageView = self::IMAGE_VIEW;
+		}
+	}
+
     public function run()
     {
 		$assets = dirname(__FILE__).'/assets';
         $baseUrl = Yii::app()->assetManager->publish($assets);
+        // use jqery helper
+		Yii::app()->clientScript->registerCoreScript('jquery');
 		Yii::app()->clientScript->registerScriptFile($baseUrl . '/swfupload.js', CClientScript::POS_HEAD);
 		Yii::app()->clientScript->registerCssFile($baseUrl . '/default.css');
 		if(isset($this->jsHandlerUrl))
@@ -84,14 +116,30 @@ class CSwfUpload extends CWidget
 			'flash_url' => $baseUrl. '/swfupload.swf',
             'post_params' => array(
             	'PHPSESSID' => session_id(),
+            	'model' => CHtml::modelName($this->model),
             	'attribute' => $this->attribute,
-            	//'languages' => CHtml::listData($this->controller->languages, 'language_id', 'code'),
+            	'attributes' => $this->attributes,
+            	'thumb' => $this->thumb,
+            	//'languages' => CHtml::listData(Yii::app()->controller->languages, 'language_id', 'code'),
             ),
             'custom_settings' => array(
             	'assets'=>$baseUrl,
-            	'loginRequiredAjaxResponse' => Yii::app()->user->loginRequiredAjaxResponse,
-            	'loginRequiredReturnUrl' => CHtml::normalizeUrl(array('site/index')),
+            	'filesContainer' => 'thumbnails'.$id,
+            	'upload_target'=>'divFileProgressContainer'.$id,
+            	'yiiLoginRequired' => "js:function(){
+					var _yiiLoginRequired = false;
+
+					jQuery.ajax({
+						url:'".CHtml::normalizeUrl(array('site/index'))."',
+						async: false
+					}).done(function(data, status, xhr){
+						_yiiLoginRequired = (xhr.responseText === '".Yii::app()->user->loginRequiredAjaxResponse."');
+					});
+
+					return _yiiLoginRequired;
+            	}",
             ),
+		   	'button_placeholder_id'=>'swfupload'.$id,
             'file_post_name' => self::FILE_POST_NAME,
             'file_size_limit' => '2 MB',
 			'use_query_string'=>false,
@@ -104,8 +152,6 @@ class CSwfUpload extends CWidget
 		   	'upload_error_handler'=>'js:uploadError',
 		   	'upload_success_handler'=>'js:uploadSuccess',
 		   	'upload_complete_handler'=>'js:uploadComplete',
-		   	'custom_settings'=>array('upload_target'=>'divFileProgressContainer'.$id),
-		   	'button_placeholder_id'=>'swfupload'.$id,
 		   	'button_width'=>200,
 		   	'button_height'=>25,
 		   	'button_text'=>'<span class="button">'.Yii::t('app', 'Select A Image').'(2 MB Max)</span>',
@@ -117,55 +163,14 @@ class CSwfUpload extends CWidget
 			'debug'=>false,
 		);
 
-		// thumb
-		$thumb = CMap::mergeArray(array('width'=>120, 'height'=>120, 'master'=>Image::AUTO), $this->thumb);
-		$config['post_params']['thumb'] = $thumb;
-		// attribute
-		$attributes = $this->normalizeAttribute($this->attributes);
-		$config['post_params']['attributes'] = $attributes;
-
-
 		$config = CMap::mergeArray($config, $this->config);
 		$config = CJavaScript::encode($config);
-
+		//
 		Yii::app()->getClientScript()->registerScript($id, "var {$id}; {$id} = new SWFUpload($config);");
 
-		$listView = $this->listView ? $this->listView : self::LIST_VIEW;
-		$imageView = $this->imageView ? $this->imageView : self::IMAGE_VIEW;
+		$items= $this->items();
 
-		$items= array();
-
-		if($this->photos){
-			$photos = $this->photos();
-
-			$fullPath = Yii::getPathOfAlias('webroot').'/';
-
-			$photo = null;
-
-			foreach ($photos as $image) {
-				if($photo == null) $photo = $image;
-
-				if( ! is_file($fullPath . $image->{$this->attribute})) continue;
-				// thumb
-				$src = Yii::app()->image->load($fullPath.$image->pic)
-						->resize($thumb['width'], $thumb['height'], $thumb['master'])
-						->cache();
-
-				$index = uniqid();
-
-				$data = array(
-					'src'=>$src,
-					'image'=>$image,
-					'index'=>$index,
-					'thumb' => $thumb,
-					'attributes' => $attributes,
-				);
-
-				$items[CHtml::modelName($image) . '_item_' . $index] = $this->render($imageView, $data, true);
-			}
-		}
-
-		$this->render($listView,array(
+		$this->render($this->listView,array(
 			'id' => $id,
 			'items' => $items,
 		));
@@ -175,13 +180,18 @@ class CSwfUpload extends CWidget
     protected function photos(){
     	$photos = array();
 
+    	$modelName = CHtml::modelName($this->model);
+
     	if(is_array($this->photos)){
+    		// check instanceof ???
     		$photos = $this->photos;
     	}elseif(is_object($this->photos)){
-    		if($this->photos instanceof CActiveRecord){
+    		if($this->photos instanceof $modelName){
     			$photos = array($this->photos);
     		}elseif($this->photos instanceof CDbCriteria){
-    			// todo
+    			$criteria = $this->photos;
+
+    			$photos = $modelName::model()->findAll($criteria);
     		}
     	}elseif(is_string($this->photos) && strpos($this->photos, '.')){
     		// As relation
@@ -195,16 +205,61 @@ class CSwfUpload extends CWidget
     			if(array_key_exists($relationName, $relations)){
     				$relation = $relations[$relationName];
 
-    				if($relation[0] === CActiveRecord::HAS_ONE || $relation[0] === CActiveRecord::BELONGS_TO){
-    					$photos = array($model->{$relationName});
-    				}elseif($relation[0] === CActiveRecord::HAS_MANY || $relation[0] === CActiveRecord::MANY_MANY){
-    					$photos = $model->{$relationName};
+    				if(isset($relation[0], $relation[1])){
+	    				$relationModelName = isset($relation[1]) ? $relation[1] : '';
+
+	    				if($relationModelName === $modelName){
+		    				if($relation[0] === CActiveRecord::HAS_ONE || $relation[0] === CActiveRecord::BELONGS_TO){
+		    					$photos = array($model->{$relationName});
+		    				}elseif($relation[0] === CActiveRecord::HAS_MANY || $relation[0] === CActiveRecord::MANY_MANY){
+		    					$photos = $model->{$relationName};
+		    				}
+	    				}
     				}
     			}
     		}
     	}
 
     	return $photos;
+    }
+
+    protected function items($fullPath = null){
+    	$items = array();
+
+    	if(empty($fullPath)){
+    		$fullPath = Yii::getPathOfAlias('webroot').'/';
+    	}
+
+    	if($photos = $this->photos){
+    		$thumb = $this->thumb;
+    		$attributes = $this->attributes;
+    		$imageView = $this->imageView;
+
+	    	foreach ($photos as $image) {
+	    		$file =$fullPath . $image->{$this->attribute};;
+
+	    		if(!is_file($file)) continue;
+
+	    		// thumb
+	    		$src = Yii::app()->image->load($file)
+	    				->resize($thumb['width'], $thumb['height'], $thumb['master'])
+	    				->cache();
+
+	    		$index = uniqid();
+
+	    		$data = array(
+	    			'src'=>$src,
+	    			'image'=>$image,
+	    			'index'=>$index,
+	    			'thumb' => $thumb,
+	    			'attributes' => $attributes,
+	    		);
+
+	    		$items[CHtml::modelName($image) . '_item_' . $index] = $this->render($imageView, $data, true);
+	    	}
+    	}
+
+    	return $items;
     }
 
     protected function normalizeAttribute($attributes, $default = array('callback' => 'activeHiddenField', 'attribute' => '')){

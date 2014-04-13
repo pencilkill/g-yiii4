@@ -238,6 +238,8 @@
             name: 'userfile',
             // Additional data to send
             data: {},
+            // Custom setting
+            setting: {},
             // Submit file as soon as it's selected
             autoSubmit: true,
             // The type of data that you're expecting back from the server.
@@ -316,6 +318,9 @@
     AjaxUpload.prototype = {
         setData: function(data){
             this._settings.data = data;
+        },
+        setSetting: function(setting){
+        	this._settings.setting = setting;
         },
         disable: function(){            
             addClass(this._button, this._settings.disabledClass);

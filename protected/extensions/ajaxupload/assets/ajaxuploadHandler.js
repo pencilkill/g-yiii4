@@ -12,43 +12,58 @@
  */
 (function($){  
 
-	$.fn.ajaxUploadHandler=function(options) {	
-		function onChange(file, extension) {
+	$.fn.ajaxUploadHandler=function(options){	
+		function onChange(file, extension){
 			$('.ajaxUploadLoading').remove();
     		// check extension
 			
     		return true;
     	}
     	
-    	function onSubmit(file, extension) {
-    		var btn = $(this._button);
+    	function onSubmit(file, extension){
+    		var setting = this._settings.setting;
+
+    		var btn = null;
     		
-    		btn.after('<img src="' + this._settings.data.baseUrl + '/images/loading.gif" class="ajaxUploadLoading" style="padding-left: 5px;" />');
+    		if(setting.hasOwnProperty('btn')){
+    			btn = $('#' + setting.btn);
+    		}
+    		
+    		if(this._settings.setting.hasOwnProperty('baseUrl')){
+    			btn.after('<img src="' + this._settings.setting.baseUrl + '/images/loading.gif" class="ajaxUploadLoading" style="padding-left: 5px;"/>');
+    		}
+    	
     		btn.attr('disabled', true);
-    		
-    		canSubmit = true;	// default submit
-    		
-    		// trigger loginRequiredAjaxResponse, YII_LOGIN_REQUIRED
-    		if (this._settings.data.hasOwnProperty('loginRequiredAjaxResponse') && this._settings.data.hasOwnProperty('loginRequiredReturnUrl')){
-    			var url = this._settings.data.loginRequiredReturnUrl;	// Yii returnUrl enabled   			
-    			
-    			yii_login_required = this._settings.data.loginRequiredAjaxResponse; 
-    			
-    			$.ajax({url:url, async: false}).done(function(data, status, xhr){canSubmit = (xhr.responseText != yii_login_required); });
+    		  		
+    		var yiiLoginRequired = false;
+    		if(this._settings.setting.hasOwnProperty('yiiLoginRequired') && typeof this._settings.setting.yiiLoginRequired === 'function'){
+    			yiiLoginRequired = this._settings.setting.yiiLoginRequired();
     		}
 
-    		return canSubmit;
+    		return yiiLoginRequired === false;
     	}
     	
-    	function onComplete(file, json) {
+    	function onComplete(file, json){
     		// 'this' refers to the element's Ajaxupload, not the element
-    		var btn = $(this._button);
-    		var preview = $(btn.attr('previewId'));
-    		var hidden = $(btn.attr('hiddenId'));
+    		var setting = this._settings.setting;
+
+    		var btn = null, field = null, preview = null;
+    		
+    		if(setting.hasOwnProperty('btn')){
+    			btn = $('#' + setting.btn);
+    		}
+    		
+    		if(setting.hasOwnProperty('field')){
+    			field = $('#' + setting.field);
+    		}
+    		
+    		if(setting.hasOwnProperty('preview')){
+    			preview = $('#' + setting.preview);
+    		}
     		
     		btn.attr('disabled', false);
     		
-    		if (json['success']) {
+    		if (json['success']){
     			//alert(json['success']);
     			if(preview){
 	    			var tagName = preview.prop('tagName').toString().toUpperCase();
@@ -60,11 +75,12 @@
 	    			}
     			}
     			
-    			if(hidden){
-    				hidden.attr({'value':json.file});
+    			if(field){
+    				field.attr({'value':json.file});
     			}
     		}
-    		if (json['error']) {
+    		
+    		if (json['error']){
     			alert(json['error']);
     		}
     		
@@ -73,8 +89,11 @@
     	
 		var defaults = {
 				action: undefined,
-				data:{},
 				name: 'userfile',	// compatiable with Ajaxupload, be carefully to change this default setting
+				data:{},
+				setting:{
+					'btn':undefined
+				},
 				autoSubmit: true,
 				responseType: 'json',
 				onChange: onChange,
@@ -84,18 +103,10 @@
     	
     	var _options = $.extend({}, defaults, options);
     	
-        return this.each(function() {
-        	var btnId = _options.btnId ? _options.splice('btnId') : '#' + this.id + '_upload';	// remove after getting
-        	var previewId = _options.previewId ? _options.splice('previewId') : (this.previewId ? this.previewId : '#' + this.id + '_preview');
-        	var hiddenId = '#' + this.id;
-        	
-        	$(btnId).attr({
-        		'hiddenId':hiddenId,
-        		'previewId':previewId
-        	});
-
-        	if(_options.action){
-        		new AjaxUpload(btnId, _options);
+        return this.each(function(){
+        	//
+        	if(_options.action && _options.setting.btn){
+        		new AjaxUpload(_options.setting.btn, _options);
         	}else{
         		throw 'ajaUploadHanler: action for AjaxUpload is required!';
         	}

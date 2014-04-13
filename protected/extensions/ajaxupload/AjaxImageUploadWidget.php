@@ -45,6 +45,7 @@ class AjaxImageUploadWidget extends AjaxUploadWidget
     {
 		$assets = dirname(__FILE__).'/assets';
         $baseUrl = Yii::app()->assetManager->publish($assets);
+		Yii::app()->clientScript->registerCoreScript('jquery');
 		Yii::app()->clientScript->registerScriptFile($baseUrl . '/ajaxupload.js', CClientScript::POS_HEAD);
 		if(isset($this->jsHandlerUrl))
 		{
@@ -54,7 +55,7 @@ class AjaxImageUploadWidget extends AjaxUploadWidget
 		}
 
 		// default thumb setting
-		$imageCache = array('resize'=>array('width' => 120, 'height' => 120));
+		$imageCache = array('resize'=>array('width' => 120, 'height' => 120, 'master' => Image::AUTO));
 		$imageCache = CMap::mergeArray($imageCache, $this->imageCache);
 
 		// thumb
@@ -68,17 +69,35 @@ class AjaxImageUploadWidget extends AjaxUploadWidget
 		// imageSelect
 		$imageSelect = $this->imageSelect($fancyBox);
 
+		$setting = array(
+			'btn' => $this->htmlOptions['id'] . AjaxUploadWidget::AJAX_BUTTION_SUFFIX,
+			'field' => $this->htmlOptions['id'],
+			'preview' => $this->htmlOptions['id'] . AjaxUploadWidget::AJAX_PREVIEW_SUFFIX,
+			'baseUrl' => $baseUrl,
+			'yiiLoginRequired' => "js:function(){
+				var _yiiLoginRequired = false;
+
+				jQuery.ajax({
+					url:'".CHtml::normalizeUrl(array('site/index'))."',
+					async: false
+				}).done(function(data, status, xhr){
+					_yiiLoginRequired = (xhr.responseText === '".Yii::app()->user->loginRequiredAjaxResponse."');
+				});
+
+				return _yiiLoginRequired;
+			}",
+		);
+
 		//
 		$settings = array(
             'action' => CHtml::normalizeUrl(Yii::app()->createUrl('site/ajaxUpload')),
             'name' => self::AJAX_FILE_NAME,
             'data' => array(
 				'instanceName' => 'userfile',	// specified parameter name of getInstanceByName()
-				'baseUrl' => $baseUrl,
-				'loginRequiredAjaxResponse' => Yii::app()->user->loginRequiredAjaxResponse,
-            	'loginRequiredReturnUrl' => CHtml::normalizeUrl(array('site/index')),
+            	'resize' => $imageCache['resize'],
             	'params' => $this->params,
 			),
+			'setting' => $setting,
 			//'autoSubmit'=>true,
 			//'responseType'=>'json',
 		   	//'hoverClass'=>'hover',
@@ -90,10 +109,9 @@ class AjaxImageUploadWidget extends AjaxUploadWidget
 
 
 		$settings = CMap::mergeArray($settings, $this->settings);
-		$settings = CJavaScript::encode($settings);
 
 		// register id append $prefix to make sure unique
-		Yii::app()->getClientScript()->registerScript(__CLASS__.$this->htmlOptions['id'], "jQuery('#{$this->htmlOptions['id']}').ajaxUploadHandler($settings);");
+		Yii::app()->getClientScript()->registerScript(__CLASS__.$this->htmlOptions['id'], "jQuery('#{$this->htmlOptions['id']}').ajaxUploadHandler(".CJavaScript::encode($settings).");");
 
 		$this->render('image', array(
 			'name' => $this->name,
@@ -101,6 +119,7 @@ class AjaxImageUploadWidget extends AjaxUploadWidget
 			'htmlOptions' => $this->htmlOptions,
 			'preview' => $preview,
 			'previewX' => $previewX,
+			'setting' => $setting,
 			'resize' => $imageCache['resize'],
 			'fancyBox' => $fancyBox,
 			'imageSelect' => $imageSelect,
