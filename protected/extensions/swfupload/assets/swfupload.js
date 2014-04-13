@@ -298,7 +298,7 @@ SWFUpload.prototype.buildParamString = function () {
 		var recurse = function (cur, prop) {
 			if (Object(cur) !== cur) {
 				result[prop] = cur;
-			} else if (Array.isArray(cur)) {
+			} else if (Object.prototype.toString.call(cur) === '[object Array]') {
 				for(var i=0, l=cur.length; i<l; i++)
 					recurse(cur[i], prop + '[' + i + ']');
 				if (l == 0)
