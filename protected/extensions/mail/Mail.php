@@ -85,10 +85,6 @@ class Mail{
 	public function __call($method, $args){
 		$class = $this->_PHPMailer;
 
-		if(method_exists($this, $method)){
-			$class = $this;
-		}
-
 		$ref = new ReflectionMethod($class, $method);
 
 		return $ref->invokeArgs($class, $args);
