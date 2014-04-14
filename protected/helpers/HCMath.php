@@ -37,7 +37,7 @@
 class HCMath{
 
 	private static function _combine($base, &$result, $swap = array()){
-		if(empty($base)){
+		if(empty($base) || !is_array($base)){
 			$result[] = $swap;
 		}else{
 			for($i = sizeof($base) - 1; $i >= 0; --$i) {
