@@ -30,6 +30,12 @@ class Picture extends BasePicture
 					),
 				)
 			),
+			'CActiveRecordAssetBehavior' => array(
+				'class' => 'frontend.behaviors.CActiveRecordAssetBehavior',
+				'assets' => array(
+					'pic',
+				)
+			),
         ));
 	}
 

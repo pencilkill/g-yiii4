@@ -375,11 +375,7 @@ class SiteController extends Controller
 			$cropData['width'] = $width = (int)Yii::app()->request->getParam('width', NULL);
 			$cropData['height'] = $height = (int)Yii::app()->request->getParam('height', NULL);
 
-			if(($baseUrl = Yii::app()->getBaseUrl(true)) && strpos($src, Yii::app()->getBaseUrl(true)) === 0){
-				$src = substr($src, strlen($baseUrl));
-			}else if(($baseUrl = Yii::app()->getBaseUrl(false)) && strpos($src, Yii::app()->getBaseUrl(true)) === 0){
-				$src = substr($src, strlen($baseUrl));
-			}
+			$src = HCUrl::trim($src);
 
 			$imageFile = Yii::getPathOfAlias('webroot') . '/' . ltrim($src, '/');
 

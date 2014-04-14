@@ -51,5 +51,17 @@ class HCUrl {
 
 		return $params;
 	}
+	/**
+	 * Trim the base url to get the relative url based on webroot
+	 */
+	public static function trim($src){
+		if(($baseUrl = Yii::app()->getBaseUrl(true)) && strpos($src, Yii::app()->getBaseUrl(true)) === 0){
+			$src = substr($src, strlen($baseUrl));
+		}else if(($baseUrl = Yii::app()->getBaseUrl(false)) && strpos($src, Yii::app()->getBaseUrl(true)) === 0){
+			$src = substr($src, strlen($baseUrl));
+		}
+
+		return $src;
+	}
 }
 ?>

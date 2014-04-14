@@ -34,6 +34,14 @@ class BeforeRequestBehavior extends CBehavior
         // theme base on language
         //$this->setTheme($this->owner->language);
     }
+    /**
+     *	required to get language query string if urlManager enabled
+     */
+    public function parseUrl(){
+    	$pathInfo = $this->owner->getUrlManager()->parseUrl($this->owner->getRequest());
+
+    	$this->owner->getUrlManager()->parsePathInfo($pathInfo);
+    }
 	/**
 	 * language forceTranslation if using Yii::t()
 	 * @param boolean $isForce
@@ -123,14 +131,6 @@ class BeforeRequestBehavior extends CBehavior
 	 */
 	public function setTheme($theme=null){
 		$this->owner->theme = $theme;
-	}
-	/**
-	 *	required to get language query string if urlManager enabled
-	 */
-	public function parseUrl(){
-		$pathInfo = $this->owner->getUrlManager()->parseUrl($this->owner->getRequest());
-
-		$this->owner->getUrlManager()->parsePathInfo($pathInfo);
 	}
 }
 ?>
