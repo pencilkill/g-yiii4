@@ -8,6 +8,8 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
 	
+	config.baseHref = '';
+	config.basePath = 'ckeditor/';
 	config.filebrowserBrowseUrl = 'ckfinder/ckfinder.html.php';
 	config.filebrowserImageBrowseUrl = 'ckfinder/ckfinder.html.php?Type=Images';
 	config.filebrowserFlashBrowseUrl = 'ckfinder/ckfinder.html.php?Type=Flash';

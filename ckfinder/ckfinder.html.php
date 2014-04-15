@@ -139,6 +139,8 @@
 
 		var ckfinder = new CKFinder( config );
 
+		ckfinder.customConfig = '';
+
 		ckfinder.callback = function( api ) {
 			//
 			api.disableFolderContextMenuOption( 'CreateSubFolder', false );
