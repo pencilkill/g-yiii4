@@ -13,7 +13,7 @@
 
 <link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl?>/stylesheet/stylesheet.css" />
 <script type="text/javascript" src="<?php echo $this->skinUrl?>/javascript/jquery/tabs.js"></script>
-<script type="text/javascript" src="<?php echo $this->skinUrl?>/javascript/jquery/superfish/js/superfish.js"></script>
+<!-- <script type="text/javascript" src="<?php echo $this->skinUrl?>/javascript/jquery/superfish/js/superfish.js"></script> -->
 <script type="text/javascript" src="<?php echo $this->skinUrl?>/javascript/jquery/main.js"></script>
 <?php
     if (Yii::app()->user->loginRequiredAjaxResponse){
@@ -46,8 +46,8 @@
   	<?php
   		/**
   		 * @example
-  		 * <ul class="left" style="display: none;">
-  		 * <li id="example"><a href="http://www.google.com.hk/" class="top">Example</a>
+  		 * <ul class="left">
+  		 * <li id="example"><a href="http://www.google.com.hk/">Example</a>
   		 * 	<ul>
   		 * 		<li><a class="parent">SubItem<a/>
   		 * 			<ul>
@@ -59,109 +59,69 @@
   		 * 		<li><a href="http://www.google.com.hk/">SubItem</a></li>
   		 * 	</ul>
   		 * </li>
-  		 * <li><a href="http://www.google.com.hk/" class="top">SubItem</a></li>
+  		 * <li><a href="http://www.google.com.hk/">SubItem</a></li>
   		 * </ul>
   		 */
   	?>
-    <ul class="left" style="display: none;">
-      <li id="dashboard"><a href="<?php echo Yii::app()->homeUrl; ?>" class="top"><?php echo Yii::t('nav', 'Dashboard'); ?></a></li>
-      <li id="catalog"><a class="top"><?php echo Yii::t('nav', 'Catalog'); ?></a>
+    <ul class="left">
+      <li><a href="<?php echo Yii::app()->homeUrl; ?>"><?php echo Yii::t('nav', 'Dashboard'); ?></a></li>
+      <li><a><?php echo Yii::t('nav', 'Catalog'); ?></a>
         <ul>
           <li><a href="<?php echo Yii::app()->createUrl('category/index', array()); ?>"><?php echo Yii::t('nav', 'Category'); ?></a></li>
           <li><a href="<?php echo Yii::app()->createUrl('product/index', array()); ?>"><?php echo Yii::t('nav', 'Product'); ?></a></li>
         </ul>
       </li>
-	  <li id="news"><a href="<?php echo Yii::app()->createUrl('news/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'News'); ?></a></li>
-      <li id="information"><a href="<?php echo Yii::app()->createUrl('information/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Information'); ?></a></li>
-      <li id="pic"><a href="<?php echo Yii::app()->createUrl('picture/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Picture'); ?></a></li>
-      <li id="contact"><a href="<?php echo Yii::app()->createUrl('contact/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Contact'); ?></a></li>
-      <li id="customer"><a class="top"><?php echo Yii::t('nav', 'Customers'); ?></a>
+	  <li><a href="<?php echo Yii::app()->createUrl('news/index', array()); ?>"><?php echo Yii::t('nav', 'News'); ?></a></li>
+      <li><a href="<?php echo Yii::app()->createUrl('information/index', array()); ?>"><?php echo Yii::t('nav', 'Information'); ?></a></li>
+      <li><a href="<?php echo Yii::app()->createUrl('picture/index', array()); ?>"><?php echo Yii::t('nav', 'Picture'); ?></a></li>
+      <li><a href="<?php echo Yii::app()->createUrl('contact/index', array()); ?>"><?php echo Yii::t('nav', 'Contact'); ?></a></li>
+      <li><a><?php echo Yii::t('nav', 'Customers'); ?></a>
         <ul>
           <li><a href="<?php echo Yii::app()->createUrl('customer/index', array()); ?>"><?php echo Yii::t('nav', 'Customer'); ?></a></li>
           <li><a href="<?php echo Yii::app()->createUrl('customerGroup/index', array()); ?>"><?php echo Yii::t('nav', 'CustomerGroup'); ?></a></li>
         </ul>
       </li>
-      <li id="admin"><a href="<?php echo Yii::app()->createUrl('admin/index', array()); ?>" class="top"><?php echo Yii::t('nav', 'Admin'); ?></a></li>
-      <li id="system"><a class="top"><?php echo Yii::t('nav', 'System'); ?></a>
+      <li><a href="<?php echo Yii::app()->createUrl('admin/index', array()); ?>"><?php echo Yii::t('nav', 'Admin'); ?></a></li>
+      <li><a><?php echo Yii::t('nav', 'System'); ?></a>
         <ul>
           <li><a href="<?php echo Yii::app()->createUrl('admin/account', array()); ?>"><?php echo Yii::t('nav', 'Account'); ?></a></li>
           <li><a href="<?php echo Yii::app()->createUrl('setting/index', array()); ?>"><?php echo Yii::t('nav', 'Setting'); ?></a></li>
-          <li style="display:none;"><a href="<?php echo Yii::app()->createUrl('setting/asset', array()); ?>"><?php echo Yii::t('nav', 'Asset'); ?></a></li>
+          <li><a href="<?php echo Yii::app()->createUrl('setting/asset', array()); ?>"><?php echo Yii::t('nav', 'Asset'); ?></a></li>
         </ul>
       </li>
     </ul>
     <ul class="right">
-      <li id="store"><a onclick="window.open('<?php echo Yii::app()->baseUrl; ?>');" class="top"><?php echo Yii::t('nav', 'Site Frontend'); ?></a></li>
-      <li id="exit"><a class="top" href="<?php echo Yii::app()->createUrl('site/logout', array()); ?>"><?php echo Yii::t('nav', 'Exit System'); ?></a></li>
+      <li><a onclick="window.open('<?php echo Yii::app()->baseUrl; ?>');"><?php echo Yii::t('nav', 'Site Frontend'); ?></a></li>
+      <li><a href="<?php echo Yii::app()->createUrl('site/logout', array()); ?>"><?php echo Yii::t('nav', 'Exit System'); ?></a></li>
     </ul>
-    <script type="text/javascript">
-    jQuery(function($) {
-	$('#menu > ul').superfish({
-		hoverClass	 : 'sfHover',
-		pathClass	 : 'overideThisToUse',
-		delay		 : 0,
-		animation	 : {height: 'show'},
-		speed		 : 'normal',
-		autoArrows   : false,
-		dropShadows  : false,
-		disableHI	 : false, /* set to true to disable hoverIntent detection */
-		onInit		 : function(){},
-		onBeforeShow : function(){},
-		onShow		 : function(){},
-		onHide		 : function(){}
-	});
+	<script type="text/javascript">
+		jQuery(function($) {
+			route = getURLVar('r');
 
-	$('#menu > ul').css('display', 'block');
-});
+			if (!route) {
+				$('#dashboard').addClass('selected');
+			} else {
+				prefix = '#menu a:regex(href, .*?[\?\&]?r[^=]*\=[^=]*';
+				suffix = '[\?\&]?.*)';
 
-function getURLVar(urlVarName) {
-	var urlHalves = String(document.location).toLowerCase().split('?');
-	var urlVarValue = '';
+				part = route.split('/');
 
-	if (urlHalves[1]) {
-		var urlVars = urlHalves[1].split('&');
-
-		for (var i = 0; i <= (urlVars.length); i++) {
-			if (urlVars[i]) {
-				var urlVarPair = urlVars[i].split('=');
-
-				if (urlVarPair[0] && urlVarPair[0] == urlVarName.toLowerCase()) {
-					urlVarValue = urlVarPair[1];
+				o = $(prefix + part.join('/') + suffix);
+				try{
+					do{
+						o = $(prefix + part.join('/') + suffix);
+						part.pop();
+					}while(part.length && !o.length);
+				}catch(e){
+					//
+				}finally{
+					if(o.length){
+						o.first().closest('#menu > ul > li').addClass('selected');
+					}
 				}
 			}
-		}
-	}
-
-	return urlVarValue;
-}
-
-jQuery(function($) {
-	route = getURLVar('r');
-
-	if (!route) {
-		$('#dashboard').addClass('selected');
-	} else {
-		prefix = '#menu a:regex(href, .*?[\?\&]?r[^=]*\=[^=]*';
-		suffix = '[\?\&]?.*)';
-
-		part = route.split('/');
-
-		o = $(prefix + part.join('/') + suffix);
-		try{
-			do{
-				o = $(prefix + part.join('/') + suffix);
-				part.pop();
-			}while(part.length && !o.length);
-		}catch(e){
-			//
-		}finally{
-			if(o.length){
-				o.first().parents('li[id]').addClass('selected');
-			}
-		}
-	}
-});
-</script>
+		});
+	</script>
   </div>
   <?php endif; ?>
 </div>
