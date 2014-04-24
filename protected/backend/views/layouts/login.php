@@ -11,6 +11,7 @@
 <?php Yii::app()->clientScript->registerCoreScript('jquery');?>
 <title><?php echo $this->pageTitle; ?></title>
 <link rel="stylesheet" type="text/css" href="<?php echo $this->skinUrl?>/stylesheet/stylesheet.css" />
+<style type="text/css">body, #container, #content{min-width: 100%;}</style>
 </head>
 <body>
 <div id="container">
