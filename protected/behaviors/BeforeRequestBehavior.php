@@ -31,7 +31,13 @@ class BeforeRequestBehavior extends CBehavior
         $this->setMultiLanguage();
         // forece translation
         $this->setTranslation(true);
-        // theme base on language
+        /*
+         *  theme base on language
+         *
+         *	or using 'File Translation' view file, e.g
+         *  views/site/index.php for sourceLanguage while views/site/zh_tw/index.php for language 'zh_tw'
+         *  File Translation support different something like image(s) for different language, not only 'Message Translation'
+         */
         //$this->setTheme($this->owner->language);
     }
     /**

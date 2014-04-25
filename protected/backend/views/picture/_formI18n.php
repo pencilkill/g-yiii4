@@ -82,8 +82,8 @@
 				echo $this->renderPartial(
 					'_swfupload',
 					array(
-						'gallery' => $gallery,
-						'galleries' => $galleries,
+						'photo' => $photo,
+						'photos' => $photos,
 					),
 					true
 				);
