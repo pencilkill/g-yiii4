@@ -98,7 +98,7 @@ class SiteController extends Controller
 
 	/**
 	 * swfuplod
-	 * @author sam@ozchamp.net
+	 * @author @author Sam <mail.song.de.qiang@gmail.com> <mail.song.de.qiang@gmail.com>
 	 * @see ext.swfupload.handler.js
 	 */
 	public function actionSwfUpload()
@@ -244,7 +244,7 @@ class SiteController extends Controller
 
 	/**
 	 * ajaxupload
-	 * @author sam@ozchamp.net
+	 * @author @author Sam <mail.song.de.qiang@gmail.com> <mail.song.de.qiang@gmail.com>
 	 * @see ext.ajaxupload.handler.js
 	 */
 	public function actionAjaxUpload()
@@ -357,7 +357,7 @@ class SiteController extends Controller
 
 	/**
 	 * ajaxcrop
-	 * @author sam@ozchamp.net
+	 * @author @author Sam <mail.song.de.qiang@gmail.com> <mail.song.de.qiang@gmail.com>
 	 * @see ext.imageselect
 	 */
 	public function actionAjaxCrop(){

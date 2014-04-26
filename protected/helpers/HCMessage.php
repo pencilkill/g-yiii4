@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @author Sam@ozchamp.net
+ * @author @author Sam <mail.song.de.qiang@gmail.com> <mail.song.de.qiang@gmail.com>
  * This class manage to generate translation file based on 'yiic message ...' console command
  */
 class HCMessage{

@@ -141,7 +141,7 @@ class RGenerator extends CApplicationComponent
 		//$items['modules'] = $this->getControllersInModules($basePath);
 		/**
 		 * fix Yii::app()->basePath alias frontend for backend application
-		 * update by Sam@ozchamp.net
+		 * update by Sam <mail.song.de.qiang@gmail.com>
 		 */
 		$items['controllers'] = $this->getControllersInPath(Yii::app()->getControllerPath());
 		$items['modules'] = $this->getControllersInModules(Yii::app()->getModulePath());

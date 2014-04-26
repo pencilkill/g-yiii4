@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Sam@ozchamp.net
+ * @author @author Sam <mail.song.de.qiang@gmail.com> <mail.song.de.qiang@gmail.com>
  * @copyright www.ozchamp.net
  * @version 1.0
  *

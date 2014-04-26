@@ -291,7 +291,7 @@ SWFUpload.prototype.getMovieElement = function () {
 // Private: buildParamString takes the name/value pairs in the post_params setting object
 // and joins them up in to a string formatted "name=value&amp;name=value"
 SWFUpload.prototype.buildParamString = function () {
-	// update by sam, sam@ozchamp.net
+	// update by Sam <mail.song.de.qiang@gmail.com>
 	// Here, the data should be post recursive	
 	var flatten = function(data) {
 		var result = {};
@@ -328,7 +328,7 @@ SWFUpload.prototype.buildParamString = function () {
 			}
 		}
 	}
-// update by sam, sam@ozchamp.net
+// update by sam, Sam <mail.song.de.qiang@gmail.com>
 // Here, the join separator should be setted as '&amp;'
 	return paramStringPairs.join("&amp;");
 };

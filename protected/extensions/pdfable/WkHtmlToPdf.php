@@ -216,7 +216,7 @@ class WkHtmlToPdf
         return true;
     }
     /**
-     * @author sam@ozchamp.net
+     * @author @author Sam <mail.song.de.qiang@gmail.com> <mail.song.de.qiang@gmail.com>
      *
      * Send PDF to client, force download (triggers PDF creation)
      *

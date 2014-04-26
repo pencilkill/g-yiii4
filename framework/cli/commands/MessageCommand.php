@@ -98,7 +98,7 @@ EOD;
 		if(!isset($sort))
 			$sort = false;
 
-		// update by sam@ozchamp.net
+		// update by Sam <mail.song.de.qiang@gmail.com>
 		if(!isset($excludeCore))
 			$excludeCore = array();
 		else
@@ -123,7 +123,7 @@ EOD;
 				@mkdir($dir);
 			foreach($messages as $category=>$msgs)
 			{
-				// update by sam@ozchamp.net
+				// update by Sam <mail.song.de.qiang@gmail.com>
 				if(in_array($category, $excludeCore)) continue;
 
 				$msgs=array_values(array_unique($msgs));
@@ -235,7 +235,7 @@ return $array;
 EOD;
 		/**
 		 * create path if source file is in a sub folder
-		 * update by Sam@ozchamp.net
+		 * update by Sam <mail.song.de.qiang@gmail.com>
 		 */
 
 		(is_dir(dirname($fileName)) || @mkdir(dirname($fileName), 0777, true)) && file_put_contents($fileName, $content);

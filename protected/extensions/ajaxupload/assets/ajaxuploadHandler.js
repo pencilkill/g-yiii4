@@ -5,7 +5,7 @@
  * Notice: ajaxUploadHandler selector is a field element which used for keeping the AjaxUpload return value while that AjaxUpload selector is a button element for upload file 
  * 
  * 2013-07-20
- * @author Sam@ozchamp.net
+ * @author Sam <mail.song.de.qiang@gmail.com>
  * @base jQuery
  * @version 1.0
  * 

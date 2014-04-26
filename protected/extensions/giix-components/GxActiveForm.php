@@ -44,7 +44,7 @@ class GxActiveForm extends CActiveForm {
 
 	/**
 	 * conbine validate(), validateTabular()
-	 * @author sam@ozchamp.net
+	 * @author @author Sam <mail.song.de.qiang@gmail.com> <mail.song.de.qiang@gmail.com>
 	 * @see validate()
 	 * @see validateTabular()
 	 * @return string the JSON representation of the validation error messages.

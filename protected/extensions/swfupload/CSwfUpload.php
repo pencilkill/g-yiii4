@@ -1,6 +1,6 @@
 <?php
 /**
- * update by Sam@ozchamp.net
+ * update by Sam <mail.song.de.qiang@gmail.com>
  * @todo multi instance, more example : https://code.google.com/p/swfupload/
  * @author yii extension
  */

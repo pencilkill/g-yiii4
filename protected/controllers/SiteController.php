@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Sam@ozchamp.net
+ * @author @author Sam <mail.song.de.qiang@gmail.com> <mail.song.de.qiang@gmail.com>
  *
  */
 class SiteController extends GxController

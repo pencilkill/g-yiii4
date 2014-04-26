@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Sam, sam@ozchamp.net
+ * @author @author Sam <mail.song.de.qiang@gmail.com>
  * @example
  * for basic:
  * <?php $this->widget('ext.ckeditor.CKEditorWidget',array('model'=>$model, 'attribute'=>'content', 'value'=>$model->content)); ?>

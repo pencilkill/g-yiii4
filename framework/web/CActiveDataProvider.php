@@ -182,7 +182,7 @@ class CActiveDataProvider extends CDataProvider
 			$offset=$pagination->getOffset();
 			$itemCount = $pagination->getItemCount();
 
-			// fix limit(e.g. mssql) sam@ozchamp.net
+			// fix limit(e.g. mssql) Sam <mail.song.de.qiang@gmail.com>
             if(($limit + $offset) > $itemCount){
             	$criteria->limit = $itemCount - $offset;
             }

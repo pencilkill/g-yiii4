@@ -2,7 +2,7 @@
 /**
  * class CActiveFormBehavior file
  *
- * @author Sam@ozchamp.net
+ * @author @author Sam <mail.song.de.qiang@gmail.com> <mail.song.de.qiang@gmail.com>
  *
  * Using for dynamic form validator
  * @example

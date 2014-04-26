@@ -64,7 +64,7 @@
 			//$form.data('settings', settings);
 			
 			/**
-			 * append attributes if settings.attributes existed, sam@ozchamp.net
+			 * append attributes if settings.attributes existed, Sam <mail.song.de.qiang@gmail.com>
 			 */
 			if(settings.hasOwnProperty('attributes') && $.isArray(settings.attributes) && settings.attributes.length > 0){
 				var formSettings = $form.data('settings');
@@ -81,7 +81,7 @@
 			}
 			
 			/**
-			 * Add attributes to validate without change any other settings, sam@ozchamp.net
+			 * Add attributes to validate without change any other settings, Sam <mail.song.de.qiang@gmail.com>
 			 */
 			var addValidateAttributes = function (attributes){
 				var optionsNew = $.extend({}, $form.data('settings'));
