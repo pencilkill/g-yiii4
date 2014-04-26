@@ -1,4 +1,4 @@
-<?php error_reporting(E_ALL ^E_NOTICE);ini_set('display_errors', 0);extract($_GET);header('content-type: application/x-javascript');?>
+<?php error_reporting(E_ALL ^E_NOTICE);ini_set('display_errors', 0);header('content-type: application/x-javascript');?>
 <?php
 /**
 
@@ -12,8 +12,17 @@ please check both of them by comparing the original version if you have any ques
 
 <script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="../ckeditor/adapters/jquery.js"></script>
-<script type="text/javascript">CKEDITOR.config.customConfig = '../ckeditor/config.js.php?uri=../'</script>
+<script type="text/javascript">CKEDITOR.config.customConfig = '../ckeditor/config.js.php?base=../&YiiApp=<?php echo Yii::app()->id?>'</script>
 */
+?>
+<?php
+	$base = '';
+	if(isset($_GET['base'])){
+		$base = $_GET['base'];
+		unset($_GET['base']);
+	}
+
+	$uri = $_GET ? '&' . http_build_query($_GET) : '';
 ?>
 /**
  * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
@@ -25,12 +34,12 @@ CKEDITOR.editorConfig = function( config ) {
 	config.language = 'fr';
 	config.uiColor = '#AADC6E';
 	*/
-	config.baseHref = '<?php echo $uri?>';
-	config.basePath = '<?php echo $uri?>ckeditor/';
-	config.filebrowserBrowseUrl = '<?php echo $uri?>ckfinder/ckfinder.html.php';
-	config.filebrowserImageBrowseUrl = '<?php echo $uri?>ckfinder/ckfinder.html.php?Type=Images';
-	config.filebrowserFlashBrowseUrl = '<?php echo $uri?>ckfinder/ckfinder.html.php?Type=Flash';
-	config.filebrowserUploadUrl = '<?php echo $uri?>ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files';
-	config.filebrowserImageUploadUrl = '<?php echo $uri?>ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images';
-	config.filebrowserFlashUploadUrl = '<?php echo $uri?>ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash';
+	config.baseHref = '<?php echo $base?>';
+	config.basePath = '<?php echo $base?>ckeditor/';
+	config.filebrowserBrowseUrl = '<?php echo $base?>ckfinder/ckfinder.html.php<?php echo $uri?>';
+	config.filebrowserImageBrowseUrl = '<?php echo $base?>ckfinder/ckfinder.html.php?Type=Images<?php echo $uri?>';
+	config.filebrowserFlashBrowseUrl = '<?php echo $base?>ckfinder/ckfinder.html.php?Type=Flash<?php echo $uri?>';
+	config.filebrowserUploadUrl = '<?php echo $base?>ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files<?php echo $uri?>';
+	config.filebrowserImageUploadUrl = '<?php echo $base?>ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images<?php echo $uri?>';
+	config.filebrowserFlashUploadUrl = '<?php echo $base?>ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash<?php echo $uri?>';
 };

@@ -13,6 +13,6 @@ require_once($yii);
 // YiiBase method accessable now
 // classes defined by framework/YiiBase::$_coreClasses accessable now
 
-$config=CMap::mergeArray(require_once(dirname(__FILE__).'/protected/config/main.php'), require_once(dirname(__FILE__).'/protected/config/front.php'));
+$config=require_once(dirname(__FILE__).'/protected/config/front.php');
 
 Yii::createWebApplication($config)->run();

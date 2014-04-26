@@ -3,7 +3,9 @@
  * this configuration is frontend only
  * see mian configuration to get more informaiton
  */
-return array(
+$main = include_once __DIR__ . '/main.php';
+
+return CMap::mergeArray($main, array(
 	// preloading 'log' component
 	'preload'=>array(
 		//'log',
@@ -137,4 +139,4 @@ return array(
 		 */
 		'languages' => array(),
 	),
-);
+));

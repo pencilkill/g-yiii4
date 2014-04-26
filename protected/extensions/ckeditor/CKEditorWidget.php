@@ -17,6 +17,8 @@
 
 class CKEditorWidget extends CInputWidget
 {
+	const CKEDITOR_CLASS = 'ckeditor';
+
 	public $CKBasePath;
     public $config;
 
@@ -42,7 +44,7 @@ class CKEditorWidget extends CInputWidget
 		Yii::app()->clientScript->registerScriptFile($this->CKBasePath . 'ckeditor.js', CClientScript::POS_HEAD);
 		Yii::app()->clientScript->registerScriptFile($this->CKBasePath . 'adapters/jquery.js', CClientScript::POS_HEAD);
 		//
-		$adapter = '';
+		$adapter = '.' . self::CKEDITOR_CLASS;
 		if(isset($this->htmlOptions['class'])){
 			$adapter = '.' . $this->htmlOptions['class'];
 		}elseif(isset($this->htmlOptions['id'])){
@@ -51,7 +53,9 @@ class CKEditorWidget extends CInputWidget
 			$adapter = '[name="' . $this->htmlOptions['class'] . '"]';
 		}
 
-		$config = array();
+		$config = array(
+			//'customConfig' => $this->CKBasePath . 'config.js.php?YiiApp=' . Yii::app()->id,
+		);
 
 		if(isset($this->config)){
 			$config = CMap::mergeArray($config, $this->config);
