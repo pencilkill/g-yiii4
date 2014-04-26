@@ -373,7 +373,7 @@ class HCArray {
 	}
 
 	/**
-	 * @author @author Sam <mail.song.de.qiang@gmail.com> <mail.song.de.qiang@gmail.com>
+	 * @author Sam <mail.song.de.qiang@gmail.com>
 	 *
 	 * Get list of all values from a multidimentional array
 	 * Using array_walk_recursive cause RecursiveArrayIterator will miss object element
@@ -391,7 +391,7 @@ class HCArray {
 	}
 
 	/**
-	 * @author @author Sam <mail.song.de.qiang@gmail.com> <mail.song.de.qiang@gmail.com>
+	 * @author Sam <mail.song.de.qiang@gmail.com>
 	 *
 	 * @param $array
 	 * @param $leftSymbol

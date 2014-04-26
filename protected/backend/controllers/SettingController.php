@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @author @author Sam <mail.song.de.qiang@gmail.com> <mail.song.de.qiang@gmail.com>
+ * @author Sam <mail.song.de.qiang@gmail.com>
  * SettingController
  * Notice setting is like key=>value, so we can not use normal rules to validate the model
  * It will create a dynamic behavior to valiate the model without further changing

@@ -3,7 +3,7 @@ Yii::import('frontend.extensions.ajaxupload.AjaxUploadWidget');
 /**
  * CAjaxUploadAction class file.
  *
- * @author @author Sam <mail.song.de.qiang@gmail.com>
+ * @author Sam <mail.song.de.qiang@gmail.com>
  */
 class CAjaxUploadAction extends CAction
 {

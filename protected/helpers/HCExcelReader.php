@@ -4,7 +4,7 @@
  * Read data from xls, xlsx, csv. It can get file type automatically.
  * Read data by section, fetching data from specified section which is between begin row and end row
  *
- * @author @author Sam <mail.song.de.qiang@gmail.com>
+ * @author Sam <mail.song.de.qiang@gmail.com>
  *
  */
 class HCExcelReader

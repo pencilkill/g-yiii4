@@ -2,7 +2,7 @@
 /**
  * Excel export class
 
- * @author @author Sam <mail.song.de.qiang@gmail.com>
+ * @author Sam <mail.song.de.qiang@gmail.com>
  *
  */
 class HCExcelWriter

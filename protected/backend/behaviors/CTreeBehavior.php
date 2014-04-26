@@ -5,7 +5,7 @@
  *
  * TODO Maybe cache solution is required(cache or class private property $_data)
  *
- * @author @author Sam <mail.song.de.qiang@gmail.com> <mail.song.de.qiang@gmail.com>
+ * @author Sam <mail.song.de.qiang@gmail.com>
  */
 
 class CTreeBehavior extends CActiveRecordBehavior {

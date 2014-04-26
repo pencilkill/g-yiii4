@@ -2,7 +2,7 @@
 
 /**
  * EImageSelect widget class file.
- * @author @author Sam <mail.song.de.qiang@gmail.com>
+ * @author Sam <mail.song.de.qiang@gmail.com>
 
  * EImageSelect extends CWidget and implements a base class for a imageselect widget.
  * more about imgareaselect can be found at http://odyniec.net/projects/imgareaselect/, version: 0.9.10.

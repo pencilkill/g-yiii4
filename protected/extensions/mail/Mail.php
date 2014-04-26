@@ -4,7 +4,7 @@
  *  Specified the Sender before using SetFrom method in this case please
  *  Reading SetFrom method to get more about Sender and Replyto proprities
  *
- * @author @author Sam <mail.song.de.qiang@gmail.com> <mail.song.de.qiang@gmail.com>
+ * @author Sam <mail.song.de.qiang@gmail.com>
  * @example
  	$mail = new Mail;
     $mail->SetFrom('user@server.com', 'name');

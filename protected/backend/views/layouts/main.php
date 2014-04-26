@@ -167,5 +167,9 @@
 <script type="text/javascript" src="<?php echo $this->skinUrl?>/javascript/jquery/jquery.corner.js"></script>
 <script type="text/javascript">$('.button, .success, .warning, .attention').corner();$('.heading').corner('top');</script>
 <![endif]-->
+<!--
+<script type="text/javascript" src="<?php echo $this->skinUrl?>/javascript/jquery/imgpreview.full.jquery.js"></script>
+<script type="text/javascript">jQuery(function($) {$('.imgPreview').imgPreview();});</script>
+ -->
 </body>
 </html>

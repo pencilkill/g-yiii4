@@ -204,7 +204,9 @@ class CDbHttpSession extends CHttpSession
 			}
 			catch(Exception $e)
 			{
-				$this->createSessionTable($db,$this->sessionTableName);
+				if (Yii::app()->db->schema->getTable($this->sessionTableName,true)===null) {
+					$this->createSessionTable($db,$this->sessionTableName);
+				}
 			}
 		}
 		return true;

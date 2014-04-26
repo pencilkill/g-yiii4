@@ -9,7 +9,7 @@
  * the constraint defination is "SET NULL" on delete
  * (we can not use '0' as default value cause the value '0' is not a fk value)
  *
- * @author @author Sam <mail.song.de.qiang@gmail.com> <mail.song.de.qiang@gmail.com>
+ * @author Sam <mail.song.de.qiang@gmail.com>
  * @see zii.behaviors.CTimestampBehavior
  */
 

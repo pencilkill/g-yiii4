@@ -2,7 +2,7 @@
 /**
  * Defined PCLZIP_TEMPORARY_DIR
  * Nothing further
- * @author @author Sam <mail.song.de.qiang@gmail.com>
+ * @author Sam <mail.song.de.qiang@gmail.com>
  */
   if (!defined('PCLZIP_TEMPORARY_DIR')) {
   	$pclzip_temporary_dir = Yii::getPathOfAlias('webroot').'/assets/pclzip/temp/';

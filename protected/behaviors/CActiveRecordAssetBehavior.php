@@ -2,7 +2,7 @@
 /**
  * class CActiveFormBehavior file
  *
- * @author @author Sam <mail.song.de.qiang@gmail.com> <mail.song.de.qiang@gmail.com>
+ * @author Sam <mail.song.de.qiang@gmail.com>
  *
  * Using for clean up assets, unlink file, image ...
  *

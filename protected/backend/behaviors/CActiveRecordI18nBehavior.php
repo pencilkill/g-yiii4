@@ -5,7 +5,7 @@
  * actually, only for scenario 'insert', cause the afterConstruct event of a active record only be invoked for scenario 'insert'
   * support rewrite relations
  *
- * @author @author Sam <mail.song.de.qiang@gmail.com> <mail.song.de.qiang@gmail.com>
+ * @author Sam <mail.song.de.qiang@gmail.com>
  */
 
 class CActiveRecordI18nBehavior extends CActiveRecordBehavior {
