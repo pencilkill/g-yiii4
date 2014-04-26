@@ -25,6 +25,8 @@ Yii::setPathOfAlias('frontend', $frontend);
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 return array(
+	'id' => 'frontend',
+
 	'basePath'=>$frontend,
 
 	'theme'=>'_basic',

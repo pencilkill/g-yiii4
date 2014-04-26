@@ -22,6 +22,24 @@
  */
 function CheckAuthentication()
 {
+	//
+	$auth = function(){
+		$yii=_baseUrl::dir().'framework/yii.php';
+
+		// remove the following lines when in production mode
+		defined('YII_DEBUG') or define('YII_DEBUG', false);
+		// specify how many levels of call stack should be shown in each log message
+		defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
+
+		require_once($yii);
+
+		$config=require_once(_baseUrl::dir().'protected/backend/config/main.php');
+
+		Yii::createWebApplication($config);
+		// set Yii::app()->id for different app to check auth for different scences, Sam <mail.song.de.qiang@gmail.com>
+		return Yii::app()->user->isGuest == false;
+	};
+
 	// WARNING : DO NOT simply return "true". By doing so, you are allowing
 	// "anyone" to upload and list the files in your server. You must implement
 	// some kind of session validation here. Even something very simple as...
@@ -32,7 +50,7 @@ function CheckAuthentication()
 	// user logs in your system. To be able to use session variables don't
 	// forget to add session_start() at the top of this file.
 
-	return true;
+	return $auth();
 }
 
 // LicenseKey : Paste your license key here. If left blank, CKFinder will be

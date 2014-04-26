@@ -23,6 +23,8 @@ Yii::setPathOfAlias('rights', Yii::getPathOfAlias('frontend.modules.rights'));
 // This is the backend main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 $backCfg = array(
+	'id' => 'backend',
+
 	'basePath'=>$frontend,
 
 	'theme'=>'_ozman',
