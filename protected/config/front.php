@@ -3,7 +3,7 @@
  * this configuration is frontend only
  * see mian configuration to get more informaiton
  */
-$main = include_once __DIR__ . '/main.php';
+$main = require(__DIR__ . '/main.php');
 
 return CMap::mergeArray($main, array(
 	// preloading 'log' component

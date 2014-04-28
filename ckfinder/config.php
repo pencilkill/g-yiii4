@@ -1,6 +1,27 @@
 <?php require_once '_baseUrl.php';?>
 
 <?php
+function YiiApp(){
+	$_baseDir = _baseUrl::dir();
+
+	$apps = array(
+		md5('frontend') => 'protected/config/front.php',
+		md5('backend') =>'protected/backend/config/main.php',
+	);
+
+	//
+	$yii = $_baseDir.'framework/yii.php';
+
+	require_once($yii);
+
+	$app = require($_baseDir . 'protected/backend/config/main.php');
+	if(isset($GLOBALS['YiiApp'], $apps[$GLOBALS['YiiApp']])){
+		//$app = require($_baseDir . $apps[$GLOBALS['YiiApp']]);
+	}
+
+	return Yii::createWebApplication($app);
+}
+$GLOBALS['YiiApp'] = YiiApp();
 /*
  * ### CKFinder : Configuration File - Basic Instructions
  *
@@ -22,24 +43,6 @@
  */
 function CheckAuthentication()
 {
-	//
-	$auth = function(){
-		$yii=_baseUrl::dir().'framework/yii.php';
-
-		// remove the following lines when in production mode
-		defined('YII_DEBUG') or define('YII_DEBUG', false);
-		// specify how many levels of call stack should be shown in each log message
-		defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
-
-		require_once($yii);
-
-		$config=require_once(_baseUrl::dir().'protected/backend/config/main.php');
-
-		Yii::createWebApplication($config);
-		// set Yii::app()->id for different app to check auth for different scences, Sam <mail.song.de.qiang@gmail.com>
-		return Yii::app()->user->isGuest == false;
-	};
-
 	// WARNING : DO NOT simply return "true". By doing so, you are allowing
 	// "anyone" to upload and list the files in your server. You must implement
 	// some kind of session validation here. Even something very simple as...
@@ -50,7 +53,7 @@ function CheckAuthentication()
 	// user logs in your system. To be able to use session variables don't
 	// forget to add session_start() at the top of this file.
 
-	return $auth();
+	return $GLOBALS['YiiApp']->user->isGuest == false;
 }
 
 // LicenseKey : Paste your license key here. If left blank, CKFinder will be
@@ -69,8 +72,7 @@ $config['LicenseKey'] = '';
 To make it easy to configure CKFinder, the $baseUrl and $baseDir can be used.
 Those are helper variables used later in this config file.
 */
-$_relativeUrl = 'upload/ckfinder/';
-
+$ckfinderUrl = 'upload/ckfinder/';
 /*
 $baseUrl : the base path used to build the final URL for the resources handled
 in CKFinder. If empty, the default value (/userfiles/) is used.
@@ -81,7 +83,7 @@ Examples:
 
 ATTENTION: The trailing slash is required.
 */
-$baseUrl = _baseUrl::url(false) . $_relativeUrl;
+$baseUrl = _baseUrl::url(false) . $ckfinderUrl;
 
 /*
 $baseDir : the path to the local directory (in the server) which points to the
@@ -101,7 +103,7 @@ Examples:
 ATTENTION: The trailing slash is required.
 */
 //$baseDir = resolveUrl($baseUrl);
-$baseDir = _baseUrl::dir() . $_relativeUrl;
+$baseDir = _baseUrl::dir() . $ckfinderUrl;
 
 /*
  * ### Advanced Settings

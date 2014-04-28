@@ -54,7 +54,7 @@ class CKEditorWidget extends CInputWidget
 		}
 
 		$config = array(
-			//'customConfig' => $this->CKBasePath . 'config.js.php?YiiApp=' . Yii::app()->id,
+			'customConfig' => $this->CKBasePath . 'config.js.php?YiiApp=' . md5(Yii::app()->id),
 		);
 
 		if(isset($this->config)){

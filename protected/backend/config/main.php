@@ -9,7 +9,7 @@ $frontend=dirname($backend);
 
 // This step should be done firstly
 // cause require one file will run the script which may be define some variable besides configuration
-$frontCfg = require_once($frontend.'/config/main.php');
+$frontCfg = require($frontend.'/config/main.php');
 // override safety now
 
 // Notice that backend alias can be defined here only
@@ -39,12 +39,9 @@ $backCfg = array(
 	'defaultController'=>'site',
 
 	// preloading 'log' component
-	/*
 	'preload'=>array(
-		'log',
+		//'log',
 	),
-	*/
-
 
 	// autoloading model and component classes
 	'import'=>array(
