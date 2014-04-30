@@ -2,24 +2,29 @@
 
 <?php
 function YiiApp(){
-	$_baseDir = _baseUrl::dir();
-
-	$apps = array(
-		md5('frontend') => 'protected/config/front.php',
-		md5('backend') =>'protected/backend/config/main.php',
-	);
-
-	//
-	$yii = $_baseDir.'framework/yii.php';
-
-	require_once($yii);
-
-	$app = require($_baseDir . 'protected/backend/config/main.php');
-	if(isset($GLOBALS['YiiApp'], $apps[$GLOBALS['YiiApp']])){
-		//$app = require($_baseDir . $apps[$GLOBALS['YiiApp']]);
+	$id = isset($_GET['id']) ? $_GET['id'] : '';
+	
+	if($id){
+		$_baseDir = _baseUrl::dir();
+	
+		$apps = array(
+			md5('frontend') => 'protected/config/front.php',
+			md5('backend') => 'protected/backend/config/main.php',
+		);
+	
+		//
+		$yii = $_baseDir.'framework/yii.php';
+	
+		require_once($yii);
+	
+		if(isset($apps[$id])){
+			$app = require($_baseDir . $apps[$id]);
+		}
+	
+		return Yii::createWebApplication($app);
+	}else{
+		throw new Exception("Application'id is required !");
 	}
-
-	return Yii::createWebApplication($app);
 }
 $GLOBALS['YiiApp'] = YiiApp();
 /*

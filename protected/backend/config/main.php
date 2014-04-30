@@ -12,9 +12,6 @@ $frontend=dirname($backend);
 $frontCfg = require($frontend.'/config/main.php');
 // override safety now
 
-// Notice that backend alias can be defined here only
-// it is used to distinguish frontend
-// for example, GiixCrudGenerator->getMethod()
 Yii::setPathOfAlias('backend', $backend);
 
 // RBAC rights

@@ -139,7 +139,7 @@
 
 		var ckfinder = new CKFinder( config );
 
-		ckfinder.customConfig = '';
+		ckfinder.customConfig = '<?php echo _baseUrl::url()?>ckfinder/config.js.php';
 
 		ckfinder.callback = function( api ) {
 			//

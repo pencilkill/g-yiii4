@@ -18,11 +18,17 @@
 class CKEditorWidget extends CInputWidget
 {
 	const CKEDITOR_CLASS = 'ckeditor';
-
+	/**
+	 * using as ckfinder instance id to identify different application
+	 */
+	protected $app;
+	
 	public $CKBasePath;
     public $config;
 
     public function init() {
+    	$this->app = Yii::app()->id;
+    	
 		if(empty($this->CKBasePath)){
 			$this->CKBasePath = Yii::app()->getBaseUrl().'/ckeditor/';
 		}
@@ -54,7 +60,7 @@ class CKEditorWidget extends CInputWidget
 		}
 
 		$config = array(
-			'customConfig' => $this->CKBasePath . 'config.js.php?YiiApp=' . md5(Yii::app()->id),
+			'customConfig' => $this->CKBasePath . 'config.js.php?id=' . md5($this->app),
 		);
 
 		if(isset($this->config)){

@@ -1,4 +1,4 @@
-<?php error_reporting(E_ALL ^E_NOTICE);ini_set('display_errors', 0);extract($_GET);header('content-type: application/x-javascript');?>
+<?php error_reporting(E_ALL ^E_NOTICE);ini_set('display_errors', 0);header('content-type: application/x-javascript');?>
 <?php /** Check the ckfinder.html.php please*/ ?>
 /*
 Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
@@ -19,5 +19,4 @@ CKFinder.customConfig = function( config )
 	config.language = 'fr';
 	config.removePlugins = 'basket';
 	*/
-
 };
