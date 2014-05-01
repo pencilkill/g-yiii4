@@ -1,27 +1,27 @@
 $.fn.tabs = function() {
-	var selector = this;
-	
+	var self = $(this);
+
 	this.each(function() {
-		var obj = $(this); 
+		var el = $(this); 
 		
-		$(obj.attr('href')).hide();
+		$(el.attr('href')).hide();
 		
-		$(obj).click(function(e) {
-			$(selector).removeClass('selected');
+		el.on('click', function(e){
+			self.removeClass('selected');
 			
-			$(selector).each(function(i, element) {
-				$($(element).attr('href')).hide();
+			$.each(self, function(i, _el) {
+				$($(_el).attr('href')).hide();
 			});
 			
-			$(this).addClass('selected');
+			el.addClass('selected');
 			
-			$($(this).attr('href')).show();
+			$(el.attr('href')).show();
 			
 			e.preventDefault();
 		});
 	});
 
-	$(this).show();
+	self.show();
 	
-	$(this).first().click();
+	self.first().trigger('click');
 };

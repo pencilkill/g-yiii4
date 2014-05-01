@@ -8,9 +8,9 @@
  * tabs
  */
 jQuery.each(jQuery('.htabs, .vtabs'), function(i, v){
-	var addClassName = 'tabs-i-' + i;
-	jQuery(this).addClass(addClassName);
-	jQuery('.' + addClassName + ' a').tabs();
+	var className = 'tabs-' + i;
+	jQuery(this).addClass(className);
+	jQuery('.' + className + ' a').tabs();
 });
 /**
  * setting $.fn.yiiactiveform
