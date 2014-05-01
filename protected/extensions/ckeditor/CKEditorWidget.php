@@ -17,23 +17,41 @@
 
 class CKEditorWidget extends CInputWidget
 {
-	const CKEDITOR_CLASS = 'ckeditor';
+	const CKEDITOR_INSTANCE_CLASS = 'ckeditor';
+	const CKEDITOR_CLASS = 'editor';
 	/**
 	 * using as ckfinder instance id to identify different application
 	 */
-	protected $app;
-	
+	public $app;
+
 	public $CKBasePath;
     public $config;
 
+    /**
+     * using this ckeditor configuration as CKEditor.config
+     * in this case, we can use $('editor').ckeditor() without extra config on fly
+     */
+    public $useAsGlobal = false;
+
     public function init() {
-    	$this->app = Yii::app()->id;
-    	
+    	if($this->app === null){
+    		$this->app = Yii::app()->id;
+    	}
+
 		if(empty($this->CKBasePath)){
 			$this->CKBasePath = Yii::app()->getBaseUrl().'/ckeditor/';
 		}
+
         if(($this->value)){
 			$this->value = '';
+		}
+
+		/**
+		 * class 'ckeditor' is the default selector
+		 * IE will trigger uncaught exception for a already ckeditor instance
+		 */
+		if(isset($this->htmlOptions['class']) && $this->htmlOptions['class'] === self::CKEDITOR_INSTANCE_CLASS){
+			$this->htmlOptions['class'] = self::CKEDITOR_CLASS;
 		}
 
     	if(!(isset($this->htmlOptions['class']) || isset($this->htmlOptions['id']) || isset($this->htmlOptions['name']))){
@@ -65,6 +83,10 @@ class CKEditorWidget extends CInputWidget
 
 		if(isset($this->config)){
 			$config = CMap::mergeArray($config, $this->config);
+		}
+
+		if($this->useAsGlobal){
+			Yii::app()->clientScript->registerScript(__CLASS__, "jQuery.extend(true, CKEDITOR.config, ".CJavaScript::encode($config)." || {});");
 		}
 
 		if($adapter){

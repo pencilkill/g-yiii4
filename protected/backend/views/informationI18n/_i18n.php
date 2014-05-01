@@ -26,7 +26,7 @@
 				<?php echo $form->labelEx($model,'description'); ?>
 			</td>
 			<td>
-				<?php echo $form->textArea($model, "[{$language_id}]description", array('rows' => 5, 'cols' => 50, 'class' => 'ckeditor')); ?>
+				<?php echo $form->textArea($model, "[{$language_id}]description", array('rows' => 5, 'cols' => 50, 'class' => 'editor')); ?>
 				<?php echo $form->error($model, "[$language_id]description"); ?>
 			</td>
 		</tr><!-- row -->

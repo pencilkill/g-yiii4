@@ -3,27 +3,27 @@
 <?php
 function YiiApp(){
 	$id = isset($_GET['id']) ? $_GET['id'] : '';
-	
+
 	if($id){
 		$_baseDir = _baseUrl::dir();
-	
+
 		$apps = array(
 			md5('frontend') => 'protected/config/front.php',
 			md5('backend') => 'protected/backend/config/main.php',
 		);
-	
+
 		//
 		$yii = $_baseDir.'framework/yii.php';
-	
+
 		require_once($yii);
-	
+
 		if(isset($apps[$id])){
 			$app = require($_baseDir . $apps[$id]);
 		}
-	
+
 		return Yii::createWebApplication($app);
 	}else{
-		throw new Exception("Application'id is required !");
+		return false;
 	}
 }
 $GLOBALS['YiiApp'] = YiiApp();
@@ -58,7 +58,7 @@ function CheckAuthentication()
 	// user logs in your system. To be able to use session variables don't
 	// forget to add session_start() at the top of this file.
 
-	return $GLOBALS['YiiApp']->user->isGuest == false;
+	return $GLOBALS['YiiApp'] && $GLOBALS['YiiApp']->user->isGuest == false;
 }
 
 // LicenseKey : Paste your license key here. If left blank, CKFinder will be

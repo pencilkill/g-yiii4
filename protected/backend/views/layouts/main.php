@@ -135,7 +135,7 @@
 	Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.ozchamp.com/" rel="external" target="_blank"><?php echo Yii::t('app', 'Design Team')?></a>. All Rights Reserved.
 </div><!-- footer -->
 
-<?php $this->widget('frontend.extensions.ckeditor.CKEditorWidget'); ?>
+<?php $this->widget('frontend.extensions.ckeditor.CKEditorWidget', array('useAsGlobal' => true)); ?>
 <?php $this->widget('frontend.extensions.fancybox.EFancyBox', array('target' => null, 'config' => array())); ?>
 <?php
 	$this->widget('zii.widgets.jui.CJuiDatePicker',
