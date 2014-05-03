@@ -1,9 +1,6 @@
 <?php
 /**
- * Site helper class.
- *
  * @author Sam <mail.song.de.qiang@gmail.com>
- * @copyright  www.ozchamp.net
  */
 class HCSite {
 	/**
