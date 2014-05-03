@@ -1,10 +1,6 @@
 <?php
 /**
  * @author Sam <mail.song.de.qiang@gmail.com>
- * @copyright www.ozchamp.net
- * @version 1.0
- *
- *
  */
 class AjaxUploadWidget extends CInputWidget
 {
