@@ -1,1 +1,1 @@
-// Basic theme for frontend
+// Original Yii Theme for frontend

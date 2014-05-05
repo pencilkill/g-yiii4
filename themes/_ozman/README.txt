@@ -1,1 +1,1 @@
-// Theme for backend
+// Opencart Theme for backend

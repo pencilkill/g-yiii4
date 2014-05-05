@@ -1,6 +1,2 @@
-<Files ~ "^.(htaccess|htpasswd)$">
-deny from all
-</Files>
-Options -Indexes
-DirectoryIndex index.php index.html      
-order deny,allow
+RedirectMatch 404 ".*\/$"
+RedirectMatch 404 ".*?\/views/"
