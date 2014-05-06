@@ -29,7 +29,7 @@ return array(
 
 	'basePath'=>$frontend,
 
-	'theme'=>'_basic',
+	'theme'=>'_front',
 
 	'language'=>'zh_tw',
 
