@@ -24,7 +24,7 @@ $backCfg = array(
 
 	'basePath'=>$frontend,
 
-	'theme'=>'_todc',
+	'theme'=>'_ozman',
 
 	'name'=>$frontCfg['name'].' - Administrator',
 
