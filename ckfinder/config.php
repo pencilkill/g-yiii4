@@ -4,22 +4,17 @@
 function YiiApp(){
 	$id = isset($_GET['id']) ? $_GET['id'] : '';
 
-	if($id){
-		$_baseDir = _baseUrl::dir();
+	$apps = array(
+		md5('frontend') => 'protected/config/front.php',
+		md5('backend') => 'protected/backend/config/main.php',
+	);
 
-		$apps = array(
-			md5('frontend') => 'protected/config/front.php',
-			md5('backend') => 'protected/backend/config/main.php',
-		);
-
-		//
+	if($id && isset($apps[$id])){
 		$yii = $_baseDir.'framework/yii.php';
 
 		require_once($yii);
 
-		if(isset($apps[$id])){
-			$app = require($_baseDir . $apps[$id]);
-		}
+		$app = require(_baseUrl::dir() . $apps[$id]);
 
 		return Yii::createWebApplication($app);
 	}else{
