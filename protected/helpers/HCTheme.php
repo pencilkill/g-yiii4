@@ -23,13 +23,13 @@ class HCTheme {
 			 * backend GUI for assets management is accessable for administrator
 			 * uncomment the following as a published folder
 			 */
-			//$skinUrl = Yii::app()->assetManager->publish($path);
+			$skinUrl = Yii::app()->assetManager->publish($path);
 
 			/**
 			 * Without assets, we can update file(s) immediately in this case
 			 * uncomment the following if you do not need to publish folder
 			 */
-			$skinUrl = Yii::app()->theme->baseUrl . '/' . $base;
+			//$skinUrl = Yii::app()->theme->baseUrl . '/' . $base;
 		}
 
 		return $skinUrl;

@@ -59,6 +59,11 @@ class SiteController extends Controller
 	 */
 	public function actionLogin()
 	{
+		// logout through action only
+		if(! Yii::app()->user->isGuest){
+			$this->redirect(Yii::app()->user->returnUrl);
+		}
+
 		$this->layout = '//layouts/login';
 
 		$model=new LoginForm;

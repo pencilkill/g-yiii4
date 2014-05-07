@@ -80,8 +80,9 @@ $backCfg = array(
 			'install'=>false,
 			'baseUrl'=>'/rights',
 			'layout'=>'rights.views.layouts.main',
-			'appLayout'=>'backend.views.layouts.main',
-			'cssFile'=>'/themes/_ozman/assets/stylesheet/rights.css',
+			'appLayout'=>'//layouts/main',
+			// based on Yii->app()->controller->skinUrl
+			'cssFile'=>'/stylesheet/rights.css',
 			'debug'=>false,
 		),
 
@@ -127,6 +128,7 @@ $backCfg = array(
 
 		'widgetFactory' => array(
 			'widgets' => array(
+				// place configuration here, or use theme skins component
 				'CLinkPager' => array (
 					  'firstPageCssClass' => 'first',
 					  'lastPageCssClass' => 'last',

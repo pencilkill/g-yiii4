@@ -161,6 +161,11 @@ class CustomerController extends GxController {
 	}
 
 	public function actionLogin(){
+		// logout through action only
+		if(! Yii::app()->user->isGuest){
+			$this->redirect(Yii::app()->user->returnUrl);
+		}
+
 		$model=new LoginForm;
 
 		$this->performAjaxValidation($model, 'login-form');
