@@ -185,8 +185,6 @@ class AdminController extends GxController {
                         Yii::app()->user->setFlash('success', Yii::t('app', 'Operation Success'));
 
                         $this->refresh();
-
-                        $this->redirect(array('account', array('id' => $id)));
                     }
                 }catch(CDbException $e){
                     $transaction->rollback();

@@ -98,7 +98,7 @@
 			route = getURLVar('r');
 
 			if (!route) {
-				$('#dashboard').addClass('selected');
+				$('#menu li:first').addClass('selected');
 			} else {
 				prefix = '#menu a:regex(href, .*?[\?\&]?r[^=]*\=[^=]*';
 				suffix = '[\?\&]?.*)';

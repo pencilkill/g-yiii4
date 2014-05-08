@@ -90,6 +90,10 @@ class SettingController extends GxController {
 					unlink($item);
 				}
 			}
+
+			Yii::app()->user->setFlash('success', Yii::t('app', 'Operation Success'));
+
+			$this->refresh();
 		}
 
 		$files = glob($dir . DIRECTORY_SEPARATOR . $base . '*');

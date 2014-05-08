@@ -15,8 +15,17 @@ body, td, th, input, select, textarea, option, optgroup {
 	font-size: 12px;
 	color: #000000;
 }
-input[type='text'], input[type='password'] {
-	padding: 2px;
+input[type='text'], input[type='password'], textarea, select {
+	background: #FFFFFF;
+	background-repeat: repeat;
+	background-position: left top;
+	border:1px solid #999;
+}
+select {
+	background: #FFFFFF;
+	background-repeat: repeat;
+	background-position: left top;
+	border:1px solid #FFFFFF;
 }
 select {
 	padding: 1px;
@@ -400,7 +409,7 @@ a.button.small, .list a.button.small {
 	background: #F7F7F7;
 }
 .list tr.filter td {
-	padding: 5px;
+	padding: 7px;
 	background: #E7EFEF;
 }
 .pagination {
