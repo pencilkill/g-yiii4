@@ -10,7 +10,7 @@ function YiiApp(){
 	);
 
 	if($id && isset($apps[$id])){
-		$yii = $_baseDir.'framework/yii.php';
+		$yii = _baseUrl::dir().'framework/yii.php';
 
 		require_once($yii);
 
