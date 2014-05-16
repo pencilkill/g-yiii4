@@ -77,7 +77,7 @@
       <li><a><?php echo Yii::t('nav', 'Customers'); ?></a>
         <ul>
           <li><a href="<?php echo Yii::app()->createUrl('customer/index', array()); ?>"><?php echo Yii::t('nav', 'Customer'); ?></a></li>
-          <li><a href="<?php echo Yii::app()->createUrl('customerGroup/index', array()); ?>"><?php echo Yii::t('nav', 'CustomerGroup'); ?></a></li>
+          <li><a href="<?php echo Yii::app()->createUrl('customerType/index', array()); ?>"><?php echo Yii::t('nav', 'CustomerType'); ?></a></li>
         </ul>
       </li>
       <li><a href="<?php echo Yii::app()->createUrl('admin/index', array()); ?>"><?php echo Yii::t('nav', 'Admin'); ?></a></li>

@@ -36,8 +36,8 @@ class Customer extends BaseCustomer
 	public function attributeLabels() {
 		return CMap::mergeArray(parent::attributeLabels(), array(
 			'confirm_password' => Yii::t('m/customer', 'Confirm Password'),
-			'customer_group_id' => null,
-			'customerGroup' => null,
+			'customer_Type_id' => null,
+			'customerType' => null,
 		));
 	}
 

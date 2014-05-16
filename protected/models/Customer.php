@@ -23,13 +23,13 @@ class Customer extends BaseCustomer
         ));
 	}
 
-	public function group($customer_group_id)
+	public function group($customer_type_id)
 	{
 	    $t = $this->getTableAlias(false, false);
 
 	    $this->getDbCriteria()->mergeWith(array(
-	        'condition' => "{$t}.customer_group_id=:customer_group_id",
-	        'params' => array(':customer_group_id'=>$customer_group_id),
+	        'condition' => "{$t}.customer_type_id=:customer_type_id",
+	        'params' => array(':customer_type_id'=>$customer_type_id),
 	    ));
 
 	    return $this;
@@ -51,7 +51,7 @@ class Customer extends BaseCustomer
 		return CMap::mergeArray(parent::rules(), array(
 			array('username', 'unique', 'className' => 'Customer', 'attributeName' => 'username', 'on' => 'insert, update'),
 			array('username', 'email'),
-			array('username, customer_group_id, token, activated, status', 'unsafe', 'on' => 'update'),
+			array('username, customer_type_id, token, activated, status', 'unsafe', 'on' => 'update'),
 			array('confirm_password, password', 'required', 'on' => 'insert'),
 			array('confirm_password, password', 'length', 'min' => 6),
 			array('confirm_password', 'compare', 'compareAttribute' => 'password'),

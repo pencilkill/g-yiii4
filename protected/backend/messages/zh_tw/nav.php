@@ -18,7 +18,7 @@
  */
 return array (
   'Customer' => '會員',
-  'CustomerGroup' => '群組',
+  'CustomerType' => '群組',
   'Customers' => '會員管理',
   'Account' => '帳號設定',
   'Admin' => '管理員',

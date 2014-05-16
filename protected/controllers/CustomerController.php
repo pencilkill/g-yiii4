@@ -41,6 +41,7 @@ class CustomerController extends GxController {
 			),
 			array('allow',
 				'actions'=>array('profile', 'logout'),
+				//'expression'=>"{$user->id}=={$owner_id}",
 				'users'=>array('@'),
 			),
 			array('deny',
@@ -75,13 +76,13 @@ class CustomerController extends GxController {
 
 			$model->token = $token;
 
-			// group
-			$model->customer_group_id = 0;
+			// type
+			$model->customer_type_id = 0;
 
-			$group = CustomerGroup::model()->find();
+			$type = CustomerType::model()->find();
 
-			if(!empty($group->customer_group_id)){
-				$model->customer_group_id = $group->customer_group_id;
+			if(!empty($type->customer_type_id)){
+				$model->customer_type_id = $type->customer_type_id;
 			}
 
 			if($model->validate()){

@@ -18,8 +18,7 @@
             'options'=>array(
                 'delay'=>100,
                 'focus'=>'js:function(event,ui){
-                    $(this).val($(ui.item).val());
-                    $(this).trigger(\'change\');
+                    $(this).val(ui.item.value);
                 }',
             ),
             'htmlOptions'=>array(

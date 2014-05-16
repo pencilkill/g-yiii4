@@ -10,8 +10,8 @@
 
 
 	<div class="row">
-		<?php echo $form->label($model, 'customer_group_id'); ?>
-		<?php echo $form->dropDownList($model, 'customer_group_id', GxHtml::listDataEx(CustomerGroup::model()->findAllAttributes(null, true)), array('prompt' => Yii::t('app', 'All'))); ?>
+		<?php echo $form->label($model, 'customer_type_id'); ?>
+		<?php echo $form->dropDownList($model, 'customer_type_id', GxHtml::listDataEx(CustomerType::model()->findAllAttributes(null, true)), array('prompt' => Yii::t('app', 'All'))); ?>
 	</div>
 
 

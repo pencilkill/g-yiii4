@@ -573,15 +573,18 @@ class AuthItemController extends RController
 	 * The array is used to build the autocomplete field.
 	 * @return array The names of the controllers
 	 */
-	protected function getControllers() {
+	protected function getControllers($controllerPath = null) {
+		if($controllerPath === null){
+			$controllerPath = Yii::app()->getControllerPath();
+		}
+
 		$controllers = array();
-		$controllerPath = Yii::getPathOfAlias('backend') ? Yii::getPathOfAlias('backend.controllers') : Yii::getPathOfAlias('frontend.controllers');
-		$files = scandir($controllerPath);
-		foreach ($files as $file) {
+		foreach (scandir($controllerPath) as $file) {
 			if ($file[0] !== '.' && preg_match('/.*(Controller\.php)$/i', $file, $matches)) {
 				$controllers[] = preg_replace('/' . $matches[1] . '$/i', '.*', $file);
 			}
 		}
+
 		return $controllers;
 	}
 }

@@ -45,7 +45,6 @@
 #rights .form input[type=text],
 #rights .form input[type=password] {
 	padding:5px;
-	background:url('../images/bg_formInputText.gif') repeat-x;
 	border:1px solid #c0c0c0;
 	-moz-border-radius:6px;
 	-webkit-border-radius:6px;

@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.1
+-- version 4.0.4
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2014 年 03 月 15 日 04:02
--- 服务器版本: 5.5.24-log
--- PHP 版本: 5.4.3
+-- 生成日期: 2014 年 05 月 16 日 16:06
+-- 服务器版本: 5.6.12-log
+-- PHP 版本: 5.4.16
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- 数据库: `yii_yiii4`
 --
+CREATE DATABASE IF NOT EXISTS `yii_yiii4` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `yii_yiii4`;
 
 -- --------------------------------------------------------
 
@@ -44,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
 --
 
 INSERT INTO `admin` (`admin_id`, `name`, `username`, `email`, `password`, `status`, `super`, `create_time`, `update_time`) VALUES
-(1, 'admin', 'admin', 'sam@ozchamp.net', '1a85380e2ae37e8385ecd73b468f632d', 1, 1, '2013-06-01 00:00:00', '2013-08-22 03:51:54'),
+(1, 'admin', 'admin', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 1, '2013-06-01 00:00:00', '2014-05-09 01:09:41'),
 (2, 'administrator', 'administrator', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 1, '2013-06-01 12:03:02', '2013-08-22 03:47:36'),
 (5, 'ozchamp', 'ozchamp', 'sam@ozchamp.net', '72870614884a05be92e3c79d8969a3eb', 1, 0, '2013-08-22 03:27:11', '2014-03-04 12:14:10');
 
@@ -249,7 +251,7 @@ INSERT INTO `contact` (`contact_id`, `status`, `firstname`, `lastname`, `sex`, `
 
 CREATE TABLE IF NOT EXISTS `customer` (
   `customer_id` int(11) NOT NULL AUTO_INCREMENT,
-  `customer_group_id` int(11) NOT NULL,
+  `customer_type_id` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
   `username` varchar(32) NOT NULL,
   `password` varchar(32) NOT NULL,
@@ -260,35 +262,35 @@ CREATE TABLE IF NOT EXISTS `customer` (
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`customer_id`),
   UNIQUE KEY `username` (`username`),
-  KEY `customer_group_id` (`customer_group_id`)
+  KEY `customer_type_id` (`customer_type_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- 转存表中的数据 `customer`
 --
 
-INSERT INTO `customer` (`customer_id`, `customer_group_id`, `name`, `username`, `password`, `token`, `activated`, `status`, `create_time`, `update_time`) VALUES
+INSERT INTO `customer` (`customer_id`, `customer_type_id`, `name`, `username`, `password`, `token`, `activated`, `status`, `create_time`, `update_time`) VALUES
 (1, 1, 'Sam', 'sam@ozchamp.net', 'fcea920f7412b5da7be0cf42b8c93759', NULL, 1, 1, '2014-02-28 17:10:33', '2014-03-05 10:22:31'),
 (7, 1, 'Sam2', 'cmd.dos@hotmail.com', '14e1b600b1fd579f47433b88e8d85291', '59f61aa9478c77d0943ed50862278bfa', 1, 1, '2014-03-05 10:11:52', '2014-03-05 10:20:29');
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `customer_group`
+-- 表的结构 `customer_type`
 --
 
-CREATE TABLE IF NOT EXISTS `customer_group` (
-  `customer_group_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `customer_type` (
+  `customer_type_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
   `default` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`customer_group_id`)
+  PRIMARY KEY (`customer_type_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
--- 转存表中的数据 `customer_group`
+-- 转存表中的数据 `customer_type`
 --
 
-INSERT INTO `customer_group` (`customer_group_id`, `name`, `default`) VALUES
+INSERT INTO `customer_type` (`customer_type_id`, `name`, `default`) VALUES
 (1, 'Default', 1);
 
 -- --------------------------------------------------------
@@ -464,14 +466,7 @@ CREATE TABLE IF NOT EXISTS `picture` (
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`picture_id`),
   KEY `pic_type_id` (`picture_type_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
-
---
--- 转存表中的数据 `picture`
---
-
-INSERT INTO `picture` (`picture_id`, `sort_order`, `pic`, `picture_type_id`, `create_time`, `update_time`) VALUES
-(13, 0, 'upload/2013/08/21/521421eedbc32.jpg', 1, '2013-08-21 10:13:17', '2013-08-21 10:13:17');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -491,15 +486,7 @@ CREATE TABLE IF NOT EXISTS `picture_i18n` (
   PRIMARY KEY (`picture_i18n_id`),
   KEY `language_id` (`language_id`),
   KEY `picture_id` (`picture_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
-
---
--- 转存表中的数据 `picture_i18n`
---
-
-INSERT INTO `picture_i18n` (`picture_i18n_id`, `picture_id`, `language_id`, `status`, `url`, `title`, `keywords`, `description`) VALUES
-(1, 13, 1, 1, 'http://www.google.com.hk/', 'tw', 'ktw', '<p>\r\n	ddddtw</p>\r\n'),
-(2, 13, 2, 1, 'http://www.google.com/', 'en', 'ken', '<p>\r\n	dddden</p>\r\n');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -542,7 +529,7 @@ CREATE TABLE IF NOT EXISTS `product` (
 --
 
 INSERT INTO `product` (`product_id`, `sort_order`, `price`, `create_time`, `update_time`) VALUES
-(4, 0, '300', '2013-07-29 23:21:01', '2014-02-20 16:17:47'),
+(4, 0, '300', '2013-07-29 23:21:01', '2014-05-09 01:08:18'),
 (5, 0, '289', '2013-10-29 11:30:17', '2014-02-20 16:20:39');
 
 -- --------------------------------------------------------
@@ -558,7 +545,7 @@ CREATE TABLE IF NOT EXISTS `product2category` (
   PRIMARY KEY (`product2category_id`),
   KEY `product_id` (`product_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19 ;
 
 --
 -- 转存表中的数据 `product2category`
@@ -566,7 +553,7 @@ CREATE TABLE IF NOT EXISTS `product2category` (
 
 INSERT INTO `product2category` (`product2category_id`, `product_id`, `category_id`) VALUES
 (5, 5, 7),
-(12, 4, 7);
+(18, 4, 7);
 
 -- --------------------------------------------------------
 
@@ -586,7 +573,7 @@ CREATE TABLE IF NOT EXISTS `product_i18n` (
   PRIMARY KEY (`product_i18n_id`),
   KEY `product_id` (`product_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=36 ;
 
 --
 -- 转存表中的数据 `product_i18n`
@@ -595,8 +582,8 @@ CREATE TABLE IF NOT EXISTS `product_i18n` (
 INSERT INTO `product_i18n` (`product_i18n_id`, `product_id`, `language_id`, `status`, `pic`, `title`, `keywords`, `description`) VALUES
 (12, 5, 1, 1, 'upload/2013/10/29/526f2bb450dd5.jpg', 'tw1', NULL, NULL),
 (13, 5, 2, 1, 'upload/2013/10/29/526f2bc317c47.jpg', 'en1', NULL, NULL),
-(22, 4, 1, 1, 'upload/2013/10/28/526dd05dbb6ea.jpg', 'tw', 'ktw', '<p>\r\n	dtw</p>\r\n'),
-(23, 4, 2, 1, 'upload/2014/01/15/52d6260bc91b3.jpg', 'en', 'ken', '<p>\r\n	den</p>\r\n');
+(34, 4, 1, 1, 'upload/2014/04/12/534831b94c4b4.jpg', 'tw', 'ktw', '<p>dtw</p>\r\n'),
+(35, 4, 2, 1, 'upload/2014/04/12/5348204329f63.jpg', 'en', 'ken', '<p>den</p>\r\n');
 
 -- --------------------------------------------------------
 
@@ -610,19 +597,7 @@ CREATE TABLE IF NOT EXISTS `product_image` (
   `pic` varchar(256) NOT NULL,
   PRIMARY KEY (`product_image_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=189 ;
-
---
--- 转存表中的数据 `product_image`
---
-
-INSERT INTO `product_image` (`product_image_id`, `product_id`, `pic`) VALUES
-(183, 4, 'upload/2013/07/29/51f6b4009933c.jpg'),
-(184, 4, 'upload/2013/07/29/51f6b4014a31d.jpg'),
-(185, 4, 'upload/2013/07/29/51f6abb0d6e59.jpg'),
-(186, 4, 'upload/2013/07/29/51f6ab5237318.jpg'),
-(187, 4, 'upload/2013/07/29/51f6abb18308f.jpg'),
-(188, 4, 'upload/2014/01/15/52d6255d16431.jpg');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1152,7 +1127,7 @@ ALTER TABLE `category_i18n`
 -- 限制表 `customer`
 --
 ALTER TABLE `customer`
-  ADD CONSTRAINT `customer_ibfk_4` FOREIGN KEY (`customer_group_id`) REFERENCES `customer_group` (`customer_group_id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `customer_ibfk_4` FOREIGN KEY (`customer_type_id`) REFERENCES `customer_type` (`customer_type_id`) ON UPDATE CASCADE;
 
 --
 -- 限制表 `information`

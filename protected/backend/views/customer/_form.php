@@ -84,11 +84,11 @@
 
 		<tr style="display:none;">
 			<td>
-				<?php echo $form->labelEx($model,'customer_group_id'); ?>
+				<?php echo $form->labelEx($model,'customer_type_id'); ?>
 			</td>
 			<td>
-				<?php echo $form->dropDownList($model, 'customer_group_id', CHtml::listData(CustomerGroup::model()->findAll(), 'customer_group_id', 'name')); ?>
-				<?php echo $form->error($model,'customer_group_id'); ?>
+				<?php echo $form->dropDownList($model, 'customer_type_id', CHtml::listData(CustomerType::model()->findAll(), 'customer_type_id', 'name')); ?>
+				<?php echo $form->error($model,'customer_type_id'); ?>
 			</td>
 		</tr><!-- row -->
 

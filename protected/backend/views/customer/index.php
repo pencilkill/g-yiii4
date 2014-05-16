@@ -119,9 +119,9 @@ $this->breadcrumbs = array(
 							'username',
 
 							array(
-								'name' => 'customer_group_id',
-								'value' => 'CHtml::value($data, "customerGroup", Yii::t("app", "None"))',
-								'filter' => CHtml::activeDropDownList($model, 'customer_group_id', CHtml::listData(CustomerGroup::model()->findAll(), 'customer_group_id', 'name'), array('prompt' => '')),
+								'name' => 'customer_type_id',
+								'value' => 'CHtml::value($data, "customerType", Yii::t("app", "None"))',
+								'filter' => CHtml::activeDropDownList($model, 'customer_type_id', CHtml::listData(CustomerType::model()->findAll(), 'customer_type_id', 'name'), array('prompt' => '')),
 							),
 
 							array(
