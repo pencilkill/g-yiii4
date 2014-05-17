@@ -46,7 +46,7 @@ class EImageSelect extends CWidget {
             Yii::app()->clientScript->registerCoreScript('jquery');
             Yii::app()->clientScript->registerScriptFile($baseUrl . '/scripts/jquery.imgareaselect.pack.js', CClientScript::POS_END);
         } else {
-            throw new Exception('EImageSelect - Error: Couldn\'t find assets to publish.');
+            throw new Exception(__CLASS__ . ' - Error: Couldn\'t find assets to publish.');
         }
     }
 
