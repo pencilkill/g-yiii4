@@ -1,26 +1,21 @@
 <?php
 
 /**
- * EImageSelect widget class file.
+ * ELazyLoad widget class file.
  * @author Sam <mail.song.de.qiang@gmail.com>
 
- * EImageSelect extends CWidget and implements a base class for a imageselect widget.
- * more about imgareaselect can be found at http://odyniec.net/projects/imgareaselect/, version: 0.9.10.
+ * ELazyLoad extends CWidget and implements a base class for a lazyload widget.
+ * more about lazeload can be found at https://github.com/tuupola/jquery_lazyload/
  */
 
-class EImageSelect extends CWidget {
+class ELazyLoad extends CWidget {
     // @ string the taget element on DOM
     public $target;
-    // @ string the taget element on DOM
-    public $ajaxUrl;
     // @ array of config settings for imageselect
     public $config = array();
 
     // function to init the widget
     public function init() {
-    	if(empty($this->ajaxUrl)){
-    		$this->ajaxUrl = CHtml::normalizeUrl(array('site/ajaxCrop'));
-    	}
         // publish the required assets
         $this->publishAssets();
     }
@@ -30,7 +25,7 @@ class EImageSelect extends CWidget {
         $config = CJavaScript::encode($this->config);
         if(!empty($this->target)){
 	        Yii::app()->clientScript->registerScript($this->getId(), "
-				$('{$this->target}').imgAreaSelect($config);
+				$('{$this->target}').lazeload($config);
 			");
         }
     }
@@ -40,11 +35,8 @@ class EImageSelect extends CWidget {
         $assets = dirname(__FILE__) . '/assets';
         $baseUrl = Yii::app()->assetManager->publish($assets);
         if (is_dir($assets)) {
-            Yii::app()->clientScript->registerCssFile($baseUrl . '/css/imgareaselect-default.css');
-            //Yii::app()->clientScript->registerCssFile($baseUrl . '/css/imgareaselect-animated.css');
-            //Yii::app()->clientScript->registerCssFile($baseUrl . '/css/imgareaselect-deprecated.css');
             Yii::app()->clientScript->registerCoreScript('jquery');
-            Yii::app()->clientScript->registerScriptFile($baseUrl . '/scripts/jquery.imgareaselect.pack.js', CClientScript::POS_END);
+            Yii::app()->clientScript->registerScriptFile($baseUrl . '/lazeload', CClientScript::POS_HEAD);
         } else {
             throw new Exception(__CLASS__ . ' - Error: Couldn\'t find assets to publish.');
         }
