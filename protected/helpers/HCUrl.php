@@ -55,13 +55,42 @@ class HCUrl {
 	 * Trim the base url to get the relative url based on webroot
 	 */
 	public static function trim($src){
-		if(($baseUrl = Yii::app()->getBaseUrl(true)) && strpos($src, Yii::app()->getBaseUrl(true)) === 0){
+		$baseUrl = Yii::app()->getBaseUrl(true);
+		if(strpos($src, $baseUrl) === 0){
 			$src = substr($src, strlen($baseUrl));
-		}else if(($baseUrl = Yii::app()->getBaseUrl(false)) && strpos($src, Yii::app()->getBaseUrl(true)) === 0){
-			$src = substr($src, strlen($baseUrl));
+		}else{
+			$baseUrl = Yii::app()->getBaseUrl(false);
+			if(strpos($src, $baseUrl) === 0){
+				$src = substr($src, strlen($baseUrl));
+			}
 		}
 
 		return $src;
+	}
+
+	// called by shortUrl
+	private static function code62($x){
+		$show = '';
+		while($x>0){
+			$s = $x % 62;
+			if($s > 35){
+				$s = chr($s + 61);
+			}elseif($s> 9 && $s <= 35){
+				$s = chr($s + 55);
+			}
+			$show .= $s;
+			$x = floor($x/62);
+		}
+		return $show;
+	}
+	/**
+	 *
+	 * @param String $url
+	 */
+	public static function shortUrl($url){
+		$url = crc32($url);
+		$result = sprintf('%u',$url);
+		return self::code62($result);
 	}
 }
 ?>

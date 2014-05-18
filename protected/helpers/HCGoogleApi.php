@@ -5,9 +5,12 @@
  *
  */
 class HCGoogleApi{
-	const API_KEY = '';
 	//
+	const API_KEY = 'AIzaSyD2d-HWDJ5CxW0ZMvW-avIwVesXjIaLL-M';
+	// Translation does not require api, it is based on google web translation
 	const URL_TRANSLATE = 'http://translate.google.cn/translate_a/t';
+	// Url shorten, more about url shorten can be found at https://developers.google.com/url-shortener/v1/getting_started
+	const URL_SHORTEN = 'https://www.googleapis.com/urlshortener/v1/url';
 
 	/**
 	 *
@@ -41,6 +44,68 @@ class HCGoogleApi{
 
 		if(preg_match('/\s*\[\[\[\s*"(.*?)"\s*,\s*"/', $response, $results)){
 			list($text, $result) = $results;
+		}
+
+		return $result;
+	}
+
+	/**
+	 *
+	 * @param String $url
+	 * @param String $apiKey
+	 * @return Ambigous <NULL, string, mixed>
+	 */
+	public static function shorten($url, $apiKey = self::API_KEY){
+		$uri = array(
+			'key' => $apiKey,
+		);
+		$apiUrl = self::URL_SHORTEN;
+		$amp = strpos($apiUrl, '?') == 0 ? '?' : '&';
+		$apiUrl .= $amp . http_build_query($uri);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $apiUrl);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(array("longUrl"=>$url)));
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		$response = curl_exec($ch);
+		curl_close($ch);
+
+		$result = null;
+		if($response = json_decode($response, true)){
+			$result = isset($response['id']) ? $response['id'] : '';
+		}
+
+		return $result;
+	}
+
+	/**
+	 *
+	 * @param String $url
+	 * @param String $apiKey
+	 * @return Ambigous <NULL, string, mixed>
+	 */
+	public static function expand($url, $apiKey = self::API_KEY){
+		$uri = array(
+			'key' => $apiKey,
+			'shortUrl' => $url,
+		);
+		$apiUrl = self::URL_SHORTEN;
+		$amp = strpos($apiUrl, '?') == 0 ? '?' : '&';
+		$apiUrl .= $amp . http_build_query($uri);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $apiUrl);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		$response = curl_exec($ch);
+		curl_close($ch);
+
+		$result = null;
+		if($response = json_decode($response, true)){
+			$result = isset($response['longUrl']) ? $response['longUrl'] : '';
 		}
 
 		return $result;

@@ -10,8 +10,8 @@ class HCSinaApi{
 	//
 	const URL_SHORT = 'http://api.t.sina.com.cn/short_url/shorten.json';
 	const URL_LONG = 'http://api.t.sina.com.cn/short_url/expand.json';
-	
-	public static function short($url){
+
+	public static function shorten($url){
 		$uri = array(
 			'source' => self::API_KEY,
 			'url_long' => $url,
@@ -26,10 +26,11 @@ class HCSinaApi{
 		if($json = json_decode($response)){
 			$url = $json[0]->url_short;
 		}
+
 		return $url;
 	}
-	
-	public static function long($url){
+
+	public static function expand($url){
 		$uri = array(
 			'source' => self::API_KEY,
 			'url_short' => $url,
@@ -44,6 +45,7 @@ class HCSinaApi{
 		if($json = json_decode($response)){
 			$url = $json[0]->url_long;
 		}
+
 		return $url;
 	}
 }
