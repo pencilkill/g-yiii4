@@ -31,7 +31,7 @@ return array(
 
 	'theme'=>'_front',
 
-	'language'=>'zh_tw',
+	'language'=>'zh_cn',
 
 	'name'=>'元伸科技',
 

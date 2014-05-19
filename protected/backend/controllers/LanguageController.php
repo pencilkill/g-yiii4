@@ -39,11 +39,17 @@ class LanguageController extends GxController {
 			$valid = $model->validate();
 
 			if ($valid) {
+				$relations = HCPhpMessage::collectRelationModels();
+
 				$transaction = Yii::app()->db->beginTransaction();
 
 				try{
 					$model->save(false);
-
+					//
+					foreach($relations as $modelClass){
+						HCPhpMessage::createLanguageAR($modelClass, $model->language_id);
+					}
+					//
 					$transaction->commit();
 
 					if (Yii::app()->getRequest()->getIsAjaxRequest()){

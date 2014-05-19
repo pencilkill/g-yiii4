@@ -36,7 +36,7 @@ class ELazyLoad extends CWidget {
         $baseUrl = Yii::app()->assetManager->publish($assets);
         if (is_dir($assets)) {
             Yii::app()->clientScript->registerCoreScript('jquery');
-            Yii::app()->clientScript->registerScriptFile($baseUrl . '/lazeload', CClientScript::POS_HEAD);
+            Yii::app()->clientScript->registerScriptFile($baseUrl . '/jquery.lazyload.min.js', CClientScript::POS_HEAD);
         } else {
             throw new Exception(__CLASS__ . ' - Error: Couldn\'t find assets to publish.');
         }

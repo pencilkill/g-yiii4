@@ -28,7 +28,7 @@ $backCfg = array(
 
 	'name'=>$frontCfg['name'].' - Administrator',
 
-	'language'=>'zh_tw',
+	'language'=>'zh_cn',
 
 	'controllerPath' => $backend.'/controllers',
     'viewPath' => $backend.'/views',
