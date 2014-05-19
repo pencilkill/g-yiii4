@@ -19,7 +19,7 @@
 				<?php echo $form->labelEx($model,'pic'); ?>
 			</td>
 			<td>
-				<?php echo HCUploader::ajaxImageUpload(array('model' => $model,'attribute' => 'pic')); ?>
+				<?php echo HCUploader::ajaxImageUpload(array('model' => $model,'attribute' => 'pic', 'imageSelect' => true)); ?>
 				<?php echo $form->error($model,'pic'); ?>
 			</td>
 		</tr><!-- row -->

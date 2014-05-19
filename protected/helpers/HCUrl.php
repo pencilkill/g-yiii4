@@ -60,7 +60,9 @@ class HCUrl {
 		}else if(($baseUrl = Yii::app()->getBaseUrl(false)) && strpos($src, Yii::app()->getBaseUrl(true)) === 0){
 			$src = substr($src, strlen($baseUrl));
 		}
-
+		// compatiple with urlManager
+		$src = ltrim($src, '/');
+		
 		return $src;
 	}
 }
