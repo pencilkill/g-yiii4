@@ -21,7 +21,7 @@
 #rights .breadcrumbs a { color:#666; font-weight:normal; font-size: 12px; margin-bottom: 15px; text-decoration:none; }
 #rights .breadcrumbs a:hover { color:#000; text-decoration:underline; }
 
-#rights #content { position:relative; margin}
+#rights #content { position:relative;}
 
 #rights #rights-menu { margin:0 0 25px 0; background:none; margin-top: 20px;}
 #rights #rights-menu ul.actions { margin:0; padding:0; list-style-type:none; }
