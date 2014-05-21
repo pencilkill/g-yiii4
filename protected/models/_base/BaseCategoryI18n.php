@@ -62,12 +62,12 @@ abstract class BaseCategoryI18n extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'category_i18n_id' => Yii::t('m/categoryi18n', 'Category I18n'),
+			'category_i18n_id' => Yii::t('m/categoryI18n', 'Category I18n'),
 			'category_id' => null,
 			'language_id' => null,
-			'title' => Yii::t('m/categoryi18n', 'Title'),
-			'keywords' => Yii::t('m/categoryi18n', 'Keywords'),
-			'description' => Yii::t('m/categoryi18n', 'Description'),
+			'title' => Yii::t('m/categoryI18n', 'Title'),
+			'keywords' => Yii::t('m/categoryI18n', 'Keywords'),
+			'description' => Yii::t('m/categoryI18n', 'Description'),
 			'category' => null,
 			'language' => null,
 		);
@@ -89,5 +89,4 @@ abstract class BaseCategoryI18n extends GxActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
-
 }

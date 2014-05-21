@@ -15,13 +15,36 @@ return CMap::mergeArray($main, array(
 		'frontend.components.*',
 		'frontend.models.*',
 		'frontend.behaviors.*',
+		'frontend.modules.rights.*',
+		'frontend.modules.rights.components.*',
 		'frontend.extensions.ELinkPager',
 		'frontend.extensions.MobileDetect.MobileDetect',
 		'frontend.extensions.shoppingCart.*',
 	),
 
 	'modules' => array(
-		//
+		// check the component 'Controller extend RController'
+		
+		'rights'=>array(
+			'superuserName'=>'Admin',
+			'authenticatedName'=>'Authenticated',
+			'userClass'=>'Customer',
+			'userIdColumn'=>'customer_id',
+			'userNameColumn'=>'username',
+			'enableBizRule'=>false,
+			'enableBizRuleData'=>false,
+			'displayDescription'=>true,
+			'flashSuccessKey'=>'RightsSuccess',
+			'flashErrorKey'=>'RightsError',
+			'install'=>false,
+			'baseUrl'=>'/rights',
+			'layout'=>'rights.views.layouts.main',
+			'appLayout'=>'//layouts/main',
+			// based on Yii->app()->controller->skinUrl
+			'cssFile'=>'/stylesheet/rights.css',
+			'debug'=>false,
+		),
+		
 	),
 
 	// application components
@@ -43,7 +66,19 @@ return CMap::mergeArray($main, array(
 			// ajax session timeout
 			'loginRequiredAjaxResponse' => 'YII_LOGIN_REQUIRED',
 		),
-
+		
+		'authManager'=>array(
+			'class'=>'RDbAuthManager',
+			'connectionID'=>'db',
+			// this is the deault role which user use to login, should be the lowest for backend
+			'defaultRoles'=>array('Guest'),
+			//DB table, maybe auth will be added frontend sometime
+			'assignmentTable' => 'customer_authassignment',
+			'itemTable' => 'customer_authitem',
+			'itemChildTable' => 'customer_authitemchild',
+			'rightsTable' => 'customer_rights',
+		),
+		
 		'shoppingCart' => array(
 			'class' => 'frontend.extensions.shoppingCart.EShoppingCart',
 		),
@@ -58,12 +93,13 @@ return CMap::mergeArray($main, array(
 			 */
             //'basePath'=>null,
         ),
-
+		/*
         'urlManager'=>array(
             'urlFormat' => 'path',
         	'showScriptName' => false,
         	'urlSuffix' => '.html',
         ),
+        */
 
 		// example to config widget
 		'widgetFactory' => array(

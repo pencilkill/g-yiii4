@@ -64,14 +64,14 @@ abstract class BasePictureI18n extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'picture_i18n_id' => Yii::t('m/picturei18n', 'Picture I18n'),
+			'picture_i18n_id' => Yii::t('m/pictureI18n', 'Picture I18n'),
 			'picture_id' => null,
 			'language_id' => null,
-			'status' => Yii::t('m/picturei18n', 'Status'),
-			'url' => Yii::t('m/picturei18n', 'Url'),
-			'title' => Yii::t('m/picturei18n', 'Title'),
-			'keywords' => Yii::t('m/picturei18n', 'Keywords'),
-			'description' => Yii::t('m/picturei18n', 'Description'),
+			'status' => Yii::t('m/pictureI18n', 'Status'),
+			'url' => Yii::t('m/pictureI18n', 'Url'),
+			'title' => Yii::t('m/pictureI18n', 'Title'),
+			'keywords' => Yii::t('m/pictureI18n', 'Keywords'),
+			'description' => Yii::t('m/pictureI18n', 'Description'),
 			'picture' => null,
 			'language' => null,
 		);
@@ -95,5 +95,4 @@ abstract class BasePictureI18n extends GxActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
-
 }

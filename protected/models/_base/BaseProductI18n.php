@@ -64,14 +64,14 @@ abstract class BaseProductI18n extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'product_i18n_id' => Yii::t('m/producti18n', 'Product I18n'),
+			'product_i18n_id' => Yii::t('m/productI18n', 'Product I18n'),
 			'product_id' => null,
 			'language_id' => null,
-			'status' => Yii::t('m/producti18n', 'Status'),
-			'pic' => Yii::t('m/producti18n', 'Pic'),
-			'title' => Yii::t('m/producti18n', 'Title'),
-			'keywords' => Yii::t('m/producti18n', 'Keywords'),
-			'description' => Yii::t('m/producti18n', 'Description'),
+			'status' => Yii::t('m/productI18n', 'Status'),
+			'pic' => Yii::t('m/productI18n', 'Pic'),
+			'title' => Yii::t('m/productI18n', 'Title'),
+			'keywords' => Yii::t('m/productI18n', 'Keywords'),
+			'description' => Yii::t('m/productI18n', 'Description'),
 			'product' => null,
 			'language' => null,
 		);
@@ -95,5 +95,4 @@ abstract class BaseProductI18n extends GxActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
-
 }

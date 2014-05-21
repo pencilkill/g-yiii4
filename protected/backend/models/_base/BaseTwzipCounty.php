@@ -59,11 +59,11 @@ abstract class BaseTwzipCounty extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'twzip_county_id' => Yii::t('m/twzipcounty', 'Twzip County'),
+			'twzip_county_id' => Yii::t('m/twzipCounty', 'Twzip County'),
 			'twzip_city_id' => null,
-			'sort_order' => Yii::t('m/twzipcounty', 'Sort Order'),
-			'postcode' => Yii::t('m/twzipcounty', 'Postcode'),
-			'name' => Yii::t('m/twzipcounty', 'Name'),
+			'sort_order' => Yii::t('m/twzipCounty', 'Sort Order'),
+			'postcode' => Yii::t('m/twzipCounty', 'Postcode'),
+			'name' => Yii::t('m/twzipCounty', 'Name'),
 			'twzipCity' => null,
 		);
 	}

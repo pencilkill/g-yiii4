@@ -170,7 +170,7 @@ class GiixModelCode extends ModelCode {
 				if ($label === 'Id')
 					$label = 'ID';
 
-				$label = "Yii::t('m".'/'.strtolower($className)."', '{$label}')";
+				$label = "Yii::t('m".'/'.lcfirst($className)."', '{$label}')";
 			}
 			$labels[$column->name] = $label;
 		}

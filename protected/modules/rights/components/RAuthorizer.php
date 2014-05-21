@@ -297,7 +297,12 @@ class RAuthorizer extends CApplicationComponent
 
 		$superusers = array();
 		foreach( $users as $user )
-			$superusers[] = $user->name;
+			/**
+			 * This is a rights extension bug.
+			 *
+			 */
+			//$superusers[] = $user->name;
+			$superusers[] = $user->{Rights::module()->userNameColumn};
 
 		// Make sure that we have superusers, otherwise we would allow full access to Rights
 		// if there for some reason is not any superusers.

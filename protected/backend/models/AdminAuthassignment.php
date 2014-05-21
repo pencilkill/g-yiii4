@@ -1,8 +1,8 @@
 <?php
 
-Yii::import('backend.models._base.BaseAuthassignment');
+Yii::import('backend.models._base.BaseAdminAuthassignment');
 
-class Authassignment extends BaseAuthassignment
+class AdminAuthassignment extends BaseAdminAuthassignment
 {
 
 	public static function model($className=__CLASS__) {

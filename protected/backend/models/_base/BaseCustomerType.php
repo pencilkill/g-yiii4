@@ -56,9 +56,9 @@ abstract class BaseCustomerType extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'customer_type_id' => Yii::t('m/customertype', 'Customer Type'),
-			'name' => Yii::t('m/customertype', 'Name'),
-			'default' => Yii::t('m/customertype', 'Default'),
+			'customer_type_id' => Yii::t('m/customerType', 'Customer Type'),
+			'name' => Yii::t('m/customerType', 'Name'),
+			'default' => Yii::t('m/customerType', 'Default'),
 			'customers' => null,
 		);
 	}

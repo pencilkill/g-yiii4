@@ -55,9 +55,9 @@ abstract class BaseProductImage extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'product_image_id' => Yii::t('m/productimage', 'Product Image'),
+			'product_image_id' => Yii::t('m/productImage', 'Product Image'),
 			'product_id' => null,
-			'pic' => Yii::t('m/productimage', 'Pic'),
+			'pic' => Yii::t('m/productImage', 'Pic'),
 			'product' => null,
 		);
 	}

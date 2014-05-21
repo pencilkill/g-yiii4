@@ -57,10 +57,10 @@ abstract class BasePictureType extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'picture_type_id' => Yii::t('m/picturetype', 'Picture Type'),
-			'picture_type' => Yii::t('m/picturetype', 'Picture Type'),
-			'create_time' => Yii::t('m/picturetype', 'Create Time'),
-			'update_time' => Yii::t('m/picturetype', 'Update Time'),
+			'picture_type_id' => Yii::t('m/pictureType', 'Picture Type'),
+			'picture_type' => Yii::t('m/pictureType', 'Picture Type'),
+			'create_time' => Yii::t('m/pictureType', 'Create Time'),
+			'update_time' => Yii::t('m/pictureType', 'Update Time'),
 			'pictures' => null,
 		);
 	}
@@ -79,5 +79,4 @@ abstract class BasePictureType extends GxActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
-
 }
