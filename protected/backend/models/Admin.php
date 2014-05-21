@@ -96,7 +96,7 @@ class Admin extends BaseAdmin
 	}
 
 	protected function beforeDelete() {
-		return $this->super ? false : true;
+		return Rights::getAuthorizer()->isSuperuser($this->admin_id) ? false : true;
 	}
 
 	protected function afterDelete(){
@@ -107,7 +107,7 @@ class Admin extends BaseAdmin
 			Rights::revoke($roleName, $this->admin_id);
 		}
 	}
-
+	
 	public function search() {
 		$_provider = parent::search();
 		$alias = $this->tableAlias;
@@ -116,9 +116,12 @@ class Admin extends BaseAdmin
 		$criteria->group = "{$alias}.admin_id";
 		$criteria->together = true;
 
-		$criteria->with = array('authassignment');
-		$criteria->compare('authassignment.itemname', $this->roles);
-
+		$criteria->with = array('adminAuthassignment');
+		$criteria->compare('adminAuthassignment.itemname', $this->roles);
+		//
+		if($roles = $this->rolesList()){
+			$criteria->addInCondition('adminAuthassignment.itemname', array_keys($roles));
+		}
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
@@ -139,10 +142,17 @@ class Admin extends BaseAdmin
 	}
 
 	public function rolesList($includeSuperuser=false, $sort=true){
-		// RBAC
-		$authorizer = Yii::app()->getModule('rights')->getAuthorizer();
-		$roles = $authorizer->getRoles($includeSuperuser, $sort);
+		$result = array();
+		if($rights = Yii::app()->getModule('rights')){
+			// RBAC
+			$roles = $rights->getAuthorizer()->getRoles($includeSuperuser, $sort);
 
-		return CHtml::listData($roles, 'name', 'name');
+			//$result = CHtml::listData($roles, 'name', 'name');
+			foreach($roles as $name => $item){
+				$result[$name] = $item->getNameText();
+			}
+		}
+		
+		return $result;
 	}
 }

@@ -64,14 +64,14 @@ abstract class BaseNewsI18n extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'news_i18n_id' => Yii::t('m/newsi18n', 'News I18n'),
+			'news_i18n_id' => Yii::t('m/newsI18n', 'News I18n'),
 			'news_id' => null,
 			'language_id' => null,
-			'status' => Yii::t('m/newsi18n', 'Status'),
-			'pic' => Yii::t('m/newsi18n', 'Pic'),
-			'title' => Yii::t('m/newsi18n', 'Title'),
-			'keywords' => Yii::t('m/newsi18n', 'Keywords'),
-			'description' => Yii::t('m/newsi18n', 'Description'),
+			'status' => Yii::t('m/newsI18n', 'Status'),
+			'pic' => Yii::t('m/newsI18n', 'Pic'),
+			'title' => Yii::t('m/newsI18n', 'Title'),
+			'keywords' => Yii::t('m/newsI18n', 'Keywords'),
+			'description' => Yii::t('m/newsI18n', 'Description'),
 			'news' => null,
 			'language' => null,
 		);
@@ -95,5 +95,4 @@ abstract class BaseNewsI18n extends GxActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
-
 }

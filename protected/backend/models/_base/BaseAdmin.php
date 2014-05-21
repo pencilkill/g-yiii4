@@ -15,11 +15,10 @@
  * @property string $email
  * @property string $password
  * @property integer $status
- * @property integer $super
  * @property string $create_time
  * @property string $update_time
 
- * @property Authassignment $authassignment
+ * @property AdminAuthassignment $adminAuthassignment
  *
  */
 abstract class BaseAdmin extends GxActiveRecord {
@@ -43,17 +42,17 @@ abstract class BaseAdmin extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('name, username, email', 'required'),
-			array('status, super', 'numerical', 'integerOnly'=>true),
+			array('status', 'numerical', 'integerOnly'=>true),
 			array('name, username, email, password', 'length', 'max'=>32),
 			array('create_time, update_time', 'safe'),
-			array('status, super, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('admin_id, name, username, email, password, status, super, create_time, update_time', 'safe', 'on'=>'search'),
+			array('status, create_time, update_time', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('admin_id, name, username, email, password, status, create_time, update_time', 'safe', 'on'=>'search'),
 		);
 	}
 
 	public function relations() {
 		return array(
-			'authassignment' => array(self::HAS_ONE, 'Authassignment', 'userid'),
+			'adminAuthassignment' => array(self::HAS_ONE, 'AdminAuthassignment', 'userid'),
 		);
 	}
 
@@ -70,7 +69,6 @@ abstract class BaseAdmin extends GxActiveRecord {
 			'email' => Yii::t('m/admin', 'Email'),
 			'password' => Yii::t('m/admin', 'Password'),
 			'status' => Yii::t('m/admin', 'Status'),
-			'super' => Yii::t('m/admin', 'Super'),
 			'create_time' => Yii::t('m/admin', 'Create Time'),
 			'update_time' => Yii::t('m/admin', 'Update Time'),
 		);
@@ -87,7 +85,6 @@ abstract class BaseAdmin extends GxActiveRecord {
 		$criteria->compare("{$alias}.email", $this->email, true);
 		$criteria->compare("{$alias}.password", $this->password, true);
 		$criteria->compare("{$alias}.status", $this->status);
-		$criteria->compare("{$alias}.super", $this->super);
 		$criteria->compare("{$alias}.create_time", $this->create_time, true);
 		$criteria->compare("{$alias}.update_time", $this->update_time, true);
 

@@ -11,9 +11,6 @@ class AdminController extends GxController {
 			$model->setAttributes($_GET['Admin']);
 		}
 
-		// except super ar
-		$model->super = 0;
-
 		Yii::app()->user->setState('admin-grid-url', Yii::app()->request->url);
 
 		$this->render('index', array(
@@ -34,9 +31,6 @@ class AdminController extends GxController {
 
 		if (isset($_POST['Admin'])) {
 			$model->setAttributes($_POST['Admin']);
-
-			// 超級管理員只可手動設定
-			$model->super = 0;
 
 			$valid = $model->validate();
 
@@ -100,9 +94,6 @@ class AdminController extends GxController {
 		);
 
 		if (isset($_POST['Admin'])) {
-			// 超級管理員只可手動設定
-			if(isset($_POST['Admin']['super'])) unset($_POST['Admin']['super']);
-
 			$model->setAttributes($_POST['Admin']);
 
 			$valid = $model->validate();
@@ -229,10 +220,7 @@ class AdminController extends GxController {
             $criteria= new CDbCriteria;
             $criteria->compare('admin_id', $selectedIds);
 
-			// except super ar
-			$criteria->compare('super', 0);
-
-			$models = Admin::model()->findAll($criteria);
+            $models = Admin::model()->findAll($criteria);
 
 			$errorModel = null;
 
@@ -281,9 +269,6 @@ class AdminController extends GxController {
 
 			$criteria= new CDbCriteria;
 			$criteria->compare('admin_id', $edittedIds);
-
-			// except super ar
-			$criteria->compare('super', 0);
 
 			$models = Admin::model()->findAll($criteria);
 

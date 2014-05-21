@@ -56,9 +56,9 @@ abstract class BaseTwzipCity extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'twzip_city_id' => Yii::t('m/twzipcity', 'Twzip City'),
-			'sort_order' => Yii::t('m/twzipcity', 'Sort Order'),
-			'name' => Yii::t('m/twzipcity', 'Name'),
+			'twzip_city_id' => Yii::t('m/twzipCity', 'Twzip City'),
+			'sort_order' => Yii::t('m/twzipCity', 'Sort Order'),
+			'name' => Yii::t('m/twzipCity', 'Name'),
 			'twzipCounties' => null,
 		);
 	}
@@ -76,5 +76,4 @@ abstract class BaseTwzipCity extends GxActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
-
 }

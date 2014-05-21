@@ -63,13 +63,13 @@ abstract class BaseInformationI18n extends GxActiveRecord {
 
 	public function attributeLabels() {
 		return array(
-			'information_i18n_id' => Yii::t('m/informationi18n', 'Information I18n'),
+			'information_i18n_id' => Yii::t('m/informationI18n', 'Information I18n'),
 			'information_id' => null,
 			'language_id' => null,
-			'status' => Yii::t('m/informationi18n', 'Status'),
-			'title' => Yii::t('m/informationi18n', 'Title'),
-			'keywords' => Yii::t('m/informationi18n', 'Keywords'),
-			'description' => Yii::t('m/informationi18n', 'Description'),
+			'status' => Yii::t('m/informationI18n', 'Status'),
+			'title' => Yii::t('m/informationI18n', 'Title'),
+			'keywords' => Yii::t('m/informationI18n', 'Keywords'),
+			'description' => Yii::t('m/informationI18n', 'Description'),
 			'information' => null,
 			'language' => null,
 		);

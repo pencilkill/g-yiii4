@@ -37,7 +37,7 @@ $backCfg = array(
 
 	// preloading 'log' component
 	'preload'=>array(
-		//'log',
+		'log',
 	),
 
 	// autoloading model and component classes
@@ -83,7 +83,7 @@ $backCfg = array(
 			'appLayout'=>'//layouts/main',
 			// based on Yii->app()->controller->skinUrl
 			'cssFile'=>'/stylesheet/rights.css',
-			'debug'=>false,
+			'debug'=>true,
 		),
 
 	),
@@ -116,10 +116,10 @@ $backCfg = array(
 			// this is the deault role which user use to login, should be the lowest for backend
 			'defaultRoles'=>array('Guest'),
 			//DB table, maybe auth will be added frontend sometime
-			'assignmentTable' => 'authassignment',
-		    'itemTable' => 'authitem',
-		    'itemChildTable' => 'authitemchild',
-		    'rightsTable' => 'rights',
+			'assignmentTable' => 'admin_authassignment',
+		    'itemTable' => 'admin_authitem',
+		    'itemChildTable' => 'admin_authitemchild',
+		    'rightsTable' => 'admin_rights',
 		),
 
         'messages'=>array(
