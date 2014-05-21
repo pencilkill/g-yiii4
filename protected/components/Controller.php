@@ -22,11 +22,6 @@ class Controller extends RController
 	public $breadcrumbs=array();
 
 	/**
-	 * @var skinUrl(assetsUrl), based on theme
-	 */
-	public $skinUrl;
-
-	/**
 	 * see app behavior to get more about init()
 	 */
 	public function init() {
@@ -36,7 +31,7 @@ class Controller extends RController
 		$this->skinUrl = HCTheme::publishThemeAssets();
 
 		// default Meta
-		$this->registerBaseMetas();
+		$this->registerMeta();
 	}
 
 	/**
@@ -83,7 +78,7 @@ class Controller extends RController
      * The core jquery script is not included, it will be registered in main layout if necessary
      * We can change title and meta dynamically using the meta unique id which is the fifth parameter for app registerMetaTag()
      */
-    public function registerBaseMetas(){
+    public function registerMeta(){
     	$id = Yii::app()->params->languageId;
 
     	$title = 'meta_title_'.$id;

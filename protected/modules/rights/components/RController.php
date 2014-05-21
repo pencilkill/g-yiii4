@@ -29,6 +29,15 @@ class RController extends CController
 	public $skinUrl;
 
 	/**
+	 * The filter method for 'rights' access filter.
+	 */
+	public function filters() {
+		return array(
+			'rights',
+		);
+	}
+
+	/**
 	* The filter method for 'rights' access filter.
 	* This filter is a wrapper of {@link CAccessControlFilter}.
 	* @param CFilterChain $filterChain the filter chain that the filter is on.

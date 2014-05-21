@@ -6,6 +6,12 @@
 class SiteController extends GxController
 {
 	/**
+	 * @see RController::allowedActions()
+	 */
+	public function allowedActions(){
+		return 'error';
+	}
+	/**
 	 * Declares class-based actions.
 	 */
 	public function actions()

@@ -24,7 +24,7 @@ return CMap::mergeArray($main, array(
 
 	'modules' => array(
 		// check the component 'Controller extend RController'
-		
+
 		'rights'=>array(
 			'superuserName'=>'Admin',
 			'authenticatedName'=>'Authenticated',
@@ -44,7 +44,7 @@ return CMap::mergeArray($main, array(
 			'cssFile'=>'/stylesheet/rights.css',
 			'debug'=>false,
 		),
-		
+
 	),
 
 	// application components
@@ -66,7 +66,7 @@ return CMap::mergeArray($main, array(
 			// ajax session timeout
 			'loginRequiredAjaxResponse' => 'YII_LOGIN_REQUIRED',
 		),
-		
+
 		'authManager'=>array(
 			'class'=>'RDbAuthManager',
 			'connectionID'=>'db',
@@ -78,7 +78,7 @@ return CMap::mergeArray($main, array(
 			'itemChildTable' => 'customer_authitemchild',
 			'rightsTable' => 'customer_rights',
 		),
-		
+
 		'shoppingCart' => array(
 			'class' => 'frontend.extensions.shoppingCart.EShoppingCart',
 		),

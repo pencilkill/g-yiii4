@@ -93,6 +93,7 @@ return array(
 		'curl' => array(
 			'class' => 'frontend.extensions.curl.Curl',
 			'options' => array(
+				//
 			),
 		),
 

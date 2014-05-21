@@ -45,12 +45,6 @@ class Controller extends RController
 		$this->pageTitle = Yii::app()->name;
 	}
 
-	public function filters() {
-		return array(
-			'rights',
-		);
-	}
-
 	public function languages() {
 		$criteria = new CDbCriteria;
 		$criteria->alias = 't';
