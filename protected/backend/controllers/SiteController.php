@@ -2,15 +2,6 @@
 
 class SiteController extends Controller
 {
-
-	/**
-	 * Cause the RBAC module rights can not get actions returned from controller->actions() well
-	 * Allowedactions() authorize for guest role here and
-	 * RBAC rights will authorize nothing for guest role
-	 */
-	public function allowedActions(){
-		return 'error, login, logout, captcha';
-	}
 	/**
 	 * Declares class-based actions.
 	 */
