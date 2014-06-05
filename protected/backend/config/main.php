@@ -37,7 +37,7 @@ $backCfg = array(
 
 	// preloading 'log' component
 	'preload'=>array(
-		'log',
+		//'log',
 	),
 
 	// autoloading model and component classes
@@ -72,8 +72,8 @@ $backCfg = array(
 			'userClass'=>'Admin',
 			'userIdColumn'=>'admin_id',
 			'userNameColumn'=>'username',
-			'enableBizRule'=>false,
-			'enableBizRuleData'=>false,
+			'enableBizRule'=>true,
+			'enableBizRuleData'=>true,
 			'displayDescription'=>true,
 			'flashSuccessKey'=>'RightsSuccess',
 			'flashErrorKey'=>'RightsError',
@@ -115,7 +115,7 @@ $backCfg = array(
 			'connectionID'=>'db',
 			// this is the deault role which user use to login, should be the lowest for backend
 			'defaultRoles'=>array('Guest'),
-			//DB table, maybe auth will be added frontend sometime
+			// DB table, maybe auth will be added frontend sometime
 			'assignmentTable' => 'admin_authassignment',
 		    'itemTable' => 'admin_authitem',
 		    'itemChildTable' => 'admin_authitemchild',
