@@ -1,5 +1,5 @@
 <?php
-class WebUser extends RWebUser{	// RWebUser for rights module
+class WebUser extends CWebUser{
 	/**
 	 * @see Check loginUrl
 	 */

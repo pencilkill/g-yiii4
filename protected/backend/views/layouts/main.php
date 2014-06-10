@@ -63,7 +63,7 @@
   		 */
   	?>
     <ul class="left">
-      <li><a href="<?php echo Yii::app()->homeUrl; ?>"><?php echo Yii::t('nav', 'Dashboard'); ?></a></li>
+      <li><a href="<?php echo Yii::app()->createUrl('site/index', array()); ?>"><?php echo Yii::t('nav', 'Dashboard'); ?></a></li>
       <li><a><?php echo Yii::t('nav', 'Catalog'); ?></a>
         <ul>
           <li><a href="<?php echo Yii::app()->createUrl('category/index', array()); ?>"><?php echo Yii::t('nav', 'Category'); ?></a></li>
@@ -98,9 +98,9 @@
 			route = getURLVar('r');
 
 			if (!route) {
-				$('#menu li:first').addClass('selected');
+				$('#menu ul.left > li:first').addClass('selected');
 			} else {
-				prefix = '#menu a:regex(href, .*?[\?\&]?r[^=]*\=[^=]*';
+				prefix = '#menu ul.left a:regex(href, .*?[\?\&]?r[^=]*\=[^=]*';
 				suffix = '[\?\&]?.*)';
 
 				part = route.split('/');
@@ -115,7 +115,7 @@
 					//
 				}finally{
 					if(o.length){
-						o.first().closest('#menu > ul > li').addClass('selected');
+						o.first().closest('#menu ul.left > li').addClass('selected');
 					}
 				}
 			}

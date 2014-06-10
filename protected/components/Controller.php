@@ -3,7 +3,7 @@
  * Controller is the customized base controller class.
  * All controller classes for this application should extend from this base class.
  */
-class Controller extends RController
+class Controller extends CController
 {
 	/**
 	 * @var string the default layout for the controller view. Defaults to '//layouts/column1',
@@ -20,6 +20,10 @@ class Controller extends RController
 	 * for more details on how to specify this property.
 	 */
 	public $breadcrumbs=array();
+	/**
+	 * @var skinUrl(appAssetsUrl), based on app theme
+	 */
+	public $skinUrl;
 
 	/**
 	 * see app behavior to get more about init()

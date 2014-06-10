@@ -2,8 +2,8 @@
 -- version 4.0.4
 -- http://www.phpmyadmin.net
 --
--- 主机: 127.0.0.1
--- 生成日期: 2014 年 05 月 21 日 12:48
+-- 主机: localhost
+-- 生成日期: 2014 年 06 月 10 日 12:46
 -- 服务器版本: 5.6.12-log
 -- PHP 版本: 5.4.16
 
@@ -114,7 +114,11 @@ INSERT INTO `admin_authitem` (`name`, `type`, `description`, `bizrule`, `data`) 
 ('PictureType.*', 1, 'PictureType.*', NULL, 'N;'),
 ('Product.*', 1, 'Product.*', NULL, 'N;'),
 ('Setting.*', 1, 'Setting.*', NULL, 'N;'),
-('Site.*', 1, 'Site.*', NULL, 'N;');
+('Site.*', 1, 'Site.*', NULL, 'N;'),
+('Site.Captcha', 0, 'Site.Captcha', NULL, 'N;'),
+('Site.Error', 0, 'Site.Error', NULL, 'N;'),
+('Site.Login', 0, 'Site.Login', NULL, 'N;'),
+('Site.Logout', 0, 'Site.Logout', NULL, 'N;');
 
 -- --------------------------------------------------------
 
@@ -153,7 +157,11 @@ INSERT INTO `admin_authitemchild` (`parent`, `child`) VALUES
 ('Authenticated', 'PictureType.*'),
 ('Authenticated', 'Product.*'),
 ('Authenticated', 'Setting.*'),
-('Authenticated', 'Site.*');
+('Authenticated', 'Site.*'),
+('Guest', 'Site.Captcha'),
+('Guest', 'Site.Error'),
+('Guest', 'Site.Login'),
+('Guest', 'Site.Logout');
 
 -- --------------------------------------------------------
 
@@ -299,140 +307,6 @@ CREATE TABLE IF NOT EXISTS `customer` (
 INSERT INTO `customer` (`customer_id`, `customer_type_id`, `name`, `username`, `password`, `token`, `activated`, `status`, `create_time`, `update_time`) VALUES
 (1, 1, 'Sam', 'sam@ozchamp.net', 'fcea920f7412b5da7be0cf42b8c93759', NULL, 1, 1, '2014-02-28 17:10:33', '2014-03-05 10:22:31'),
 (7, 1, 'Sam2', 'cmd.dos@hotmail.com', 'fcea920f7412b5da7be0cf42b8c93759', '59f61aa9478c77d0943ed50862278bfa', 1, 1, '2014-03-05 10:11:52', '2014-03-05 10:20:29');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `customer_authassignment`
---
-
-CREATE TABLE IF NOT EXISTS `customer_authassignment` (
-  `itemname` varchar(64) NOT NULL,
-  `userid` varchar(64) NOT NULL,
-  `bizrule` text,
-  `data` text,
-  PRIMARY KEY (`itemname`,`userid`),
-  KEY `userid` (`userid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `customer_authassignment`
---
-
-INSERT INTO `customer_authassignment` (`itemname`, `userid`, `bizrule`, `data`) VALUES
-('Admin', '1', NULL, 'N;'),
-('Administrator', '2', NULL, 'N;'),
-('Authenticated', '5', NULL, 'N;');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `customer_authitem`
---
-
-CREATE TABLE IF NOT EXISTS `customer_authitem` (
-  `name` varchar(64) NOT NULL,
-  `type` int(11) NOT NULL,
-  `description` text,
-  `bizrule` text,
-  `data` text,
-  PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `customer_authitem`
---
-
-INSERT INTO `customer_authitem` (`name`, `type`, `description`, `bizrule`, `data`) VALUES
-('Admin', 2, '開發模式。\r\n任意權限。', NULL, 'N;'),
-('Admin.Account', 0, 'Admin.Account', NULL, 'N;'),
-('Admin.Create', 0, 'Admin.Create', NULL, 'N;'),
-('Admin.Delete', 0, 'Admin.Delete', NULL, 'N;'),
-('Admin.Gridviewdelete', 0, 'Admin.Gridviewdelete', NULL, 'N;'),
-('Admin.Gridviewupdate', 0, 'Admin.Gridviewupdate', NULL, 'N;'),
-('Admin.Index', 0, 'Admin.Index', NULL, 'N;'),
-('Admin.Update', 0, 'Admin.Update', NULL, 'N;'),
-('Administrator', 2, '超級用戶。\r\n具備普通管理員的權限。\r\n同時允許管理後臺用戶。', NULL, 'N;'),
-('Authenticated', 2, '普通用戶。\r\n具備多數內容的操作權限。\r\n允許且僅允許更新自身個人信息。', NULL, 'N;'),
-('Category.*', 1, 'Category.*', NULL, 'N;'),
-('Contact.*', 1, 'Contact.*', NULL, 'N;'),
-('Customer.*', 1, 'Customer.*', NULL, 'N;'),
-('CustomerGroup.*', 1, 'CustomerGroup.*', NULL, 'N;'),
-('Guest', 2, '匿名用戶。\r\n不具備管理權限。', NULL, 'N;'),
-('Information.*', 1, 'Information.*', NULL, 'N;'),
-('News.*', 1, 'News.*', NULL, 'N;'),
-('Picture.*', 1, 'Picture.*', NULL, 'N;'),
-('PictureType.*', 1, 'PictureType.*', NULL, 'N;'),
-('Product.*', 1, 'Product.*', NULL, 'N;'),
-('Setting.*', 1, 'Setting.*', NULL, 'N;'),
-('Site.*', 1, 'Site.*', NULL, 'N;');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `customer_authitemchild`
---
-
-CREATE TABLE IF NOT EXISTS `customer_authitemchild` (
-  `parent` varchar(64) NOT NULL,
-  `child` varchar(64) NOT NULL,
-  PRIMARY KEY (`parent`,`child`),
-  KEY `child` (`child`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `customer_authitemchild`
---
-
-INSERT INTO `customer_authitemchild` (`parent`, `child`) VALUES
-('Authenticated', 'Admin.Account'),
-('Administrator', 'Admin.Create'),
-('Administrator', 'Admin.Delete'),
-('Administrator', 'Admin.Gridviewdelete'),
-('Administrator', 'Admin.Gridviewupdate'),
-('Administrator', 'Admin.Index'),
-('Administrator', 'Admin.Update'),
-('Administrator', 'Authenticated'),
-('Authenticated', 'Category.*'),
-('Authenticated', 'Contact.*'),
-('Authenticated', 'Customer.*'),
-('Authenticated', 'CustomerGroup.*'),
-('Authenticated', 'Guest'),
-('Authenticated', 'Information.*'),
-('Authenticated', 'News.*'),
-('Authenticated', 'Picture.*'),
-('Authenticated', 'PictureType.*'),
-('Authenticated', 'Product.*'),
-('Authenticated', 'Setting.*'),
-('Authenticated', 'Site.*');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `customer_rights`
---
-
-CREATE TABLE IF NOT EXISTS `customer_rights` (
-  `itemname` varchar(64) NOT NULL,
-  `type` int(11) NOT NULL,
-  `weight` int(11) NOT NULL,
-  PRIMARY KEY (`itemname`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `customer_rights`
---
-
-INSERT INTO `customer_rights` (`itemname`, `type`, `weight`) VALUES
-('Category.*', 1, 3),
-('Contact.*', 1, 4),
-('Information.*', 1, 5),
-('News.*', 1, 6),
-('Picture.*', 1, 0),
-('PictureType.*', 1, 1),
-('Product.*', 1, 7),
-('Setting.*', 1, 8),
-('Site.*', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -1240,8 +1114,8 @@ ALTER TABLE `admin_authassignment`
 -- 限制表 `admin_authitemchild`
 --
 ALTER TABLE `admin_authitemchild`
-  ADD CONSTRAINT `admin_authitemchild_ibfk_2` FOREIGN KEY (`child`) REFERENCES `admin_authitem` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `admin_authitemchild_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `admin_authitem` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `admin_authitemchild_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `admin_authitem` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `admin_authitemchild_ibfk_2` FOREIGN KEY (`child`) REFERENCES `admin_authitem` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- 限制表 `admin_rights`
@@ -1267,25 +1141,6 @@ ALTER TABLE `category_i18n`
 --
 ALTER TABLE `customer`
   ADD CONSTRAINT `customer_ibfk_4` FOREIGN KEY (`customer_type_id`) REFERENCES `customer_type` (`customer_type_id`) ON UPDATE CASCADE;
-
---
--- 限制表 `customer_authassignment`
---
-ALTER TABLE `customer_authassignment`
-  ADD CONSTRAINT `customer_authassignment_ibfk_1` FOREIGN KEY (`itemname`) REFERENCES `customer_authitem` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- 限制表 `customer_authitemchild`
---
-ALTER TABLE `customer_authitemchild`
-  ADD CONSTRAINT `customer_authitemchild_ibfk_2` FOREIGN KEY (`child`) REFERENCES `customer_authitem` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `customer_authitemchild_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `customer_authitem` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- 限制表 `customer_rights`
---
-ALTER TABLE `customer_rights`
-  ADD CONSTRAINT `customer_rights_ibfk_1` FOREIGN KEY (`itemname`) REFERENCES `customer_authitem` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- 限制表 `information`

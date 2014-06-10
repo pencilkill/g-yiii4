@@ -33,7 +33,19 @@ class Controller extends RController
 	 */
 
 	public $languages;
+	/**
+	 * @var skinUrl(appAssetsUrl), based on app theme
+	 */
+	public $skinUrl;
 
+	/**
+	 * The filter method for 'rights' access filter.
+	 */
+	public function filters() {
+		return array(
+			'rights',
+		);
+	}
 
 	public function init() {
 		parent::init();
