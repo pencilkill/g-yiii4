@@ -190,5 +190,6 @@ $backCfg = array(
 	'params'=>require(dirname(__FILE__).'/params.php'),
 );
 
-//return main confinguration from both frontend and backend ,override frontend configuration which existed
+// return main confinguration from both frontend and backend ,override frontend configuration which existed
+// change frontend confinguration before merge, such as 'urlManager' confinguration to 'urlManagerFrontend' to create frontend url through backend
 return CMap::mergeArray($frontCfg, $backCfg);
