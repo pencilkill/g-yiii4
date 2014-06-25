@@ -3,36 +3,31 @@
  * @author Sam <mail.song.de.qiang@gmail.com>
  *
  */
-class SiteController extends GxController
-{
+class SiteController extends GxController {
 	/**
 	 * Declares class-based actions.
 	 */
-	public function actions()
-	{
-		return array();
+	public function actions() {
+		return array ();
 	}
 
 	/**
 	 * This is the default 'index' action that is invoked
 	 * when an action is not explicitly requested by users.
 	 */
-	public function actionIndex()
-	{
-		$this->render('//site/index');
+	public function actionIndex() {
+		$this->render ( '//site/index' );
 	}
 
 	/**
 	 * This is the action to handle external exceptions.
 	 */
-	public function actionError()
-	{
-		if($error=Yii::app()->errorHandler->error)
-		{
-			if(Yii::app()->request->isAjaxRequest)
-			echo $error['message'];
+	public function actionError() {
+		if ($error = Yii::app ()->errorHandler->error) {
+			if (Yii::app ()->request->isAjaxRequest)
+				echo $error ['message'];
 			else
-			$this->render('error', $error);
+				$this->render ( 'error', $error );
 		}
 	}
 	/**
