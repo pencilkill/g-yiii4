@@ -1,9 +1,36 @@
-/assets/*
-**/runtime/*
-/upload/*
+# phpstorm project files
+.idea
+
+# netbeans project files
+nbproject
+
+# zend studio for eclipse project files
 .buildpath
 .project
-.settings/
+.settings
 
+# windows thumbnail cache
+Thumbs.db
+
+# composer itself is not needed
+composer.phar
+
+# Mac DS_Store Files
+.DS_Store
+
+# phpunit itself is not needed
+phpunit.phar
+# local phpunit config
+/phpunit.xml
+
+# public resources
+/assets/*
+
+# runtime 
+**/runtime/*
+
+# customer files
+/upload/*
+
+# except some directories required on init
 !index.html
-/nbproject/private/
