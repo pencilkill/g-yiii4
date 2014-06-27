@@ -1,6 +1,6 @@
 <?php
 /**
- * class CActiveFormBehavior file
+ * class CActiveRecordAssetBehavior file
  *
  * @author Sam <mail.song.de.qiang@gmail.com>
  *
@@ -10,7 +10,7 @@
  * cause we may use file manager sometimes, e.g CKFinder,
  * the assets are aways shared, they should not be deleted
  */
-class CActiveRecordAssetBehavior  extends CActiveRecordBehavior {
+class CActiveRecordAssetBehavior extends CActiveRecordBehavior {
 	private $_ar;
 	/**
 	 * filter the assets, key/value list, key as attribute name,
