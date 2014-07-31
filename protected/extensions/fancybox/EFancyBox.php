@@ -59,8 +59,8 @@ class EFancyBox extends CWidget {
 
     // function to run the widget
     public function run() {
-        $config = CJavaScript::encode($this->config);
         if(!empty($this->target)){
+	        $config = CJavaScript::encode($this->config);
 	        Yii::app()->clientScript->registerScript($this->getId(), "
 				$('{$this->target}').fancybox($config);
 			");
